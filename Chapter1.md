@@ -39,8 +39,6 @@ Agile is an iterative, incremental software development philosophy codified in t
 3. **Customer collaboration** over contract negotiation.
 4. **Responding to change** over following a plan.
 
-graph LR
-    Input[Input] --> Process[Process]
 ### Key Agile Principles
 
 * **Iterative Progress:** Software is developed in rapid, repeating iterations (typically 1 to 4 weeks).
@@ -54,7 +52,7 @@ graph LR
 
 While Agile defines the philosophy, specific frameworks implement its concepts into concrete day-to-day operations.
 
-```mermaid
+
 <+----------------------------------------------------------------------+
 |                         AGILE PHILOSOPHY                              |
 +-----------------------------------+-----------------------------------+
@@ -70,7 +68,7 @@ While Agile defines the philosophy, specific frameworks implement its concepts i
 | Prescribed Events |                               | Flexible Backlog  |
 +-------------------+                               +-------------------+ 
 
-```
+\
 
 ### Scrum
 
