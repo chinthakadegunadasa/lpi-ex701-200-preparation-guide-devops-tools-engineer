@@ -55,7 +55,7 @@ graph LR
 
 While Agile defines the philosophy, specific frameworks implement its concepts into concrete day-to-day operations.
 
-```
+(~~~~~~~~~~~~~~~~
 +-----------------------------------------------------------------------+
 |                         AGILE PHILOSOPHY                              |
 +-----------------------------------+-----------------------------------+
@@ -64,14 +64,13 @@ While Agile defines the philosophy, specific frameworks implement its concepts i
           |                                                   |
           v                                                   v
 +-------------------+                               +-------------------+
-|      SCRUM        |                               |      KANBAN       |
+|      SCRUM        |      <g> ... ~~~~~~~~~~~~~~~~)                         |      KANBAN       |
 +-------------------+                               +-------------------+
 | Time-boxed Sprints|                               | Continuous Flow   |
 | Rigid Roles       |                               | WIP Limits        |
 | Prescribed Events |                               | Flexible Backlog  |
 +-------------------+                               +-------------------+
-
-```
+... ~~~~~~~~~~~~~~~~)
 
 ### Scrum
 
@@ -134,6 +133,7 @@ Executing Agile software development requires systematic tracking and transparen
 
 1. **Epic:** A high-level strategic initiative or large body of work that spans multiple sprints (e.g., "Implement Multi-Region Failover Infrastructure").
 2. **Feature:** A distinct functionality within an Epic that fulfills a specific business capability (e.g., "Database Replication Automation").
+```
 3. **User Story:** A granular requirement expressed from the end-user perspective:
 
 $$\text{As a } \langle \text{role} \rangle, \text{ I want } \langle \text{action} \rangle \text{ so that } \langle \text{business value} \rangle.$$
@@ -145,6 +145,7 @@ $$\text{As a } \langle \text{role} \rangle, \text{ I want } \langle \text{action
 
 A shared, formal specification of conditions that code must meet before an increment is considered completed and deployable. A representative enterprise DoD includes:
 
+```
 * Unit test coverage meets or exceeds defined thresholds (e.g., $\ge 80\%$).
 * Static application security testing (SAST) passes with zero high/critical vulnerabilities.
 * Peer code review has been completed and approved by at least two senior maintainers.
@@ -169,7 +170,7 @@ While Agile solves communication and alignment problems between business manager
 
 **DevOps** bridges this operational divide. It is a compound of **Development** and **Operations**, representing a cultural movement, set of practices, and engineering philosophy that unifies software creation, testing, deployment, and infrastructure management.
 
-```
+(~~~~~~~~~~~~~~~~
        +-------------------------------------------------+
        |                  THE DEVOPS LOOP                |
        |                                                 |
@@ -178,8 +179,7 @@ While Agile solves communication and alignment problems between business manager
        |       |                           v             |
        |    [MONITOR] <--- [OPERATE] <-- [DEPLOY]        |
        +-------------------------------------------------+
-
-```
+... ~~~~~~~~~~~~~~~~)
 
 ### Key Pillars of DevOps (The CALMS Model)
 
