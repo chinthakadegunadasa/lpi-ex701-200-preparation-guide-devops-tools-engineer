@@ -1,17 +1,11 @@
-# Chapter 4: Standard Components and Platforms for Software
+# Chapter 6: Source Code Management (Tags, Branches, & Stash)
 
 ## Table of Contents
 
 * Introduction
-* Features and Concepts of Object Storage
-* Features and Concepts of Relational and NoSQL Databases
-* Features and Concepts of Message Brokers and Message Queues
-* Features and Concepts of Big Data Services
-* Features and Concepts of Computing Services: IaaS
-* Features and Concepts of Application Runtimes: PaaS
-* Features and Concepts of Hosted Applications: SaaS
-* Features and Concepts of Function Applications: FaaS
-* Features and Concepts of Content Delivery Networks (CDNs)
+* Tags: Marking Specific Versions
+* Branches: Working in Parallel
+* Temporary Change Management with git stash and git pop
 * Guided Exercises
 * Explorational Exercises
 * Summary
@@ -22,410 +16,270 @@
 
 ## Introduction
 
-Modern application development relies on standardized platforms, managed services, and foundational cloud components. Rather than reimplementing fundamental infrastructure—such as persistent storage, database engine indexing, distributed queuing, or compute provisioning—enterprise architects compose applications using well-defined cloud service models and middleware building blocks.
+As enterprise applications scale, managing source code requires more than basic linear commits. Engineering teams must isolate parallel feature development, maintain production hotfix lanes, tag immutable software releases, and context-switch quickly without losing uncommitted local work.
 
-Understanding the architectural boundaries, operational characteristics, and integration patterns of these components is critical for building resilient, cost-effective, and scalable systems. This chapter covers standard application runtime models, storage archetypes, messaging systems, cloud service tiers (IaaS, PaaS, SaaS, FaaS), and distribution networks.
-
----
-
-## Features and Concepts of Object Storage
-
-Object storage is a flat storage architecture designed to store unstructured data—such as media files, backups, disk images, and analytics datasets—at massive scale. Unlike traditional POSIX file systems (which organize data into hierarchical directory trees) or block storage (which exposes raw block devices to an operating system), object storage manages data as distinct, independent units called **objects**.
-
-```
-+-----------------------------------------------------------------------+
-|                            OBJECT STORAGE                             |
-+-----------------------------------------------------------------------+
-|  [ Global / Regional Namespace: s3.example.com ]                      |
-|                                                                       |
-|  +-----------------------------------------------------------------+  |
-|  | BUCKET: enterprise-assets                                       |  |
-|  |                                                                 |  |
-|  |  +-------------------+  +-------------------+                   |  |
-|  |  | Object ID / Key   |  | Object ID / Key   |                   |  |
-|  |  | "images/logo.png" |  | "logs/app.log"    |                   |  |
-|  |  |                   |  |                   |                   |  |
-|  |  | - Binary Data     |  | - Binary Data     |                   |  |
-|  |  | - Metadata (JSON) |  | - Metadata (JSON) |                   |  |
-|  |  | - Version ID      |  | - Version ID      |                   |  |
-|  |  +-------------------+  +-------------------+                   |  |
-|  +-----------------------------------------------------------------+  |
-+-----------------------------------------------------------------------+
-
-```
-
-### Core Concepts of Object Storage
-
-* **Buckets / Containers:** Top-level flat logical namespaces used to organize objects, apply security access policies, and manage lifecycle rules.
-* **Objects:** Data entities consisting of three primary components:
-1. **Payload:** The raw binary data stream.
-2. **Globally Unique Identifier (Key):** The string key path representing the object (e.g., `documents/2026/report.pdf`).
-3. **Metadata:** Key-value pairs describing system properties (e.g., `Content-Type`, `ETag`, creation timestamp) and custom user-defined attributes.
-
-
-* **RESTful API Access:** Objects are manipulated directly over HTTP/HTTPS using standard operations (`GET`, `PUT`, `POST`, `DELETE`) via standardized protocols like the AWS S3 API.
-* **Storage Tiering & Lifecycle Policies:** Automated transition of objects across access tiers based on age or access patterns (e.g., *Hot/Standard* $\rightarrow$ *Cool/Infrequent Access* $\rightarrow$ *Cold/Archive/Glacier*).
-* **Immutability & WORM:** Support for *Write Once, Read Many* (WORM) constraints via Object Lock policies to meet security compliance requirements.
+This chapter covers intermediate Git mechanisms: **Tags** for milestone management, **Branches** for parallel workflow isolation, and the **Git Stash** workspace buffer for temporary change management.
 
 ---
 
-## Features and Concepts of Relational and NoSQL Databases
+## Tags: Marking Specific Versions
 
-Data persistence in modern software is divided between structured Relational Database Management Systems (RDBMS) and non-relational (NoSQL) database patterns.
+Tags are reference pointers that mark specific historical commits in a repository's execution path. While branches move dynamically with each new commit, tags are static, immutable references, making them ideal for release milestones (e.g., Semantic Versioning `v1.0.0`, production deployments, audit points).
 
 ```
-+-----------------------------------------------------------------------+
-|                         DATABASE ARCHETYPES                           |
-+----------------------------------+------------------------------------+
-|   RELATIONAL DATABASES (RDBMS)    |         NOSQL DATABASES            |
-|   (PostgreSQL, MySQL, MariaDB)   |   (MongoDB, Redis, Cassandra)      |
-+----------------------------------+------------------------------------+
-| - Rigid Schemas (Tables/Rows)    | - Flexible / Dynamic Schemas       |
-| - Complex Joins & SQL Language   | - Key-Value, Document, Column-Family|
-| - ACID Guarantees                | - BASE / Eventual Consistency      |
-| - Vertical Scaling (Primary)     | - Horizontal Scaling (Sharding)    |
-+----------------------------------+------------------------------------+
+         TAG: v1.0.0 (Immutable Reference)
+              |
+              v
+[Commit A] -> [Commit B] -> [Commit C] (main branch pointer)
 
 ```
 
-### Relational Database Management Systems (RDBMS)
+### Types of Tags
 
-Relational databases enforce structured schemas, organization via tables and foreign key relations, and strict transactional consistency.
+* **Lightweight Tags:** Simple pointers referencing a specific commit SHA (essentially a fixed branch pointer).
+* **Annotated Tags:** Stored as full checksummed objects in the Git database. They contain the tagger's name, email, timestamp, tagging message payload, and optional cryptographic GPG signatures. Annotated tags are standard for enterprise software releases.
 
-* **ACID Properties:**
-* **Atomicity:** All operations within a transaction complete successfully, or the entire transaction is rolled back.
-* **Consistency:** Data remains valid according to all defined schema rules and constraints before and after the transaction.
-* **Isolation:** Concurrent transactions execute without cross-contamination.
-* **Durability:** Committed data is permanently saved in non-volatile storage, surviving crashes.
+```bash
+# Create a lightweight tag
+git tag v1.0.0-lw
 
+# Create an annotated release tag with message metadata
+git tag -a v1.0.0 -m "release: baseline v1.0.0 production build"
 
+# Push a specific tag to remote origin
+git push origin v1.0.0
 
-### NoSQL Databases
+# Push all local tags to remote origin
+git push origin --tags
 
-NoSQL databases sacrifice strict ACID constraints or structured schemas to achieve horizontal scalability, high throughput, and flexible data models.
-
-* **Key-Value Stores (e.g., Redis, Memcached):** In-memory datastores optimized for high-speed read/write access indexed by a single primary key. Common for caching and session management.
-* **Document Databases (e.g., MongoDB, Couchbase):** Store semi-structured data as JSON/BSON documents. Ideal for rapidly evolving application schemas.
-* **Wide-Column Stores (e.g., Apache Cassandra, ScyllaDB):** Multi-dimensional sorted maps designed to distribute petabytes of data across clustered nodes with high write performance.
-* **Graph Databases (e.g., Neo4j):** Nodes and edges optimized for querying complex interconnected relationship networks.
-* **BASE Model:** *Basically Available, Soft-state, Eventual consistency*—a reliability model prioritizing availability over immediate consistency across nodes.
+```
 
 ---
 
-## Features and Concepts of Message Brokers and Message Queues
+## Branches: Working in Parallel
 
-In distributed systems and microservices, asynchronous communication breaks direct dependencies between producers and consumers. **Message Brokers** accept, buffer, translate, and route messages across endpoints.
+Branches allow developers to diverge from the main line of execution to work on features, bug fixes, or experimental designs without stability risks to production code.
 
 ```
-                  POINT-TO-POINT QUEUE PATTERN
-+------------+       +-------------------+       +------------+
-|  Producer  | ----> |  Queue (FIFO)     | ----> |  Consumer  |
-+------------+       +-------------------+       +------------+
-
-                PUBLISH-SUBSCRIBE (PUB/SUB) PATTERN
-                     +-------------------+
-                     |  Topic / Exchange |
-                     +---------+---------+
-                               |
-            +------------------+------------------+
-            |                                     |
-            v                                     v
-   +-----------------+                   +-----------------+
-   | Subscription A  |                   | Subscription B  |
-   +--------+--------+                   +--------+--------+
-            |                                     |
-            v                                     v
-   +-----------------+                   +-----------------+
-   |   Consumer 1    |                   |   Consumer 2    |
-   +-----------------+                   +-----------------+
+                  +-- [Feature Branch: feature/login] -- [Commit 1] -- [Commit 2]
+                  |                                                        |
+[Main Branch] -- [Base Commit] --------------------------------------------+-- [Merge Commit]
 
 ```
 
-### Messaging Patterns
+### Core Branching Mechanics
 
-* **Point-to-Point (Queue):** Messages sent by a producer are delivered to exactly one consumer process. Messages remain buffered in the queue until acknowledged (`ACK`).
-* **Publish-Subscribe (Pub/Sub / Topic):** Messages published to a topic are broadcast to all active subscribers registered to that topic channel.
+In Git, a branch is simply a lightweight, 41-byte pointer file located in `.git/refs/heads/` that contains the 40-character SHA-1 hash of its latest commit. Creating a branch adds a new pointer without duplicating file contents or source code.
 
-### Common Industry Technologies
+* **Creating and Switching Branches:**
 
-* **RabbitMQ (AMQP):** Traditional message broker offering advanced routing topologies, message acknowledgments, and dead-letter handling.
-* **Apache Kafka:** Distributed event streaming platform using an append-only log model, supporting high throughput, event replay, and stream processing.
+```bash
+# Create a new feature branch
+git branch feature/user-auth
+
+# Switch active working context to the new branch
+git checkout feature/user-auth
+
+# Create and switch in a single step (modern Git)
+git switch -c feature/user-auth
+
+```
+
+* **Merging Branches:**
+
+```bash
+# Switch to target integration branch
+git checkout main
+
+# Perform standard merge
+git merge feature/user-auth
+
+# Force a explicit merge commit (preserving historical branch topology)
+git merge --no-ff feature/user-auth -m "merge: integrate user-auth feature branch"
+
+```
+
+* **Branch Cleanup:**
+
+```bash
+# Delete a fully merged topic branch
+git branch -d feature/user-auth
+
+# Force-delete an unmerged topic branch
+git branch -D feature/user-auth
+
+```
 
 ---
 
-## Features and Concepts of Big Data Services
+## Temporary Change Management with git stash and git pop
 
-Big Data services provide the computational framework, storage engines, and processing pipelines required to collect, analyze, and transform massive volumes of structured, semi-structured, and unstructured data.
-
-* **The 5 Vs of Big Data:**
-1. **Volume:** Scale of data spanning terabytes to exabytes.
-2. **Velocity:** Speed at which data arrives and must be processed (real-time vs. batch).
-3. **Variety:** Diversity of data sources and structural types (text, binary, logs, sensor data).
-4. **Veracity:** Data quality, accuracy, and trustworthiness.
-5. **Value:** Actionable insights derived from processing raw data.
-
-
-* **Batch Processing vs. Stream Processing:**
-* **Batch Processing (e.g., Hadoop MapReduce, Apache Spark):** Processes large static datasets at scheduled intervals.
-* **Stream Processing (e.g., Apache Flink, Spark Streaming):** Processes real-time event streams continuously with sub-second response times.
-
-
-* **Data Warehouses vs. Data Lakes:**
-* **Data Warehouse (e.g., Snowflake, Amazon Redshift):** Highly structured, schema-on-write storage optimized for SQL analytical reporting (OLAP).
-* **Data Lake (e.g., Apache Iceberg on S3):** Low-cost, schema-on-read storage retaining raw formats for exploratory analytics and data science workloads.
-
-
-
----
-
-## Features and Concepts of Computing Services: IaaS
-
-**Infrastructure as a Service (IaaS)** provides fundamental compute, storage, and networking resources over the internet on a pay-as-you-go basis. Users manage operating systems, middleware, and application stacks, while the cloud provider manages physical hardware, datacenters, and hypervisors.
-
-### Core IaaS Building Blocks
-
-* **Compute Instances:** Virtual Machines (VMs) running on shared or dedicated hypervisors (e.g., KVM, Xen) with configurable vCPU, RAM, and attached storage.
-* **Software-Defined Networking (SDN):** Virtual Private Clouds (VPCs), subnets, route tables, internet gateways, and security groups providing network isolation.
-* **Block and Shared Storage:** Network-attached virtual block disks (e.g., AWS EBS) or shared network filesystems (NFS/POSIX) attached directly to instances.
-
----
-
-## Features and Concepts of Application Runtimes: PaaS
-
-**Platform as a Service (PaaS)** abstracts away operating system management, runtime installations, middleware maintenance, and storage configurations. Developers deploy source code or container images directly into a fully managed application environment.
+When working on a feature, emergency hotfix requests or context switches often arise before local changes are ready for a structured commit. Stash acts as a temporary stack where uncommitted working directory and staging index changes can be safely stored and retrieved later.
 
 ```
-+-----------------------------------------------------------------------+
-|                       SHARED RESPONSIBILITY MODEL                     |
-+-----------------------------------------------------------------------+
-|   Component          |    IaaS         |    PaaS         |   SaaS     |
-+----------------------+-----------------+-----------------+------------+
-| Applications         | Customer        | Customer        | Provider   |
-| Data / Content       | Customer        | Customer        | Provider   |
-| Runtime / Framework  | Customer        | Provider        | Provider   |
-| Operating System     | Customer        | Provider        | Provider   |
-| Virtualization       | Provider        | Provider        | Provider   |
-| Compute / Hardware   | Provider        | Provider        | Provider   |
-| Physical Networking  | Provider        | Provider        | Provider   |
-+-----------------------------------------------------------------------+
++---------------------+     git stash      +-------------------+
+| Working Directory / | -----------------> |   Stash Stack     |
+| Staging Index       | <----------------- | (stash@{0}, etc.) |
++---------------------+     git stash pop  +-------------------+
 
 ```
 
-### Advantages of PaaS
+### Essential Stash Operations
 
-* **Accelerated Development Cycles:** Pre-configured language runtimes (Node.js, Python, Java, Go) allow developers to focus entirely on application code.
-* **Integrated Deployment Pipelines:** Native Git integration automatically builds and releases deployments upon pushing to a repository branch.
-* **Automated Operational Services:** Includes built-in load balancing, TLS certificate provisioning, auto-scaling, and health monitoring.
-* **Examples:** Heroku, Red Hat OpenShift, AWS Elastic Beanstalk, Google App Engine.
+* **Saving Changes to Stash:**
 
----
+```bash
+# Save uncommitted tracked changes to the stash stack
+git stash
 
-## Features and Concepts of Hosted Applications: SaaS
+# Save with a descriptive message identifier
+git stash save "WIP: auth middleware token validation logic"
 
-**Software as a Service (SaaS)** delivers complete, operational software applications to end users over the web. The platform vendor manages the entire stack, including code, database engines, infrastructure, security patching, and capacity planning.
-
-### Characteristics of Enterprise SaaS
-
-* **Multi-Tenant Architecture:** A single software instance serves multiple distinct customer organizations (tenants) while logically isolating data.
-* **Subscription & On-Demand Licensing:** Managed under recurring usage or seat-based billing models.
-* **Web & API Access:** End users interact via web browsers or native mobile interfaces, while enterprise systems integrate through REST/GraphQL APIs.
-* **Examples:** Microsoft 365, Salesforce, Google Workspace, ServiceNow.
-
----
-
-## Features and Concepts of Function Applications: FaaS
-
-**Function as a Service (FaaS)**—often referred to as **Serverless Computing**—executes individual, event-driven functions in response to incoming events without requiring persistent server infrastructure.
-
-```
-+-----------------------------------------------------------------------+
-|                      FUNCTION AS A SERVICE (FaaS)                     |
-+-----------------------------------------------------------------------+
-|                                                                       |
-|  Event Trigger                     FaaS Compute Engine                |
-|  +--------------------+           +-------------------------------+   |
-|  | S3 Object Created  | --------> | Ephemeral Container Instance  |   |
-|  | HTTP API Gateway   |           |                               |   |
-|  | Database Event     |           |  1. Spin up runtime           |   |
-|  +--------------------+           |  2. Execute handler() code    |   |
-|                                   |  3. Return response           |   |
-|                                   |  4. Destroy / Freeze Instance |   |
-|                                   +-------------------------------+   |
-|                                                  |                    |
-|                                                  v                    |
-|                                     Execution Billed in Milliseconds  |
-+-----------------------------------------------------------------------+
+# Include untracked files in the stash
+git stash -u
 
 ```
 
-### Core Mechanisms of FaaS
+* **Inspecting and Applying Stashes:**
 
-* **Event-Driven Execution:** Functions trigger automatically in response to specific system events (e.g., HTTP requests via API Gateways, object uploads to storage buckets, database record updates, scheduled cron timers).
-* **Short-Lived & Ephemeral:** Execution environments run for short durations (typically milliseconds to minutes) and are automatically destroyed after processing events.
-* **Scale-to-Zero Architecture:** When idle, zero compute instances run, incurring zero baseline infrastructure cost. When requests arrive, the framework scales compute instances dynamically.
-* **Cold Starts:** Processing latency introduced when an event triggers the creation of a brand-new container runtime instance from an idle state.
-* **Examples:** AWS Lambda, Google Cloud Functions, OpenFaaS, Knative.
+```bash
+# List all stashed changes currently stored in the repository
+git stash list
 
----
+# Re-apply the latest stashed changes AND remove them from the stash stack
+git stash pop
 
-## Features and Concepts of Content Delivery Networks (CDNs)
+# Re-apply stashed changes while keeping them on the stack
+git stash apply stash@{0}
 
-A **Content Delivery Network (CDN)** is a geographically distributed network of edge servers designed to cache and serve web content (images, scripts, stylesheets, API responses, videos) closer to end users.
-
-```
-                               WITHOUT CDN
-  [ Client (Europe) ] ------------------------------> [ Origin Server (US) ]
-                        High Latency (120ms+)
-
-                                WITH CDN
-  [ Client (Europe) ] ----> [ Edge POP (Europe) ] --> (Cache Miss Only) --> [ Origin Server ]
-                      Low Latency (5ms)
+# Drop a specific stash entry
+git stash drop stash@{0}
 
 ```
-
-### Core Functions of a CDN
-
-* **Edge Caching:** Caches static assets at Points of Presence (POPs) near end-users, lowering response times and reducing origin server load.
-* **Origin Shielding:** Acts as a caching proxy layer, reducing direct traffic load on backend application databases and servers.
-* **DDoS Mitigation & Edge Security:** Intercepts malicious volumetric attacks (e.g., SYN floods, HTTP floods) at the network edge before they reach the core origin infrastructure.
-* **TLS Offloading:** Terminates TLS/SSL connections at the edge server, reducing compute overhead on origin application runtimes.
-* **Examples:** Cloudflare, Fastly, Amazon CloudFront, Akamai.
 
 ---
 
 ## Guided Exercises
 
-### Exercise 4.1: Interacting with S3-Compatible Object Storage via MinIO CLI
+### Exercise 6.1: Implementing Branching Workflows and Release Tagging
 
-**Scenario:** Deploy a local S3-compatible MinIO object storage instance using Docker, create an access-controlled bucket, and upload structured data with custom metadata using the command line.
+**Scenario:** Create a stable release branch workflow, isolate a feature on a topic branch, merge it back using non-fast-forward tracking, and apply an annotated Semantic Versioning tag.
 
 **Step-by-Step Execution:**
 
-1. Deploy a local MinIO object storage container:
+1. Create a workspace directory and initialize a Git repository:
 
 ```bash
-docker run -d --name minio-s3 \
-  -p 9000:9000 -p 9001:9001 \
-  -e "MINIO_ROOT_USER=admin" \
-  -e "MINIO_ROOT_PASSWORD=SuperSecretPassword123" \
-  minio/minio server /data --console-address ":9001"
+mkdir enterprise-branch-lab && cd enterprise-branch-lab
+git init
+git branch -M main
 
 ```
 
-2. Install or execute the MinIO Client tool (`mc`) inside a temporary container context to configure an alias connection:
+2. Generate baseline configuration and commit:
 
 ```bash
-docker exec -it minio-s3 mc alias set localminio http://localhost:9000 admin SuperSecretPassword123
+echo "# Enterprise Application Engine" > README.md
+git add README.md
+git commit -m "chore: initial baseline commit"
 
 ```
 
-3. Create a new storage bucket named `enterprise-backups`:
+3. Create and switch to a new feature branch `feature/payment-gateway`:
 
 ```bash
-docker exec -it minio-s3 mc mb localminio/enterprise-backups
+git checkout -b feature/payment-gateway
 
 ```
 
-4. Create a sample configuration file and upload it to the storage bucket, attaching custom metadata:
+4. Implement feature changes and record commits:
 
 ```bash
-# Create local data payload inside container
-docker exec -it minio-s3 sh -c 'echo "app_config_data=v1.0" > /tmp/config.json'
-
-# Copy object with custom metadata flags
-docker exec -it minio-s3 mc cp /tmp/config.json localminio/enterprise-backups/config.json
+echo "func ProcessPayment() bool { return true }" > payment.go
+git add payment.go
+git commit -m "feat(payment): implement payment processing logic"
 
 ```
 
-5. Inspect the uploaded object properties and metadata tags:
+5. Return to `main` branch and perform a non-fast-forward merge (`--no-ff`) to preserve branch history:
 
 ```bash
-docker exec -it minio-s3 mc stat localminio/enterprise-backups/config.json
+git checkout main
+git merge --no-ff feature/payment-gateway -m "merge: integrate payment gateway feature"
 
 ```
 
-6. Clean up the container runtime:
+6. Apply an annotated release tag to the merge commit:
 
 ```bash
-docker stop minio-s3 && docker rm minio-s3
+git tag -a v1.1.0 -m "release: v1.1.0 adding payment processing support"
+
+```
+
+7. Inspect the commit graph and verify tag alignment:
+
+```bash
+git log --oneline --graph --decorate --all
 
 ```
 
 ---
 
-### Exercise 4.2: Implementing an Ephemeral Event-Driven FaaS Handler
+### Exercise 6.2: Managing Interruptions with Git Stash
 
-**Scenario:** Write and execute an event-driven Function application in Python simulating an AWS Lambda / Knative serverless image thumbnail processing handler.
+**Scenario:** Simulate an urgent production bug intervention mid-feature development by stashing active uncommitted changes, switching contexts to execute a hotfix, and returning to restore the working state.
 
 **Step-by-Step Execution:**
 
-1. Create a workspace directory:
+1. Modify `payment.go` on your active working directory without committing:
 
 ```bash
-mkdir serverless-function && cd serverless-function
+echo "// WIP: adding fraud detection check" >> payment.go
+git status
 
 ```
 
-2. Create an event handler implementation `handler.py`:
+2. An urgent hotfix request arrives. Stash active uncommitted changes with a message:
 
-```python
-import json
-import time
-
-def lambda_handler(event, context):
-    """
-    Simulates a FaaS entrypoint triggered by an Object Storage upload event.
-    """
-    print("[INFO] FaaS Instance warm-up initialized.")
-    
-    # Process incoming event record
-    try:
-        records = event.get("Records", [])
-        for record in records:
-            bucket_name = record["s3"]["bucket"]["name"]
-            object_key = record["s3"]["object"]["key"]
-            file_size = record["s3"]["object"]["size"]
-            
-            print(f"[EVENT] Processing Object Upload:")
-            print(f"        Bucket: {bucket_name}")
-            print(f"        Object: {object_key}")
-            print(f"        Size  : {file_size} Bytes")
-            
-            # Simulate transformation work (e.g., processing an image thumbnail)
-            time.sleep(0.5)
-            
-        return {
-            "statusCode": 200,
-            "body": json.dumps({"message": "Processing complete", "processed_files": len(records)})
-        }
-    except KeyError as e:
-        print(f"[ERROR] Malformed event structure missing key: {e}")
-        return {"statusCode": 400, "body": json.dumps({"error": "Invalid payload format"})}
-
-# Local testing simulation driver
-if __name__ == "__main__":
-    # Mock Object Creation Event Payload
-    mock_s3_event = {
-        "Records": [
-            {
-                "s3": {
-                    "bucket": {"name": "enterprise-media-assets"},
-                    "object": {"key": "uploads/user-avatar.png", "size": 1048576}
-                }
-            }
-        ]
-    }
-    
-    print("--- Simulating Serverless Execution ---")
-    response = lambda_handler(mock_s3_event, None)
-    print(f"Execution Output: {json.dumps(response, indent=2)}")
+```bash
+git stash save "WIP: fraud check development"
+git status
 
 ```
 
-3. Run the FaaS handler simulation:
+*Observation:* Working directory is clean.
+
+3. Create a hotfix branch from `main` to address the critical incident:
 
 ```bash
-python3 handler.py
+git checkout -b hotfix/null-pointer
+echo "// Critical fix applied" >> payment.go
+git add payment.go
+git commit -m "fix: resolve critical null pointer exception"
+
+```
+
+4. Merge the hotfix back into `main`:
+
+```bash
+git checkout main
+git merge --no-ff hotfix/null-pointer -m "merge: resolve null pointer critical bug"
+git branch -d hotfix/null-pointer
+
+```
+
+5. Restore active feature work from the stash stack:
+
+```bash
+git stash pop
+
+```
+
+6. Verify that local uncommitted changes are restored to `payment.go`:
+
+```bash
+git status
+cat payment.go
 
 ```
 
@@ -433,70 +287,57 @@ python3 handler.py
 
 ## Explorational Exercises
 
-### Exercise 1: Architecting a Cloud-Native Data Platform
+### Exercise 1: Fast-Forward vs. Non-Fast-Forward Merging Analysis
 
-Design a cloud-native architecture for a high-traffic IoT analytics platform receiving 50,000 telemetry metrics per second.
+Create two separate local testing repositories (`repo-ff` and `repo-noff`).
 
-1. Select appropriate cloud component abstractions (IaaS, PaaS, FaaS, Object Storage, NoSQL, Message Brokers).
-2. Trace the data flow from IoT Edge devices to real-time alerting dashboards and long-term analytical storage.
-3. Justify your architectural choices for handling data velocity, storage cost optimization, and query performance.
+1. In `repo-ff`, create a branch, commit new code, switch back to `main`, and execute `git merge <branch>`.
+2. In `repo-noff`, perform the same actions but execute `git merge --no-ff <branch>`.
+3. Compare `git log --graph --oneline` output across both repositories. Explain why enterprise DevOps teams often enforce non-fast-forward merges on main integration branches.
 
-### Exercise 2: Evaluating Cloud Service Tier Trade-offs (IaaS vs. PaaS vs. FaaS)
+### Exercise 2: Resolving Stash Conflicts
 
-Evaluate the operational and business trade-offs of deploying a web service across three delivery models:
-
-* **Option A:** Virtual Machine instances deployed on IaaS (e.g., EC2/Compute Engine) managed manually with Ansible.
-* **Option B:** Containerized application deployed on PaaS (e.g., OpenShift/App Engine).
-* **Option C:** Ephemeral event-driven functions running on FaaS (e.g., AWS Lambda/Google Cloud Functions) backed by API Gateway.
-
-Compare these options across **Day-1 Deployment Overhead**, **Day-2 Operational Maintenance** (security patching, OS upgrades), **Cost at Zero Traffic**, and **Cost at Sustained High Traffic**.
+1. Create a tracking file `config.json` committed to `main`.
+2. Modify `config.json` locally, then stash the modification (`git stash`).
+3. On `main`, edit and commit a conflicting change to the same line in `config.json`.
+4. Run `git stash pop` and observe the merge conflict result.
+5. Document the step-by-step resolution path required to reconcile the stash conflict and finalize working directory state.
 
 ---
 
 ## Summary
 
-* Modern cloud platforms offer standard abstractions that allow developers to focus on application logic rather than low-level infrastructure management.
-* **Object Storage** provides flat, scalable, HTTP-accessible storage for unstructured data payloads.
-* **Databases** split into structured **RDBMS** (prioritizing ACID consistency) and **NoSQL** patterns (prioritizing horizontal scalability, flexible data schemas, and speed).
-* **Message Brokers** enable asynchronous integration using point-to-point queues or publish-subscribe topic channels.
-* Cloud service models divide operational responsibilities across distinct tiers: **IaaS** (infrastructure control), **PaaS** (managed runtime focus), **SaaS** (fully hosted apps), and **FaaS** (event-driven, scale-to-zero serverless functions).
-* **Content Delivery Networks (CDNs)** cache assets at network edge POPs, improving response times, offloading origin servers, and mitigating security threats.
+* **Tags** mark fixed release milestones in a repository history. Annotated tags store tagger identity, timestamp, and message metadata, making them ideal for version releases.
+* **Branches** isolate feature development, bug fixes, and operational releases without affecting code on standard integration paths.
+* **Fast-Forward Merges** advance branch pointers linearly without creating new commits. **Non-Fast-Forward (`--no-ff`) Merges** create explicit merge commits, preserving explicit visual record of topic branch development.
+* **Git Stash** provides a temporary buffer to hold uncommitted working directory and index modifications, enabling rapid context switching during critical maintenance tasks.
 
 ---
 
 ## Answers to Guided Exercises
 
-### Answer to Exercise 4.1
+### Answer to Exercise 6.1
 
-The MinIO execution commands demonstrate fundamental object storage operations:
+Executing `git merge --no-ff feature/payment-gateway` creates an explicit merge commit that keeps the historical scope of the feature branch intact inside the commit log graph. Tagging the resulting commit (`v1.1.0`) attaches an immutable version reference to that state.
 
-* Running MinIO via Docker launches an S3-compatible service exposing HTTP management interfaces.
-* Data is stored within isolated logical namespaces called buckets (`localminio/enterprise-backups`).
-* Access permissions, custom metadata tags, and binary object content are managed directly over standard network protocols using `mc` tool operations.
+### Answer to Exercise 6.2
 
-### Answer to Exercise 4.2
-
-The Python script illustrates key FaaS execution concepts:
-
-* Functions decouple logic from persistent compute servers, remaining idle until triggered by explicit event structures (such as S3 object creation notifications).
-* The function extracts parameter attributes directly from incoming event payloads and terminates cleanly upon returning execution status.
+* Running `git stash save` moves uncommitted working directory modifications off into `.git/refs/stash`, restoring working tree files back to a clean baseline state matching `HEAD`.
+* After completing the emergency hotfix merge on `main`, running `git stash pop` re-applies the uncommitted changes back to the working directory and removes the corresponding entry from the stash stack.
 
 ---
 
 ## Answers to Explorational Exercises
 
-### Sample Answer to Exercise 1: IoT Data Platform Architecture
+### Sample Answer to Exercise 1: Fast-Forward vs. Non-Fast-Forward Comparison
 
-1. **Ingestion Layer:** Devices transmit metrics via MQTT/HTTP into a managed Message Broker (e.g., Apache Kafka or AWS Kinesis) to absorb network traffic spikes.
-2. **Real-time Processing:** Stream processing engines (e.g., Apache Flink or serverless FaaS functions) consume message topics, evaluate metric thresholds, and trigger real-time alerts.
-3. **Storage Tiering:**
-* **Hot Storage:** Write metrics to a wide-column NoSQL database (e.g., Cassandra or Timestream) for low-latency operational dashboard queries over recent data (0–30 days).
-* **Cold Storage:** Compress and output raw telemetry data in Parquet format into low-cost **Object Storage** for historical analytics and machine learning workloads.
+* **Fast-Forward Merge:** Simply advances the target branch pointer directly to the commit of the feature branch. No separate merge commit is generated, resulting in a completely flat, linear revision graph.
+* **Non-Fast-Forward (`--no-ff`) Merge:** Always generates a distinct merge commit with two parent commit hashes, preserving the visual branch arc in graph logs. Enterprise teams favor `--no-ff` on main integration branches because it allows entire feature commits to be identified, audited, or reverted as a single atomic unit.
 
+### Sample Answer to Exercise 2: Resolving Stash Conflicts
 
-
-### Sample Answer to Exercise 2: Cloud Service Tier Evaluation
-
-* **Cost at Zero Traffic:** FaaS costs $0.00 due to scale-to-zero architecture. IaaS incurs constant virtual machine running costs regardless of load. PaaS costs vary depending on whether the platform supports scaling instance counts to zero when idle.
-* **Cost at Sustained High Traffic:** At steady, predictable high-volume traffic, IaaS or PaaS container instances are generally more cost-effective per request than FaaS execution costs.
-* **Operational Maintenance Overhead:** IaaS requires manual or automated OS security patching, kernel updates, and backup management. PaaS and FaaS abstract away OS-level maintenance, transferring platform maintenance responsibilities to the cloud provider.
+1. Running `git stash pop` during an overlapping conflict outputs: `CONFLICT (content): Merge conflict in config.json`.
+2. Git marks the conflict markers (`<<<<<<< Updated upstream`, `=======`, `>>>>>>> Stashed changes`) inside `config.json`.
+3. The stash entry is intentionally retained on the stack until conflict resolution completes.
+4. Open `config.json`, edit the file to resolve conflicting lines, save changes, and stage: `git add config.json`.
+5. Remove the resolved conflict entry manually from the stash stack: `git stash drop`.
