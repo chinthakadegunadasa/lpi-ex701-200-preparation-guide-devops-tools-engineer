@@ -9,7 +9,6 @@
 * Benefits of Agile in Modern Software Development
 * What is DevOps?
 * Agile and DevOps
-
 * Guided Exercises
 * Explorational Exercises
 * Summary
@@ -55,7 +54,7 @@ graph LR
 
 While Agile defines the philosophy, specific frameworks implement its concepts into concrete day-to-day operations.
 
-(~~~~~~~~~~~~~~~~
+```mermaid
 <+-----------------------------------------------------------------------+
 |                         AGILE PHILOSOPHY                              |
 +-----------------------------------+-----------------------------------+
@@ -70,7 +69,7 @@ While Agile defines the philosophy, specific frameworks implement its concepts i
 | Rigid Roles       |                               | WIP Limits        |
 | Prescribed Events |                               | Flexible Backlog  |
 +-------------------+                               +-------------------+ >
-... ~~~~~~~~~~~~~~~~)
+```
 
 ### Scrum
 
