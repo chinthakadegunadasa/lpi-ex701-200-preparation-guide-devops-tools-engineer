@@ -55,7 +55,7 @@ graph LR
 While Agile defines the philosophy, specific frameworks implement its concepts into concrete day-to-day operations.
 
 ```mermaid
-<+-----------------------------------------------------------------------+
+<+----------------------------------------------------------------------+
 |                         AGILE PHILOSOPHY                              |
 +-----------------------------------+-----------------------------------+
                                     |
@@ -68,7 +68,8 @@ While Agile defines the philosophy, specific frameworks implement its concepts i
 | Time-boxed Sprints|                               | Continuous Flow   |
 | Rigid Roles       |                               | WIP Limits        |
 | Prescribed Events |                               | Flexible Backlog  |
-+-------------------+                               +-------------------+ >
++-------------------+                               +-------------------+ 
+
 ```
 
 ### Scrum
