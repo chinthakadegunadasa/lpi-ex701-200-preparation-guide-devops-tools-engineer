@@ -1,19 +1,3 @@
-# Lesson 1: Modern Software Development (Introduction & Agile/DevOps)
-
-## Table of Contents
-- Introduction
-- What is Agile?
-- Agile Methodologies
-- Agile in Practice: Lifecycle and Artifacts
-- Benefits of Agile in Modern Software Development
-- What is DevOps?
-- Agile and DevOps
-- Guided Exercises
-- Explorational Exercises
-- Summary
-- Answers to Guided Exercises
-- Answers to Explorational Exercises
-
 # Chapter 1: Modern Software Development (Introduction & Agile/DevOps)
 
 ## Table of Contents
@@ -30,7 +14,6 @@
 * Summary
 * Answers to Guided Exercises
 * Answers to Explorational Exercises
-
 ---
 
 ## Introduction
