@@ -9,6 +9,7 @@
 * Benefits of Agile in Modern Software Development
 * What is DevOps?
 * Agile and DevOps
+
 * Guided Exercises
 * Explorational Exercises
 * Summary
@@ -39,6 +40,8 @@ Agile is an iterative, incremental software development philosophy codified in t
 3. **Customer collaboration** over contract negotiation.
 4. **Responding to change** over following a plan.
 
+graph LR
+    Input[Input] --> Process[Process]
 ### Key Agile Principles
 
 * **Iterative Progress:** Software is developed in rapid, repeating iterations (typically 1 to 4 weeks).
