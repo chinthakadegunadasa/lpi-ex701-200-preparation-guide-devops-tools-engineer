@@ -17,53 +17,13 @@ Designing resilient systems requires selecting the right architectural paradigm 
 
 ![Architectural Comparison Matrix](img/lpi-ex701-200-Architectural-Comparison-Matrix.jpeg)
 
-| Architectural Dimension | Monolithic Architecture | Microservices Architecture | Serverless / Event-Driven (FaaS) |
-| :--- | :--- | :--- | :--- |
-| **Deployment Unit** | Single unified artifact (`.war`, single binary). | Distributed containerized binaries per domain bounded context. | Individual function invocations triggered by event streams. |
-| **State Management** | Centralized relational database state with local ACID transactions. | Decentralized database per service. Eventual consistency across domains. | Stateless execution nodes with externalized persistent state stores. |
-| **Scaling Dynamics** | Vertical host scaling or full-stack horizontal replication. | Granular horizontal auto-scaling targeted to specific high-load services. | Automatic instant scaling driven per-request by cloud event providers. |
-| **Operational Overhead** | Low initial complexity. High release-coordination friction. | High complexity requiring CI/CD pipelines, service meshes, and distributed tracing. | Offloaded control plane infrastructure. High reliance on provider ecosystem. |
-| **Failure Isolation** | Low. A memory leak in one module can crash the entire application process. | High. Process failures are isolated to individual services. | Extreme. Single execution failures are isolated to specific event invocations. |
-
 ---
 
 ## 1.2 API-First Architectures: REST, gRPC, and Asynchronous Interfaces
 
 Inter-service communication is the primary performance bottleneck in microservice systems. Modern architectures balance synchronous interfaces for external consumers with high-performance synchronous or asynchronous protocols for internal communication.
 
-
-```
-
-```
-              EXTERNAL CLIENTS
-                     |
-                     | HTTPS / REST (JSON)
-                     v
-          +--------------------+
-          |   API Gateway      |
-          +---------+----------+
-                    |
-        +-----------+-----------+
-        | HTTP/2 gRPC (Protobuf)| Internal Synchronous Inter-Service
-        v                       v
-+---------------+       +---------------+
-| Order Service |       | Inventory Svc |
-+-------+-------+       +---------------+
-        |
-        | AMQP Events
-        v
-+---------------+
-| Message Broker|
-+-------+-------+
-        |
-        v
-+---------------+
-| Billing Svc   |
-+---------------+
-
-```
-
-```
+![EXTERNAL CLIENTS](img/lpi-ex-701-200-external-clients.jpeg)
 
 ### Synchronous Protocols: REST vs. gRPC
 
