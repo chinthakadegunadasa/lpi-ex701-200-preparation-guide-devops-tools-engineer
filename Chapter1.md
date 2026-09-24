@@ -134,9 +134,6 @@ sudo systemctl status redis-server --no-pager
 sudo systemctl status rabbitmq-server --no-pager
 
 ```
-
----
-
 ### Step 1: Initialize Project Structure & Protobuf Code Generation
 
 Create the workspace directory structure for your microservices layout:
@@ -198,9 +195,6 @@ mv proto/*.go proto/orderpb/ 2>/dev/null || true
 ls -la proto/orderpb/
 
 ```
-
----
-
 ### Step 2: Implement the Order Ingestion Engine (gRPC, Redis, RabbitMQ Publisher)
 
 Create the Order Service (`order-service/main.go`). This service receives incoming orders over gRPC, writes the preliminary order state into **Redis**, and publishes an `order.created` event to **RabbitMQ**.
@@ -333,9 +327,6 @@ func main() {
 EOF
 
 ```
-
----
-
 ### Step 3: Implement the Asynchronous Payment Worker (RabbitMQ Consumer)
 
 Create the Payment Worker (`payment-service/main.go`). This background service consumes `order.created` messages from RabbitMQ, simulates payment processing, and updates the cached order state in **Redis**.
@@ -509,8 +500,6 @@ EOF
 
 ```
 
----
-
 ### Step 5: Build, Run, and Verify the Event-Driven Pipeline
 
 #### 1. Compile All Go Modules
@@ -596,15 +585,6 @@ redis-cli GET "order:ORD-89421"
 
 ![Verification & Troubleshooting Guide](img/lpi-701-200-ch1-Verification-Troubleshooting-Guide.jpeg)
 
-| Issue | Root Cause | Remediation Procedure |
-| --- | --- | --- |
-| `connection refused` on port `50051` | Order Ingestion Service is not running or failed to bind to TCP socket. | Ensure `order-service` is executing. Check for port conflicts using `ss -tulpn | grep 50051`. |
-| `AMQP Dial Error` | RabbitMQ daemon is stopped or credentials are missing. | Verify service status: `sudo systemctl status rabbitmq-server`. Test connectivity: `nc -zv localhost 5672`. |
-| Redis status key returns `nil` | Order key has expired or connection string failed. | Verify Redis is running: `redis-cli ping` (should return `PONG`). Check key TTL settings in code. |
-| `protoc-gen-go: program not found` | Protobuf Go compiler plugins are missing from `$PATH`. | Ensure Go binary path is exported: `export PATH=$PATH:$(go env GOPATH)/bin`. |
-
----
-
 ## Chapter Review Questions
 
 1. Which factor best justifies adopting gRPC over REST/JSON for internal inter-service communication?
@@ -626,9 +606,6 @@ redis-cli GET "order:ORD-89421"
 * B) HALF-OPEN
 * C) ISOLATED
 * D) TERMINATED
-
-
-
 ---
 
 ### Answers & Explanations
@@ -636,7 +613,3 @@ redis-cli GET "order:ORD-89421"
 1. **Correct Answer: C.** gRPC uses Protocol Buffers (a compact binary format) running over HTTP/2, reducing network bandwidth usage and serialization overhead compared to REST over JSON.
 2. **Correct Answer: B.** RabbitMQ acts as a traditional broker that deletes messages after consumer acknowledgement. Kafka operates as a immutable distributed append-only log, allowing consumers to track and replay offsets independently.
 3. **Correct Answer: B.** Once a Circuit Breaker's sleep timer expires in the **OPEN** state, it transitions to **HALF-OPEN** to allow a limited number of probe requests to check if the downstream service has recovered.
-
-```
-
-```
