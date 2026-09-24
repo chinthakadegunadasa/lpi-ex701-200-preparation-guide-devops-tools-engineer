@@ -11,25 +11,7 @@ This chapter covers the structural design patterns required to build, decouple, 
 ## 1.1 Architectural Paradigms: Monolithic, Microservices, and Serverless
 
 Designing resilient systems requires selecting the right architectural paradigm based on team size, operational capabilities, domain complexity, and latency tolerances.
-
-
-```
-
-Monolithic Architecture                Microservices Architecture
-+---------------------------------+    +--------------+    +--------------+
-|  User Interface Layer           |    | User Service |    | Order Service|
-|  -----------------------------  |    | (Go / REST)  |    | (Java / gRPC)|
-|  Business Logic Layer           |    +------+-------+    +------+-------+
-|  -----------------------------  |           |                   |
-|  Data Access Layer              |           v                   v
-+---------------------------------+    +--------------+    +--------------+
-|                      |  User DB     |    |  Order DB    |
-v                      | (PostgreSQL) |    | (PostgreSQL) |
-+---------------------------------+    +--------------+    +--------------+
-| Single Shared Relational DB     |
-+---------------------------------+
-
-```
+![Monolithic, Microservices, and Serverless](img/lpi-ex701-200-ch1-monolithic-vs-microservices.jpeg)
 
 ### Architectural Comparison Matrix
 
