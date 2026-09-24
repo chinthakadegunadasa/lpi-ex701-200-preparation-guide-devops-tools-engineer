@@ -1,4 +1,3 @@
-```markdown:Chapter1.md
 # Chapter 1: Cloud-Native Architecture Patterns
 
 ## Introduction & Enterprise Context
