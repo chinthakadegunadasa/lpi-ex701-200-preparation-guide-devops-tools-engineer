@@ -106,34 +106,7 @@ In distributed architectures, transient network partitions and service outages a
 ## 1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices
 
 In this lab, you will decouple a synchronous monolithic checkout process into an event-driven architecture using **gRPC**, **RabbitMQ**, and **Redis** on your local Linux environment.
-
-```
-                                  +-----------------------+
-                                  |   gRPC Order Client   |
-                                  +-----------+-----------+
-                                              |
-                                              | gRPC / HTTP2
-                                              v
-                                  +-----------------------+
-                                  | Order Ingestion Engine|
-                                  | (gRPC Server)         |
-                                  +-----+-----------+-----+
-                                        |           |
-               Check Cache / Write State|           | Publish 'order.created'
-                                        v           v
-                                  +----------+ +------------+
-                                  | Redis    | | RabbitMQ   |
-                                  | Cache    | | Exchange   |
-                                  +----------+ +-----+------+
-                                                     |
-                                                     | AMQP Delivery
-                                                     v
-                                          +---------------------+
-                                          | Payment Processor   |
-                                          | Worker Service      |
-                                          +---------------------+
-
-```
+![gRPC Order Client](img/lpi-ex701-200-ch1-gRPC-Order-Client.jpeg)
 
 ### Lab Prerequisites & Environment Baseline
 
