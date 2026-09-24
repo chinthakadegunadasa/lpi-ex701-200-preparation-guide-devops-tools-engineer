@@ -6,8 +6,6 @@ Modern enterprise software systems have evolved from monolithic deployments into
 
 This chapter covers the structural design patterns required to build, decouple, and operate enterprise-scale cloud-native systems. You will learn how to transition monolithic applications to event-driven microservices, configure high-throughput messaging interfaces, implement distributed caching, and enforce enterprise fault-tolerance patterns.
 
----
-
 ## 1.1 Architectural Paradigms: Monolithic, Microservices, and Serverless
 
 Designing resilient systems requires selecting the right architectural paradigm based on team size, operational capabilities, domain complexity, and latency tolerances.
@@ -16,8 +14,6 @@ Designing resilient systems requires selecting the right architectural paradigm 
 ### Architectural Comparison Matrix
 
 ![Architectural Comparison Matrix](img/lpi-ex701-200-Architectural-Comparison-Matrix.jpeg)
-
----
 
 ## 1.2 API-First Architectures: REST, gRPC, and Asynchronous Interfaces
 
