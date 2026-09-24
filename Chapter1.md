@@ -71,8 +71,6 @@ message GetOrderStatusResponse {
 
 ```
 
----
-
 ## 1.3 Event-Driven Architecture & Message Queuing
 
 Event-Driven Architecture (EDA) decouples service communication using an intermediate broker. Rather than calling downstream dependency endpoints synchronously, services emit facts called **events**. Downstream consumers subscribe to and process these events asynchronously.
@@ -81,8 +79,6 @@ Event-Driven Architecture (EDA) decouples service communication using an interme
 
 * **AMQP / Queue Pattern (e.g., RabbitMQ):** Smart broker, dumb consumer model. Tracks message delivery states, supports complex routing keys, and removes messages once acknowledged. Ideal for task distribution and transactional workflow management.
 * **Event Streaming / Log Pattern (e.g., Apache Kafka):** Dumb broker, smart consumer model. Maintains an append-only distributed log. Consumers track their own offsets and can replay historical event streams. Ideal for event sourcing, telemetry, and high-throughput real-time data pipelines.
-
----
 
 ## 1.4 Enterprise Scalability, Fault Tolerance, and Resilience
 
@@ -96,8 +92,6 @@ In distributed architectures, transient network partitions and service outages a
 2. **Retry with Exponential Backoff and Jitter:** Automatically retries transient failures while introducing randomized delay backoffs to prevent "thundering herd" conditions on recovering services.
 3. **Bulkhead Isolation Pattern:** Segregates thread pools or connection limits per integration point so that a failure in one slow downstream system does not exhaust all application threads.
 4. **Graceful Degradation & Fallbacks:** Provides static or cached alternative responses when dependent services are unreachable.
-
----
 
 ## 1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices
 
@@ -575,8 +569,6 @@ redis-cli GET "order:ORD-89421"
 
 ```
 
----
-
 ## Verification & Troubleshooting Guide
 
 ![Verification & Troubleshooting Guide](img/lpi-701-200-ch1-Verification-Troubleshooting-Guide.jpeg)
@@ -602,7 +594,6 @@ redis-cli GET "order:ORD-89421"
 * B) HALF-OPEN
 * C) ISOLATED
 * D) TERMINATED
----
 
 ### Answers & Explanations
 
