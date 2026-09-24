@@ -314,8 +314,8 @@ func main() {
 	}
 }
 EOF
-
 ```
+
 ### Step 3: Implement the Asynchronous Payment Worker (RabbitMQ Consumer)
 
 Create the Payment Worker (`payment-service/main.go`). This background service consumes `order.created` messages from RabbitMQ, simulates payment processing, and updates the cached order state in **Redis**.
