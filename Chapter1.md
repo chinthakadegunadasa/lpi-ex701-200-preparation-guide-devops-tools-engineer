@@ -15,6 +15,8 @@ Designing resilient systems requires selecting the right architectural paradigm 
 
 ### Architectural Comparison Matrix
 
+![Architectural Comparison Matrix](img/lpi-ex701-200-Architectural-Comparison-Matrix.jpeg)
+
 | Architectural Dimension | Monolithic Architecture | Microservices Architecture | Serverless / Event-Driven (FaaS) |
 | :--- | :--- | :--- | :--- |
 | **Deployment Unit** | Single unified artifact (`.war`, single binary). | Distributed containerized binaries per domain bounded context. | Individual function invocations triggered by event streams. |
