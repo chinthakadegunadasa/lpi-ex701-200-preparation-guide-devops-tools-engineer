@@ -169,7 +169,6 @@ message OrderResponse {
   string message = 3;
 }
 EOF
-
 ```
 
 Compile the Protobuf definition into Go source code bindings:
@@ -438,8 +437,6 @@ EOF
 
 ```
 
----
-
 ### Step 4: Implement a Test Client to Trigger the System
 
 Create a gRPC test client (`client.go`) to send synthetic order events into the system:
@@ -587,7 +584,6 @@ redis-cli GET "order:ORD-89421"
 * B) RabbitMQ tracks message delivery per consumer; Kafka uses an append-only log where consumers manage their own offset pointers.
 * C) Kafka requires gRPC interfaces; RabbitMQ only works over HTTP/1.1.
 * D) RabbitMQ operates strictly as a serverless engine.
-
 
 3. When configuring a Circuit Breaker, what state immediately follows the **OPEN** state after its timeout window expires?
 * A) CLOSED
