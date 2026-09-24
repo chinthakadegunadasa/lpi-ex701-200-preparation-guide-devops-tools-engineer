@@ -92,7 +92,7 @@ Event-Driven Architecture (EDA) decouples service communication using an interme
 
 In distributed architectures, transient network partitions and service outages are expected events. Systems must be engineered to contain failures gracefully without cascading across the entire environment.
 
-![Normal Operation](img/lpi-ex701-200-Architectural-Comparison-Matrix.jpeg)
+![Normal Operation](img/lpi-ex701-200-ch1-nomal-operation.jpeg)
 
 ## Core Enterprise Resilience Patterns
 
