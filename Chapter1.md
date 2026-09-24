@@ -45,7 +45,7 @@ Agile is an iterative, incremental software development philosophy codified in t
 * **Continuous Delivery:** Functional, tested software increments are produced at the end of every sprint.
 * **Empowered Cross-Functional Teams:** Teams include product owners, developers, QA engineers, and system architects who collaborate daily.
 * **Reflective Improvement:** Teams continuously evaluate operational performance and adjust workflows during retrospectives.
-l
+
 ---
 
 ## Agile Methodologies
@@ -85,8 +85,6 @@ Scrum is a structured, time-boxed framework designed to deliver working software
 * **Daily Standup:** A 15-minute operational alignment meeting answering three core questions: What was completed yesterday? What is planned for today? What blockers exist?
 * **Sprint Review:** Demonstrates working software increments to stakeholders.
 * **Sprint Retrospective:** Evaluates team velocity, internal bottlenecks, and process enhancements.
-
-
 
 ### Kanban
 
