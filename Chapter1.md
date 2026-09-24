@@ -92,31 +92,9 @@ Event-Driven Architecture (EDA) decouples service communication using an interme
 
 In distributed architectures, transient network partitions and service outages are expected events. Systems must be engineered to contain failures gracefully without cascading across the entire environment.
 
-```
-               [ Normal Operation ]
-                        |
-                        | Service Delay / Error Threshold Exceeded
-                        v
-                 +--------------+
-                 | Circuit OPEN |  ---> Requests fail fast immediately.
-                 +------+-------+       Fallback response executed.
-                        |
-                        | Sleep Window Timer Expires
-                        v
-                 +--------------+
-                 | HALF-OPEN    |  ---> Trial requests sent.
-                 +------+-------+
-                        |
-            +-----------+-----------+
-            | Success               | Failure
-            v                       v
-     +--------------+        +--------------+
-     | CLOSED (OK)  |        | Circuit OPEN |
-     +--------------+        +--------------+
+![Normal Operation](img/lpi-ex701-200-Architectural-Comparison-Matrix.jpeg)
 
-```
-
-### Core Enterprise Resilience Patterns
+## Core Enterprise Resilience Patterns
 
 1. **Circuit Breaker Pattern:** Monitors outgoing call failure rates. When errors pass a configured threshold, the breaker trips to **OPEN**, failing subsequent calls instantly without exhausting downstream resources.
 2. **Retry with Exponential Backoff and Jitter:** Automatically retries transient failures while introducing randomized delay backoffs to prevent "thundering herd" conditions on recovering services.
