@@ -594,6 +594,8 @@ redis-cli GET "order:ORD-89421"
 
 ## Verification & Troubleshooting Guide
 
+![Verification & Troubleshooting Guide](img/lpi-701-200-ch1-Verification-Troubleshooting-Guide.jpeg)
+
 | Issue | Root Cause | Remediation Procedure |
 | --- | --- | --- |
 | `connection refused` on port `50051` | Order Ingestion Service is not running or failed to bind to TCP socket. | Ensure `order-service` is executing. Check for port conflicts using `ss -tulpn | grep 50051`. |
