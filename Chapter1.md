@@ -45,7 +45,7 @@ Agile is an iterative, incremental software development philosophy codified in t
 * **Continuous Delivery:** Functional, tested software increments are produced at the end of every sprint.
 * **Empowered Cross-Functional Teams:** Teams include product owners, developers, QA engineers, and system architects who collaborate daily.
 * **Reflective Improvement:** Teams continuously evaluate operational performance and adjust workflows during retrospectives.
-
+l
 ---
 
 ## Agile Methodologies
@@ -53,7 +53,7 @@ Agile is an iterative, incremental software development philosophy codified in t
 While Agile defines the philosophy, specific frameworks implement its concepts into concrete day-to-day operations.
 
 
-<+----------------------------------------------------------------------+
++----------------------------------------------------------------------+
 |                         AGILE PHILOSOPHY                              |
 +-----------------------------------+-----------------------------------+
                                     |
@@ -68,7 +68,7 @@ While Agile defines the philosophy, specific frameworks implement its concepts i
 | Prescribed Events |                               | Flexible Backlog  |
 +-------------------+                               +-------------------+ 
 
-\
+
 
 ### Scrum
 
@@ -76,7 +76,7 @@ Scrum is a structured, time-boxed framework designed to deliver working software
 
 * **Core Roles:**
 * **Product Owner (PO):** Defines business requirements, manages the product backlog, and prioritizes feature development.
-* **Scrum Master:** Facilitates process compliance, removes operational blockers, and protects team capacity.
+* **Scrum Master:** Facilitates process compliance, removes operational blockes, and protects team capacity.
 * **Development Team:** Self-organizing group responsible for technical design, implementation, and quality assurance.
 
 
