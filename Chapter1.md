@@ -95,8 +95,6 @@ Kanban is a lean workflow management method focused on continuous delivery witho
 * **Limit Work in Progress (WIP):** Impose strict capacity limits per state to prevent bottlenecks and context-switching overhead.
 * **Manage Flow:** Measure and optimize the time it takes for an item to transition from creation to completion.
 
-
-
 ### Extreme Programming (XP)
 
 Extreme Programming (XP) focuses on technical engineering practices aimed at producing higher quality software and improving team responsiveness to changing customer requirements.
@@ -105,9 +103,7 @@ Extreme Programming (XP) focuses on technical engineering practices aimed at pro
 * **Pair Programming:** Two developers write code together on a single workstation (one driver, one navigator).
 * **Test-Driven Development (TDD):** Automated unit tests are written before functional application code.
 * **Continuous Integration (CI):** Code integrations are merged and automatically verified multiple times per day.
-
-
-
+  
 ---
 
 ## Agile in Practice: Lifecycle and Artifacts
@@ -164,9 +160,8 @@ Modern enterprise environments adopt Agile to maintain strategic adaptability:
 
 While Agile solves communication and alignment problems between business managers and software developers, it often leaves a gap at the operational release boundary. Developers push fast updates, while operations teams prioritize production environment stability.
 
-**DevOps** bridges this operational divide. It is a compound of **Development** and **Operations**, representing a cultural movement, set of practices, and engineering philosophy that unifies software creation, testing, deployment, and infrastructure management.
+**DevOps** bridges this operational divide. It is a compound of **Development** and **Operations**, representing a cultural movement, set of practices, and engineering philosophy that unifies software creation, testing, deployment, and infrastructure management
 
-(~~~~~~~~~~~~~~~~
        +-------------------------------------------------+
        |                  THE DEVOPS LOOP                |
        |                                                 |
@@ -175,7 +170,7 @@ While Agile solves communication and alignment problems between business manager
        |       |                           v             |
        |    [MONITOR] <--- [OPERATE] <-- [DEPLOY]        |
        +-------------------------------------------------+
-... ~~~~~~~~~~~~~~~~)
+...
 
 ### Key Pillars of DevOps (The CALMS Model)
 
@@ -221,27 +216,20 @@ During Sprint 14 planning, two senior engineers will be out on leave for 2 days 
 
 $$\text{Average Velocity} = \frac{34 + 28 + 38}{3} = \frac{100}{3} \approx 33.33 \text{ Points}$$
 
-
 2. Compute the team capacity modification factor:
 Assuming a standard team of 5 engineers working 10 days each:
 
 $$\text{Total Available Days} = 5 \times 10 = 50 \text{ Engineer-Days}$$
 
-
 $$\text{Deduction for PTO} = 2 \text{ Engineers} \times 2 \text{ Days} = 4 \text{ Engineer-Days}$$
-
 
 $$\text{Adjusted Available Capacity} = 50 - 4 = 46 \text{ Engineer-Days}$$
 
-
-$$\text{Capacity Factor} = \frac{46}{50} = 0.92 \ (92\%)$$
-
+$$\text{Capacity Factor} = \frac{46}{50} = 0.92 \ (92\%)$
 
 3. Apply capacity factor to project planned commitment for Sprint 14:
 
 $$\text{Adjusted Sprint Commitment Target} = 33.33 \times 0.92 = 30.66 \approx 30 \text{ Story Points}$$
-
-
 
 ---
 
