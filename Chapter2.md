@@ -11,8 +11,6 @@ This chapter provides an enterprise-level, hands-on deep dive into core containe
 * **Microservices Deployment Topologies:** Multi-container pod patterns (Sidecar, Ambassador, Adapter) and container orchestration runtime interfaces (CRI-O, containerd).
 * **Health Checks & Lifecycle Management:** Liveness, readiness, and startup probes to automate self-healing and zero-downtime rollouts.
 
----
-
 ## 1. Enterprise Container Architecture & Security Best Practices
 
 ### 1.1 Container Runtime Architecture: OCI, containerd, and CRI-O
