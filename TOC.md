@@ -70,11 +70,11 @@ Table of Contents
 ### 9.6 **Hands-On Lab:** Deploying a High-Availability Stateful Workload with Ingress Routing
 
 ## Chapter 10: Kubernetes Storage, ConfigMaps, & Secrets
-*   10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning
-*   10.2 Container Storage Interface (CSI) Drivers
-*   10.3 Decoupling Configuration using ConfigMaps
-*   10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
-*   10.5 **Hands-On Lab:** Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
+### 10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning
+### 10.2 Container Storage Interface (CSI) Drivers
+### 10.3 Decoupling Configuration using ConfigMaps
+### 10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
+### 10.5 **Hands-On Lab:** Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
 
 #### Chapter 11: Kubernetes Security & RBAC
 *   11.1 Kubernetes Authentication & Authorization Engine
