@@ -15,47 +15,6 @@
 *   **Passing Score:** 500 / 800.
 *   **Prerequisites:** Familiarity with Linux Administration (LPIC-1 equivalent), Git operations, and fundamental networking.
 
----
-
-## Part II: Exam Objective Mapping Matrix
-
-| LPI Exam Objective | LPIC Topic Weight | Mapped Handbook Chapter | Primary Tooling Stack |
-| :--- | :--- | :--- | :--- |
-| **Topic 701: Software Engineering & Architecture** | | | |
-| 701.1 Software Architecture | 2 | Chapter 1: Cloud-Native Architecture Patterns | Microservices, REST, gRPC, Serverless |
-| 701.2 Principles & Agile Software Development | 2 | Chapter 2: Agile, DevOps, & SRE Methodology | Kanban, Scrum, SLO/SLI tracking |
-| 701.3 Software Security & Compliance | 2 | Chapter 3: Enterprise DevSecOps & Security Compliance | DevSecOps, Static/Dynamic Scanning, SAST |
-| 701.4 Application Components & Services | 2 | Chapter 4: Enterprise Middleware & Application Services | NGINX, HAProxy, RabbitMQ, Redis |
-| **Topic 702: Container Management & Orchestration** | | | |
-| 702.1 Container Basics | 3 | Chapter 5: Docker Containerization Architecture & Core Operations | Docker, Containerd, cgroups, namespaces |
-| 702.2 Container Storage & Networking | 3 | Chapter 6: Advanced Container Storage & Overlay Networking | Docker Volumes, Macvlan, Overlay, CNI |
-| 702.3 Service Discovery & Load Balancing | 2 | Chapter 7: Service Discovery & Dynamic Routing | Consul, Traefik, HAProxy |
-| 702.4 Container Orchestration (Kubernetes) | 4 | Chapter 8: Enterprise Kubernetes Architecture & Operations | kubectl, K8s API, Control Plane, Etcd |
-| 702.5 Pods, Deployments, & Services | 4 | Chapter 9: Kubernetes Workload Management | Pods, Deployments, StatefulSets, Services |
-| 702.6 Kubernetes Storage & Configuration | 3 | Chapter 10: Kubernetes Storage, ConfigMaps, & Secrets | PV, PVC, StorageClasses, Secrets |
-| 702.7 Kubernetes Security & RBAC | 2 | Chapter 11: Kubernetes RBAC, Network Policies, & Hardening | RBAC, ServiceAccounts, NetworkPolicies |
-| **Topic 703: Infrastructure Configuration & Automation** | | | |
-| 703.1 Infrastructure as Code (IaC) | 3 | Chapter 12: IaC Architecture & State Management | Terraform, OpenTofu |
-| 703.2 Advanced Infrastructure Provisioning | 3 | Chapter 13: Declarative Infrastructure Provisioning | Terraform HCL, Modules, Providers |
-| 703.3 Configuration Management Basics | 3 | Chapter 14: Ansible Architecture & Core Playbooks | Ansible Engine, Inventories, Modules |
-| 703.4 Advanced Configuration Automation | 3 | Chapter 15: Advanced Ansible Patterns, Roles, & Automation | Ansible Roles, Vault, Dynamic Inventory |
-| 703.5 Machine Image Creation | 2 | Chapter 16: Automated Immutable Image Pipelines | Packer, Cloud-init |
-| **Topic 704: Continuous Delivery & CI/CD Pipelines** | | | |
-| 704.1 Version Control with Git | 3 | Chapter 17: Enterprise Git Workflows & Internal Internals | Git CLI, Hooks, Branching Strategies |
-| 704.2 Continuous Integration Principles | 2 | Chapter 18: Continuous Integration Architecture | CI Pipelines, Artifact Repositories |
-| 704.3 Continuous Delivery & Deployment Pipelines | 3 | Chapter 19: Enterprise CI/CD Pipeline Automation | Jenkins, GitLab CI, GitHub Actions |
-| 704.4 Deployment Strategies | 2 | Chapter 20: Modern Deployment Strategies | Blue/Green, Canary, Rolling Updates |
-| **Topic 705: Monitoring, Logging, & SRE** | | | |
-| 705.1 System & Application Monitoring | 3 | Chapter 21: Prometheus Monitoring & Metrics Engineering | Prometheus, PromQL, Exporters |
-| 705.2 Log Aggregation & Analysis | 3 | Chapter 22: Enterprise Log Management Pipelines | Promtail, Loki, Grafana, Fluentd |
-| 705.3 Visualization & Alerting | 2 | Chapter 23: Enterprise Dashboards & Alert Management | Grafana, Alertmanager, PagerDuty Integration |
-| 705.4 Incident Response & Observability | 2 | Chapter 24: Observability, Tracing, & Incident Management | Jaeger, OpenTelemetry, Incident Runbooks |
-| **Topic 706: Cloud Architecture & Testing** | | | |
-| 706.1 Cloud Service Models & Providers | 2 | Chapter 25: Multi-Cloud Architectures & Service Models | AWS, GCP, Azure, Hybrid Cloud |
-| 706.2 Automated Testing Techniques | 2 | Chapter 26: Continuous Testing Frameworks | Unit, Integration, Smoke, Chaos Testing |
-| 706.3 Chaos Engineering & Resiliency | 2 | Chapter 27: Enterprise Chaos Engineering & Fault Injection | Chaos Mesh, Gremlin, Resiliency Testing |
-
----
 
 ## Part III: Table of Contents & Chapter Breakdown
 
