@@ -15,7 +15,8 @@ For the DevOps engineer, the choice between architectural patterns fundamentally
 ### 1.1.1 Monolithic Architecture
 
 A monolith is a unified unit. All components—from UI code to backend business logic and database access—are tightly coupled and deployed together as a single artifact.
-<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/d4458865-989e-4f2f-9d00-87ee43fb9149" />
+
+![Monolithic Architecture](img/ch1/monolithic-application..png)
 
 #### Enterprise Considerations:
 
