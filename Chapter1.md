@@ -27,7 +27,8 @@ A monolith is a unified unit. All components—from UI code to backend business 
 
 Microservices partition the application into a collection of loosely coupled, independent, single-purpose services. Each service is self-contained, manages its own private data, and communicates over network protocols (like HTTP/REST, gRPC).
 
-![Microservices Architecture](img/ch1/microservices-application.png)
+![Microservices Architecture](img/ch1/microservices-application..png)
+
 
 #### Enterprise Considerations:
 
