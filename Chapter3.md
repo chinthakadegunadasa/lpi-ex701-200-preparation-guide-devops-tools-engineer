@@ -1,4 +1,3 @@
-```markdown
 # Chapter 3: Enterprise DevSecOps & Security Compliance
 
 Welcome to Chapter 3! This chapter transitions from the fundamental definitions of the LPI 701-200 Exam Objective 701.3 into a fully comprehensive, enterprise-oriented, and *hands-on* implementation guide for DevSecOps.
