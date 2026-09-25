@@ -77,105 +77,102 @@ Table of Contents
 ### 10.5 **Hands-On Lab:** Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
 
 #### Chapter 11: Kubernetes Security & RBAC
-*   11.1 Kubernetes Authentication & Authorization Engine
-*   11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
-*   11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
-*   11.4 Pod Security Standards (PSS) and Admission Controllers
-*   11.5 **Hands-On Lab:** Implementing Zero-Trust Network Policies and Granular RBAC RBAC Security
+### 11.1 Kubernetes Authentication & Authorization Engine
+### 11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
+### 11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
+### 11.4 Pod Security Standards (PSS) and Admission Controllers
+### 11.5 **Hands-On Lab:** Implementing Zero-Trust Network Policies and Granular RBAC RBAC Security
 
-### Module 3: Infrastructure Configuration & Automation (Topic 703)
+# Module 3: Infrastructure Configuration & Automation (Topic 703)
 
-#### Chapter 12: IaC Architecture & State Management
-*   12.1 Declarative vs. Imperative Infrastructure Paradigm
-*   12.2 Terraform / OpenTofu Architecture and Provider Ecosystem
-*   12.3 Managing State Files: Remote Backends, State Locking, and Security
-*   12.4 State Inspection, Import, and Refactoring Strategies
-*   12.5 **Hands-On Lab:** Provisioning Remote State Storage with S3 Backend and Lock Table
+## Chapter 12: IaC Architecture & State Management
+### 12.1 Declarative vs. Imperative Infrastructure Paradigm
+### 12.2 Terraform / OpenTofu Architecture and Provider Ecosystem
+### 12.3 Managing State Files: Remote Backends, State Locking, and Security
+### 12.4 State Inspection, Import, and Refactoring Strategies
+### 12.5 **Hands-On Lab:** Provisioning Remote State Storage with S3 Backend and Lock Table
 
-#### Chapter 13: Declarative Infrastructure Provisioning
-*   13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types
-*   13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
-*   13.3 Enterprise Module Architecture and Reusability
-*   13.4 Resource Lifecycle Management and Workspace Management
-*   13.5 **Hands-On Lab:** Building Modular Terraform Code for Automated Cloud Node Provisioning
+## Chapter 13: Declarative Infrastructure Provisioning
+### 13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types
+### 13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
+### 13.3 Enterprise Module Architecture and Reusability
+### 3.4 Resource Lifecycle Management and Workspace Management
+### 13.5 **Hands-On Lab:** Building Modular Terraform Code for Automated Cloud Node Provisioning
 
-#### Chapter 14: Ansible Architecture & Core Playbooks
-*   14.1 Agentless Configuration Management Engine & SSH Control
-*   14.2 Inventory Files (Static vs. Dynamic Inventory Engines)
-*   14.3 Writing Idempotent Ansible Tasks and Playbooks
-*   14.4 Variables, Facts, Handlers, and Conditionals
-*   14.5 **Hands-On Lab:** Writing an Idempotent Multi-Tier Application Server Playbook
+## Chapter 14: Ansible Architecture & Core Playbooks
+### 14.1 Agentless Configuration Management Engine & SSH Control
+### 14.2 Inventory Files (Static vs. Dynamic Inventory Engines)
+### 14.3 Writing Idempotent Ansible Tasks and Playbooks
+### 14.4 Variables, Facts, Handlers, and Conditionals
+### 14.5 **Hands-On Lab:** Writing an Idempotent Multi-Tier Application Server Playbook
 
-#### Chapter 15: Advanced Ansible Patterns, Roles, & Automation
-*   15.1 Structuring Enterprise Codebases with Ansible Roles
-*   15.2 Managing Secrets with Ansible Vault
-*   15.3 Dynamic Inventories for Cloud and Virtualization Enclaves
-*   15.4 Asynchronous Execution, Poll Options, and Error Handling
-*   15.5 **Hands-On Lab:** Implementing Encrypted Ansible Roles with Automated Dynamic Inventories
+## Chapter 15: Advanced Ansible Patterns, Roles, & Automation
+### 5.1 Structuring Enterprise Codebases with Ansible Roles
+### 15.2 Managing Secrets with Ansible Vault
+### 15.3 Dynamic Inventories for Cloud and Virtualization Enclaves
+### 15.4 Asynchronous Execution, Poll Options, and Error Handling
+### 15.5 **Hands-On Lab:** Implementing Encrypted Ansible Roles with Automated Dynamic Inventories
 
-#### Chapter 16: Automated Immutable Image Pipelines
-*   16.1 The Immutable Infrastructure Design Pattern
-*   16.2 HashiCorp Packer Architecture: Builders, Provisioners, and Post-Processors
-*   16.3 Automating OS Provisioning via Cloud-Init and Kickstart
-*   16.4 Integrating Packer into CI/CD Automated Pipelines
-*   16.5 **Hands-On Lab:** Building Automated Hardened Debian 13 Golden Machine Images
+## Chapter 16: Automated Immutable Image Pipelines
+### 16.2 HashiCorp Packer Architecture: Builders, Provisioners, and Post-Processors
+### 16.3 Automating OS Provisioning via Cloud-Init and Kickstart
+### 16.4 Integrating Packer into CI/CD Automated Pipelines
+### 16.5 **Hands-On Lab:** Building Automated Hardened Debian 13 Golden Machine Images
 
 ---
 
 ### Module 4: Continuous Delivery & CI/CD Pipelines (Topic 704)
 
-#### Chapter 17: Enterprise Git Workflows & Internal Internals
-*   17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)
-*   17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching
-*   17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
-*   17.4 Client-Side and Server-Side Git Hooks
-*   17.5 **Hands-On Lab:** Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
+## Chapter 17: Enterprise Git Workflows & Internal Internals
+### 17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)
+### 17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching
+### 7.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
+### 17.4 Client-Side and Server-Side Git Hooks
+###   17.5 **Hands-On Lab:** Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
 
 #### Chapter 18: Continuous Integration Architecture
-*   18.1 Continuous Integration Core Principles and Artifact Management
-*   18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)
-*   18.3 Automated Build Engines and Dependency Caching Strategies
-*   18.4 Code Quality Gates and Static Analysis Integration
-*   18.5 **Hands-On Lab:** Setting Up a Local Private Container and Artifact Registry with Access Controls
+### 18.1 Continuous Integration Core Principles and Artifact Management
+### 18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)
+### 18.3 Automated Build Engines and Dependency Caching Strategies
+### 18.4 Code Quality Gates and Static Analysis Integration
+### 18.5 **Hands-On Lab:** Setting Up a Local Private Container and Artifact Registry with Access Controls
 
-#### Chapter 19: Enterprise CI/CD Pipeline Automation
-*   19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions
-*   19.2 Pipeline Runners, Agents, and Scalable Execution Environments
-*   19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package
-*   19.4 Pipeline Caching, Parameterization, and Trigger Mechanics
-*   19.5 **Hands-On Lab:** Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins
+## Chapter 19: Enterprise CI/CD Pipeline Automation
+### 19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions
+### 19.2 Pipeline Runners, Agents, and Scalable Execution Environments
+### 19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package
+### 19.4 Pipeline Caching, Parameterization, and Trigger Mechanics
+### 19.5 **Hands-On Lab:** Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins
 
-#### Chapter 20: Modern Deployment Strategies
-*   20.1 In-Place vs. Immutable Deployments
-*   20.2 Blue/Green Deployment Implementation Patterns
-*   20.3 Canary Deployments with Traffic Splitting Algorithms
-*   20.4 Rolling Updates and Automated Rollbacks
-*   20.5 **Hands-On Lab:** Executing Automated Zero-Downtime Blue/Green Deployments via Service Mesh
-
----
+## Chapter 20: Modern Deployment Strategies
+### 20.1 In-Place vs. Immutable Deployments
+### 20.2 Blue/Green Deployment Implementation Patterns
+### 20.3 Canary Deployments with Traffic Splitting Algorithms
+### 20.4 Rolling Updates and Automated Rollbacks
+### 20.5 **Hands-On Lab:** Executing Automated Zero-Downtime Blue/Green Deployments via Service Mesh
 
 ### Module 5: Monitoring, Logging, & SRE (Topic 705)
 
-#### Chapter 21: Prometheus Monitoring & Metrics Engineering
-*   21.1 Prometheus Pull-Based Metrics Architecture & TSDB Storage
-*   21.2 Core Metric Types: Counters, Gauges, Histograms, and Summaries
-*   21.3 PromQL (Prometheus Query Language) Masterclass: Aggregations, Rates, and Functions
-*   21.4 Node Exporters, Application Instrumentation, and Pushgateway
-*   21.5 **Hands-On Lab:** Instrumenting Custom Microservice Metrics and Writing Advanced PromQL Queries
+## Chapter 21: Prometheus Monitoring & Metrics Engineering
+### 21.1 Prometheus Pull-Based Metrics Architecture & TSDB Storage
+### 21.2 Core Metric Types: Counters, Gauges, Histograms, and Summaries
+### 21.3 PromQL (Prometheus Query Language) Masterclass: Aggregations, Rates, and Functions
+### 21.4 Node Exporters, Application Instrumentation, and Pushgateway
+### 21.5 **Hands-On Lab:** Instrumenting Custom Microservice Metrics and Writing Advanced PromQL Queries
 
-#### Chapter 22: Enterprise Log Management Pipelines
-*   22.1 Log Management Challenges in Distributed Architecture
-*   22.2 Grafana Loki Engine Architecture vs. Traditional ELK Stack
-*   22.3 Log Ingestion with Promtail and Fluentd Log Shippers
-*   22.4 Log Parsing, Label Extraction, and Querying with LogQL
-*   22.5 **Hands-On Lab:** Implementing a High-Throughput Log Aggregation Pipeline using Loki and Promtail
+## Chapter 22: Enterprise Log Management Pipelines
+### 22.1 Log Management Challenges in Distributed Architecture
+### 22.2 Grafana Loki Engine Architecture vs. Traditional ELK Stack
+### 22.3 Log Ingestion with Promtail and Fluentd Log Shippers
+### 22.4 Log Parsing, Label Extraction, and Querying with LogQL
+### 22.5 **Hands-On Lab:** Implementing a High-Throughput Log Aggregation Pipeline using Loki and Promtail
 
-#### Chapter 23: Enterprise Dashboards & Alert Management
-*   23.1 Building Enterprise Dashboards in Grafana
-*   23.2 Alert Rule Design: Static Thresholds vs. Anomaly Detection
-*   23.3 Prometheus Alertmanager Configuration: Grouping, Inhibitions, and Silences
-*   23.4 Notification Integrations: Slack, PagerDuty, Webhooks, and Email
-*   23.5 **Hands-On Lab:** Building Real-Time Operational Dashboards and Configuring Alerting Pipelines
+## Chapter 23: Enterprise Dashboards & Alert Management
+### 23.1 Building Enterprise Dashboards in Grafana
+### 23.2 Alert Rule Design: Static Thresholds vs. Anomaly Detection
+### 23.3 Prometheus Alertmanager Configuration: Grouping, Inhibitions, and Silences
+### 23.4 Notification Integrations: Slack, PagerDuty, Webhooks, and Email
+### 23.5 **Hands-On Lab:** Building Real-Time Operational Dashboards and Configuring Alerting Pipelines
 
 #### Chapter 24: Observability, Tracing, & Incident Management
 *   24.1 The Three Pillars of Observability: Metrics, Logs, and Traces
@@ -184,39 +181,38 @@ Table of Contents
 *   24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture
 *   24.5 **Hands-On Lab:** End-to-End Distributed Tracing Analysis for Microservice Bottlenecks
 
----
+# Module 6: Cloud Architecture & Testing (Topic 706)
 
-### Module 6: Cloud Architecture & Testing (Topic 706)
+## Chapter 25: Multi-Cloud Architectures & Service Models
+### 25.1 Cloud Computing Models: IaaS, PaaS, SaaS, and FaaS
+### 25.2 Hybrid Cloud and Multi-Cloud Interconnect Design
+### 25.3 Cloud Storage Architecture: Object, Block, and File Storage Mechanics
+### 25.4 Cost Optimization, FinOps, and Resource Management Strategies
+### 25.5 **Hands-On Lab:** Orchestrating Infrastructure Deployments Across Hybrid Cloud Interfaces
 
-#### Chapter 25: Multi-Cloud Architectures & Service Models
-*   25.1 Cloud Computing Models: IaaS, PaaS, SaaS, and FaaS
-*   25.2 Hybrid Cloud and Multi-Cloud Interconnect Design
-*   25.3 Cloud Storage Architecture: Object, Block, and File Storage Mechanics
-*   25.4 Cost Optimization, FinOps, and Resource Management Strategies
-*   25.5 **Hands-On Lab:** Orchestrating Infrastructure Deployments Across Hybrid Cloud Interfaces
-
-#### Chapter 26: Continuous Testing Frameworks
-*   26.1 The Automated Testing Pyramid: Unit, Integration, System, and End-to-End
-*   26.2 Automated Acceptance and Smoke Testing in Pipelines
-*   26.3 Load and Stress Performance Testing Frameworks (k6, Locust)
-*   26.4 Test-Driven Development (TDD) & Behavior-Driven Development (BDD) Paradigms
-*   26.5 **Hands-On Lab:** Embedding Load Testing and Quality Gates into an Automated Pipeline
+## Chapter 26: Continuous Testing Frameworks
+### 26.1 The Automated Testing Pyramid: Unit, Integration, System, and End-to-End
+### 26.2 Automated Acceptance and Smoke Testing in Pipelines
+### 26.3 Load and Stress Performance Testing Frameworks (k6, Locust)
+### 26.4 Test-Driven Development (TDD) & Behavior-Driven Development (BDD) Paradigms
+### 26.5 **Hands-On Lab:** Embedding Load Testing and Quality Gates into an Automated Pipeline
 
 #### Chapter 27: Enterprise Chaos Engineering & Fault Injection
-*   27.1 Principles of Chaos Engineering and Hypothesis-Driven Experiments
-*   27.2 Simulating Infrastructure Failures: Network Latency, Node Failures, and Packet Loss
-*   27.3 Chaos Mesh and Gremlin Engine Deployment in Kubernetes Environments
-*   27.4 Measuring System Resiliency and Steady-State Recovery
-*   27.5 **Hands-On Lab:** Running Automated Fault-Injection Experiments on Production Workloads
+### 27.1 Principles of Chaos Engineering and Hypothesis-Driven Experiments
+### 27.2 Simulating Infrastructure Failures: Network Latency, Node Failures, and Packet Loss
+### 27.3 Chaos Mesh and Gremlin Engine Deployment in Kubernetes Environments
+### 27.4 Measuring System Resiliency and Steady-State Recovery
+### 27.5 **Hands-On Lab:** Running Automated Fault-Injection Experiments on Production Workloads
 
----
+## Chapter 28: Exam Objective and Chapter Mapping Matrix
 
-## Part IV: Appendices
+![Exam Objective and Chapter Mapping Matrix](img/lpi-ex701-200-objectives-and-chapter-mapping.jpeg)
 
+# Part IV: Appendices
 
-### Appendix A: DevOps Toolchain Installation Protocols
-*   Automated Provisioning Script for Local Debian Workstations
-*   Package Repositories, Keys, and Dependency Configurations
+## Appendix A: DevOps Toolchain Installation Protocols
+### **A.1** Automated Provisioning Script for Local Debian Workstations using Debian 13 Live image 
+### **A.2** Package Repositories, Keys, and Dependency 
 
 ### Appendix B: Comprehensive Tooling Command Matrix
 *   **B.1** Docker & Container Management CLI Quick Reference
