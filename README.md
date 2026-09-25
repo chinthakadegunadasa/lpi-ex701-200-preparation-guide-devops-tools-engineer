@@ -16,7 +16,7 @@
 *   **Prerequisites:** Familiarity with Linux Administration (LPIC-1 equivalent), Git operations, and fundamental networking.
 
 
-## Part III: Table of Contents & Chapter Breakdown
+## Part II: Table of Contents & Chapter Breakdown
 
 ### Module 1: Software Engineering, Architecture, & Security (Topic 701)
 
