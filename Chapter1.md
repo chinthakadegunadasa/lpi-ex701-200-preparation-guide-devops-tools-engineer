@@ -107,7 +107,7 @@ The starting monolithic application manages both Order Placement and Payment Pro
 
 ### Architecture Overview
 
-![Hands-On Lab-before](img/ch1/event-driven-flow-before-lab.png)
+![Hands-On Lab-before](img/ch1/monolithic-flow-before-lab.png)
 
 ![Hands-On Lab-before](img/ch1/event-driven-flow-after-lab.png)
 
