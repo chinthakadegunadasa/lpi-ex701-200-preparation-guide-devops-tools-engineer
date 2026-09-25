@@ -100,21 +100,7 @@ In distributed microservices, a single "order" process may span multiple service
 
 The following matrix—adapted for this context—is a critical guide for the enterprise DevOps engineer diagnosing microservices systems.
 
-| Issue (Observed Symptoms) | Root Cause | Remediation Procedure |
-| --- | --- | --- |
-| **gRPC connection failed** on port `50051` | The target microservice (e.g., Order Svc) failed to bind to its port or is down. | Check service status and port conflicts on target host (`ss -tulpn`). |
-| **AMQP Connection Error** | The RabbitMQ message broker service is down or credential mismatch. | Verify broker service state: `sudo systemctl status rabbitmq-server`. Test connectivity: `nc -zv localhost 5672`. |
-| **Redis/Cache is returning nil** | Key expiration (TTL) or a failing connection string to Redis. | Verify Redis is alive (`redis-cli ping`). Check key TTL settings and persistence configuration. |
-| **Missing code stubs** (e.g., Python, Go) | Protobuf compiler plugins failed to run or generate dependencies. | Re-run Protobuf compiler: `protoc --python_out=. --grpc_python_out=. path/to/order.proto`. |
-
-#### Diagnostics Matrix Prompt for Image Generation
-
-```text
-A professional, technical troubleshooting reference table presented in a clean, light-mode textbook print style, illustrating common microservices diagnostic issues. Style & Aesthetics: Minimal technical manual layout, crisp black vector line art on a stark white background with subtle slate-gray row-header highlights. Modern technical sans-serif typography, perfectly legible text labels, flat 2D graphic design, high contrast, precise vector lines. Pure white background, no dark backgrounds, no 3D shading, no gradients, no photorealism. Structure & Layout (Grid Format): A structured 3-column reference table with precise outer borders, clear vertical column lines, and horizontal row dividers. Header Row: A dark slate-gray background banner with bold white text labels: "Issue (Observed Symptoms)", "Root Cause", and "Remediation Procedure". Content Snippets: Rows display bolded technical terms and code snippets. Example Row 1: **gRPC connection failed** on port 50051 (Issue); The target microservice (e.g., Order Svc) failed to bind to its port or is down (Root Cause); Check service status and port conflicts on target host (`ss -tulpn`) (Remediation). Example Row 2: **AMQP Connection Error** (Issue); The RabbitMQ message broker service is down or credential mismatch (Root Cause); Verify broker service state: `sudo systemctl status rabbitmq-server`. Test connectivity: `nc -zv localhost 5672` (Remediation). The entire diagram presented in portrait vertical orientation with generous white margin padding around text cells, like a page in a troubleshooting manual.
-
-```
-
----
+<img width="687" height="1024" alt="image" src="https://github.com/user-attachments/assets/5f1bfd29-fecb-42f3-8e4e-3655106d86d7" />
 
 ## 1.5 Hands-On Lab: Decoupling a Monolith into Event-Driven Microservices
 
@@ -283,9 +269,4 @@ if __name__ == "__main__":
 
 After starting the ingestion engine (`server.py`) and the asynchronous payment processor worker (`worker.py`), test the pipeline with `client.py`.
 
-#### Lab Diagnostics Matrix Prompt for Image Generation
-
-```text
-A professional, technical troubleshooting reference table presented in a clean, light-mode textbook print style, focusing on issues encountered during the asynchronous Messaging Lab. Style & Aesthetics: Minimal technical manual layout, crisp black vector line art on a stark white background with subtle slate-gray row-header highlights. Modern technical sans-serif typography, perfectly legible text labels, flat 2D graphic design, high contrast, precise vector lines. Pure white background, no dark backgrounds, no 3D shading, no gradients, no photorealism. Structure & Layout (Grid Format): A structured 3-column reference table with precise grid lines and horizontal row dividers. Header Row: A dark slate-gray background banner with bold white text labels: "Issue", "Root Cause", and "Remediation Procedure". Content Snippets: Rows display bolded terms and code snippets. Example Row: `AMQP Dial Error` (Issue); RabbitMQ daemon is stopped or credentials mismatch (Root Cause); Verify service status (`sudo systemctl status rabbitmq-server`). Test connectivity (`nc -zv localhost 5672`) (Remediation). Another Row: Redis state missing (Issue); Key expired or persistence string fail (Root Cause); Verify Redis is running (`redis-cli ping`). Check key TTL settings (Remediation). The entire diagram presented in portrait vertical orientation, generous white margin padding, textbook schematic figure style.
-
-```
+<img width="572" height="1024" alt="image" src="https://github.com/user-attachments/assets/f6b599de-8f91-4b50-a8dc-e393207162ed" />
