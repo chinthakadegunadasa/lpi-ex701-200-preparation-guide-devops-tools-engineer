@@ -124,69 +124,9 @@ The starting monolithic application manages both Order Placement and Payment Pro
 
 ### Architecture Overview
 
-```text
-[Monolithic Flow (Before Lab)]
-+-----------+ (Sync Check) +---------+ (Sync Charge) +---------+
-| Order Svc | -----------+> | Pay Svc | -----------+> |  Logs   |
-+-----------+              +---------+              +---------+
-         |                      |                      |
-         v                      v                      v
-      [OrderDB]               [PayDB]                [LogDB]
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/8412a8d3-efc5-42f5-99d5-25ec6e9c7e64" />
 
-```
-
-```text
-[Event-Driven Flow (After Lab)]
-+-----------+   'order.created' Event   +-----------+
-| Order Svc | ------------------------> | RabbitMQ  |
-| (Async)   |   via AMQP Ex: ordx       | Exchange  |
-+-----------+                           +-----------+
-                                             || (Route: queue:orderq)
-                                             ||
-                                             vv
-                                        +-----------+ (Consume & Process)
-                                        | Pay Svc   |
-                                        | (Async)   |
-                                        +-----------+
-
-```
-
-### Lab Refactoring Prompts for Image Generation
-
-#### Monolithic Before-Flow Prompt
-
-```text
-A professional, technical textbook architecture diagram illustrating the "Monolithic Flow (Before Lab)". Style & Aesthetics: Clean light-mode print style, minimal textbook diagram layout, crisp black vector line art on a stark white background with subtle slate-gray fill accents. Modern technical sans-serif typography, perfectly legible text labels, flat 2D graphic design, high contrast, precise vector lines. Pure white background, no dark backgrounds, no 3D shading, no gradients, no photorealism. Layout & Flow (Horizontal Flow): A series of three connected rectangular blocks. The first block is labeled "Order Svc". A sharp horizontal arrow labeled "(Sync Check)" points from it to the second block, labeled "Pay Svc". A second horizontal arrow labeled "(Sync Charge)" points from the second block to the third block, labeled "Logs". Below each box, cylindrical database icons labeled "[OrderDB]", "[PayDB]", and "[LogDB]" respectively. The overall layout emphasizes sequential, tightly coupled synchronous calls within a unified binary flow, like a technical schematic manual figure.
-
-```
-
-#### Event-Driven After-Flow Prompt
-
-```text
-A professional, technical textbook architecture diagram illustrating the "Event-Driven Flow (After Lab)". Style & Aesthetics: Clean light-mode print style, minimal textbook diagram layout, crisp black vector line art on a stark white background with subtle slate-gray fill accents. Modern technical sans-serif typography, perfectly legible text labels, flat 2D graphic design, high contrast, precise vector lines. Pure white background, no dark backgrounds, no 3D shading, no gradients, no photorealism. Layout & Flow (Branched Asynchronous Flow): The layout emphasizes decoupling. The first block, "Order Svc" (with "(Async)" below it), is connected by a horizontal downward arrow labeled "'order.created' Event" and "via AMQP Ex: ordx" to the central block, labeled "RabbitMQ Exchange". Below the Message Broker, a large, centered dual-arrow structure points downwards, labeled "(Route: queue:orderq)". This branched connection points directly to the next distinct block: "Pay Svc" (with "(Async)" and "(Consume & Process)" below it). An overall layout that emphasizes decoupling and asynchronous flow managed by the broker, like a technical blueprint figure.
-
-```
-
-### Lab Prerequisites & Setup
-
-You require access to a Linux environment (Ubuntu 22.04+ or similar).
-
-**Step 1: Environment Setup**
-Install base packages and dependencies.
-
-```bash
-# Update repositories and install Python and virtual environment tools
-sudo apt update && sudo apt install -y python3-dev python3-pip python3-venv
-
-# Install and start RabbitMQ server (the message broker)
-sudo apt install -y rabbitmq-server
-sudo systemctl start rabbitmq-server && sudo systemctl enable rabbitmq-server
-
-# Optional: Enable the RabbitMQ Management UI
-sudo rabbitmq-plugins enable rabbitmq_management
-# (Access management portal at http://localhost:15672/ with user:guest pass:guest)
-
-```
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/2e44fa30-59e5-41c0-ba61-d276906718de" />
 
 ### Step 2: Protocol Buffers Schema Definition
 
