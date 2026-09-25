@@ -8,8 +8,6 @@ The enterprise landscape is rapidly moving away from complex, tightly-coupled sy
 
 By the end of this chapter, you will be able to evaluate architectural choices and design patterns for new and existing systems, preparing you not just for the exam, but for making critical architectural decisions in enterprise DevOps environments.
 
----
-
 ## 1.1 Monolithic vs. Microservices vs. Serverless Paradigms
 
 For the DevOps engineer, the choice between architectural patterns fundamentally impacts CI/CD pipelines, monitoring strategies, infrastructure management, and team structure.
@@ -24,8 +22,6 @@ A monolith is a unified unit. All components—from UI code to backend business 
 * **Pros:** Simplified initial development and deployment; efficient local testing; straightforward horizontal scaling (scale by duplicating the entire monolith).
 * **Cons:** **Development Velocity** slows as the application grows; **Tightly Coupled**—a single change requires redeploying the whole system; **Scaling** is inefficient (must scale components that don't need scaling); **Fault Isolation** is poor (a single bug can crash the entire system).
 
----
-
 ### 1.1.2 Microservices Architecture
 
 Microservices partition the application into a collection of loosely coupled, independent, single-purpose services. Each service is self-contained, manages its own private data, and communicates over network protocols (like HTTP/REST, gRPC).
@@ -35,47 +31,19 @@ Microservices partition the application into a collection of loosely coupled, in
 #### Enterprise Considerations:
 
 * **Pros:** **Decoupled Deployment**—services can be deployed independently, increasing agility; **Scalability**—scale individual services based on load; **Resilience**—faults are isolated to the service; **Technology Diversity**—services can use different languages or databases; **Team Alignment**—align teams to specific business domains.
+  
 * **Cons:** **Complexity**—managing many distinct services is difficult; **Data Consistency**—achieving consistency across private databases requires careful architecture (e.g., Saga pattern); **DevOps Overhead**—requires robust automation (CI/CD, orchestration, service mesh); **Network Latency**—service-to-service communication introduces latency.
-
----
 
 ### 1.1.3 Serverless Paradigm (Function-as-a-Service)
 
 Serverless (FaaS) abstracts away the server and infrastructure completely. Developers write stateless, event-triggered "functions" that execute small, discrete logic units. The cloud provider handles all provisioning, scaling, and fault tolerance.
 
-```text
-[Serverless/FaaS Paradigm]
-+-----------------------------------------+
-|      [Cloud Provider Managed Platform]  |
-|                                         |
-| [Event Sources]                         |
-| +-----------+  (Trigger)  +-----------+ |
-| | HTTP API  | -----------> | Process() | |
-| +-----------+             | Function  | |
-|                           |           | |
-| +-----------+  (Trigger)  +-----------+ |
-| | DB Change | -----------> | Save()    | |
-| +-----------+             | Function  | |
-|                           +-----------+ |
-+-----------------------------------------+
-|      [Zero Infrastructure for Dev]      |
-+-----------------------------------------+
-
-```
-
-#### Serverless Prompt for Image Generation
-
-```text
-A professional, technical architecture diagram illustrating a "Serverless (FaaS) Paradigm". Style & Aesthetics: Clean light-mode print style, minimal textbook diagram layout, crisp black vector line art on a stark white background with subtle slate-gray fill accents. Modern technical sans-serif typography, perfectly legible text labels, flat 2D graphic design, high contrast, precise vector lines. Pure white background, no dark backgrounds, no 3D shading, no gradients, no photorealism. Layout & Flow (Event-Triggered Flow): A large encapsulating rectangle labeled "Cloud Provider Managed Platform". This block contains two flow paths. Left side (Event Sources): Two separate rectangular boxes labeled "HTTP API" and "DB Change". Right side (Execution): A rectangular box labeled "Process() Function" (top right) and "Save() Function" (bottom right). Connections: A sharp horizontal arrow labeled "(Trigger)" points from "HTTP API" to "Process() Function". A second sharp horizontal arrow labeled "(Trigger)" points from "DB Change" to "Save() Function". The whole layout highlights the direct, reactive trigger relationship managed by the cloud platform, abstracting away the infrastructure, like a technical blueprint or manual figure.
-
-```
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/f0ed3908-c6e8-410c-8a54-700238852368" />
 
 #### Enterprise Considerations:
 
 * **Pros:** **Utility-Based Pricing**—pay only for the seconds the function runs; **Auto-Scaling**—scales seamlessly from zero to high demand; **Zero Infrastructure Management**—abstracts servers, OS, and patching; **Developer Focus**—allows teams to focus purely on business logic.
 * **Cons:** **Vendor Lock-in**—functions are often tightly coupled to provider APIs; **Cold Starts**—first function execution after idleness can be slow; **Complexity at Scale**—managing hundreds of discrete functions becomes challenging; **Stateless**—requires external persistence (Redis, DynamoDB).
-
----
 
 ## 1.2 API-First Architectures: REST, gRPC, and GraphQL
 
