@@ -266,4 +266,4 @@ if __name__ == "__main__":
 
 After starting the ingestion engine (`server.py`) and the asynchronous payment processor worker (`worker.py`), test the pipeline with `client.py`.
 
-<img width="572" height="1024" alt="image" src="https://github.com/user-attachments/assets/f6b599de-8f91-4b50-a8dc-e393207162ed" />
+![ Verification & Troubleshooting](img/ch1/remediation-procedure-meseging-table.png)
