@@ -260,29 +260,9 @@ podman pod ps
 2. **Ambassador Pattern:** Acts as a network proxy for the main container, abstracting access to external services (e.g., routing traffic to database clusters or external APIs).
 3. **Adapter Pattern:** Standardizes output or metrics from heterogeneous application runtimes into a uniform format expected by monitoring tools (e.g., exposing Prometheus metrics).
 
----
-
 ### 3.2 Liveness, Readiness, and Startup Probes
 
-```
-                       CONTAINER LIFECYCLE
-                                │
-                                v
-                     ┌─────────────────────┐
-                     │    STARTUP PROBE    │ ─── Fail? ──> Restart Container
-                     └──────────┬──────────┘
-                                │ Success
-                                v
-                     ┌─────────────────────┐
-                     │   READINESS PROBE   │ ─── Fail? ──> Remove from Service Endpoints
-                     └──────────┬──────────┘
-                                │ Success
-                                v
-                     ┌─────────────────────┐
-                     │   LIVENESS PROBE    │ ─── Fail? ──> Restart Container
-                     └─────────────────────┘
-
-```
+![Container-lifecycle](img/lpi-ex-701-200-ch2-container-lifecycle.jpeg)
 
 * **Startup Probe:** Validates whether the application within the container has initialized. All other probes are disabled until the startup probe succeeds.
 * **Readiness Probe:** Determines whether the container is ready to accept inbound network traffic. If it fails, the container is removed from service load balancer endpoints.
