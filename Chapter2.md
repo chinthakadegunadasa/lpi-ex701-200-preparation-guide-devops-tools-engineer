@@ -22,6 +22,7 @@ In enterprise Kubernetes environments, high-level container runtimes interact wi
 ![KUBERNETES NODE (KUBELET)](img/lpi-ex701-200-ch2-kubernetes-node.jpeg)
 
 ### 1.2 Enterprise Security Matrix for Containerized Workloads
+![Enterprise Security Matrix for Containerized Workloads](img/lpi-ex701-200-ch2-container-security-matrix.jpeg)
 
 | Security Layer | Traditional/Insecure Configuration | Enterprise Production Standard | Risk Mitigated |
 | --- | --- | --- | --- |
