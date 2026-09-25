@@ -83,9 +83,6 @@ if __name__ == "__main__":
 EOF
 
 ```
-
----
-
 ### Step 2: Enterprise Multi-Stage Dockerfile Construction
 
 Create a minimal, production-hardened `Dockerfile` utilizing build stages to minimize image size and eliminate build tools from the final image runtime layer.
@@ -135,8 +132,6 @@ ENTRYPOINT ["python3", "/app/src/app.py"]
 
 ```
 
----
-
 ### Step 3: Container Image Build and Inspection
 
 Build the OCI container image using Podman/Docker and verify security compliance:
@@ -152,8 +147,6 @@ podman images order-processor:v1.0.0
 podman inspect order-processor:v1.0.0 | jq '.[0].Config.User'
 
 ```
-
----
 
 ### Step 4: Multi-Container Pod Configuration (Ambassador Pattern)
 
@@ -225,8 +218,6 @@ spec:
 
 ```
 
----
-
 ### Step 5: Executing and Testing Hardened Container Workloads
 
 Launch the pod locally using Podman pod abstractions to simulate Kubernetes container runtime behavior:
@@ -250,8 +241,6 @@ podman pod ps
 
 ```
 
----
-
 ## 3. Advanced Microservices Patterns & Health Probes
 
 ### 3.1 Pod Design Patterns
@@ -267,7 +256,6 @@ podman pod ps
 * **Startup Probe:** Validates whether the application within the container has initialized. All other probes are disabled until the startup probe succeeds.
 * **Readiness Probe:** Determines whether the container is ready to accept inbound network traffic. If it fails, the container is removed from service load balancer endpoints.
 * **Liveness Probe:** Checks whether the container process is alive. If it fails, the runtime kills and restarts the container based on its restart policy.
-
 ---
 
 ## 4. Verification & Troubleshooting
@@ -275,12 +263,11 @@ podman pod ps
 ### Pipeline Verification Walkthrough
 
 1. Verify local container endpoint response:
+   
 ```bash
 curl -i http://localhost:8080/healthz
 
 ```
-
-
 **Expected Response:**
 ```http
 HTTP/1.1 200 OK
@@ -290,36 +277,24 @@ Content-type: application/json
 
 ```
 
-
 2. Test readiness endpoint:
 ```bash
 curl -i http://localhost:8080/ready
 
 ```
 
-
 3. Confirm non-root container isolation:
+
 ```bash
 podman exec -it main-processor-container id
 
 ```
-
-
 **Expected Response:**
 ```text
 uid=10001(appuser) gid=10001(appgroup) groups=10001(appgroup)
 
 ```
 
-
-
----
-
 ### Common Field Failures & Remediation Matrix
 
-| Issue | Root Cause | Remediation Procedure |
-| --- | --- | --- |
-| `CrashLoopBackOff` | Application failed to start, or liveness probe timed out. | Inspect container logs: `podman logs <container-id>` or `kubectl logs <pod-name>`. |
-| `Read-only file system` Error | Application attempted to write runtime logs or PID files to a read-only root partition. | Mount an `emptyDir` or `tmpfs` volume explicitly to writeable paths like `/tmp` or `/var/log`. |
-| `Permission denied` on port binding | Container process attempted to bind to a privileged port (< 1024) while running as non-root without `CAP_NET_BIND_SERVICE`. | Reconfigure the application to use non-privileged ports (e.g., 8080, 8443) or add `CAP_NET_BIND_SERVICE`. |
-| `ImagePullBackOff` | Invalid image path, missing registry authentication, or tag mismatch. | Verify image tags, repository permissions, and pull credentials (`podman login`). |
+![Failures & Remediation Matrix](img/lpi-ex-701-200-ch2-failures-remediation-matrix.jpeg)
