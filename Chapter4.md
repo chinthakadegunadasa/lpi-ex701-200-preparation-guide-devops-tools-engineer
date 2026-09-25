@@ -1,4 +1,3 @@
-```markdown
 # Chapter 4: Enterprise Middleware & Application Services
 
 Welcome to Chapter 4! This chapter transitions from application-level DevSecOps controls (LPI Exam Objective 701.3) into **LPI Exam Objective 701.4: Enterprise Middleware & Application Services**.
