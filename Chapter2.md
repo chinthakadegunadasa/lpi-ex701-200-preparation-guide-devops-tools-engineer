@@ -19,6 +19,8 @@ This chapter provides an enterprise-level, hands-on deep dive into core containe
 
 In enterprise Kubernetes environments, high-level container runtimes interact with low-level runtimes using the Open Container Initiative (OCI) specification.
 
+![KUBERNETES NODE (KUBELET)](img/lpi-ex701-200-ch2-kubernetes-node.jpeg)
+
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │                   KUBERNETES NODE (KUBELET)                           │
