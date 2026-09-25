@@ -27,7 +27,7 @@ A monolith is a unified unit. All components—from UI code to backend business 
 
 Microservices partition the application into a collection of loosely coupled, independent, single-purpose services. Each service is self-contained, manages its own private data, and communicates over network protocols (like HTTP/REST, gRPC).
 
-![Microservices Architecture](img/ch1/microservices-application..png)
+![Microservices Architecture](img/ch1/microservices-application.png)
 
 
 #### Enterprise Considerations:
@@ -76,8 +76,6 @@ The previous matrix (originally from image_5.png but adapted for content) has be
 Event-Driven Architecture (EDA) decouples systems using asynchronous messaging. When something of note occurs (an "event"), a service *publishes* this event to a message broker. Other services that need to react to that event *subscribe* and *consume* it.
 ![Event-Driven Architecture](img/ch1/event-driven-architecture-flow.png)
 
-<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/a58e1ccf-eaed-485e-8f6c-11d98d3d3424" />
-
 #### Key Enterprise Messaging Components (RabbitMQ Example):
 
 1. **Publisher:** The application that sends (publishes) messages to an exchange.
@@ -86,8 +84,6 @@ Event-Driven Architecture (EDA) decouples systems using asynchronous messaging. 
 4. **Binding:** The logical rule connecting an exchange to a specific queue.
 5. **Queue:** A buffer that stores messages asynchronously until they are consumed.
 6. **Consumer:** The application that connects to a queue and consumes messages.
-
----
 
 ## 1.4 Enterprise Scalability, Fault Tolerance, and High Availability
 
@@ -101,7 +97,7 @@ In distributed microservices, a single "order" process may span multiple service
 
 The following matrix—adapted for this context—is a critical guide for the enterprise DevOps engineer diagnosing microservices systems.
 
-<img width="687" height="1024" alt="image" src="https://github.com/user-attachments/assets/5f1bfd29-fecb-42f3-8e4e-3655106d86d7" />
+![Failure Matrix & Root Cause Remediation](img/ch1/remediation-procedure-table.png)
 
 ## 1.5 Hands-On Lab: Decoupling a Monolith into Event-Driven Microservices
 
@@ -111,9 +107,9 @@ The starting monolithic application manages both Order Placement and Payment Pro
 
 ### Architecture Overview
 
-<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/8412a8d3-efc5-42f5-99d5-25ec6e9c7e64" />
+![Hands-On Lab-before](img/ch1/event-driven-flow-before-lab.png)
 
-<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/2e44fa30-59e5-41c0-ba61-d276906718de" />
+![Hands-On Lab-before](img/ch1/event-driven-flow-after-lab.png)
 
 ### Step 2: Protocol Buffers Schema Definition
 
