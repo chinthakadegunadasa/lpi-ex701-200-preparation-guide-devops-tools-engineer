@@ -41,35 +41,35 @@ Table of Contents
 ### 5.5 **Hands-On Lab:** Constructing Minimalistic, Hardened Multi-Stage Container Images
 
 ## Chapter 6: Advanced Container Storage & Overlay Networking
-6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)
-*   6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts
-*   6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay
-*   6.4 Enterprise Multi-Host Networking Configuration
-*   6.5 **Hands-On Lab:** Configuring Cross-Node Container Overlay Networks with Custom Subnets
+### 6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)
+### 6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts
+### 6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay
+### 6.4 Enterprise Multi-Host Networking Configuration
+### 6.5 **Hands-On Lab:** Configuring Cross-Node Container Overlay Networks with Custom Subnets
 
-#### Chapter 7: Service Discovery & Dynamic Routing
-*   7.1 Principles of Service Discovery in Distributed Systems
-*   7.2 HashiCorp Consul Cluster Deployment and Service Registration
-*   7.3 Dynamic Reverse Proxying with Traefik and NGINX
-*   7.4 Health Checking and Automated Traffic Rerouting
-*   7.5 **Hands-On Lab:** Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing
+## Chapter 7: Service Discovery & Dynamic Routing
+### 7.1 Principles of Service Discovery in Distributed Systems
+### 7.2 HashiCorp Consul Cluster Deployment and Service Registration
+### 7.3 Dynamic Reverse Proxying with Traefik and NGINX
+### 7.4 Health Checking and Automated Traffic Rerouting
+### 7.5 **Hands-On Lab:** Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing
 
-#### Chapter 8: Enterprise Kubernetes Architecture & Operations
-*   8.1 Kubernetes Control Plane Components (kube-apiserver, etcd, kube-scheduler, kube-controller-manager)
-*   8.2 Worker Node Architecture (kubelet, kube-proxy, Container Runtime)
-*   8.3 `kubectl` CLI Configuration and API Interactivity
-*   8.4 Production Cluster Bootstrapping Standards (`kubeadm`)
-*   8.5 **Hands-On Lab:** Bootstrapping a Multi-Node Kubernetes Control Plane via Kubeadm
+## Chapter 8: Enterprise Kubernetes Architecture & Operations
+### 8.1 Kubernetes Control Plane Components (kube-apiserver, etcd, kube-scheduler, kube-controller-manager)
+### 8.2 Worker Node Architecture (kubelet, kube-proxy, Container Runtime)
+### 8.3 `kubectl` CLI Configuration and API Interactivity
+### 8.4 Production Cluster Bootstrapping Standards (`kubeadm`)
+### 8.5 **Hands-On Lab:** Bootstrapping a Multi-Node Kubernetes Control Plane via Kubeadm
 
-#### Chapter 9: Kubernetes Workload Management
-*   9.1 Pod Lifecycle, Phase Transitions, and Health Probes (Liveness, Readiness, Startup)
-*   9.2 Deployments, Rollouts, and Rollback Mechanics
-*   9.3 StatefulSets: Ordered Provisioning and Persistent Identity
-*   9.4 DaemonSets, Jobs, and CronJobs
-*   9.5 Kubernetes Services (ClusterIP, NodePort, LoadBalancer) and Ingress Controllers
-*   9.6 **Hands-On Lab:** Deploying a High-Availability Stateful Workload with Ingress Routing
+## Chapter 9: Kubernetes Workload Management
+### 9.1 Pod Lifecycle, Phase Transitions, and Health Probes (Liveness, Readiness, Startup)
+### 9.2 Deployments, Rollouts, and Rollback Mechanics
+### 9.3 StatefulSets: Ordered Provisioning and Persistent Identity
+### 9.4 DaemonSets, Jobs, and CronJobs
+### 9.5 Kubernetes Services (ClusterIP, NodePort, LoadBalancer) and Ingress Controllers
+### 9.6 **Hands-On Lab:** Deploying a High-Availability Stateful Workload with Ingress Routing
 
-#### Chapter 10: Kubernetes Storage, ConfigMaps, & Secrets
+## Chapter 10: Kubernetes Storage, ConfigMaps, & Secrets
 *   10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning
 *   10.2 Container Storage Interface (CSI) Drivers
 *   10.3 Decoupling Configuration using ConfigMaps
@@ -82,8 +82,6 @@ Table of Contents
 *   11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
 *   11.4 Pod Security Standards (PSS) and Admission Controllers
 *   11.5 **Hands-On Lab:** Implementing Zero-Trust Network Policies and Granular RBAC RBAC Security
-
----
 
 ### Module 3: Infrastructure Configuration & Automation (Topic 703)
 
