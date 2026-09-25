@@ -24,15 +24,6 @@ In enterprise Kubernetes environments, high-level container runtimes interact wi
 ### 1.2 Enterprise Security Matrix for Containerized Workloads
 ![Enterprise Security Matrix for Containerized Workloads](img/lpi-ex701-200-ch2-container-security-matrix.jpeg)
 
-| Security Layer | Traditional/Insecure Configuration | Enterprise Production Standard | Risk Mitigated |
-| --- | --- | --- | --- |
-| **User Privileges** | `root` (UID 0) inside container | Unprivileged user (e.g., `UID 10001`) | Privilege escalation to host kernel |
-| **Root Filesystem** | Read-Write (`rw`) | Read-Only (`ro`) with explicit `tmpfs` mounts | Malware injection & runtime tampering |
-| **Linux Capabilities** | Default capabilities enabled | `DROP ALL`, add explicit capabilities (`NET_BIND_SERVICE`) | Container breakout via syscall manipulation |
-| **Base Image Layer** | `ubuntu:latest` or `debian:latest` | Minimal Alpine or Google `distroless` | Unnecessary binaries & CVE attack surface |
-
----
-
 ## 2. Hands-On Laboratory: Securing and Orchestrating Microservices
 
 In this enterprise hands-on lab, you will engineer a secure, highly optimized multi-stage OCI container image for a microservice and deploy it using an **Ambassador Sidecar pattern** with custom health probes and security contexts.
