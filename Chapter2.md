@@ -26,27 +26,7 @@ In enterprise Kubernetes environments, high-level container runtimes interact wi
 
 In this enterprise hands-on lab, you will engineer a secure, highly optimized multi-stage OCI container image for a microservice and deploy it using an **Ambassador Sidecar pattern** with custom health probes and security contexts.
 
-```
-                          ┌────────────────────────────────────────────────┐
-                          │                   POD BOUNDARY                 │
-                          │                                                │
-                          │  ┌───────────────────┐  ┌───────────────────┐  │
-                          │  │   MAIN CONTAINER  │  │ SIDECAR CONTAINER │  │
-                          │  │                   │  │                   │  │
-Client Request ───────────┼─>│   Microservice    │─>│ Ambassador Proxy  │──┼─> Outbound Service
-(Port 8080)               │  │  (Unprivileged)   │  │   (Localhost:9000)│  │   (External API)
-                          │  └─────────┬─────────┘  └───────────────────┘  │
-                          │            │                                   │
-                          │            v                                   │
-                          │   ┌─────────────────┐                          │
-                          │   │ Liveness Probe  │                          │
-                          │   │ /healthz        │                          │
-                          │   └─────────────────┘                          │
-                          └────────────────────────────────────────────────┘
-
-```
-
----
+![POD BOUNDARY](img/lpi-ex701-200-ch2-pod-boundary.jpeg)
 
 ### Step 1: Environment & Workspace Preparation
 
