@@ -75,29 +75,7 @@ The previous matrix (originally from image_5.png but adapted for content) has be
 
 Event-Driven Architecture (EDA) decouples systems using asynchronous messaging. When something of note occurs (an "event"), a service *publishes* this event to a message broker. Other services that need to react to that event *subscribe* and *consume* it.
 
-```text
-+-----------------------+   Event Published   +-----------------------+
-|    Order Service      | -----------------> |    Message Broker    |
-| [Sync Order Check]    |                     | (e.g., RabbitMQ,      |
-+-----------------------+                     |        Kafka)         |
-                                             +-----------------------+
-                                                     ||
-                                                     || Event Consumed
-                                                     || (Asynchronously)
-                                                     vv
-+-----------------------+                     +-----------------------+
-|  Inventory Service    | <----------------- |    Billing Service    |
-| [Consume, Check Stock]|                     | [Consume, ProcessPay] |
-+-----------------------+                     +-----------------------+
-
-```
-
-#### Event-Driven Prompt for Image Generation
-
-```text
-A professional, technical architecture diagram illustrating an "Event-Driven Architecture Flow". Style & Aesthetics: Clean light-mode print style, minimal textbook diagram layout, crisp black vector line art on a stark white background with subtle slate-gray fill accents. Modern technical sans-serif typography, perfectly legible text labels, flat 2D graphic design, high contrast, precise vector lines. Pure white background, no dark backgrounds, no 3D shading, no gradients, no photorealism. Layout & Flow (Top-Down & Branched Asynchronous Flow): A central top rectangular block is labeled "Order Service" and "(Sync Order Check)". A horizontal downward arrow labeled "Event Published" points from the side of the "Order Service" block to a central block labeled "Message Broker" (and "e.g., RabbitMQ, Kafka"). Below the Message Broker, a large, centered dual-arrow structure points downwards, labeled "Event Consumed (Asynchronously)". This branched connection points directly to two separate rectangular blocks positioned side-by-side: "Inventory Service" (and "(Consume, Check Stock)") on the left, and "Billing Service" (and "(Consume, ProcessPay)") on the right. An overall layout that emphasizes asynchronous fan-out from the broker, presented clearly like a blueprint schematic.
-
-```
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/a58e1ccf-eaed-485e-8f6c-11d98d3d3424" />
 
 #### Key Enterprise Messaging Components (RabbitMQ Example):
 
