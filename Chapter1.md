@@ -17,34 +17,7 @@ For the DevOps engineer, the choice between architectural patterns fundamentally
 ### 1.1.1 Monolithic Architecture
 
 A monolith is a unified unit. All components—from UI code to backend business logic and database access—are tightly coupled and deployed together as a single artifact.
-
-```text
-[Monolithic Application]
-+-----------------------------------+
-|            Monolith               |
-+-----------------------------------+
-|  [User Interface]                 |
-|  [Business Logic - Billing]       |
-|  [Business Logic - Catalog]       |
-|  [Business Logic - Shipping]      |
-|  [Data Access Layer]              |
-+-----------------------------------+
-|          [Single Binary]          |
-+-----------------------------------+
-              ||
-              vv
-+-----------------------------------+
-|         [Single Database]         |
-+-----------------------------------+
-
-```
-
-#### Monolith Prompt for Image Generation
-
-```text
-A professional, technical textbook architecture diagram illustrating a "Monolithic Application". Style & Aesthetics: Clean light-mode print style, minimal textbook diagram layout, crisp black vector line art on a stark white background with subtle slate-gray row-header highlights. Modern technical sans-serif typography, flat 2D graphic design, high contrast, clean grid lines. Structure & Layout: A large, single central block labeled "Monolith". Inside this block, stacked layers (represented as boxes) are shown: "User Interface", "Business Logic - Billing", "Business Logic - Catalog", "Business Logic - Shipping", and "Data Access Layer". An outer bracket around all layers labels the whole block as "Single Binary". A vertical arrow points from the bottom of the "Single Binary" bracket down to a separate cylindrical database icon labeled "Single Database". The entire structure is minimal, schematic, and clean, like a technical manual entry.
-
-```
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/d4458865-989e-4f2f-9d00-87ee43fb9149" />
 
 #### Enterprise Considerations:
 
@@ -57,28 +30,7 @@ A professional, technical textbook architecture diagram illustrating a "Monolith
 
 Microservices partition the application into a collection of loosely coupled, independent, single-purpose services. Each service is self-contained, manages its own private data, and communicates over network protocols (like HTTP/REST, gRPC).
 
-```text
-[Microservices Application]
-+-----------------+   +-----------------+   +-----------------+
-| Billing Service |   | Catalog Service |   | Shipping Service|
-| (Independent)   |   | (Independent)   |   | (Independent)   |
-+-----------------+   +-----------------+   +-----------------+
-| [Service Binary]|   | [Service Binary]|   | [Service Binary]|
-+-----------------+   +-----------------+   +-----------------+
-      ||                    ||                    ||
-      vv                    vv                    vv
-+-----------------+   +-----------------+   +-----------------+
-| [Billing DB]    |   | [Catalog DB]    |   | [Shipping DB]   |
-+-----------------+   +-----------------+   +-----------------+
-
-```
-
-#### Microservices Prompt for Image Generation
-
-```text
-A professional, technical architecture flowchart illustrating a "Microservices Application". Style & Aesthetics: Clean light-mode print style, minimal textbook diagram layout, crisp black vector line art on a stark white background with subtle slate-gray row-header highlights. Modern technical sans-serif typography, perfectly legible text labels, flat 2D graphic design, high contrast, precise vector lines. Pure white background, no dark backgrounds, no 3D shading, no gradients, no photorealism. Layout & Flow (Horizontal Flow): Three separate, self-contained columns are shown side-by-side. Each column is structured vertically. Top Blocks: Rectangular boxes labeled "Billing Service", "Catalog Service", and "Shipping Service" respectively, each bracketed by "(Independent)". Middle Blocks: Just below each service, rectangular boxes labeled "[Service Binary]". Connection: A clear vertical arrow points from each service box down to its respective binary box. Bottom Blocks: Below each binary box, cylindrical database icons labeled "[Billing DB]", "[Catalog DB]", and "[Shipping DB]" respectively. An overall layout that emphasizes independence and encapsulation within each vertical stack, presented side-by-side like a schematic guide.
-
-```
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/15bdbfbb-68ab-432d-a9ff-132853932cd9" />
 
 #### Enterprise Considerations:
 
