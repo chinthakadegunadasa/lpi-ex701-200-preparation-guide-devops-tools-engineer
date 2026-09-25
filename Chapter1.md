@@ -16,7 +16,7 @@ For the DevOps engineer, the choice between architectural patterns fundamentally
 
 A monolith is a unified unit. All components—from UI code to backend business logic and database access—are tightly coupled and deployed together as a single artifact.
 
-![Monolithic Architecture](img/ch1/monolithic-application..png)
+![Monolithic Architecture](img/ch1/monolithic-application.png)
 
 #### Enterprise Considerations:
 
@@ -27,7 +27,7 @@ A monolith is a unified unit. All components—from UI code to backend business 
 
 Microservices partition the application into a collection of loosely coupled, independent, single-purpose services. Each service is self-contained, manages its own private data, and communicates over network protocols (like HTTP/REST, gRPC).
 
-<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/15bdbfbb-68ab-432d-a9ff-132853932cd9" />
+![Microservices Architecture](img/ch1/microservices-application.png)
 
 #### Enterprise Considerations:
 
@@ -39,7 +39,7 @@ Microservices partition the application into a collection of loosely coupled, in
 
 Serverless (FaaS) abstracts away the server and infrastructure completely. Developers write stateless, event-triggered "functions" that execute small, discrete logic units. The cloud provider handles all provisioning, scaling, and fault tolerance.
 
-<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/f0ed3908-c6e8-410c-8a54-700238852368" />
+![Serverless Paradigm](img/ch1/serverless-paradigm.png)
 
 #### Enterprise Considerations:
 
@@ -70,11 +70,10 @@ gRPC is a high-performance RPC framework designed for internal microservices com
 
 The previous matrix (originally from image_5.png but adapted for content) has been refined to comprehensively compare the protocols.
 
----
-
 ## 1.3 Event-Driven Architecture & Message Queuing
 
 Event-Driven Architecture (EDA) decouples systems using asynchronous messaging. When something of note occurs (an "event"), a service *publishes* this event to a message broker. Other services that need to react to that event *subscribe* and *consume* it.
+![Event-Driven Architecture](img/ch1/event-driven-architecture-flow.png)
 
 <img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/a58e1ccf-eaed-485e-8f6c-11d98d3d3424" />
 
