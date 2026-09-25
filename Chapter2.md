@@ -21,28 +21,6 @@ In enterprise Kubernetes environments, high-level container runtimes interact wi
 
 ![KUBERNETES NODE (KUBELET)](img/lpi-ex701-200-ch2-kubernetes-node.jpeg)
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   KUBERNETES NODE (KUBELET)                           │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ Container Runtime Interface (CRI)
-                                    v
-┌────────────────────────────────────────────────────────────────────────┐
-│               HIGH-LEVEL RUNTIME (containerd / CRI-O)                   │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ OCI Runtime Spec
-                                    v
-┌────────────────────────────────────────────────────────────────────────┐
-│                   LOW-LEVEL RUNTIME (runc / crun)                       │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ Linux Namespaces / cgroups
-                                    v
-┌────────────────────────────────────────────────────────────────────────┐
-│                       HOST LINUX KERNEL                                │
-└────────────────────────────────────────────────────────────────────────┘
-
-```
-
 ### 1.2 Enterprise Security Matrix for Containerized Workloads
 
 | Security Layer | Traditional/Insecure Configuration | Enterprise Production Standard | Risk Mitigated |
