@@ -1,6 +1,3 @@
-Chapter4.md [generated with file_gen tool]
-
-```markdown
 # Chapter 4: Enterprise Middleware & Application Services
 
 This chapter covers enterprise middleware and application services for the **DevOps Tools Engineer (LPI 701-200)** certification. It provides production-grade architectural patterns, advanced configuration files, hands-on lab deployments, and DALL-E 3 prompts for generating clean, print-style visual documentation.
@@ -367,6 +364,10 @@ curl -I http://localhost/
 4. **Verify RabbitMQ Management API accessibility:**
 ```bash
 curl -u admin:EnterpriseSecurePass2026! http://localhost:15672/api/overview
+```
+
+```
+
 
 ```
 
@@ -404,7 +405,3 @@ redis-cli -a RedisSecurePass2026! ping
 **DALL-E 3 Prompt for Lab Architecture Diagram:**
 
 > A professional technical architecture diagram titled "Hands-On Lab Deployment Stack Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and port configurations use fixed-width code typography. Structure & Layout: A container orchestration network topology showing HAProxy routing traffic to NGINX backend nodes alongside RabbitMQ and Redis cache services. High-contrast technical schematic style. Do not display font name.
-
-```
-
-```
