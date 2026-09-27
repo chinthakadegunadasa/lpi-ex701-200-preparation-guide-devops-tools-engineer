@@ -16,106 +16,19 @@
 
 ### API Design: REST, GraphQL, and gRPC Protocols
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                API PROTOCOL INTERACTION PATTERNS                                  |
-+---------------------------------------------------------------------------------------------------+
-|                                                                                                   |
-|   [ External Client ]                                                                             |
-|            |                                                                                      |
-|            +--- ( HTTP/2 REST JSON ) ---------> [ API Gateway (Edge Proxy) ]                     |
-|            |                                                 |                                    |
-|            +--- ( GraphQL Query / Sub ) -------> [ GraphQL Server (BFF) ]                         |
-|                                                              |                                    |
-|   -----------------------------------------------------------|----------------------------------  |
-|   INTERNAL HIGH-SPEED SERVICE MESH BOUNDARY                  |                                    |
-|                                                              v                                    |
-|                                                    +-------------------+                          |
-|                                                    | Microservice A    |                          |
-|                                                    +---------+---------+                          |
-|                                                              |                                    |
-|                                                              | ( HTTP/2 Protobuf gRPC )           |
-|                                                              v                                    |
-|                                                    +-------------------+                          |
-|                                                    | Microservice B    |                          |
-|                                                    +-------------------+                          |
-+---------------------------------------------------------------------------------------------------+
-```
-
-#### DALL-E 3 Image Generation Prompt
-> **Prompt:** A professional technical architecture diagram titled "API Protocol Interaction Patterns". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and protocol specifications use fixed-width code typography. Structure & Layout: Horizontal flow showing REST JSON requests, GraphQL query routing, and internal high-speed gRPC binary communication across microservice interfaces. High-contrast technical schematic style. Do not display font name.
-
----
 ![API Protocol Interaction Patterns](assets/images/chapter2/2-2-API-Protocol-Interaction-Patterns.png)
 
 ## 2.3 Event-Driven Messaging Infrastructure
 
 ### Message Queuing Systems & Dead-Letter Processing
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                           EVENT ROUTING AND DLX PROCESSING WORKFLOW                               |
-+---------------------------------------------------------------------------------------------------+
-|                                                                                                   |
-|  [ Publisher App ] ---> ( Exchange: orders_v1 )                                                   |
-|                                |                                                                  |
-|                                +--- [ Routing Key: order.created ] ---> [ Queue: order_process ]   |
-|                                                                                 |                 |
-|                                                                                 v                 |
-|                                                                       +-------------------+       |
-|                                                                       | Consumer Worker   |       |
-|                                                                       +---------+---------+       |
-|                                                                                 |                 |
-|                                                                         (Processing Error)        |
-|                                                                                 v                 |
-|                                                                       +-------------------+       |
-|                                                                       | Reject w/o Requeue|       |
-|                                                                       +---------+---------+       |
-|                                                                                 |                 |
-|  +------------------------------------------------------------------------------+                 |
-|  |                                                                                                |
-|  v                                                                                                |
-|  ( Dead Letter Exchange: orders_dlx ) ---> [ DLQ: orders_process_dlq ] ---> [ Alerting / Replay ] |
-|                                                                                                   |
-+---------------------------------------------------------------------------------------------------+
-```
-
-#### DALL-E 3 Image Generation Prompt
-> **Prompt:** A professional technical architecture diagram titled "Event Routing and DLX Processing Workflow". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and configuration names use fixed-width code typography. Structure & Layout: Top-down pipeline showing message publishing to a Topic Exchange, routing to primary queues, and dead-letter queue (DLQ) retry redirection. High-contrast technical schematic style. Do not display font name.
-
----
+![Event Routing and DLX Processing Workflow](assets/images/chapter2/2-3-Event-Routing-and-DLX-Processing-Workflow.png)
 
 ## 2.4 Resiliency Architecture Patterns
 
 ### Circuit Breaker Pattern State Transitions
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                             CIRCUIT BREAKER STATE MACHINE TOPOLOGY                                |
-+---------------------------------------------------------------------------------------------------+
-|                                                                                                   |
-|                   +-------------------------------------------------------+                       |
-|                   |                                                       |                       |
-|                   v                                                       |                       |
-|            +---------------+     Failure Rate > Threshold          +---------------+              |
-|            |               |-------------------------------------->|               |              |
-|            |    CLOSED     |                                       |     OPEN      |              |
-|            | (Normal Ops)  |<--------------------------------------| (Fast Fail)   |              |
-|            +---------------+       Success Counter Reset           +---------------+              |
-|                    ^                                                       |                      |
-|                    |                                                       | Timer Expired        |
-|                    |               +---------------+                       |                      |
-|                    +---------------|   HALF-OPEN   |<----------------------+                      |
-|                     Success Limit  | (Probe Traffic)|                                             |
-|                     Reached        +---------------+                                              |
-|                                                                                                   |
-+---------------------------------------------------------------------------------------------------+
-```
-
-#### DALL-E 3 Image Generation Prompt
-> **Prompt:** A professional technical architecture diagram titled "Circuit Breaker State Machine Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and state conditions use fixed-width code typography. Structure & Layout: Closed-loop state machine diagram illustrating state transitions between Closed, Open, and Half-Open states based on failure rate thresholds and reset timers. High-contrast technical schematic style. Do not display font name.
-
----
+![Circuit Breaker State Machine Topology](assets/images/chapter2/2-4-Circuit-Breaker-State-Machine-Topology.png)
 
 ## 2.5 Enterprise Implementation Lab: Decoupled Order System
 
@@ -140,8 +53,11 @@
 +---------------------------------------------------------------------------------------------------+
 ```
 
+
 #### DALL-E 3 Image Generation Prompt
 > **Prompt:** A professional technical architecture diagram titled "Hands-On Decoupled Lab Infrastructure". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and port bindings use fixed-width code typography. Structure & Layout: Architectural flow showing an HTTP Gateway delegating order requests to an ingestion service, publishing events through RabbitMQ, and triggering worker microservices updating a Redis cache. High-contrast technical schematic style. Do not display font name.
+
+![Hands-On Decoupled Lab Infrastructure](assets/images/chapter2/2-5-Hands-On-Decoupled-Lab-Infrastructure.png)
 
 ### Hands-On Lab Instructions
 
