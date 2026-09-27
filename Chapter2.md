@@ -38,6 +38,8 @@
 #### DALL-E 3 Image Generation Prompt
 > **Prompt:** A professional technical architecture diagram titled "Architectural Evolution Paradigms". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with subtle slate-gray header highlights. Text labels use clear sans-serif typography, and technical names use fixed-width code typography. Structure & Layout: Three side-by-side comparative diagrams showing Monolithic (single block with database), Microservices (decoupled blocks with dedicated databases), and Serverless (event-driven functions over managed infrastructure). High-contrast technical schematic style. Do not display font name.
 
+![Architectural Evolution Paradigms](assets/images/chapter2/2-1-Architectural-Evolution-Paradigms.png)
+
 #### Enterprise Trade-Off Matrix
 
 ```
