@@ -2,9 +2,9 @@
 
 This chapter covers foundational cloud-native architectural patterns for the **DevOps Tools Engineer (LPI 701-200)** certification. It provides enterprise-grade architectural analysis, hands-on configuration examples, protocol comparisons, reliability patterns, and DALL-E 3 prompts for generating clean, print-style visual documentation.
 
----
-
 ## 1.1 Monolithic vs. Microservices vs. Serverless Paradigms
+
+![Architectural Evolution Paradigms](assets/images/chapter1/1-1-Architectural-Evolution-Paradigms.png)
 
 Selecting an application architecture requires evaluating operational complexity, deployment velocity, fault isolation, and resource consumption. Enterprise environments often transition from monolithic codebases to microservices or serverless architectures to increase velocity and scalability.
 
