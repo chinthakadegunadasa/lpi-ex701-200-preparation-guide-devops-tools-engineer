@@ -1,6 +1,6 @@
 # Chapter 1: Cloud-Native Architecture Patterns
 
-This chapter covers foundational cloud-native architectural patterns for the **DevOps Tools Engineer (LPI 701-200)** certification. It provides enterprise-grade architectural analysis, hands-on configuration examples, protocol comparisons, reliability patterns, and DALL-E 3 prompts for generating clean, print-style visual documentation.
+This chapter covers foundational cloud-native architectural patterns for the **DevOps Tools Engineer (LPI 701-200)** certification. It provides enterprise-grade architectural analysis, hands-on configuration examples, protocol comparisons, and reliability patterns.
 
 ## 1.1 Monolithic vs. Microservices vs. Serverless Paradigms
 
