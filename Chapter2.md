@@ -1,7 +1,5 @@
 # Chapter 2: Enterprise Cloud-Native Architecture & Microservices Implementation
 
----
-
 ## 2.1 Architectural Paradigms & System Deconstruction
 
 ### Monolithic vs. Microservices vs. Serverless Architectural Paradigms
@@ -31,31 +29,6 @@
 ![Circuit Breaker State Machine Topology](assets/images/chapter2/2-4-Circuit-Breaker-State-Machine-Topology.png)
 
 ## 2.5 Enterprise Implementation Lab: Decoupled Order System
-
-```
-+---------------------------------------------------------------------------------------------------+
-|                          HANDS-ON DECOUPLED LAB INFRASTRUCTURE                                    |
-+---------------------------------------------------------------------------------------------------+
-|                                                                                                   |
-|  [ Client ] ---> [ NGINX Edge Proxy :80 ] ---> [ Ingestion App :8080 ]                            |
-|                                                      |                                            |
-|                                             (Publish JSON Event)                                  |
-|                                                      v                                            |
-|                                          [ RabbitMQ Exchange :5672 ]                              |
-|                                                      |                                            |
-|                                                      v                                            |
-|                                           [ Worker Pool (Node) ]                                  |
-|                                                      |                                            |
-|                                            (Cache State Updates)                                  |
-|                                                      v                                            |
-|                                          [ Redis Cluster :6379 ]                                  |
-|                                                                                                   |
-+---------------------------------------------------------------------------------------------------+
-```
-
-
-#### DALL-E 3 Image Generation Prompt
-> **Prompt:** A professional technical architecture diagram titled "Hands-On Decoupled Lab Infrastructure". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and port bindings use fixed-width code typography. Structure & Layout: Architectural flow showing an HTTP Gateway delegating order requests to an ingestion service, publishing events through RabbitMQ, and triggering worker microservices updating a Redis cache. High-contrast technical schematic style. Do not display font name.
 
 ![Hands-On Decoupled Lab Infrastructure](assets/images/chapter2/2-5-Hands-On-Decoupled-Lab-Infrastructure.png)
 
@@ -147,7 +120,32 @@ docker-compose ps
 
 # 3. Simulate high-volume order ingestion
 curl -X POST http://localhost/api/v1/orders \
-  -H "Content-Type: application/json" \
+
+
+```
++---------------------------------------------------------------------------------------------------+
+|                          HANDS-ON DECOUPLED LAB INFRASTRUCTURE                                    |
++---------------------------------------------------------------------------------------------------+
+|                                                                                                   |
+|  [ Client ] ---> [ NGINX Edge Proxy :80 ] ---> [ Ingestion App :8080 ]                            |
+|                                                      |                                            |
+|                                             (Publish JSON Event)                                  |
+|                                                      v                                            |
+|                                          [ RabbitMQ Exchange :5672 ]                              |
+|                                                      |                                            |
+|                                                      v                                            |
+|                                           [ Worker Pool (Node) ]                                  |
+|                                                      |                                            |
+|                                            (Cache State Updates)                                  |
+|                                                      v                                            |
+|                                          [ Redis Cluster :6379 ]                                  |
+|                                                                                                   |
++---------------------------------------------------------------------------------------------------+
+```
+
+
+#### DALL-E 3 Image Generation Prompt
+> **Prompt:** A professional technical architecture diagram titled "Hands-On Decoupled Lab Infrastructure". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and port bindings use fixed-width code typography. Structure & Layout: Architectural flow showing an HTTP Gateway delegating order requests to an ingestion service, publishing events through RabbitMQ, and triggering worker microservices updating a Redis cache. High-contrast technical schematic style. Do not display font name.  -H "Content-Type: application/json" \
   -d '{"order_id": "ORD-9921", "customer": "EntCorp", "amount": 1450.00}'
 
 # 4. Verify message queue delivery and consumption
