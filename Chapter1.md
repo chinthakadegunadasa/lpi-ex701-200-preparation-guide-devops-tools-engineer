@@ -61,7 +61,7 @@ message AuditLogResponse {
 }
 ```
 
-![API Protocol Interaction Patterns](assets/images/chapter1/1-2-API-Protocol-Interaction-Patterns.png)
+![API Protocol Interaction Patterns](assets/images/chapter1/1-2-API -Protocol-Interaction-Patterns.png)
 
 ## 1.3 Event-Driven Architecture & Message Queuing
 
