@@ -73,38 +73,7 @@ Event-Driven Architecture (EDA) decouples producers and consumers using event br
 - **Point-to-Point (Queue):** Messages are consumed by exactly one consumer worker from a shared pool (e.g., SQS, RabbitMQ Queues).
 - **Event Sourcing:** State changes are logged as an immutable sequence of events, allowing point-in-time reconstruction.
 
-```
-+-----------------------------------------------------------------------------------+
-|                    EVENT ROUTING & DLX PROCESSING WORKFLOW                        |
-|                                                                                   |
-|  [ Order Service ]                                                                |
-|         |                                                                         |
-|         v (Publish: order.created)                                                |
-|  +-----------------------------------------------------------------------------+  |
-|  |                      Topic Exchange: order_events                           |  |
-|  +-----------------------------------------------------------------------------+  |
-|         |                                              |                          |
-|         v (Binding: order.created)                     v (Binding: order.#)       |
-|  +---------------------------+              +----------------------------------+  |
-|  | Queue: payment_processing |              | Queue: inventory_audit           |  |
-|  +---------------------------+              +----------------------------------+  |
-|         |                                              |                          |
-|         v (Failure / Max Retries)                      v                          |
-|  +---------------------------+              +----------------------------------+  |
-|  | Dead-Letter Exchange (DLX)|              | Audit Service                    |  |
-|  +---------------------------+              +----------------------------------+  |
-|         |                                                                         |
-|         v                                                                         |
-|  +---------------------------+                                                    |
-|  | Queue: payment_dlq        |                                                    |
-|  +---------------------------+                                                    |
-+-----------------------------------------------------------------------------------+
-```
-
-**DALL-E 3 Prompt for Event Diagram:**
-> A professional technical architecture diagram titled "Event Routing and DLX Processing Workflow". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and configuration names use fixed-width code typography. Structure & Layout: Top-down pipeline showing message publishing to a Topic Exchange, routing to primary queues, and dead-letter queue (DLQ) retry redirection. High-contrast technical schematic style. Do not display font name.
-
----
+![Event Routing and DLX Processing Workflow](assets/images/chapter1/1-3-Event-Routing-and-DLX-Processing-Workflow.png)
 
 ## 1.4 Enterprise Scalability, Fault Tolerance, and High Availability
 
