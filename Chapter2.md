@@ -46,6 +46,7 @@
 > **Prompt:** A professional technical architecture diagram titled "API Protocol Interaction Patterns". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and protocol specifications use fixed-width code typography. Structure & Layout: Horizontal flow showing REST JSON requests, GraphQL query routing, and internal high-speed gRPC binary communication across microservice interfaces. High-contrast technical schematic style. Do not display font name.
 
 ---
+![API Protocol Interaction Patterns](assets/images/chapter2/2-2-API-Protocol-Interaction-Patterns.png)
 
 ## 2.3 Event-Driven Messaging Infrastructure
 
