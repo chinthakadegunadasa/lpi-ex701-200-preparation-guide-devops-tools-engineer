@@ -93,34 +93,7 @@ This lab demonstrates decoupling a synchronous monolithic processing path into a
 
 ### Lab Topology Schematic
 
-![Hands-On Decoupled Lab Infrastructur]()
-
-```
-+-----------------------------------------------------------------------------------+
-|                     HANDS-ON DECOUPLED LAB INFRASTRUCTURE                         |
-|                                                                                   |
-|  [ Client Request ] --> [ HAProxy Gateway (:80) ]                                 |
-|                                |                                                  |
-|                                v                                                  |
-|                   [ Order Ingestion Service ]                                     |
-|                                |                                                  |
-|                                v (Asynchronous Event Publish)                     |
-|                     [ RabbitMQ Broker (:5672) ]                                   |
-|                                |                                                  |
-|                 +--------------+--------------+                                   |
-|                 |                             |                                   |
-|                 v                             v                                   |
-|  [ Payment Worker Service ]          [ Inventory Worker Service ]                 |
-|                 |                             |                                   |
-|                 +--------------+--------------+                                   |
-|                                |                                                  |
-|                                v                                                  |
-|                   [ Redis State Cache (:6379) ]                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-**DALL-E 3 Prompt for Lab Diagram:**
-> A professional technical architecture diagram titled "Hands-On Decoupled Lab Infrastructure". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and port bindings use fixed-width code typography. Structure & Layout: Architectural flow showing an HTTP Gateway delegating order requests to an ingestion service, publishing events through RabbitMQ, and triggering worker microservices updating a Redis cache. High-contrast technical schematic style. Do not display font name.
+![Hands-On Decoupled Lab Infrastructur](assets/images/chapter1/1-5-Hands-On Decoupled-Lab-Infrastructure.png)
 
 ### Deployment Orchestration (`docker-compose.yml`)
 
