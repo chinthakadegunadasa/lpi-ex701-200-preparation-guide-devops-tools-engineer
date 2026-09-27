@@ -93,7 +93,7 @@ This lab demonstrates decoupling a synchronous monolithic processing path into a
 
 ### Lab Topology Schematic
 
-![Hands-On Decoupled Lab Infrastructur](assets/images/chapter1/1-5-Hands-On Decoupled-Lab-Infrastructure.png)
+![Hands-On Decoupled Lab Infrastructur]()
 
 ### Deployment Orchestration (`docker-compose.yml`)
 
