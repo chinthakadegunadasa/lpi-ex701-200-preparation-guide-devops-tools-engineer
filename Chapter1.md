@@ -10,18 +10,7 @@ Selecting an application architecture requires evaluating operational complexity
 
 ### Paradigm Comparison Matrix
 
-| Attribute / Factor | Monolithic Architecture | Microservices Architecture | Serverless Paradigm (FaaS) |
-| :--- | :--- | :--- | :--- |
-| **Deployment Unit** | Single executable artifact (e.g., `.war`, single binary). | Independent container images per domain bounded-context. | Event-driven code zip/container deployed to managed runtime. |
-| **Scaling Model** | Vertical scaling or horizontal replication of entire stack. | Fine-grained independent horizontal auto-scaling per service. | Instant scale-to-zero and automatic burst scaling per event. |
-| **Fault Boundary** | Single process; memory leak or unhandled panic impacts entire system. | Isolated to individual service; fault isolated via circuit breakers. | Function execution failure is isolated to a single event invocation. |
-| **Data Storage** | Centralized relational database; shared schema across modules. | Database-per-service pattern; distributed data management. | Ephemeral stateless compute; relies on managed external datastores. |
-| **Operational Overhead** | Low initial operational complexity; monolithic CI/CD pipeline. | High overhead; requires automated CI/CD, service mesh, & tracing. | Low infrastructure maintenance; high vendor control & monitoring demands. |
-
-**DALL-E 3 Prompt for Comparison Table:**
-> A professional technical comparison diagram titled "Architectural Paradigms Matrix". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and technical terms use fixed-width code typography. Structure & Layout: A structured 4-column comparative table evaluating Monolithic, Microservices, and Serverless paradigms across deployment, scaling, fault boundaries, data storage, and operational overhead. High-contrast technical textbook schematic style. Do not display font name.
-
----
+![Architectural Paradigms Matrix](assets/images/chapter1/1-1-Architectural-Paradigms-Matrix.png)
 
 ## 1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL
 
