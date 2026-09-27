@@ -61,22 +61,7 @@ message AuditLogResponse {
 }
 ```
 
-```
-+-----------------------------------------------------------------------------------+
-|                        API PROTOCOL INTERACTION PATTERNS                          |
-|                                                                                   |
-|  [ REST Client ] ---- HTTP/1.1 (JSON) -------> [ OpenAPI REST Gateway ]           |
-|                                                      |                            |
-|  [ Mobile App ]   ---- GraphQL (POST/JSON) ---> [ GraphQL Query Engine ]          |
-|                                                      |                            |
-|  [ Microservice ] ---- HTTP/2 (gRPC/Protobuf) -> [ Internal gRPC Service ]        |
-+-----------------------------------------------------------------------------------+
-```
-
-**DALL-E 3 Prompt for Protocol Diagram:**
-> A professional technical architecture diagram titled "API Protocol Interaction Patterns". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and protocol specifications use fixed-width code typography. Structure & Layout: Horizontal flow showing REST JSON requests, GraphQL query routing, and internal high-speed gRPC binary communication across microservice interfaces. High-contrast technical schematic style. Do not display font name.
-
----
+![API Protocol Interaction Patterns](assets/images/chapter1/1-2-API-Protocol-Interaction-Patterns.png)
 
 ## 1.3 Event-Driven Architecture & Message Queuing
 
