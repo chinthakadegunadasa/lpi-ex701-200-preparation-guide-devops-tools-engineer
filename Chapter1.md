@@ -85,36 +85,15 @@ Building resilient systems requires engineering for failure at every layer of th
 2. **Bulkhead:** Isolates critical resource pools (e.g., separate thread pools per downstream dependency) so that an outage in one pool does not starve others.
 3. **Rate Limiting & Throttling:** Protects services from overload by enforcing upper limits on incoming request rates using algorithms like token bucket or leaky bucket.
 
-```
-+-----------------------------------------------------------------------------------+
-|                       CIRCUIT BREAKER STATE MACHINE TOPOLOGY                      |
-|                                                                                   |
-|                   +---------------------------------------+                       |
-|                   |                                       |                       |
-|                   v                                       |                       |
-|          +-----------------+    Error Rate > Threshold   +-----------------+      |
-|  ======> |  CLOSED STATE   | --------------------------> |   OPEN STATE    |      |
-|          | (Normal Flow)   |                             | (Fast Failures) |      |
-|          +-----------------+                             +-----------------+      |
-|                   ^                                               |               |
-|                   |              Success Trial                    | Reset Timer   |
-|                   |           +-----------------+                 | Expired       |
-|                   +---------- | HALF-OPEN STATE | <---------------+               |
-|                               | (Testing Flow)  |                                 |
-|                               +-----------------+                                 |
-+-----------------------------------------------------------------------------------+
-```
-
-**DALL-E 3 Prompt for Resiliency Diagram:**
-> A professional technical architecture diagram titled "Circuit Breaker State Machine Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and state conditions use fixed-width code typography. Structure & Layout: Closed-loop state machine diagram illustrating state transitions between Closed, Open, and Half-Open states based on failure rate thresholds and reset timers. High-contrast technical schematic style. Do not display font name.
-
----
+![Circuit Breaker State Machine Topology](assets/images/chapter1/1-4-Circuit-Breaker-State-Machine-Topology.png)
 
 ## 1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices
 
 This lab demonstrates decoupling a synchronous monolithic processing path into an asynchronous event-driven workflow using Docker Compose, NGINX, RabbitMQ, Python application services, and Redis.
 
 ### Lab Topology Schematic
+
+![Hands-On Decoupled Lab Infrastructur]()
 
 ```
 +-----------------------------------------------------------------------------------+
