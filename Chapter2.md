@@ -6,58 +6,11 @@
 
 ### Monolithic vs. Microservices vs. Serverless Architectural Paradigms
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                 ARCHITECTURAL EVOLUTION PARADIGMS                                |
-+---------------------------------------------------------------------------------------------------+
-|  1. MONOLITHIC ARCHITECTURE                                                                       |
-|  +---------------------------------------------------------------------------------------------+  |
-|  | [ Application Layer: UI / Business Logic / Data Access ]                                    |  |
-|  +---------------------------------------------------------------------------------------------+  |
-|                                                | (Single Shared Connection)                       |
-|                                                v                                                  |
-|                                    [( Monolithic RDBMS )]                                         |
-|                                                                                                   |
-|  2. MICROSERVICES ARCHITECTURE                                                                    |
-|  +------------------+         +------------------+         +------------------+                   |
-|  |  User Service    |         |  Order Service   |         | Payment Service  |                   |
-|  |  (Container A)   |         |  (Container B)   |         | (Container C)    |                   |
-|  +--------+---------+         +--------+---------+         +--------+---------+                   |
-|           |                            |                            |                             |
-|           v                            v                            v                             |
-|  [( User DB: Redis )]        [( Order DB: PGSQL )]       [( Pay DB: Mongo )]                  |
-|                                                                                                   |
-|  3. SERVERLESS PARADIGM                                                                           |
-|  [ Event Source ] ---> ( API Gateway / Event Bus ) ---> [ Ephemeral Function (FaaS) ]             |
-|                                                                   | (Stateless Execution)         |
-|                                                                   v                               |
-|                                                      [( Managed Cloud State )]                    |
-+---------------------------------------------------------------------------------------------------+
-```
-
-#### DALL-E 3 Image Generation Prompt
-> **Prompt:** A professional technical architecture diagram titled "Architectural Evolution Paradigms". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with subtle slate-gray header highlights. Text labels use clear sans-serif typography, and technical names use fixed-width code typography. Structure & Layout: Three side-by-side comparative diagrams showing Monolithic (single block with database), Microservices (decoupled blocks with dedicated databases), and Serverless (event-driven functions over managed infrastructure). High-contrast technical schematic style. Do not display font name.
-
 ![Architectural Evolution Paradigms](assets/images/chapter2/2-1-Architectural-Evolution-Paradigms.png)
 
 #### Enterprise Trade-Off Matrix
 
-```
-+-------------------+---------------------------+---------------------------+---------------------------+
-| Characteristic    | Monolithic Architecture   | Microservices Architecture| Serverless Paradigm       |
-+-------------------+---------------------------+---------------------------+---------------------------+
-| Deployment Unit   | Single Artefact (.war/bin)| Independent Containers    | Atomic Function Code      |
-| Scaling Model     | Vertical / Replicated Core| Horizontal per Service    | Event-driven Concurrency  |
-| Data Consistency  | ACIS Strong Consistency   | Eventual Consistency      | Eventual/Managed State    |
-| Operational Cost  | Low Initial Overhead      | High (Requires K8s/Mesh)  | Pay-per-execution Model   |
-| Fault Isolation   | Low (Process Shared)      | High (Process Isolated)   | Extreme (Per-invocation)  |
-+-------------------+---------------------------+---------------------------+---------------------------+
-```
-
-#### DALL-E 3 Image Generation Prompt
-> **Prompt:** A professional technical comparison diagram titled "Architectural Paradigms Matrix". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and technical terms use fixed-width code typography. Structure & Layout: A structured 4-column comparative table evaluating Monolithic, Microservices, and Serverless paradigms across deployment, scaling, fault boundaries, data storage, and operational overhead. High-contrast technical textbook schematic style. Do not display font name.
-
----
+![Architectural Paradigms Matrix](assets/images/chapter2/2-1-Architectural-Paradigms-Matrix.png)
 
 ## 2.2 Enterprise Inter-Service Communication
 
