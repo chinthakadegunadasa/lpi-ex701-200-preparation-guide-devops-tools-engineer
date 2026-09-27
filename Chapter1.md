@@ -4,24 +4,9 @@ This chapter covers foundational cloud-native architectural patterns for the **D
 
 ## 1.1 Monolithic vs. Microservices vs. Serverless Paradigms
 
-![Architectural Evolution Paradigms](assets/images/chapter1/1-1-Architectural-Evolution-Paradigms.png)
-
 Selecting an application architecture requires evaluating operational complexity, deployment velocity, fault isolation, and resource consumption. Enterprise environments often transition from monolithic codebases to microservices or serverless architectures to increase velocity and scalability.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        ARCHITECTURAL EVOLUTION PARADIGMS                          |
-|                                                                                   |
-|  [ Monolith ]                   [ Microservices ]            [ Serverless ]       |
-|  +-----------------------+     +-------+ +-------+          +-----+ +-----+       |
-|  | UI / Business Logic / |     | Service| | Service|          | Fn A| | Fn B|       |
-|  | Data Access (Single DB|     |  A (DB)| |  B (DB)|          +-----+ +-----+       |
-|  +-----------------------+     +-------+ +-------+             Managed Infra      |
-+-----------------------------------------------------------------------------------+
-```
-
-**DALL-E 3 Prompt for Architecture Diagram:**
-> A professional technical architecture diagram titled "Architectural Evolution Paradigms". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with subtle slate-gray header highlights. Text labels use clear sans-serif typography, and technical names use fixed-width code typography. Structure & Layout: Three side-by-side comparative diagrams showing Monolithic (single block with database), Microservices (decoupled blocks with dedicated databases), and Serverless (event-driven functions over managed infrastructure). High-contrast technical schematic style. Do not display font name.
+![Architectural Evolution Paradigms](assets/images/chapter1/1-1-Architectural-Evolution-Paradigms.png)
 
 ### Paradigm Comparison Matrix
 
