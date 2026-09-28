@@ -4,21 +4,6 @@
 
 Shift-left security incorporates security practices, checks, and compliance audits early into the Software Development Life Cycle (SDLC) rather than treating security as an afterthought prior to production release. In enterprise CI/CD workflows, shifting left shifts vulnerability detection from late-stage manual penetration testing to automated pipeline stages.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                 SHIFT-LEFT SECURITY LIFECYCLE                                    |
-+-------------------+--------------------+--------------------+-------------------+-----------------+
-|   IDE / Commit    |    Pull Request    |   CI Build Stage   | Deploy Staging    |   Production    |
-+-------------------+--------------------+--------------------+-------------------+-----------------+
-| Pre-commit hooks  | Branch protection  | SAST Scans         | DAST Scans        | Runtime Protection
-| Secret scanning   | PR checks / Linter | SCA / Dependencies | Container Scans   | Drift Detection |
-| Developer feedback| Peer review gate   | Artifact signing   | Dynamic testing   | SIEM / Telemetry|
-+-------------------+--------------------+--------------------+-------------------+-----------------+
-```
-
-### Image Prompt 1: Shift-Left Security Flow
-> **Prompt:** A professional technical architecture diagram titled "Shift-Left Security Pipeline Integration". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with subtle slate-gray header highlights. Text labels use clear sans-serif typography, and security tools/commands use fixed-width code typography. Structure & Layout: A left-to-right sequential pipeline flow illustrating security gates across five distinct stages: IDE (Pre-commit hooks, Secret Detection), Source Control (PR Scans, SCA), CI Build (SAST, Container Scanning, Cosign Signing), Staging (DAST, IaC Scan), and Production (Runtime Guardrails, SIEM Integration). High-contrast technical schematic style. Do not display font name.
-
 ![Shift-Left Security Pipeline Integration](assets/images/chapter3/3-1-Shift-Left-Security-Pipeline-Integration.png)
 
 ### Enterprise Security Gates and Automated Controls
@@ -30,28 +15,11 @@ Automated quality gates fail pipeline builds if predefined security baselines ar
 3. **Software Bill of Materials (SBOM) Attestation:** Generate signed SBOMs during build time to guarantee package integrity.
 4. **Automated Compliance Verification:** Use Infrastructure as Code (IaC) scanners like Checkov or Trivy to evaluate Terraform/Kubernetes manifests against CIS Benchmarks before deployment.
 
----
-
 ## 3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)
 
 Securing modern application pipelines requires combining **Static Application Security Testing (SAST)** and **Dynamic Application Security Testing (DAST)**.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                     SAST vs DAST COMPARISON                                       |
-+-----------------------+------------------------------------+--------------------------------------+
-| Feature               | SAST (Static Testing)              | DAST (Dynamic Testing)               |
-+-----------------------+------------------------------------+--------------------------------------+
-| Target                | Source code, Bytecode, Binaries    | Running Web Application / API        |
-| Execution Stage       | Early CI Build Stage (Pre-compile) | Post-Deployment / Staging            |
-| Visibility            | White-Box (Full access to code)    | Black-Box / Gray-Box (Runtime only)  |
-| Vulnerabilities Found | SQLi, XSS, Hardcoded Secrets, CWE  | Runtime Auth, CORS, Misconfigurations|
-| Processing Speed      | Fast (Seconds to Minutes)          | Slow (Requires crawl/fuzzing)        |
-+-----------------------+------------------------------------+--------------------------------------+
-```
-
-### Image Prompt 2: SAST vs DAST Architectural Execution Model
-> **Prompt:** A professional technical comparison diagram titled "SAST and DAST Execution Paradigms". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and code/execution paths use fixed-width code typography. Structure & Layout: Two side-by-side comparative architectural flows. Left side: "SAST Pipeline Gate" inspecting raw source files, AST analysis, and security rule matching before build assembly. Right side: "DAST Runtime Scanner" attacking a deployed container endpoint over HTTP/HTTPS with automated fuzzing payloads and evaluating dynamic HTTP response headers. High-contrast technical schematic style. Do not display font name.
+![SAST and DAST Execution Paradigms](assets/images/chapter3/3-2-Shift-Left-Security-Pipeline -Integration.png)
 
 ### Implementing SAST with SonarQube & Semgrep
 
