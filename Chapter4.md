@@ -61,8 +61,6 @@ backend main_website
     server web-1 10.0.10.31:80 check
 ```
 
----
-
 ## 4.2 Enterprise Messaging Brokers (RabbitMQ, Apache Kafka)
 
 Asynchronous messaging decouples application tiers, preventing cascade failures and allowing services to process spikes in traffic without degrading user experience.
@@ -87,8 +85,6 @@ rabbitmqadmin declare queue name=orders.primary durable=true arguments='{
   "x-message-ttl": 60000
 }'
 ```
-
----
 
 ## 4.3 In-Memory Caching Strategies (Redis, Memcached)
 
@@ -117,8 +113,6 @@ sentinel down-after-milliseconds mymaster 5000
 sentinel parallel-syncs mymaster 1
 sentinel failover-timeout mymaster 15000
 ```
-
----
 
 ## 4.4 Database Connection Pooling and Read/Write Splitting
 
@@ -152,25 +146,10 @@ reserve_pool = 5
 reserve_pool_timeout = 5
 ```
 
----
-
 ## 4.5 Hands-On Lab: Provisioning an HAProxy, Redis, and RabbitMQ Application Stack
 
 ### Lab Scenario
 You are tasked with building a resilient enterprise middleware tier. The application stack requires HAProxy to act as an edge load balancer, routing incoming traffic to an ingestion service. This service publishes order events to a RabbitMQ message broker, which worker instances consume and cache in a high-availability Redis instance.
-
-```
-+---------------------------------------------------------------------------------------------------+
-|                                  LAB DEPLOYMENT ARCHITECTURE                                      |
-+---------------------------------------------------------------------------------------------------+
-|  [Clients] ---> [HAProxy Gateway] ---> [Order App Service] ---> [RabbitMQ Broker]               |
-|                                               |                         |                         |
-|                                               +---> [Redis Cache] <-----+ [Worker Pool]          |
-+---------------------------------------------------------------------------------------------------+
-```
-
-### Image Prompt 5: Decoupled Middleware Lab Stack Architecture
-> **Prompt:** A professional technical architecture diagram titled "Hands-On Decoupled Lab Infrastructure". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and port bindings use fixed-width code typography. Structure & Layout: Architectural flow showing an HTTP Gateway delegating order requests to an ingestion service, publishing events through RabbitMQ, and triggering worker microservices updating a Redis cache. High-contrast technical schematic style. Do not display font name.
 
 ![Hands-On Decoupled Lab Infrastructure](assets/images/chapter4/4-5-Hands-On-Decoupled-Lab-Infrastructure.png)
 
@@ -275,8 +254,6 @@ backend app_back
    ```bash
    curl -I http://localhost:80
    ```
-
----
 
 ### Key Exam Takeaways (LPI 701-200)
 
