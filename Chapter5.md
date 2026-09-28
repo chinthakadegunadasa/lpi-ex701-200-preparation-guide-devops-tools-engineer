@@ -202,6 +202,8 @@ You are tasked with refactoring an insecure, legacy Node.js application containe
 
 > **Prompt:** A professional technical architecture diagram titled "Hands-On Hardened Build & Scanning Pipeline". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and verification commands use fixed-width code typography. Structure & Layout: Sequential lab procedure diagram. Step 1: Filtering source directory via `.dockerignore`. Step 2: Running `docker buildx` multi-stage build stage. Step 3: Verifying layer security and image size using `docker history`. Step 4: Executing `trivy image --severity HIGH,CRITICAL` security gate. High-contrast technical schematic style. Do not display font name.
 
+![Hands-On Hardened Build & Scanning Pipeline](assets/images/chapter5/5-5-Hands-On-Hardened-Build-Scanning-Pipeline.png)
+
 ### Step-by-Step Implementation
 
 #### Step 1: Create `.dockerignore`
