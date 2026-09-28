@@ -4,20 +4,7 @@
 
 In enterprise infrastructure, reverse proxies and Web Application Firewalls (WAF) sit at the edge of network zones. They act as front-line gateways, handling TLS termination, load balancing across application pools, enforcing rate limits, and protecting internal services from malicious payloads.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                              ENTERPRISE REVERSE PROXY & WAF FLOW                                 |
-+-------------------+--------------------+--------------------+-------------------+-----------------+
-|  Client Request   |   HAProxy / NGINX  |    WAF / ModSec    | Backend Pool A    | Backend Pool B  |
-+-------------------+--------------------+--------------------+-------------------+-----------------+
-| HTTPS (443)       | TLS Termination    | Rule Inspection    | App Server 01     | App Server 03   |
-| Public Traffic    | Layer 7 Routing    | SQLi / XSS Block   | App Server 02     | App Server 04   |
-| HTTP/2 / gRPC     | Health Checks      | Threat Mitigation  | (Active)          | (Failover)      |
-+-------------------+--------------------+--------------------+-------------------+-----------------+
-```
-
-### Image Prompt 1: Enterprise Gateway and WAF Architecture
-> **Prompt:** A professional technical architecture diagram titled "Enterprise Reverse Proxy and WAF Infrastructure". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with subtle slate-gray header highlights. Text labels use clear sans-serif typography, and configuration parameters use fixed-width code typography. Structure & Layout: A left-to-right flow showing incoming encrypted web clients connecting to HAProxy for high-throughput TLS offloading, passing through an NGINX ModSecurity WAF tier for inspection, and dynamically routing requests to isolated backend microservice pools with active health probing. High-contrast technical schematic style. Do not display font name.
+![Enterprise Reverse Proxy and WAF Infrastructure"](assets/images/chapter4/4-1-Enterprise-Reverse-Proxy-and-WAF-Infrastructure.png)
 
 ### HAProxy High-Performance Configuration
 
