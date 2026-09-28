@@ -3,9 +3,6 @@ Table of Contents
 # Introduction
 ## Exam Objective and Chapter Mapping Matrix
 
-![Exam Objective and Chapter Mapping Matrix]()
-
-
 # Module 1: Software Engineering, Architecture, & Security (Topic 701)
 
 ## Chapter 1: Cloud-Native Architecture Patterns
