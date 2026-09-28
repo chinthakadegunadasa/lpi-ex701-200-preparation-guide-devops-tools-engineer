@@ -1,5 +1,11 @@
 Table of Contents 
 
+# Introduction
+## Exam Objective and Chapter Mapping Matrix
+
+![Exam Objective and Chapter Mapping Matrix](img/lpi-ex701-200-objectives-and-chapter-mapping.jpeg)
+
+
 # Module 1: Software Engineering, Architecture, & Security (Topic 701)
 
 ## Chapter 1: Cloud-Native Architecture Patterns
@@ -200,10 +206,6 @@ Table of Contents
 ### 27.3 Chaos Mesh and Gremlin Engine Deployment in Kubernetes Environments
 ### 27.4 Measuring System Resiliency and Steady-State Recovery
 ### 27.5 **Hands-On Lab:** Running Automated Fault-Injection Experiments on Production Workloads
-
-## Chapter 28: Exam Objective and Chapter Mapping Matrix
-
-![Exam Objective and Chapter Mapping Matrix](img/lpi-ex701-200-objectives-and-chapter-mapping.jpeg)
 
 # Part IV: Appendices
 
