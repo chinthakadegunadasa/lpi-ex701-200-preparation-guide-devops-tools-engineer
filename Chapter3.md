@@ -93,19 +93,7 @@ cosign verify --key cosign.pub registry.internal.net/apps/order-service@sha256:d
 
 Hardcoding API keys, passwords, database credentials, or certificates in source code repository commits introduces severe security vulnerabilities. Enterprise secrets management replaces static credentials with dynamic, short-lived secrets stored in dedicated secret management systems (e.g., HashiCorp Vault).
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                ENTERPRISE VAULT ARCHITECTURE                                     |
-+---------------------------------------------------------------------------------------------------+
-|  [App Pod / CI] ---> (OIDC/K8s Auth) ---> [HashiCorp Vault] ---> (Dynamic Engine) ---> [Database] |
-|                                                |                                                  |
-|                                       Encrypted Storage Engine                                    |
-|                                        (AES-256 / Transit PKI)                                    |
-+---------------------------------------------------------------------------------------------------+
-```
-
-### Image Prompt 4: Enterprise Secrets Management & Dynamic Credential Injection
-> **Prompt:** A professional technical architecture diagram titled "HashiCorp Vault Dynamic Secret Injection Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and path names use fixed-width code typography. Structure & Layout: Horizontal sequence diagram showing a Kubernetes pod authenticating via ServiceAccount Token to HashiCorp Vault, Vault validating JWT against K8s API, Vault generating short-lived dynamic PostgreSQL credentials on-the-fly, and injecting lease-backed credentials directly into application memory via sidecar mutation agent. High-contrast technical schematic style. Do not display font name.
+![HashiCorp Vault Dynamic Secret Injection Topology](assets/images/chapter3/3-4-HashiCorp-Vault-Dynamic-Secret-Injection-Topology.png)
 
 ### HashiCorp Vault Integration Workflow
 
@@ -146,18 +134,7 @@ vault write auth/kubernetes/role/app-role \
 ### Lab Scenario
 You are assigned to build an automated DevSecOps security pipeline for a critical microservice. The pipeline must enforce strict security controls: detect hardcoded secrets using Gitleaks, perform SAST analysis via Semgrep, verify container dependencies with Trivy, sign the built artifact using Cosign, and execute a DAST baseline security scan against the staging application endpoint.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                LAB PIPELINE ARCHITECTURE FLOW                                     |
-+---------------------------------------------------------------------------------------------------+
-| [Git Push] --> [Stage 1: Secret Scan] --> [Stage 2: SAST] --> [Stage 3: Build & SCA Container Scan] |
-|                                                                                |                  |
-| [Stage 5: DAST Staging Scan] <--- [Stage 4: Cosign Sign & Push] <--------------+                  |
-+---------------------------------------------------------------------------------------------------+
-```
-
-### Image Prompt 5: Automated DevSecOps Pipeline Architecture
-> **Prompt:** A professional technical architecture diagram titled "Hands-On DevSecOps Pipeline Security Architecture". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and pipeline stages/commands use fixed-width code typography. Structure & Layout: A detailed five-stage continuous security integration pipeline. Stage 1: Pre-build Secret Audit (`gitleaks detect`). Stage 2: SAST Analysis (`semgrep scan`). Stage 3: Container Build & Vulnerability Gate (`trivy image`). Stage 4: Artifact Attestation (`cosign sign`). Stage 5: Dynamic API Security Testing (`zap-baseline.py`). High-contrast technical schematic style. Do not display font name.
+![Hands-On DevSecOps Pipeline Security Architecture](assets/images/chapter3/3-5-Hands-On-DevSecOps-Pipeline-Security-Architecture.png)
 
 ### Step-by-Step Implementation
 
