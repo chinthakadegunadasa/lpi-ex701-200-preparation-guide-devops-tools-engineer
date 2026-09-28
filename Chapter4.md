@@ -67,23 +67,6 @@ backend main_website
 
 Asynchronous messaging decouples application tiers, preventing cascade failures and allowing services to process spikes in traffic without degrading user experience.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                  RABBITMQ vs APACHE KAFKA                                         |
-+-----------------------+------------------------------------+--------------------------------------+
-| Feature               | RabbitMQ (AMQP)                    | Apache Kafka (Event Streaming)       |
-+-----------------------+------------------------------------+--------------------------------------+
-| Architecture          | Smart Broker / Dumb Consumer       | Dumb Broker / Smart Consumer         |
-| Message Handling      | Queue-based, deleted on ack        | Append-only distributed commit log   |
-| Routing Capabilities  | Complex (Direct, Topic, Fanout)    | Topic / Partition key routing        |
-| Retention             | Transient (cleared after receipt)  | Durable / Time-based retention policy|
-| Primary Use Case      | Task queues, transactional commands| Log aggregation, event sourcing      |
-+-----------------------+------------------------------------+--------------------------------------+
-```
-
-### Image Prompt 2: Message Broker Paradigm Comparison
-> **Prompt:** A professional technical comparison diagram titled "AMQP Broker vs Distributed Log Architecture". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and protocol parameters use fixed-width code typography. Structure & Layout: Side-by-side architecture comparison. Left side: "RabbitMQ AMQP Broker" showing exchange bindings routing messages into volatile queues with consumer acknowledgments. Right side: "Apache Kafka Commit Log" showing immutable partitioned logs with offset tracking across consumer groups. High-contrast technical schematic style. Do not display font name.
-
 ![Enterprise Reverse Proxy and WAF Infrastructure"](assets/images/chapter4/4-2-AMQP-Broker-vs-Distributed-Log-Architecture.png)
 
 ### Advanced RabbitMQ Exchange Topology & Dead Lettering
@@ -127,6 +110,8 @@ In-memory data stores drastically decrease database read pressure and reduce end
 
 ### Image Prompt 3: In-Memory Caching Topology and Eviction Workflow
 > **Prompt:** A professional technical architecture diagram titled "Enterprise Caching Strategies and Redis Cluster Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and command signatures use fixed-width code typography. Structure & Layout: Diagram demonstrating Cache-Aside, Write-Through, and Write-Behind patterns, paired with a Redis High Availability cluster (Sentinel + Master/Replica failover nodes) handling session caching and eviction policies (`allkeys-lru`). High-contrast technical schematic style. Do not display font name.
+
+![Enterprise Caching Strategies and Redis Cluster Topology](assets/images/chapter4/4-3-Enterprise-Caching-Strategies-and-Redis-Cluster-Topology.png)
 
 ### Enterprise Redis Sentinel Configuration
 
