@@ -19,7 +19,7 @@ Automated quality gates fail pipeline builds if predefined security baselines ar
 
 Securing modern application pipelines requires combining **Static Application Security Testing (SAST)** and **Dynamic Application Security Testing (DAST)**.
 
-![SAST and DAST Execution Paradigms](assets/images/chapter3/3-2-Shift-Left-Security-Pipeline -Integration.png)
+![SAST and DAST Execution Paradigms](assets/images/chapter3/3-2-Shift-Left-Security-Pipeline-Integration.png)
 
 ### Implementing SAST with SonarQube & Semgrep
 
@@ -58,18 +58,7 @@ docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-stable zap-baseline.py \
 
 Modern application frameworks rely heavily on third-party dependencies, creating a large attack surface across the software supply chain. Software Supply Chain Security focuses on tracking, validating, and auditing every external library and base container image.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                              SOFTWARE SUPPLY CHAIN THREAT VECTORS                                |
-+---------------------------------------------------------------------------------------------------+
-|  [Developer] ---> [SCA / Dep Check] ---> [Build & SBOM] ---> [Image Signing] ---> [Production]    |
-|       |                 |                     |                    |                   |          |
-|  Typosquatting   Vulnerable Packages     Compromised CI      Tampered Artifact   Drift / Zero-day   |
-+---------------------------------------------------------------------------------------------------+
-```
-
-### Image Prompt 3: Supply Chain Security & Container Signing Workflow
-> **Prompt:** A professional technical architecture diagram titled "Supply Chain Verification and Container Attestation". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and command signatures use fixed-width code typography. Structure & Layout: Top-to-bottom enterprise software distribution pipeline showing Software Composition Analysis (SCA) dependency checks, generation of SPDX/CycloneDX SBOMs, container image scanning using Trivy, signing the image digest with Cosign/Sigstore, and enforcement at the Kubernetes cluster via Kyverno/OPA Gatekeeper admission control. High-contrast technical schematic style. Do not display font name.
+![Supply Chain Verification and Container Attestation](assets/images/chapter3/3-3-Supply-Chain-Verification-and-Container-Attestation.png)
 
 ### Software Composition Analysis (SCA) & SBOM Generation
 
