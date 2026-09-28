@@ -172,6 +172,8 @@ You are tasked with building a resilient enterprise middleware tier. The applica
 ### Image Prompt 5: Decoupled Middleware Lab Stack Architecture
 > **Prompt:** A professional technical architecture diagram titled "Hands-On Decoupled Lab Infrastructure". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and port bindings use fixed-width code typography. Structure & Layout: Architectural flow showing an HTTP Gateway delegating order requests to an ingestion service, publishing events through RabbitMQ, and triggering worker microservices updating a Redis cache. High-contrast technical schematic style. Do not display font name.
 
+![Hands-On Decoupled Lab Infrastructure](assets/images/chapter4/4-5-Hands-On-Decoupled-Lab-Infrastructure.png)
+
 ### Step-by-Step Implementation
 
 #### Step 1: Define Stack via Docker Compose (`docker-compose.yml`)
