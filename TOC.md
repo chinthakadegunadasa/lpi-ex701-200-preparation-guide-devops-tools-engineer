@@ -1,6 +1,5 @@
 Table of Contents 
 
-
 # Module 1: Software Engineering, Architecture, & Security (Topic 701)
 
 ## Chapter 1: Cloud-Native Architecture Patterns
@@ -76,7 +75,7 @@ Table of Contents
 ### 10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
 ### 10.5 **Hands-On Lab:** Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
 
-#### Chapter 11: Kubernetes Security & RBAC
+## Chapter 11: Kubernetes Security & RBAC
 ### 11.1 Kubernetes Authentication & Authorization Engine
 ### 11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
 ### 11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
@@ -119,8 +118,6 @@ Table of Contents
 ### 16.4 Integrating Packer into CI/CD Automated Pipelines
 ### 16.5 **Hands-On Lab:** Building Automated Hardened Debian 13 Golden Machine Images
 
----
-
 ### Module 4: Continuous Delivery & CI/CD Pipelines (Topic 704)
 
 ## Chapter 17: Enterprise Git Workflows & Internal Internals
@@ -130,7 +127,7 @@ Table of Contents
 ### 17.4 Client-Side and Server-Side Git Hooks
 ###   17.5 **Hands-On Lab:** Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
 
-#### Chapter 18: Continuous Integration Architecture
+## Chapter 18: Continuous Integration Architecture
 ### 18.1 Continuous Integration Core Principles and Artifact Management
 ### 18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)
 ### 18.3 Automated Build Engines and Dependency Caching Strategies
@@ -174,7 +171,7 @@ Table of Contents
 ### 23.4 Notification Integrations: Slack, PagerDuty, Webhooks, and Email
 ### 23.5 **Hands-On Lab:** Building Real-Time Operational Dashboards and Configuring Alerting Pipelines
 
-#### Chapter 24: Observability, Tracing, & Incident Management
+## Chapter 24: Observability, Tracing, & Incident Management
 ### 24.1 The Three Pillars of Observability: Metrics, Logs, and Traces
 ### 24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation
 ### 24.3 OpenTelemetry Architecture and Jaeger Collector Deployment
@@ -197,7 +194,7 @@ Table of Contents
 ### 26.4 Test-Driven Development (TDD) & Behavior-Driven Development (BDD) Paradigms
 ### 26.5 **Hands-On Lab:** Embedding Load Testing and Quality Gates into an Automated Pipeline
 
-#### Chapter 27: Enterprise Chaos Engineering & Fault Injection
+## Chapter 27: Enterprise Chaos Engineering & Fault Injection
 ### 27.1 Principles of Chaos Engineering and Hypothesis-Driven Experiments
 ### 27.2 Simulating Infrastructure Failures: Network Latency, Node Failures, and Packet Loss
 ### 27.3 Chaos Mesh and Gremlin Engine Deployment in Kubernetes Environments
