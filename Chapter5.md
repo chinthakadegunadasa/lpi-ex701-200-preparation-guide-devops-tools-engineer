@@ -4,22 +4,8 @@
 
 Unlike full hardware virtualization provided by hypervisors, containers leverage Linux kernel primitives to achieve isolate processes. Understanding these core Linux kernel mechanics—Linux Namespaces, Control Groups (cgroups), and OverlayFS—is fundamental for troubleshooting and securing enterprise container environments.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                  LINUX CONTAINER KERNEL PRIMITIVES                                |
-+-----------------------+---------------------------------------------------------------------------+
-| Kernel Primitive      | Primary Functionality & Isolation Scope                                   |
-+-----------------------+---------------------------------------------------------------------------+
-| Linux Namespaces      | Isolation of system resources (PID, NET, MNT, IPC, UTS, USER, CGROUP)     |
-| Control Groups v2     | Resource constraint, metering, and allocation (CPU, Memory, I/O, PIDs)    |
-| OverlayFS             | Copy-on-Write (CoW) layered storage combining lowerdir and upperdir       |
-+-----------------------+---------------------------------------------------------------------------+
 
-```
-
-### Image Prompt 1: Linux Kernel Primitives and Container Isolation Architecture
-
-> **Prompt:** A professional technical architecture diagram titled "Linux Kernel Container Isolation Primitives". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and kernel parameters use fixed-width code typography. Structure & Layout: A three-part architectural stack showing the shared Host Linux Kernel at the base. The middle tier splits into Linux Namespaces (PID, NET, MNT, IPC, UTS, USER), Control Groups v2 resource limits (Memory, CPU quota, BlkIO), and OverlayFS storage layers (Lower Read-Only Image Layers, Upper Read-Write Container Layer, Merged View). The top tier shows isolated application container processes. High-contrast technical schematic style. Do not display font name.
+![Linux Kernel Container Isolation Primitives](assets/images/chapter5/5-1-Linux-Kernel-Container-Isolation-Primitives.png)
 
 ### Deep Dive: Kernel Namespaces and Isolation
 
