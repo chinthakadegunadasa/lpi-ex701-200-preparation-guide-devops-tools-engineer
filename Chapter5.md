@@ -68,7 +68,7 @@ docker inspect enterprise_app --format '{{ json .GraphDriver.Data }}' | jq .
 
 Modern Docker uses a modular, decoupled architecture rather than a single monolithic daemon. This structure adheres to Open Container Initiative (OCI) standards for runtime and image specifications.
 
-![Docker Engine & OCI Runtime Component Topology](assets/images/chapter5/5-2-Docker-Engine-and- OCI-Runtime-Component-Topology.png)
+![Docker Engine & OCI Runtime Component Topology](assets/images/chapter5/5-2-Docker-Engine-and-OCI-Runtime-Component-Topology.png)
 
 ### Component Breakdown & Execution Lifecycle
 
