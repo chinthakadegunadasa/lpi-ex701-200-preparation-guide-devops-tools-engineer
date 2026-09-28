@@ -175,11 +175,11 @@ Table of Contents
 ### 23.5 **Hands-On Lab:** Building Real-Time Operational Dashboards and Configuring Alerting Pipelines
 
 #### Chapter 24: Observability, Tracing, & Incident Management
-*   24.1 The Three Pillars of Observability: Metrics, Logs, and Traces
-*   24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation
-*   24.3 OpenTelemetry Architecture and Jaeger Collector Deployment
-*   24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture
-*   24.5 **Hands-On Lab:** End-to-End Distributed Tracing Analysis for Microservice Bottlenecks
+### 24.1 The Three Pillars of Observability: Metrics, Logs, and Traces
+### 24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation
+### 24.3 OpenTelemetry Architecture and Jaeger Collector Deployment
+### 24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture
+### 24.5 **Hands-On Lab:** End-to-End Distributed Tracing Analysis for Microservice Bottlenecks
 
 # Module 6: Cloud Architecture & Testing (Topic 706)
 
@@ -214,32 +214,32 @@ Table of Contents
 ### **A.1** Automated Provisioning Script for Local Debian Workstations using Debian 13 Live image 
 ### **A.2** Package Repositories, Keys, and Dependency 
 
-### Appendix B: Comprehensive Tooling Command Matrix
-*   **B.1** Docker & Container Management CLI Quick Reference
-*   **B.2** Kubernetes (`kubectl`) Operations & Troubleshooting Matrix
-*   **B.3** Terraform / OpenTofu State Management Commands
-*   **B.4** Ansible Execution & Vault Command Reference
-*   **B.5** Git Advanced Operations Reference
-*   **B.6** PromQL & LogQL Query Cheat Sheet
+## Appendix B: Comprehensive Tooling Command Matrix
+### **B.1** Docker & Container Management CLI Quick Reference
+### **B.2** Kubernetes (`kubectl`) Operations & Troubleshooting Matrix
+### **B.3** Terraform / OpenTofu State Management Commands
+### **B.4** Ansible Execution & Vault Command Reference
+### **B.5** Git Advanced Operations Reference
+### **B.6** PromQL & LogQL Query Cheat Sheet
 
 ### Appendix C: Common Configuration Schemas
-*   **C.1** Enterprise Dockerfile Templates (Multi-stage, Non-root)
-*   **C.2** Kubernetes Production Manifests (Deployment, StatefulSet, Ingress, NetworkPolicy)
-*   **C.3** Terraform Reusable Module Schema Template
-*   **C.4** Ansible Production Directory Layout and Playbook Schema
-*   **C.5** Prometheus & Alertmanager Enterprise YAML Configurations
-*   **C.6** Multi-Stage CI/CD Pipeline Manifests (GitLab CI, GitHub Actions, Jenkinsfile)
+### **C.1** Enterprise Dockerfile Templates (Multi-stage, Non-root)
+### **C.2** Kubernetes Production Manifests (Deployment, StatefulSet, Ingress, NetworkPolicy)
+### **C.3** Terraform Reusable Module Schema Template
+### **C.4** Ansible Production Directory Layout and Playbook Schema
+### **C.5** Prometheus & Alertmanager Enterprise YAML Configurations
+### **C.6** Multi-Stage CI/CD Pipeline Manifests (GitLab CI, GitHub Actions, Jenkinsfile)
 
 ### Appendix D: Full-Length Practice Examination (LPI 701-200)
-*   **D.1 Practice Exam Overview & Guidelines**
-*   **D.2 Exam Simulation:** 60 Scenario-Based Questions covering all Objectives (701.1–706.3)
-*   **D.3 Detailed Answer Explanations, Domain Mapping, & Topic Weighting Analysis**
+### **D.1 Practice Exam Overview & Guidelines**
+### **D.2 Exam Simulation:** 60 Scenario-Based Questions covering all Objectives (701.1–706.3)
+### **D.3 Detailed Answer Explanations, Domain Mapping, & Topic Weighting Analysis**
 
 ### Appendix E: Local Lab Infrastructure Specifications
-*   **E.1 Workspace Node Baseline:** Debian 13 Workstation with KVM Nested Virtualization
-*   **E.2 Hyper-Converged Infrastructure (HCI) Setup:**
-    *   3-Node Baseline Proxmox VE 8.x / 9.x Hyper-Converged Ceph Storage Cluster
-    *   Scale-Out Architecture: Injecting 2 Additional Compute/Storage Nodes
-*   **E.3 Enterprise Cluster Management:** Proxmox Datacenter Manager (PDM) Integration
-*   **E.4 Enterprise Backup Architecture:** Dedicated Proxmox Backup Server (PBS) Target & Datastore Engine Configuration
-*   **E.5 Ansible Deployment Playbooks:** Automated Bootstrap of the Complete Lab Topology
+### **E.1 Workspace Node Baseline:** Debian 13 Workstation with KVM Nested Virtualization
+### **E.2 Hyper-Converged Infrastructure (HCI) Setup:**
+#### 3-Node Baseline Proxmox VE 8.x / 9.x Hyper-Converged Ceph Storage Cluster
+#### Scale-Out Architecture: Injecting 2 Additional Compute/Storage Nodes
+### **E.3 Enterprise Cluster Management:** Proxmox Datacenter Manager (PDM) Integration
+### **E.4 Enterprise Backup Architecture:** Dedicated Proxmox Backup Server (PBS) Target & Datastore Engine Configuration
+### **E.5 Ansible Deployment Playbooks:** Automated Bootstrap of the Complete Lab Topology
