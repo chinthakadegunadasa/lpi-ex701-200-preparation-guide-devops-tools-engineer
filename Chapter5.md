@@ -68,23 +68,7 @@ docker inspect enterprise_app --format '{{ json .GraphDriver.Data }}' | jq .
 
 Modern Docker uses a modular, decoupled architecture rather than a single monolithic daemon. This structure adheres to Open Container Initiative (OCI) standards for runtime and image specifications.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                 DOCKER ENGINE COMPONENT TOPOLOGY                                  |
-+-------------------+--------------------+--------------------+--------------------+----------------+
-| Docker CLI        | Docker Daemon      | containerd         | containerd-shim    | runc           |
-+-------------------+--------------------+--------------------+--------------------+----------------+
-| User Interface    | REST API Endpoint  | Container Lifecycle| Execution Monitor  | OCI Runtime    |
-| Command parser    | Image Management   | Image Pulling      | Decouples Daemon   | Configures     |
-| Client IPC/HTTP   | Network / Volumes  | Storage Management | Keeps Container Up | Namespaces/    |
-|                   | Build Kit Engine   | gRPC API Interface | During Restarts    | cgroups & Exits|
-+-------------------+--------------------+--------------------+--------------------+----------------+
-
-```
-
-### Image Prompt 2: Decoupled Docker Engine Components
-
-> **Prompt:** A professional technical architecture diagram titled "Docker Engine & OCI Runtime Component Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and socket paths use fixed-width code typography. Structure & Layout: Vertical sequence flow. Top layer: "Docker CLI" sending requests over `/var/run/docker.sock`. Middle layer: "Docker Daemon (dockerd)" delegating container execution via gRPC to "containerd". Lower layer: "containerd-shim" spawning "runc" to create OCI-compliant container processes using kernel namespaces, then exiting while shim stays attached for log/I/O tracking. High-contrast technical schematic style. Do not display font name.
+![Docker Engine & OCI Runtime Component Topology](assets/images/chapter5/5-2-Docker-Engine-and- OCI-Runtime-Component-Topology.png)
 
 ### Component Breakdown & Execution Lifecycle
 
