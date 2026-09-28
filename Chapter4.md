@@ -94,23 +94,6 @@ rabbitmqadmin declare queue name=orders.primary durable=true arguments='{
 
 In-memory data stores drastically decrease database read pressure and reduce endpoint response latency from milliseconds to microseconds.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                     CACHE READ/WRITE PATTERNS                                     |
-+---------------------------------------------------------------------------------------------------+
-|                                                                                                   |
-|  [Cache-Aside]  App ---> Read Cache ---> (Hit: Return) / (Miss: Read DB -> Populate Cache)        |
-|                                                                                                   |
-|  [Write-Through] App ---> Write Cache ---> Synchronous Write DB                                   |
-|                                                                                                   |
-|  [Write-Behind] App ---> Write Cache ---> Async Batch Write DB                                    |
-|                                                                                                   |
-+---------------------------------------------------------------------------------------------------+
-```
-
-### Image Prompt 3: In-Memory Caching Topology and Eviction Workflow
-> **Prompt:** A professional technical architecture diagram titled "Enterprise Caching Strategies and Redis Cluster Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and command signatures use fixed-width code typography. Structure & Layout: Diagram demonstrating Cache-Aside, Write-Through, and Write-Behind patterns, paired with a Redis High Availability cluster (Sentinel + Master/Replica failover nodes) handling session caching and eviction policies (`allkeys-lru`). High-contrast technical schematic style. Do not display font name.
-
 ![Enterprise Caching Strategies and Redis Cluster Topology](assets/images/chapter4/4-3-Enterprise-Caching-Strategies-and-Redis-Cluster-Topology.png)
 
 ### Enterprise Redis Sentinel Configuration
@@ -141,18 +124,7 @@ sentinel failover-timeout mymaster 15000
 
 Direct application database connections can deplete database connection limits under heavy traffic. Connection proxies and read/write splitters maximize database throughput and protect database servers.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                              READ/WRITE DATABASE SPLITTING FLOW                                   |
-+---------------------------------------------------------------------------------------------------+
-|  App Microservice ---> [PgBouncer / ProxySQL] ---> (Writes) ---> Primary Database Node            |
-|                                              ---> (Reads)  ---> Read Replica Node 01             |
-|                                                            ---> Read Replica Node 02              |
-+---------------------------------------------------------------------------------------------------+
-```
-
-### Image Prompt 4: Database Connection Pooling & Read/Write Separation
-> **Prompt:** A professional technical architecture diagram titled "Database Connection Pooling and Read/Write Splitting Topology". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and connection parameters use fixed-width code typography. Structure & Layout: Architectural flow showing multiple application threads connecting through PgBouncer connection pools, routing SQL `INSERT/UPDATE` queries directly to a Primary PostgreSQL database, while distributing SELECT queries across scaled read replicas via streaming replication. High-contrast technical schematic style. Do not display font name.
+![Database Connection Pooling and Read/Write Splitting Topology](assets/images/chapter4/4-4-Database-Connection-Pooling-and-Read-Write-Splitting-Topology.png)
 
 ### PgBouncer Transaction Pooling Configuration
 
