@@ -84,6 +84,8 @@ Asynchronous messaging decouples application tiers, preventing cascade failures 
 ### Image Prompt 2: Message Broker Paradigm Comparison
 > **Prompt:** A professional technical comparison diagram titled "AMQP Broker vs Distributed Log Architecture". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and protocol parameters use fixed-width code typography. Structure & Layout: Side-by-side architecture comparison. Left side: "RabbitMQ AMQP Broker" showing exchange bindings routing messages into volatile queues with consumer acknowledgments. Right side: "Apache Kafka Commit Log" showing immutable partitioned logs with offset tracking across consumer groups. High-contrast technical schematic style. Do not display font name.
 
+![Enterprise Reverse Proxy and WAF Infrastructure"](assets/images/chapter4/4-2-AMQP-Broker-vs-Distributed-Log-Architecture.png)
+
 ### Advanced RabbitMQ Exchange Topology & Dead Lettering
 
 RabbitMQ routes messages through exchanges using bindings. Dead Letter Exchanges (DLX) handle unprocessed or rejected messages to ensure zero data loss.
