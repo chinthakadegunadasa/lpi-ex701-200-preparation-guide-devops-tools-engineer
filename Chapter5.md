@@ -155,24 +155,7 @@ ENTRYPOINT ["/app/enterprise-service"]
 
 Securing enterprise container images requires a defense-in-depth approach. Every statement in a Dockerfile creates an immutable layer. Optimizing these layers speeds up build times, minimizes network bandwidth usage, and limits security exposure.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                               CONTAINER SECURITY HARDENING CHECKLIST                              |
-+-----------------------+------------------------------------+--------------------------------------+
-| Strategy              | Implementation Technique           | Security Benefit                     |
-+-----------------------+------------------------------------+--------------------------------------+
-| Minimal Base Images   | Use Distroless or Alpine bases     | Eliminates shells, utilities, & CVEs |
-| Non-Root Execution    | Define explicit `USER 10001:10001` | Prevents privilege escalation        |
-| Read-Only Root FS     | Container flag `--read-only`       | Prevents runtime malware persistence |
-| Dropping Capabilities | Container flag `--cap-drop=ALL`    | Restricts kernel system calls        |
-| Secrets Prevention    | BuildKit `--mount=type=secret`     | Prevents secrets leaking into layers |
-+-----------------------+------------------------------------+--------------------------------------+
-
-```
-
-### Image Prompt 4: Layer Caching and Hardening Security Stack
-
-> **Prompt:** A professional technical comparison diagram titled "Container Layer Optimization & Runtime Hardening". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and CLI commands use fixed-width code typography. Structure & Layout: Split diagram layout. Left side: "Unoptimized Dockerfile" showing inefficient layer order triggering full cache invalidation and inclusion of debug utilities (`curl`, `bash`, `gcc`). Right side: "Optimized & Hardened Image" showing ordered dependency caching, multi-stage artifact extraction, non-root user execution (`USER 10001`), and dropped Linux kernel capabilities (`--cap-drop=ALL`). High-contrast technical schematic style. Do not display font name.
+![Container Layer Optimization & Runtime Hardening](assets/images/chapter5/5-4-Container-Layer-Optimization-and-Runtime-Hardening.png)
 
 ### Secrets Handling with Docker BuildKit
 
