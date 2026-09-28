@@ -4,7 +4,6 @@
 
 Unlike full hardware virtualization provided by hypervisors, containers leverage Linux kernel primitives to achieve isolate processes. Understanding these core Linux kernel mechanics—Linux Namespaces, Control Groups (cgroups), and OverlayFS—is fundamental for troubleshooting and securing enterprise container environments.
 
-
 ![Linux Kernel Container Isolation Primitives](assets/images/chapter5/5-1-Linux-Kernel-Container-Isolation-Primitives.png)
 
 ### Deep Dive: Kernel Namespaces and Isolation
@@ -62,8 +61,6 @@ OverlayFS combines two directories on a single host host into a single merged vi
 docker inspect enterprise_app --format '{{ json .GraphDriver.Data }}' | jq .
 ```
 
----
-
 ## 5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc
 
 Modern Docker uses a modular, decoupled architecture rather than a single monolithic daemon. This structure adheres to Open Container Initiative (OCI) standards for runtime and image specifications.
@@ -86,8 +83,6 @@ sudo ctr --namespace moby containers list
 # Pull image directly using containerd
 sudo ctr images pull docker.io/library/alpine:latest
 ```
-
----
 
 ## 5.3 Writing Enterprise Dockerfiles & Multi-Stage Builds
 
@@ -149,8 +144,6 @@ USER 65532:65532
 ENTRYPOINT ["/app/enterprise-service"]
 ```
 
----
-
 ## 5.4 Image Optimization, Layer Caching, and Security Hardening
 
 Securing enterprise container images requires a defense-in-depth approach. Every statement in a Dockerfile creates an immutable layer. Optimizing these layers speeds up build times, minimizes network bandwidth usage, and limits security exposure.
@@ -178,29 +171,11 @@ Execute the secure build command:
 DOCKER_BUILDKIT=1 docker build --secret id=api_token,src=./tokens/prod_token.txt -t enterprise-app:v1 .
 ```
 
----
-
 ## 5.5 Hands-On Lab: Constructing Minimalistic, Hardened Multi-Stage Container Images
 
 ### Lab Scenario
 
 You are tasked with refactoring an insecure, legacy Node.js application container configuration into an enterprise-ready, hardened multi-stage image. You will write the optimized `Dockerfile`, construct a custom `.dockerignore` file, enforce non-root execution, and scan the final artifact for vulnerability compliance using Trivy.
-
-```
-+---------------------------------------------------------------------------------------------------+
-|                                      LAB EXECUTION PIPELINE                                       |
-+---------------------------------------------------------------------------------------------------+
-|  [Raw Node.js App] ---> [Configure .dockerignore] ---> [Multi-Stage Dockerfile Compilation]       |
-|                                                                  |                                |
-|                                                                  v                                |
-|  [Security Scan (Trivy)] <--- [Non-root Runtime Execution] <--- [Layer Caching & Pruning]         |
-+---------------------------------------------------------------------------------------------------+
-
-```
-
-### Image Prompt 5: Hardened Lab Build and Inspection Workflow
-
-> **Prompt:** A professional technical architecture diagram titled "Hands-On Hardened Build & Scanning Pipeline". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and verification commands use fixed-width code typography. Structure & Layout: Sequential lab procedure diagram. Step 1: Filtering source directory via `.dockerignore`. Step 2: Running `docker buildx` multi-stage build stage. Step 3: Verifying layer security and image size using `docker history`. Step 4: Executing `trivy image --severity HIGH,CRITICAL` security gate. High-contrast technical schematic style. Do not display font name.
 
 ![Hands-On Hardened Build & Scanning Pipeline](assets/images/chapter5/5-5-Hands-On-Hardened-Build-Scanning-Pipeline.png)
 
@@ -308,8 +283,6 @@ CMD ["node", "dist/server.js"]
    ```bash
    trivy image --severity HIGH,CRITICAL enterprise/node-app:1.0.0
    ```
-
----
 
 ### Key Exam Takeaways (LPI 701-200)
 
