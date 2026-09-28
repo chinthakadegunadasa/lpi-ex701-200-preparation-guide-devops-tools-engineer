@@ -52,8 +52,6 @@ docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-stable zap-baseline.py \
   -x zap_report.xml
 ```
 
----
-
 ## 3.3 Software Supply Chain Security & Dependency Vulnerability Scanning
 
 Modern application frameworks rely heavily on third-party dependencies, creating a large attack surface across the software supply chain. Software Supply Chain Security focuses on tracking, validating, and auditing every external library and base container image.
@@ -87,8 +85,6 @@ cosign sign --key cosign.key registry.internal.net/apps/order-service@sha256:d82
 cosign verify --key cosign.pub registry.internal.net/apps/order-service@sha256:d82e1c98a31...
 ```
 
----
-
 ## 3.4 Enterprise Secrets Management Standards
 
 Hardcoding API keys, passwords, database credentials, or certificates in source code repository commits introduces severe security vulnerabilities. Enterprise secrets management replaces static credentials with dynamic, short-lived secrets stored in dedicated secret management systems (e.g., HashiCorp Vault).
@@ -98,6 +94,7 @@ Hardcoding API keys, passwords, database credentials, or certificates in source 
 ### HashiCorp Vault Integration Workflow
 
 #### 1. Configure K8s Auth Method in Vault
+
 ```bash
 # Enable K8s authentication backend in HashiCorp Vault
 vault auth enable kubernetes
@@ -126,8 +123,6 @@ vault write auth/kubernetes/role/app-role \
     policies=app-policy \
     ttl=1h
 ```
-
----
 
 ## 3.5 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline
 
@@ -229,8 +224,6 @@ dast_zap_scan:
 3. Validate that Semgrep parses ASTs to flag insecure code constructs before image compilation.
 4. Verify that Trivy halts deployment if base OS layers contain unpatched `CRITICAL` Common Vulnerabilities and Exposures (CVEs).
 5. Inspect the generated OWASP ZAP HTML report (`zap_report.html`) for dynamic HTTP security header gaps, missing anti-CSRF tokens, or permissive CORS configurations.
-
----
 
 ### Key Exam Takeaways (LPI 701-200)
 
