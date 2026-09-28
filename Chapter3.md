@@ -19,6 +19,8 @@ Shift-left security incorporates security practices, checks, and compliance audi
 ### Image Prompt 1: Shift-Left Security Flow
 > **Prompt:** A professional technical architecture diagram titled "Shift-Left Security Pipeline Integration". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with subtle slate-gray header highlights. Text labels use clear sans-serif typography, and security tools/commands use fixed-width code typography. Structure & Layout: A left-to-right sequential pipeline flow illustrating security gates across five distinct stages: IDE (Pre-commit hooks, Secret Detection), Source Control (PR Scans, SCA), CI Build (SAST, Container Scanning, Cosign Signing), Staging (DAST, IaC Scan), and Production (Runtime Guardrails, SIEM Integration). High-contrast technical schematic style. Do not display font name.
 
+![Shift-Left Security Pipeline Integration](assets/images/chapter3/3-1-Shift-Left-Security-Pipeline-Integration.png)
+
 ### Enterprise Security Gates and Automated Controls
 
 Automated quality gates fail pipeline builds if predefined security baselines are breached. Key components include:
