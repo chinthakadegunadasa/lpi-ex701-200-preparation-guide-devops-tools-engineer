@@ -93,24 +93,7 @@ sudo ctr images pull docker.io/library/alpine:latest
 
 Enterprise container build pipelines must produce secure, minimal, and deterministic images. Multi-stage builds decouple the compilation toolchain from the final operational runtime image, dramatically shrinking the attack surface and image size.
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                  MULTI-STAGE BUILD ARCHITECTURE                                   |
-+---------------------------------------------------------------------------------------------------+
-| [Stage 1: Build Environment]                                                                      |
-| Golang SDK + GCC + Build Tools + Dependencies ---> Compile Binary ---> artifact: /app/server       |
-|                                                                                 |                 |
-|                                                                                 v (Copy Only)     |
-| [Stage 2: Runtime Environment]                                                                    |
-| Distroless / Alpine Minimal Base Layer <----------------------------------------+                 |
-| Final Hardened Production Container Image (No Compiler, No Shell, Minimal Libraries)             |
-+---------------------------------------------------------------------------------------------------+
-
-```
-
-### Image Prompt 3: Multi-Stage Container Build Pipeline
-
-> **Prompt:** A professional technical architecture diagram titled "Enterprise Multi-Stage Container Build Workflow". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use clear sans-serif typography, and Dockerfile directives use fixed-width code typography. Structure & Layout: A two-stage pipeline process. Stage 1 (Builder): Shows `golang:1.22-alpine` compiling source code with CGO disabled and outputting an executable binary. Stage 2 (Production): Shows a minimal `gcr.io/distroless/static-debian12` image copying only the compiled binary from Stage 1 using `COPY --from=builder`. Highlight drastic reduction in total file size and removed shell/tools. High-contrast technical schematic style. Do not display font name.
+![Enterprise Multi-Stage Container Build Workflow](assets/images/chapter5/5-3-Enterprise-Multi-Stage-Container-Build-Workflow.png)
 
 ### Enterprise Multi-Stage `Dockerfile` Example
 
