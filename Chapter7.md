@@ -280,36 +280,6 @@ To expose a service through Traefik, add specific metadata tags during Consul se
 
 Unlike Traefik, standard NGINX requires updating `nginx.conf` files on disk and issuing a reload command (`nginx -s reload`). **Consul-Template** automates this by watching Consul key-value stores or service catalogs and rendering dynamic configuration files.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                 CONSUL-TEMPLATE WITH NGINX PIPELINE                    │
-│                                                                        │
-│  +────────────────+      1. Watch Events     +──────────────────────+  │
-│  | Consul Cluster | <─────────────────────── | Consul-Template      |  │
-│  +────────────────+                          | Daemon               |  │
-│          │                                   +──────────┬───────────+  │
-│          │ 2. Return Service Catalog Changes            │              │
-│          └──────────────────────────────────────────────┤              │
-│                                                         │ 3. Render    │
-│                                                         v              │
-│                                              +──────────────────────+  │
-│                                              | Dynamic nginx.conf   |  │
-│                                              +──────────┬───────────+  │
-│                                                         │              │
-│                                                         │ 4. Exec Reload
-│                                                         v              │
-│                                              +──────────────────────+  │
-│                                              | NGINX Process        |  │
-│                                              +──────────────────────+  │
-└────────────────────────────────────────────────────────────────────────┘
-
-```
-
-```
-[DALL-E 3 Image Generation Prompt]
-A detailed technical workflow diagram showcasing Consul-Template watching a Consul Service Catalog, updating dynamic nginx.conf files, and sending a reload signal to the NGINX master process. Minimalist light-mode style, pure white canvas background, crisp black outlines, standard sans-serif for workflow step text, monospaced font for file configurations. Pure high-contrast technical line art.
-
-```
 ![Dynamic NGINX Management with Consul-Template](assets/images/chapter7/7-3-HashiCorp-Consul-Service-Catalog.png)
 
 #### NGINX Template (`/etc/consul-template/templates/nginx.conf.ctmpl`)
@@ -370,41 +340,7 @@ consul-template -config=/etc/consul-template/config.hcl
 
 Service discovery registries must actively confirm that backends are functional before routing client traffic. If a backend degrades or crashes, the control plane updates the service catalog, causing edge proxies to remove the endpoint.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   HEALTH CHECK REROUTING MECHANISM                     │
-│                                                                        │
-│                        +──────────────────────+                        │
-│                        |    Consul Agent      |                        │
-│                        +──────────┬───────────+                        │
-│                                   │                                    │
-│             1. Continuous Health  │ Check (HTTP / TCP / Script)        │
-│             ┌─────────────────────┴─────────────────────┐              │
-│             │                                           │              │
-│             v                                           v              │
-│  +─────────────────────+                     +─────────────────────+   │
-│  | App Instance A      |                     | App Instance B      |   │
-│  | State: PASSING (200)|                     | State: CRITICAL(500)|   │
-│  +──────────┬──────────+                     +─────────────────────+   │
-│             │                                           │              │
-│             │ 2. Included in Catalog                    │ 3. Pruned    │
-│             v                                           x              │
-│  +─────────────────────────────────────────────────────────────────+   │
-│  |                      Traefik Dynamic Proxy                      |   │
-│  +──────────────────────────────────┬──────────────────────────────+   │
-│                                     │                                  │
-│                                     │ 4. Route Requests Exclusively    │
-│                                     v                                  │
-│                         Healthy App Instance A                         │
-└────────────────────────────────────────────────────────────────────────┘
-
-```
-
-```
-[DALL-E 3 Image Generation Prompt]
-A technical light-mode diagram demonstrating automated health checking and traffic rerouting. Consul Agent performs health checks against App Instance A (Passing status, green light vector indicator, solid flow arrow) and App Instance B (Critical state, red light vector, struck-out arrow). Traefik dynamic proxy receives catalog updates and routes all live traffic exclusively to App Instance A. High-contrast crisp black print aesthetic on pure white canvas.
-
-```
+![Health Checking and Automated Traffic Rerouting](assets/images/chapter7/7-4-Automated-Health-Checking-and-Traffic-Routing.png)
 
 ### Health Check Protocols in Consul
 
