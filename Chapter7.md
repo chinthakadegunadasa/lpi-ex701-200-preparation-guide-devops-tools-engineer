@@ -419,40 +419,6 @@ To prevent cascading failures across microservices, edge routers employ **Circui
 
 This hands-on exercise guides you through building a complete, dynamic edge-routing pipeline. You will set up HashiCorp Consul alongside Traefik, deploy containerized API backends, register them dynamically with Consul, and demonstrate automatic traffic rerouting during host failures.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        LAB ARCHITECTURE TARGET                         │
-│                                                                        │
-│                       Incoming Client Requests                         │
-│                                  │                                     │
-│                                  v                                     │
-│                     +──────────────────────────+                       │
-│                     | Traefik Edge Router      |                       │
-│                     | Port 80                  |                       │
-│                     +────────────┬─────────────+                       │
-│                                  │                                     │
-│             1. Watches Catalog   │ 2. Dynamic Routing                  │
-│             ┌────────────────────┴────────────────────┐                │
-│             v                                         v                │
-│  +─────────────────────+                   +─────────────────────+     │
-│  | Consul Server Node  |                   | Backends (Docker)   |     │
-│  | Port 8500           |                   |                     |     │
-│  +─────────────────────+                   | App Instance 1      |     │
-│                                            | Port 8081           |     │
-│                                            |                     |     │
-│                                            | App Instance 2      |     │
-│                                            | Port 8082           |     │
-│                                            +─────────────────────+     │
-└────────────────────────────────────────────────────────────────────────┘
-
-```
-
-```
-[DALL-E 3 Image Generation Prompt]
-A clean light-mode infrastructure diagram showing the Hands-On Lab target state: Traefik dynamic edge router processing requests on Port 80, querying a Consul Server instance on Port 8500, and load-balancing incoming requests dynamically across two containerized Go web applications running on ports 8081 and 8082. Clean high-contrast line drawing on a solid white canvas (#FFFFFF). Crisp black borders, standard print font style for labels, monospaced for ports and paths.
-
-```
-
 ![Hands-On Lab: Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing](assets/images/chapter7/7-5-Hands-On-Lab-Integrating-Hashi-Corp-Consul-with-Traefik.png)
 
 ### Lab Prerequisites
