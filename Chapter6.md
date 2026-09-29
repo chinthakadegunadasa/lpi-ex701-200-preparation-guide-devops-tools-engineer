@@ -2,8 +2,6 @@
 
 When deploying containerized workloads at enterprise scale, state management and network connectivity present the most critical operational challenges. While stateless microservices are easy to deploy, real-world architectures require durable data persistence, high-performance storage backends, and secure, cross-host network communication. To pass the LPI 701-200 exam and manage production environments effectively, system engineers must understand the low-level Linux kernel abstractions—such as Copy-on-Write (CoW) filesystems, network namespaces, virtual Ethernet pairs, and VXLAN tunnels—that make modern container storage and networking possible.
 
----
-
 ## 6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)
 
 Docker uses storage drivers to manage the image layers and the writable container layer. Understanding how these drivers handle storage allocation, layer stacking, and Copy-on-Write (CoW) operations is essential for tuning high-throughput enterprise systems.
@@ -25,6 +23,9 @@ Docker uses storage drivers to manage the image layers and the writable containe
 > **Prompt:** A professional technical architecture diagram titled "Docker Storage Driver Architecture & Layer Stacking". Style & Aesthetics: Clean light-mode print style, minimal layout, crisp black vector line art on a stark white background with slate-gray header highlights. Text labels use Google Sans Flex 12Pt for standard text and Google Sans Code 12Pt for system commands and driver parameters. Structure & Layout: A three-column comparative stack diagram showing overlay2, btrfs, and zfs storage driver backends. Left column: overlay2 showing lowerdir image layers, upperdir container layer, workdir, and unified merged mount on ext4/xfs. Middle column: btrfs demonstrating subvolume snapshots and block-level Copy-on-Write. Right column: zfs demonstrating ZFS storage pool (zpool), Adaptive Replacement Cache (ARC), and dataset clones. High-contrast technical schematic style. Do not display font name.
 
 ---
+
+![Docker Storage Driver Architecture & Layer Stacking](assets/images/chapter6/6-1-Docker-Storage-Driver-Architecture-and-Layer-Stacking.png)
+
 
 ### Deep Dive: Storage Driver Mechanics
 
