@@ -1,254 +1,259 @@
 # Chapter 7: Service Discovery & Dynamic Routing
 
-In traditional static IT infrastructure, networking was straightforward: IP addresses were fixed, server names were permanent, and load balancers were reconfigured manually or through basic configuration management scripts whenever a node was replaced.
+In traditional static IT infrastructure, service endpoints are bound to predictable IP addresses and fixed port numbers. Modern microservice architectures, containerized workloads, and auto-scaling compute groups break this model entirely. Ephemeral containers spin up and tear down on dynamically assigned network interfaces and high-numbered ports across distributed nodes. Hardcoding backend locations or maintaining static load balancer configurations creates fragile infrastructure that fails under scale and deployment frequency.
 
-In a modern, highly dynamic cloud-native ecosystem, this static model falls apart. Container orchestrators, autoscaling groups, and microservice architectures cause workloads to spin up, migrate, and terminate continuously across heterogeneous clusters. Hardcoding IP addresses or relying on static DNS records leads to operational friction, service outages, and heavy maintenance overhead.
-
-To manage this fluidity, enterprise architectures depend on two core capabilities: **Service Discovery** and **Dynamic Routing**. This chapter explores the mechanics of distributed service catalogs, multi-datacenter Consensus protocols, auto-configuring reverse proxies, dynamic health checking, and end-to-end traffic rerouting.
+This chapter details the mechanisms of dynamic service discovery and automated reverse proxying required for the LPI DevOps Tools Engineer (701-200) exam. You will explore server-side and client-side discovery patterns, deploy resilient HashiCorp Consul clusters, configure dynamic routing engines (Traefik and NGINX), and build self-healing edge routing topologies.
 
 ---
 
 ## 7.1 Principles of Service Discovery in Distributed Systems
 
-At its core, **Service Discovery** acts as an automated, central directory of all active network services and their network locations (IP address and port). Rather than hardcoding connections between microservices, applications query a Service Discovery engine to locate upstream dependencies at runtime.
+### The Fallacy of Static Addressing in Cloud-Native Architectures
+
+In containerized environments orchestrated by platforms like Kubernetes or Nomad, instances are short-lived. A host failure, continuous deployment rollout, or horizontal auto-scaling event continuously shifts network locations. Routing traffic to these workloads requires a decoupled control plane: **Service Discovery**.
+
+Service discovery automates three primary functions:
+
+1. **Registration:** Storing the IP, port, health state, and operational metadata of application instances as they start.
+2. **Resolution:** Querying a central catalog to locate healthy endpoints for a given service name.
+3. **Health Monitoring:** Continually evaluating whether registered instances can accept traffic, pruning unhealthy nodes dynamically.
 
 ```
-+-----------------------------------------------------------------------------------+
-|                        SERVICE DISCOVERY ARCHITECTURE                             |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  +--------------------+        1. Register (Health: OK)     +------------------+  |
-|  | Microservice A     |------------------------------------>| Service Catalog  |  |
-|  | IP: 10.0.1.5:8080  |                                     | (Consul/Etcd/    |  |
-|  +--------------------+                                     |  ZooKeeper)      |  |
-|                                                             +------------------+  |
-|  +--------------------+        2. Discover / Watch                   ^        |  |
-|  | Dynamic Proxy      |<---------------------------------------------+        |  |
-|  | (Traefik/Envoy)    |                                                       |  |
-|  +--------------------+                                                       |  |
-|            |                                                                      |  |
-|            +----------------- 3. Route Traffic ------------------+            |  |
-|                                                                  v            |  |
-|                                                       +--------------------+  |
-|                                                       | Microservice A     |  |
-|                                                       | IP: 10.0.1.5:8080  |  |
-|                                                       +--------------------+  |
-+-----------------------------------------------------------------------------------+
+┌────────────────────────────────────────────────────────────────────────┐
+│                        SERVICE DISCOVERY PATTERNS                      │
+│                                                                        │
+│   [ Client-Side Discovery ]             [ Server-Side Discovery ]      │
+│                                                                        │
+│         +------------+                        +------------+           │
+│         |   Client   |                        |   Client   |           │
+│         +-----+------+                        +-----+------+           │
+│               |                                     |                  │
+│         1. Query Catalog                            | Request          │
+│               v                                     v                  │
+│         +------------+                        +------------+           │
+│         | Service    |                        | Load       |           │
+│         | Registry   |                        | Balancer / |<---+      │
+│         +------------+                        | Proxy      |    |      │
+│               |                               +-----+------+    |      │
+│         2. Return IPs                               |           | Sync │
+│               |                               3. Route      | Catalog
+│               v                                     v           |      │
+│         +------------+                        +------------+    |      │
+│         | Service B  |                        | Service B  |----+      │
+│         +------------+                        +------------+           │
+└────────────────────────────────────────────────────────────────────────┘
 
 ```
 
-> **DALL-E 3 Image Generation Prompt:**
-> *A clean, high-resolution, light-mode architectural diagram illustrating Service Discovery principles on a crisp off-white background (#FAFAFA). The visual features three primary components: a Service Catalog database at the top, a Dynamic Proxy on the left, and a Microservice instance on the right. Dark slate (#2B2D42) structural boxes contain clear labels. Clean teal (#008080) directional arrows trace three distinct workflows: (1) Registration from Microservice to Catalog, (2) Watch/Discovery stream from Catalog to Dynamic Proxy, and (3) Dynamic Traffic Routing from Proxy to Microservice. All text labels use clean sans-serif typography (Google Sans Flex 12Pt style), and code snippets inside boxes use clear monospaced typography (Google Sans Code 12Pt style). Do not display font names in images. Minimalist, professional technical blueprint design.*
+```
+[DALL-E 3 Image Generation Prompt]
+A clean, technical light-mode architecture diagram comparing "Client-Side Discovery" and "Server-Side Discovery" patterns in distributed software systems. High-contrast line art, crisp borders, professional print style on a stark white background (#FFFFFF). Main system components styled as minimalist boxes labeled with clear titles. Arrows indicating network request flows and catalog synchronization. Clean black text using standard sans-serif styling for labels, and monospaced text for step labels. Zero grayscale gradients, zero shadows, pure black-and-white print output.
 
-### Client-Side vs. Server-Side Discovery
+```
 
-Service discovery architectures generally fall into two primary patterns: **Client-Side Discovery** and **Server-Side Discovery**.
+### Discovery Architecture Models: Client-Side vs. Server-Side
 
-| Dimension | Client-Side Discovery | Server-Side Discovery |
-| --- | --- | --- |
-| **Discovery Mechanism** | The client queries the service registry directly to get an instance endpoint, then picks a node using an internal load-balancing algorithm. | The client sends a request to a proxy/router (e.g., AWS ALB, Traefik). The router queries the registry and forwards the request. |
-| **Network Hops** | **1 Hop:** Client connects directly to the target instance. | **2 Hops:** Client connects to Proxy, Proxy connects to target instance. |
-| **Client Overhead** | **High:** Every client language/framework must implement discovery logic, health checking awareness, and load-balancing algorithms. | **Low:** Clients remain simple and lightweight; they only need standard HTTP/gRPC libraries to hit the central proxy. |
-| **Coupling** | High coupling between client implementation and service registry platform. | Decoupled; infrastructure handles routing transparently. |
-| **Typical Tools** | Netflix Eureka, Finagle, custom SDKs. | Traefik, NGINX Plus, Envoy, Kubernetes Services, Consul Fabric. |
+```
++------------------------+------------------------------------+------------------------------------+
+| Feature / Dimension    | Client-Side Service Discovery      | Server-Side Service Discovery      |
++------------------------+------------------------------------+------------------------------------+
+| Endpoint Query Location| Executed directly by client code   | Handled by intermediate proxy/LB   |
+| Load Balancing Method  | Client selects node from catalog   | Proxy balances traffic to backends |
+| Architecture Complexity| Lower network hops; high app-code  | Minimal app coupling; extra proxy  |
+| Ecosystem Examples     | Netflix Eureka, Finagle, Consul SDK| Traefik, NGINX + Consul, AWS ALB   |
++------------------------+------------------------------------+------------------------------------+
 
-### Architecture Comparison: Consul vs. etcd vs. ZooKeeper
+```
 
-Distributed systems require a strongly consistent state store to avoid routing traffic to non-existent or unhealthy nodes. The primary tools in this space trade off simplicity, consistency, and feature breadth:
+```
+[DALL-E 3 Image Generation Prompt]
+A clean, minimal light-mode reference table summarizing "Client-Side Service Discovery vs Server-Side Service Discovery". White background, dark black horizontal gridlines, and bold monospaced headers: "Feature / Dimension", "Client-Side Service Discovery", and "Server-Side Service Discovery". Clean sans-serif text inside table cells. High-contrast black ink style, no color fills, optimized for printed technical documentation.
 
-| Feature / Metric | HashiCorp Consul | CoreOS etcd | Apache ZooKeeper |
-| --- | --- | --- | --- |
-| **Primary Design Goal** | Native Service Mesh & Service Discovery | Distributed Key-Value Store for Configuration & State | Distributed Coordination for Large Systems |
-| **Consensus Algorithm** | Raft | Raft | Zab (ZooKeeper Atomic Broadcast) |
-| **Built-in Health Checking** | **Native:** Supports HTTP, TCP, gRPC, and custom script checks natively out of the box. | **None:** Requires external operators/sidecars to update keys upon health failure. | **None:** Relies on ephemeral nodes and active client heartbeats (leases). |
-| **Multi-Datacenter Support** | **Native:** Built-in WAN gossip pools and cross-datacenter federation. | **Manual:** Requires separate clusters or complex overlay setups. | **Complex:** High latency overhead across WAN links; typically single-DC. |
-| **KV Store Capability** | Rich hierarchical KV store with ACLs and long-polling support. | High-performance gRPC/v3 API KV store with lease capabilities. | Hierarchical znodes with watcher interfaces. |
-| **Interface Protocols** | HTTP REST, DNS, gRPC, CLI. | gRPC, HTTP REST (via proxy). | Native Java/C Client Libraries, CLI. |
+```
+
+#### Client-Side Discovery
+
+The client application queries the Service Registry (such as HashiCorp Consul or Etcd) to retrieve available IP and port mappings. The client then applies internal client-side load-balancing algorithms (e.g., Round-Robin, Least Connections) and establishes a direct connection to the target service instance.
+
+* **Advantages:** Eliminates network hops through middle proxies; provides granular control over load-balancing strategy within application logic.
+* **Disadvantages:** Couples application code to specific discovery APIs; requires client-side libraries in every language stack utilized within the enterprise architecture.
+
+#### Server-Side Discovery
+
+The client sends requests to an edge router or load balancer proxy. The proxy queries the Service Registry or list of targets, resolves the network location of an operational service instance, and routes the request down to the endpoint.
+
+* **Advantages:** Abstracted completely from application code; uniform access mechanisms across polyglot microservice environments.
+* **Disadvantages:** Introduces an additional network hop; requires maintaining highly available proxy infrastructure.
+
+### Consensus Protocols and Distributed Catalogs: Raft Overview
+
+Service registries must maintain absolute consistency and state integrity across cluster partitions. HashiCorp Consul uses the **Raft Consensus Algorithm** to maintain a replicated log among its server nodes.
+
+Raft divides cluster nodes into three states:
+
+* **Leader:** Manages all client write requests, log replication, and heartbeat emission.
+* **Follower:** Fully passive state; responds to log entry replication RPCs from the leader.
+* **Candidate:** Intermediate state during an election to choose a new Leader.
+
+To maintain quorum and tolerate hardware failures without split-brain scenarios, a Consul cluster requires an odd number of server nodes ($N$). The consensus quorum size needed to commit log entries is defined mathematically:
+
+$$\text{Quorum} = \left\lfloor \frac{N}{2} \right\rfloor + 1$$
+
+* A 3-node cluster tolerates **1** node failure ($\lfloor 3/2 \rfloor + 1 = 2$ nodes required for quorum).
+* A 5-node cluster tolerates **2** node failures ($\lfloor 5/2 \rfloor + 1 = 3$ nodes required for quorum).
 
 ---
 
 ## 7.2 HashiCorp Consul Cluster Deployment and Service Registration
 
-HashiCorp Consul uses a **Raft consensus protocol** for state replication among server nodes, alongside the **SWIM (Structured Weakness-Oriented with Infection-Style Process Group Membership Protocol) Gossip protocol** for node discovery, cluster health status, and event broadcast.
+HashiCorp Consul operates as a single binary executing in either **Server** or **Agent/Client** mode. Server agents participate in Raft consensus, store catalog state, and process queries. Client agents run on every workload host, running health checks, caching DNS responses, and forwarding RPCs to the server cluster.
+
+### Deploying a Production-Grade Consul Cluster
 
 ```
-+-----------------------------------------------------------------------------------+
-|                        CONSUL MULTI-DATACENTER ARCHITECTURE                       |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|    DATACENTER 1 (dc1) - LAN Gossip Pool                                           |
-|    +-------------------------------------------------------------------------+    |
-|    |                                                                         |    |
-|    |   +------------------+    Raft Replication    +------------------+      |    |
-|    |   | Consul Server 1  |<======================>| Consul Server 2  |      |    |
-|    |   | (Leader)         |                        | (Follower)       |      |    |
-|    |   +------------------+                        +------------------+      |    |
-|    |            ^                                            ^               |    |
-|    |            | LAN Gossip                                 | LAN Gossip    |    |
-|    |            v                                            v               |    |
-|    |   +------------------+                        +------------------+      |    |
-|    |   | Consul Agent 1   |                        | Consul Agent 2   |      |    |
-|    |   | (Client Node)    |                        | (Client Node)    |      |    |
-|    |   +------------------+                        +------------------+      |    |
-|    +-------------------------------------------------------------------------+    |
-|                                     ||                                            |
-|                                     || WAN Gossip Pool                            |
-|                                     || (Cross-DC Federation)                      |
-|                                     vv                                            |
-|    DATACENTER 2 (dc2) - LAN Gossip Pool                                           |
-|    +-------------------------------------------------------------------------+    |
-|    |   +-----------------------------------------------------------------+   |    |
-|    |   | Consul Server Cluster (dc2)                                     |   |    |
-|    |   +-----------------------------------------------------------------+   |    |
-|    +-------------------------------------------------------------------------+    |
-+-----------------------------------------------------------------------------------+
+                                  +-----------------------+
+                                  |   Consul Leader       |
+                                  |  (Server Node 1)      |
+                                  +-----------+-----------+
+                                              |
+                       +----------------------+----------------------+
+                       | Raft Consensus / Gossip (LAN Serf)          |
+                       v                                             v
+            +-----------------------+                     +-----------------------+
+            |    Consul Server      |                     |    Consul Server      |
+            |     (Node 2)          |                     |     (Node 3)          |
+            +-----------+-----------+                     +-----------+-----------+
+                        |                                             |
+  +---------------------+---------------------------------------------+---------------------+
+  |                                                                                         |
+  v                                                                                         v
++-----------------------------------+                                     +-----------------------------------+
+|  Host A (Client Agent)            |                                     |  Host B (Client Agent)            |
+|  +-----------------------------+  |                                     |  +-----------------------------+  |
+|  | Microservice: order-api     |  |                                     |  | Microservice: payment-api   |  |
+|  | Port: 8080                  |  |                                     |  | Port: 8443                  |  |
+|  +-----------------------------+  |                                     |  +-----------------------------+  |
++-----------------------------------+                                     +-----------------------------------+
 
 ```
 
-> **DALL-E 3 Image Generation Prompt:**
-> *An enterprise architectural diagram illustrating a Multi-Datacenter HashiCorp Consul Topology on a light grey background (#F8F9FA). The top section shows "Datacenter 1 (dc1)" containing two Consul Servers interlinked via a double line labeled "Raft Replication", and two Consul Client Agents connected via subtle mesh lines labeled "LAN Gossip Pool". The bottom section shows "Datacenter 2 (dc2)". A prominent bidirectional thick arrow labeled "WAN Gossip Pool (Cross-DC Federation)" links the two datacenters. All boxes have thin navy outlines (#1E293B) and clean white fill. All standard text is styled in Google Sans Flex 12Pt and all embedded code/command elements are styled in Google Sans Code 12Pt. Do not display font names in images. Clear, high-contrast, publication-quality technical illustration.*
+```
+[DALL-E 3 Image Generation Prompt]
+A high-contrast light-mode topology block diagram illustrating a 3-node HashiCorp Consul Server cluster maintaining Raft consensus and Serf gossip protocols down to client agents on Host A and Host B. Strict black-and-white technical print aesthetic. High-contrast lines, clean rectangular node shapes, crisp arrows detailing internal replication flows and client registrations. Monospaced font for host and service details, clean sans-serif for node labels. White background, zero shading or ambient lighting.
 
-### Production Multi-Node Consul Server Configuration
+```
 
-Deploying a resilient Consul cluster requires an odd number of server nodes (typically 3 or 5) to maintain a Raft quorum during network partitions or node failures.
+#### Production Server Configuration (`/etc/consul.d/consul.hcl`)
 
-Below is an enterprise-grade HCL configuration for a Consul Server node (`/etc/consul.d/consul.hcl`):
+Deploy the following declarative configuration file across a 3-node server cluster, adjusting node names and static bind addresses accordingly:
 
 ```hcl
 # /etc/consul.d/consul.hcl
-datacenter = "dc1"
-data_dir   = "/var/lib/consul"
-log_level  = "INFO"
-node_name  = "consul-server-01"
-
-# Network Binding Configuration
-bind_addr   = "10.0.10.11"
-client_addr = "0.0.0.0"
-
-# Server Role and Clustering
+node_name        = "consul-server-01"
+data_dir         = "/var/lib/consul"
+log_level        = "INFO"
 server           = true
 bootstrap_expect = 3
-retry_join       = ["10.0.10.11", "10.0.10.12", "10.0.10.13"]
+
+# Network Binds
+bind_addr   = "192.168.10.11"
+client_addr = "0.0.0.0"
+
+# Clustering & Discovery
+retry_join = ["192.168.10.11", "192.168.10.12", "192.168.10.13"]
 
 # UI Configuration
 ui_config {
   enabled = true
 }
 
-# Performance Tuning for Production
+# Connect Service Mesh / ACL Enforcement
+acl {
+  enabled                  = true
+  default_policy           = "deny"
+  enable_token_persistence = true
+}
+
 performance {
   raft_multiplier = 1
 }
 
-# Connect Service Mesh Enforcement
-connect {
-  enabled = true
-}
-
-# Security and ACL Configuration
-acl = {
-  enabled                  = true
-  default_policy           = "deny"
-  enable_token_persistence = true
-  down_policy              = "extend-cache"
-}
-
-# Encrypted Communications
-encrypt = "s3cr3tG0ss1pK3yRequir3d="
-
-tls {
-  defaults {
-    ca_file   = "/etc/consul.d/certs/consul-ca.pem"
-    cert_file = "/etc/consul.d/certs/dc1-server-consul-0.pem"
-    key_file  = "/etc/consul.d/certs/dc1-server-consul-0-key.pem"
-
-    verify_incoming = true
-    verify_outgoing = true
-  }
-}
-
 ```
 
-To initialize and launch the Consul systemd unit across nodes:
+Start the service using systemd across all nodes:
 
 ```bash
-# Verify permissions on configuration files
-sudo chown -R consul:consul /etc/consul.d /var/lib/consul
-sudo chmod 640 /etc/consul.d/consul.hcl
-
-# Enable and start Consul service
-sudo systemctl daemon-reload
 sudo systemctl enable --now consul
-
-# Bootstrap the ACL system (run once on the primary server)
-consul acl bootstrap
 
 ```
 
-### Static Service Registration via JSON Configuration
+Verify cluster initialization and consensus topology:
 
-Services can be registered statically using JSON or HCL definition files placed inside Consul's configuration directory (`/etc/consul.d/`).
+```bash
+consul members
+consul operator raft list-peers
 
-File: `/etc/consul.d/payment-service.json`
+```
 
-```json
-{
-  "service": {
-    "id": "payment-service-prod-01",
-    "name": "payment-service",
-    "tags": [
-      "primary",
-      "v2.1.0",
-      "traefik.enable=true",
-      "traefik.http.routers.payment.rule=Host(`payment.internal.net`)"
-    ],
-    "address": "10.0.20.45",
-    "port": 8080,
-    "meta": {
-      "environment": "production",
-      "owner": "finance-engineering"
-    },
-    "checks": [
-      {
-        "id": "payment-api-health",
-        "name": "Payment API HTTP Health Check",
-        "http": "http://10.0.20.45:8080/health",
-        "tls_skip_verify": false,
-        "method": "GET",
-        "interval": "10s",
-        "timeout": "2s",
-        "deregister_critical_service_after": "1m"
-      }
-    ]
+Output:
+
+```
+Node              Address             Status  Type    Build   Protocol  DC    Partition  Segment
+consul-server-01  192.168.10.11:8301  alive   server  1.16.0  2         dc1   default    <all>
+consul-server-02  192.168.10.12:8301  alive   server  1.16.0  2         dc1   default    <all>
+consul-server-03  192.168.10.13:8301  alive   server  1.16.0  2         dc1   default    <all>
+
+```
+
+### Registering Services via HCL Declarations and HTTP API
+
+Services are declared on Consul agents using static HCL definitions or injected dynamically over the HTTP API endpoints.
+
+#### Declaring a Service via HCL File (`/etc/consul.d/payment-service.hcl`)
+
+```hcl
+service {
+  id      = "payment-api-v1-01"
+  name    = "payment-api"
+  tags    = ["production", "v1", "traefik.enable=true"]
+  port    = 8443
+  address = "192.168.10.50"
+
+  check {
+    id       = "payment-api-check"
+    name     = "HTTP API Health Check"
+    http     = "https://192.168.10.50:8443/healthz"
+    tls_skip_verify = true
+    interval = "10s"
+    timeout  = "2s"
   }
 }
 
 ```
 
-Reload the Consul agent to apply the configuration without downtime:
+Reload the Consul configuration to process local registration files:
 
 ```bash
 consul reload
 
 ```
 
-### Dynamic Service Registration via Consul HTTP REST API
+#### Registering a Service Dynamic via HTTP API
 
-Applications can programmatically register themselves into Consul at startup using its REST API.
+Deployments in continuous integration/delivery (CI/CD) pipelines register instances via Consul's REST API:
 
 ```bash
 curl --request PUT \
   --url http://127.0.0.1:8500/v1/agent/service/register \
   --header 'Content-Type: application/json' \
-  --header 'X-Consul-Token: <YOUR_ACL_AGENT_TOKEN>' \
   --data '{
-    "Name": "order-fulfillment",
-    "ID": "order-fulfillment-node-03",
-    "Tags": ["shipping", "v1.4.2"],
-    "Address": "10.0.20.88",
-    "Port": 9090,
+    "ID": "order-api-01",
+    "Name": "order-api",
+    "Tags": ["v2", "web"],
+    "Address": "192.168.10.51",
+    "Port": 8080,
     "Check": {
-      "HTTP": "http://10.0.20.88:9090/healthz",
+      "HTTP": "http://192.168.10.51:8080/health",
       "Interval": "5s",
       "Timeout": "1s"
     }
@@ -256,40 +261,37 @@ curl --request PUT \
 
 ```
 
-### Querying the Service Catalog via API and DNS Interfaces
+### Catalog Querying: DNS Interface vs. HTTP REST API
 
-Consul exposes both REST and DNS interfaces to query service addresses.
+Consul provides native resolution via DNS on port `8600` and REST API endpoints on port `8500`.
 
-#### Querying via HTTP API
+#### Resolving Endpoints via DNS
 
-```bash
-# Query all healthy instances of payment-service
-curl -s http://127.0.0.1:8500/v1/health/service/payment-service?passing=true | jq .
-
-```
-
-#### Querying via DNS Interface
-
-Consul runs an embedded DNS server on port `8600` (by default).
+Query service records using standard system utilities like `dig`. Consul constructs domain names using the format `<service>.service.<datacenter>.consul`:
 
 ```bash
-# Standard A record query
-dig @127.0.0.1 -p 8600 payment-service.service.consul A +short
-
-# Service Record (SRV) query to resolve both IP and Port
-dig @127.0.0.1 -p 8600 payment-service.service.consul SRV
+dig @127.0.0.1 -p 8600 order-api.service.dc1.consul SRV
 
 ```
 
-Sample output:
+Example DNS Response Payload:
 
-```
-; <<>> DiG 9.18.28-1~deb12u2-Debian <<>> @127.0.0.1 -p 8600 payment-service.service.consul SRV
+```text
+;; QUESTION SECTION:
+;order-api.service.dc1.consul. IN SRV
+
 ;; ANSWER SECTION:
-payment-service.service.consul. 0 IN SRV 1 1 8080 0a00142d.addr.dc1.consul.
+order-api.service.dc1.consul. 0 IN SRV 1 1 8080 192-168-10-51.node.dc1.consul.
 
 ;; ADDITIONAL SECTION:
-0a00142d.addr.dc1.consul. 0 IN	A	10.0.20.45
+192-168-10-51.node.dc1.consul. 0 IN A 192.168.10.51
+
+```
+
+#### Resolving Endpoints via HTTP REST API
+
+```bash
+curl -s http://127.0.0.1:8500/v1/health/service/order-api?passing=true | jq .
 
 ```
 
@@ -297,198 +299,179 @@ payment-service.service.consul. 0 IN SRV 1 1 8080 0a00142d.addr.dc1.consul.
 
 ## 7.3 Dynamic Reverse Proxying with Traefik and NGINX
 
-While Consul acts as the system of record for service locations, external traffic and service-to-service requests require a reverse proxy to dynamically discover backend targets and balance traffic across them.
-
-### Traefik Dynamic Ingress Architecture
-
-Traefik is a modern edge router designed specifically to bind directly to service registries like Consul, Kubernetes, or Docker. It dynamically generates and updates its routing table in memory without requiring service restarts or configuration reloads.
+Dynamic reverse proxies act as entry points (edge routers) to distributed clusters. Rather than manually editing proxy routing tables and executing reload commands whenever backends change, dynamic reverse proxies poll or listen to the service discovery catalog, updating routing rules immediately.
 
 ```
-+-----------------------------------------------------------------------------------+
-|                        TRAEFIK DYNAMIC ROUTING MECHANISM                          |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  [ Incoming Client Request ]                                                      |
-|               |                                                                   |
-|               v                                                                   |
-|    +---------------------+                                                        |
-|    | EntryPoint (:80/:443)|                                                       |
-|    +---------------------+                                                        |
-|               |                                                                   |
-|               v                                                                   |
-|    +---------------------+    Consul Catalog Provider                             |
-|    | Router              |<==============================+                        |
-|    | (Evaluates Rules)   |  (Watches KV/Catalog Updates) |                        |
-|    +---------------------+                               |                        |
-|               |                                          |                        |
-|               v                                  +---------------+                |
-|    +---------------------+                       | HashiCorp     |                |
-|    | Middlewares         |                       | Consul        |                |
-|    | (Auth, Rate Limit)  |                       +---------------+                |
-|    +---------------------+                                                        |
-|               |                                                                   |
-|               v                                                                   |
-|    +---------------------+                                                        |
-|    | Service             |                                                        |
-|    | (Load Balancer)     |                                                        |
-|    +---------------------+                                                        |
-|               |                                                                   |
-|        +------+------+                                                            |
-|        |             |                                                            |
-|        v             v                                                            |
-|    Backend 1     Backend 2                                                        |
-|    (Instance A)  (Instance B)                                                     |
-+-----------------------------------------------------------------------------------+
+┌────────────────────────────────────────────────────────────────────────┐
+│                   DYNAMIC REVERSE PROXY FLOW                          │
+│                                                                        │
+│   Incoming Client HTTP Request                                         │
+│                │                                                       │
+│                v                                                       │
+│   +─────────────────────────+                                          │
+│   |  Edge Router / Proxy    | <────── Auto-discovers endpoints         │
+│   |  (Traefik / NGINX)      |         and updates routing table        │
+│   +────────────┬────────────+                                          │
+│                │                                                       │
+│        Dynamic Routing                                                 │
+│     ┌──────────┴──────────┐                                            │
+│     │                     │                                            │
+│     v                     v                                            │
+│  +─────────────────+   +─────────────────+                             │
+│  | Service A       |   | Service B       |                             │
+│  | Host 1: 10.0.0.1|   | Host 2: 10.0.0.2|                             │
+│  +─────────────────+   +─────────────────+                             │
+└────────────────────────────────────────────────────────────────────────┘
 
 ```
 
-> **DALL-E 3 Image Generation Prompt:**
-> *A light-mode software pipeline diagram showing Traefik's internal routing flow on a clean light grey background (#F3F4F6). A top box titled "EntryPoint (:80/:443)" passes requests downward through "Router", "Middlewares", and "Service (Load Balancer)" to two bottom endpoints labeled "Backend 1" and "Backend 2". A separate block on the right labeled "HashiCorp Consul" streams updates into the "Router" via a dashed arrow marked "Consul Catalog Provider". Use cool blue hues (#0284C7) for routers and emerald green (#059669) for backends. Text formatting mimics Google Sans Flex 12Pt for labels and Google Sans Code 12Pt for code snippets/ports. Do not display font names in images. Crisp technical detail without clutter.*
+```
+[DALL-E 3 Image Generation Prompt]
+A clean light-mode diagram representing the dynamic routing execution flow of an edge reverse proxy (Traefik/NGINX) auto-discovering endpoints from a backend service registry. Professional technical documentation style on pure white background (#FFFFFF). High-contrast black outlines and text, sharp geometric shapes. Clean arrows showing incoming HTTP client requests hitting the edge router, which continuously synchronizes with dynamic service backends. Monospaced font for IP definitions, standard sans-serif for components.
 
-### Production Traefik v3 Static Configuration
+```
 
-File: `/etc/traefik/traefik.yml`
+### Traefik Architecture and Providers
+
+Traefik uses two core concepts:
+
+1. **Entrypoints:** Network ports receiving incoming requests (e.g., `:80`, `:443`).
+2. **Providers:** Infrastructure engines (Consul Catalog, Docker, Kubernetes) that expose service declarations.
+
+Traefik builds routing trees automatically using **Routers** (which match incoming requests by host, path, or header) and **Services** (which load-balance traffic to healthy backend IP/port targets).
+
+#### Static Traefik Configuration (`/etc/traefik/traefik.yml`)
 
 ```yaml
-global:
-  checkNewVersion: false
-  sendAnonymousUsage: false
-
-log:
-  level: INFO
-  format: json
-
 entryPoints:
   web:
     address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
   websecure:
     address: ":443"
 
 providers:
   consulCatalog:
-    refreshInterval: 15s
-    prefix: "traefik"
+    refreshInterval: 5s
     endpoint:
       address: "127.0.0.1:8500"
       scheme: "http"
-      token: "YOUR_CONSUL_READ_TOKEN"
     exposedByDefault: false
-    defaultRule: "Host(`{{ .Name }}.internal.domain`)"
+    defaultRule: "Host(`{{ .Name }}.example.com`)"
 
 api:
   dashboard: true
-  insecure: false
-
-accessLog:
-  format: json
+  insecure: true
 
 ```
 
-When Consul Catalog integration is enabled, Traefik watches Consul for services tagged with `traefik.enable=true`. Traefik automatically builds the dynamic routing rule directly from the service tags without requiring a proxy reload.
+#### Dynamic Registration via Consul Tags
 
-### Enterprise NGINX Dynamic Reconfiguration using `consul-template`
+To expose a service through Traefik, add specific metadata tags during Consul service registration:
 
-Traditional NGINX Open Source does not dynamically poll Consul APIs directly into memory. Instead, the enterprise standard pattern uses **`consul-template`**. This daemon queries Consul for changes and dynamically renders an NGINX configuration file (`/etc/nginx/conf.d/upstream.conf`), then executes a graceful reload (`nginx -s reload`).
-
-```
-+-----------------------------------------------------------------------------------+
-|                     NGINX DYNAMIC UPDATES VIA CONSUL-TEMPLATE                     |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  +--------------------+       1. Watch Events       +--------------------+        |
-|  | HashiCorp Consul   |---------------------------->| consul-template    |        |
-|  | Catalog / KV       |                             | Daemon             |        |
-|  +--------------------+                             +--------------------+        |
-|                                                                |                  |
-|                                                                | 2. Render Template|
-|                                                                v                  |
-|  +--------------------+       3. Exec Reload        +--------------------+        |
-|  | NGINX Master       |<----------------------------| /etc/nginx/conf.d/ |        |
-|  | Process            |  (systemctl reload nginx)   | dynamic.conf       |        |
-|  +--------------------+                             +--------------------+        |
-+-----------------------------------------------------------------------------------+
+```json
+{
+  "ID": "user-service-01",
+  "Name": "user-service",
+  "Address": "10.0.1.20",
+  "Port": 9000,
+  "Tags": [
+    "traefik.enable=true",
+    "traefik.http.routers.users.rule=Host(`users.enterprise.internal`)",
+    "traefik.http.routers.users.entrypoints=web",
+    "traefik.http.services.users.loadbalancer.server.port=9000"
+  ],
+  "Check": {
+    "HTTP": "http://10.0.1.20:9000/health",
+    "Interval": "10s"
+  }
+}
 
 ```
 
-> **DALL-E 3 Image Generation Prompt:**
-> *A structural workflow diagram depicting dynamic configuration rendering on a light background. "HashiCorp Consul" streams watch events to "consul-template Daemon". "consul-template" writes an updated configuration file to "/etc/nginx/conf.d/dynamic.conf" and issues a reload signal to the "NGINX Master Process". Dark indigo lines (#312E81) depict the flow. Clear typography using Google Sans Flex 12Pt for text and Google Sans Code 12Pt for file paths. Do not display font names in images. Minimalist, professional software engineering layout.*
+### Dynamic NGINX Management with Consul-Template
 
-#### 1. Define the Consul-Template File (`/etc/consul-template/templates/app.conf.ctmpl`)
+Unlike Traefik, standard NGINX requires updating `nginx.conf` files on disk and issuing a reload command (`nginx -s reload`). **Consul-Template** automates this by watching Consul key-value stores or service catalogs and rendering dynamic configuration files.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                 CONSUL-TEMPLATE WITH NGINX PIPELINE                    │
+│                                                                        │
+│  +────────────────+      1. Watch Events     +──────────────────────+  │
+│  | Consul Cluster | <─────────────────────── | Consul-Template      |  │
+│  +────────────────+                          | Daemon               |  │
+│          │                                   +──────────┬───────────+  │
+│          │ 2. Return Service Catalog Changes            │              │
+│          └──────────────────────────────────────────────┤              │
+│                                                         │ 3. Render    │
+│                                                         v              │
+│                                              +──────────────────────+  │
+│                                              | Dynamic nginx.conf   |  │
+│                                              +──────────┬───────────+  │
+│                                                         │              │
+│                                                         │ 4. Exec Reload
+│                                                         v              │
+│                                              +──────────────────────+  │
+│                                              | NGINX Process        |  │
+│                                              +──────────────────────+  │
+└────────────────────────────────────────────────────────────────────────┘
+
+```
+
+```
+[DALL-E 3 Image Generation Prompt]
+A detailed technical workflow diagram showcasing Consul-Template watching a Consul Service Catalog, updating dynamic nginx.conf files, and sending a reload signal to the NGINX master process. Minimalist light-mode style, pure white canvas background, crisp black outlines, standard sans-serif for workflow step text, monospaced font for file configurations. Pure high-contrast technical line art.
+
+```
+
+#### NGINX Template (`/etc/consul-template/templates/nginx.conf.ctmpl`)
 
 ```nginx
-upstream backend_app {
-  zone backend_app_mem 64k;
-  {{ range service "payment-service@dc1" }}
-  server {{ .Address }}:{{ .Port }} max_fails=3 fail_timeout=10s weight=1;
+{{ range services }}
+upstream {{ .Name }} {
+  least_conn;
+  {{ range service .Name }}
+  server {{ .Address }}:{{ .Port }} max_fails=3 fail_timeout=10s;
   {{ else }}
-  # Fallback target if no instances are healthy
-  server 127.0.0.1:8080 down;
+  server 127.0.0.1:65535; # Backup down host
   {{ end }}
-  keepalive 32;
 }
+{{ end }}
 
 server {
     listen 80;
-    server_name payment.company.internal;
+    server_name apps.enterprise.internal;
 
-    location / {
-        proxy_pass http://backend_app;
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
+    {{ range services }}
+    location /{{ .Name }}/ {
+        proxy_pass http://{{ .Name }}/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
     }
+    {{ end }}
 }
 
 ```
 
-#### 2. Configure Consul-Template Daemon (`/etc/consul-template/config/consul-template.hcl`)
+#### Consul-Template System Configuration (`/etc/consul-template/config.hcl`)
 
 ```hcl
 consul {
   address = "127.0.0.1:8500"
-  retry {
-    enabled  = true
-    attempts = 12
-    backoff  = "250ms"
-  }
 }
 
 template {
-  source      = "/etc/consul-template/templates/app.conf.ctmpl"
-  destination = "/etc/nginx/conf.d/payment_service.conf"
-  perms       = 0644
+  source      = "/etc/consul-template/templates/nginx.conf.ctmpl"
+  destination = "/etc/nginx/conf.d/default.conf"
   command     = "systemctl reload nginx"
-  command_timeout = "30s"
 }
 
 ```
 
-#### 3. Run `consul-template` as a Managed Systemd Service
+Run Consul-Template as a persistent system daemon:
 
-```ini
-# /etc/systemd/system/consul-template.service
-[Unit]
-Description="Consul Template daemon for NGINX"
-After=network.target consul.service nginx.service
-Requires=consul.service nginx.service
-
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/local/bin/consul-template -config=/etc/consul-template/config/consul-template.hcl
-Restart=always
-RestartSec=5s
-
-[Install]
-WantedBy=multi-user.target
+```bash
+consul-template -config=/etc/consul-template/config.hcl
 
 ```
 
@@ -496,119 +479,111 @@ WantedBy=multi-user.target
 
 ## 7.4 Health Checking and Automated Traffic Rerouting
 
-Service discovery is only as accurate as its health-checking mechanism. Routing traffic to an unverified instance causes request drop-offs and cascaded failures.
-
-### Active vs. Passive Health Checks
+Service discovery registries must actively confirm that backends are functional before routing client traffic. If a backend degrades or crashes, the control plane updates the service catalog, causing edge proxies to remove the endpoint.
 
 ```
-+-----------------------------------------------------------------------------------+
-|                        ACTIVE VS PASSIVE HEALTH CHECKING                          |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  ACTIVE CHECKING (Proactive Polling)                                              |
-|  +--------------+          GET /healthz Check (Every 5s)      +---------------+   |
-|  | Consul Agent |-------------------------------------------->| Microservice  |   |
-|  | / Proxy      |<--------------------------------------------| Endpoint      |   |
-|  +--------------+          HTTP 200 OK (Status: Healthy)      +---------------+   |
-|                                                                                   |
-|  PASSIVE CHECKING (In-Flight Monitoring)                                          |
-|  +--------------+          1. Forward Client Request          +---------------+   |
-|  | Dynamic      |-------------------------------------------->| Microservice  |   |
-|  | Proxy        |<--------------------------------------------| Endpoint      |   |
-|  +--------------+          2. Detect TCP Reset / HTTP 503     +---------------+   |
-|         |                                                                         |   |
-|         +--- 3. Mark Instance Unhealthy & Retry Upstream Instance ---------------|   |
-+-----------------------------------------------------------------------------------+
-
-```
-
-> **DALL-E 3 Image Generation Prompt:**
-> *A clean dual-panel light-mode graphic illustrating Active vs Passive health check patterns. The top section depicts "Active Checking" with a proxy polling a microservice with scheduled HTTP check probes. The bottom section depicts "Passive Checking" with a proxy intercepting real user requests, catching a 503 response, marking the instance degraded, and rerouting to a healthy alternative. Color accent in deep orange (#EA580C) for failure states and soft green (#16A34A) for success states. Fonts styled as Google Sans Flex 12Pt for labels and Google Sans Code 12Pt for endpoints/HTTP status codes. Do not display font names in images. Publication ready.*
-
-#### Active Health Checks
-
-* **Mechanism**: The registry or edge proxy proactively polls the backend target on a fixed interval (e.g., every 5 seconds) via HTTP, TCP, gRPC, or an Exec script.
-* **Advantage**: Faults are detected before real users hit the failing node.
-* **Disadvantage**: Introduces extra network traffic and resource overhead as cluster sizes scale up.
-
-#### Passive Health Checks (Outlier Detection)
-
-* **Mechanism**: The proxy observes live production traffic. If an instance returns sequential errors (e.g., three consecutive 5xx errors or TCP timeouts), the proxy temporarily ejects the instance from the load balancing pool.
-* **Advantage**: Zero extra probe overhead; detects failures under real application loads.
-* **Disadvantage**: At least one or more real user requests must fail before the unhealthy node is detected and isolated.
-
-### Health Check Circuit State Machine
-
-In Consul, every health check progresses through three primary states:
-
-```
-                  +--------------------------------+
-                  |                                |
-                  |            PASSING             |
-                  |     (Healthy Node Traffic)     |
-                  |                                |
-                  +--------------------------------+
-                     /                          ^
-      Failure Threshold                         Success Threshold
-        Exceeded                                   Satisfied
-                   /                            \
-                  v                              \
-  +--------------------------------+   Interval   +--------------------------------+
-  |                                |------------->|                                |
-  |            CRITICAL            |              |            WARNING             |
-  |   (Removed from Routing Pool)  |<-------------| (Monitored / Degraded State)   |
-  +--------------------------------+   Failure    +--------------------------------+
-                  |                                
-                  | Deregister Critical
-                  | Timeout Elapsed
-                  v
-  +--------------------------------+
-  |    DEREGISTERED / EJECTED      |
-  |     (Purged from Catalog)      |
-  +--------------------------------+
+┌────────────────────────────────────────────────────────────────────────┐
+│                   HEALTH CHECK REROUTING MECHANISM                     │
+│                                                                        │
+│                        +──────────────────────+                        │
+│                        |    Consul Agent      |                        │
+│                        +──────────┬───────────+                        │
+│                                   │                                    │
+│             1. Continuous Health  │ Check (HTTP / TCP / Script)        │
+│             ┌─────────────────────┴─────────────────────┐              │
+│             │                                           │              │
+│             v                                           v              │
+│  +─────────────────────+                     +─────────────────────+   │
+│  | App Instance A      |                     | App Instance B      |   │
+│  | State: PASSING (200)|                     | State: CRITICAL(500)|   │
+│  +──────────┬──────────+                     +─────────────────────+   │
+│             │                                           │              │
+│             │ 2. Included in Catalog                    │ 3. Pruned    │
+│             v                                           x              │
+│  +─────────────────────────────────────────────────────────────────+   │
+│  |                      Traefik Dynamic Proxy                      |   │
+│  +──────────────────────────────────┬──────────────────────────────+   │
+│                                     │                                  │
+│                                     │ 4. Route Requests Exclusively    │
+│                                     v                                  │
+│                         Healthy App Instance A                         │
+└────────────────────────────────────────────────────────────────────────┘
 
 ```
 
-> **DALL-E 3 Image Generation Prompt:**
-> *A state machine diagram on a light neutral background detailing health states: PASSING (Green fill), WARNING (Amber fill), CRITICAL (Red fill), and DEREGISTERED (Gray fill). Directed arrows indicate transitions between states based on health probe thresholds. Text formatted cleanly using Google Sans Flex 12Pt for state titles and Google Sans Code 12Pt for parameters. Do not display font names in images. Elegant technical presentation.*
+```
+[DALL-E 3 Image Generation Prompt]
+A technical light-mode diagram demonstrating automated health checking and traffic rerouting. Consul Agent performs health checks against App Instance A (Passing status, green light vector indicator, solid flow arrow) and App Instance B (Critical state, red light vector, struck-out arrow). Traefik dynamic proxy receives catalog updates and routes all live traffic exclusively to App Instance A. High-contrast crisp black print aesthetic on pure white canvas.
 
-### Configuring Advanced Health Checks in Consul
+```
 
-Consul supports multiple probe types within a single service registration.
+### Health Check Protocols in Consul
+
+```
++----------------+--------------------------------------+------------------------------------+
+| Check Type     | Example Configuration Snippet        | Evaluation Criteria                |
++----------------+--------------------------------------+------------------------------------+
+| HTTP Check     | http = "http://10.0.1.5:8080/health" | 2xx status code = Pass; else Fail  |
+| TCP Check      | tcp  = "10.0.1.5:5432"               | Successful TCP socket handshake    |
+| Script Check   | args = ["/usr/local/bin/check.sh"]   | Exit Code 0 = Pass; 2 = Critical   |
+| gRPC Check     | grpc = "10.0.1.5:9000/Health"        | gRPC Health Checking Protocol status|
++----------------+--------------------------------------+------------------------------------+
+
+```
+
+```
+[DALL-E 3 Image Generation Prompt]
+A high-contrast light-mode reference table outlining "Consul Health Check Types, Configurations, and Evaluation Criteria". Pure white canvas (#FFFFFF), bold monospaced headers, crisp black cell borders. Standard clear print typography, readable font rendering, optimized for technical engineering handbooks.
+
+```
+
+#### Advanced Health Check Definition (`/etc/consul.d/checks.hcl`)
+
+```hcl
+service {
+  id   = "auth-service-01"
+  name = "auth-service"
+  port = 8081
+
+  check {
+    id                             = "auth-http-check"
+    name                           = "Auth Service HTTP Endpoint Check"
+    http                           = "http://127.0.0.1:8081/healthz"
+    method                         = "GET"
+    interval                       = "5s"
+    timeout                        = "1s"
+    deregister_critical_service_after = "1m"
+  }
+
+  check {
+    id       = "auth-memory-check"
+    name     = "Host Memory Utilization Check"
+    args     = ["/usr/lib/consul/scripts/check_mem.py", "-w", "80", "-c", "90"]
+    interval = "15s"
+    timeout  = "5s"
+  }
+}
+
+```
+
+### Circuit Breaking and Outlier Detection
+
+To prevent cascading failures across microservices, edge routers employ **Circuit Breaking**. If a backend service repeatedly times out or returns HTTP 5xx errors, the proxy trips the circuit, isolating the service instance for a cooldown window.
+
+#### Traefik Circuit Breaker Configuration via Consul Tags
 
 ```json
 {
-  "service": {
-    "name": "data-processor",
-    "id": "data-processor-01",
-    "address": "10.0.30.12",
-    "port": 9000,
-    "checks": [
-      {
-        "id": "tcp-connectivity",
-        "name": "TCP Socket Check",
-        "tcp": "10.0.30.12:9000",
-        "interval": "5s",
-        "timeout": "1s"
-      },
-      {
-        "id": "http-app-health",
-        "name": "Application Liveness Endpoint",
-        "http": "http://10.0.30.12:9000/healthz",
-        "method": "GET",
-        "header": {"X-Health-Check": ["Consul"]},
-        "interval": "10s",
-        "timeout": "2s"
-      },
-      {
-        "id": "disk-space-script",
-        "name": "Local Storage Capacity Check",
-        "args": ["/usr/local/bin/check_disk.sh", "-w", "80%", "-c", "90%"],
-        "interval": "30s",
-        "timeout": "5s"
-      }
-    ]
-  }
+  "ID": "inventory-api-01",
+  "Name": "inventory-api",
+  "Address": "10.0.2.15",
+  "Port": 8080,
+  "Tags": [
+    "traefik.enable=true",
+    "traefik.http.routers.inventory.rule=Host(`inventory.enterprise.internal`)",
+    "traefik.http.middlewares.inventory-cb.circuitbreaker.expression=NetworkErrorRatio() > 0.3",
+    "traefik.http.routers.inventory.middlewares=inventory-cb@consulcatalog"
+  ]
 }
 
 ```
@@ -617,250 +592,139 @@ Consul supports multiple probe types within a single service registration.
 
 ## 7.5 Hands-On Lab: Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing
 
-This hands-on lab walks through building an enterprise-grade automated service discovery pipeline. We will set up a Consul server and a Traefik edge reverse proxy, then launch multiple instances of an upstream microservice.
-
-Finally, we will simulate a service failure and observe how Consul and Traefik detect the failure and reroute live traffic with zero dropped requests.
+This hands-on exercise guides you through building a complete, dynamic edge-routing pipeline. You will set up HashiCorp Consul alongside Traefik, deploy containerized API backends, register them dynamically with Consul, and demonstrate automatic traffic rerouting during host failures.
 
 ```
-+-----------------------------------------------------------------------------------+
-|                              HANDS-ON LAB TOPOLOGY                                |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                [ Client Request ]                                 |
-|                                        |                                          |
-|                                        v                                          |
-|                       +---------------------------------+                         |
-|                       |  Traefik Dynamic Edge Router    |                         |
-|                       |  Port: 8080 (http://api.local)  |                         |
-|                       +---------------------------------+                         |
-|                                 |               |                                 |
-|          +----------------------+               +---------------------+           |
-|          | Dynamic Route                                Dynamic Route |           |
-|          v                                                            v           |
-|  +-----------------------+                            +-----------------------+   |
-|  | App Instance 1        |                            | App Instance 2        |   |
-|  | Port: 5001            |                            | Port: 5002            |   |
-|  | Status: HEALTHY       |                            | Status: HEALTHY       |   |
-|  +-----------------------+                            +-----------------------+   |
-|          ^                                                            ^           |
-|          |                    Active Health Checks                    |           |
-|          +-----------------------+    +-------------------------------+           |
-|                                  |    |                                           |
-|                       +---------------------------------+                         |
-|                       |  HashiCorp Consul Server        |                         |
-|                       |  Port: 8500 (Catalog & State)   |                         |
-|                       +---------------------------------+                         |
-+-----------------------------------------------------------------------------------+
+┌────────────────────────────────────────────────────────────────────────┐
+│                        LAB ARCHITECTURE TARGET                         │
+│                                                                        │
+│                       Incoming Client Requests                         │
+│                                  │                                     │
+│                                  v                                     │
+│                     +──────────────────────────+                       │
+│                     | Traefik Edge Router      |                       │
+│                     | Port 80                  |                       │
+│                     +────────────┬─────────────+                       │
+│                                  │                                     │
+│             1. Watches Catalog   │ 2. Dynamic Routing                  │
+│             ┌────────────────────┴────────────────────┐                │
+│             v                                         v                │
+│  +─────────────────────+                   +─────────────────────+     │
+│  | Consul Server Node  |                   | Backends (Docker)   |     │
+│  | Port 8500           |                   |                     |     │
+│  +─────────────────────+                   | App Instance 1      |     │
+│                                            | Port 8081           |     │
+│                                            |                     |     │
+│                                            | App Instance 2      |     │
+│                                            | Port 8082           |     │
+│                                            +─────────────────────+     │
+└────────────────────────────────────────────────────────────────────────┘
 
 ```
 
-> **DALL-E 3 Image Generation Prompt:**
-> *A detailed technical topology diagram on a clean white background (#FFFFFF) displaying a client request pointing to a Traefik Edge Router at the top. The router distributes load across two microservice backend instances ("App Instance 1" on port 5001 and "App Instance 2" on port 5002). A Consul Server at the bottom monitors both instances with HTTP checks and provides real-time service discovery updates to Traefik. Minimalist dark slate components with blue and teal accents. All main text uses Google Sans Flex 12Pt, and ports/code use Google Sans Code 12Pt. Do not display font names in images. No metadata included.*
+```
+[DALL-E 3 Image Generation Prompt]
+A clean light-mode infrastructure diagram showing the Hands-On Lab target state: Traefik dynamic edge router processing requests on Port 80, querying a Consul Server instance on Port 8500, and load-balancing incoming requests dynamically across two containerized Go web applications running on ports 8081 and 8082. Clean high-contrast line drawing on a solid white canvas (#FFFFFF). Crisp black borders, standard print font style for labels, monospaced for ports and paths.
 
-### Prerequisites
+```
 
-* A Linux system (Ubuntu 22.04 / 24.04 LTS or Debian 12) with root or `sudo` access.
-* Python 3 and `pip` installed.
-* `curl`, `jq`, and `dig` utilities installed.
+### Lab Prerequisites
+
+* Ubuntu 22.04 LTS host with root or `sudo` privileges.
+* Docker Engine installed and running (`docker info`).
+* Basic networking setup (ports `80`, `8500`, `8081`, and `8082` available locally).
+
+---
+
+### Step 1: Deploy HashiCorp Consul in Dev Mode
+
+Run a local Consul server instance using Docker:
 
 ```bash
-sudo apt-get update && sudo apt-get install -y curl jq dnsutils python3 python3-pip
+docker run -d --name=consul-dev \
+  -p 8500:8500 \
+  -p 8600:8600/udp \
+  hashicorp/consul:latest agent -dev -client=0.0.0.0
+
+```
+
+Verify that Consul is responding:
+
+```bash
+curl -s http://localhost:8500/v1/status/leader
 
 ```
 
 ---
 
-### Task 1: Install and Launch HashiCorp Consul in Dev Mode
+### Step 2: Deploy Traefik Edge Router
 
-1. Install the official HashiCorp GPG key and repository:
-
-```bash
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt-get update && sudo apt-get install -y consul
-
-```
-
-2. Start the Consul agent in standalone development mode in the background:
-
-```bash
-consul agent -dev -client=0.0.0.0 -ui > /tmp/consul.log 2>&1 &
-
-```
-
-3. Verify that the Consul agent is running and healthy:
-
-```bash
-consul members
-
-```
-
-Expected output:
-
-```
-Node           Address        Status  Type    Build   Protocol  DC   Partition  Segment
-ubuntu-node    127.0.0.1:8301  alive   server  1.19.0  2         dc1  default    <all>
-
-```
-
----
-
-### Task 2: Install and Configure Traefik with Consul Catalog Provider
-
-1. Download and extract the latest Traefik binary:
-
-```bash
-TRAEFIK_VERSION="v3.1.2"
-wget https://github.com/traefik/traefik/releases/download/${TRAEFIK_VERSION}/traefik_${TRAEFIK_VERSION}_linux_amd64.tar.gz
-tar -xzf traefik_${TRAEFIK_VERSION}_linux_amd64.tar.gz
-sudo mv traefik /usr/local/bin/
-sudo chmod +x /usr/local/bin/traefik
-
-```
-
-2. Create the Traefik configuration file `traefik.yml`:
+Create a local dynamic configuration file for Traefik (`traefik.yml`):
 
 ```yaml
-cat << 'EOF' > traefik.yml
-global:
-  checkNewVersion: false
-  sendAnonymousUsage: false
-
-log:
-  level: INFO
-
 entryPoints:
   web:
-    address: ":8080"
+    address: ":80"
 
 providers:
   consulCatalog:
     refreshInterval: 3s
-    prefix: "traefik"
     endpoint:
-      address: "127.0.0.1:8500"
+      address: "172.17.0.1:8500" # Docker bridge gateway IP
       scheme: "http"
     exposedByDefault: false
 
 api:
   dashboard: true
   insecure: true
-EOF
 
 ```
 
-3. Start Traefik in the background using the configuration file:
+Start the Traefik container:
 
 ```bash
-traefik --configFile=traefik.yml > /tmp/traefik.log 2>&1 &
-
-```
-
-4. Confirm that Traefik is running on ports `8080` (Entrypoint) and `8080/dashboard` (API Dashboard on `:8080` or `:8080/dashboard`):
-
-```bash
-curl -s http://127.0.0.1:8080/api/rawdata | jq .
+docker run -d --name=traefik-proxy \
+  -p 80:80 \
+  -p 8080:8080 \
+  -v $(pwd)/traefik.yml:/etc/traefik/traefik.yml \
+  traefik:v2.10
 
 ```
 
 ---
 
-### Task 3: Deploy Two Backend Microservice Instances
+### Step 3: Deploy Backend Services and Register into Consul
 
-We will write a minimal Python HTTP server that returns its instance ID, hostname, and health state.
+Deploy two distinct instances of a simple web server using Docker.
 
-1. Create the application code file `app.py`:
-
-```python
-# app.py
-import sys
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
-
-PORT = int(sys.argv[1])
-INSTANCE_ID = sys.argv[2]
-IS_HEALTHY = True
-
-class SimpleHandler(BaseHTTPRequestHandler):
-    def log_message(self, format, *args):
-        return  # Suppress default access logging for clean output
-
-    def do_GET(self):
-        global IS_HEALTHY
-        if self.path == '/health':
-            if IS_HEALTHY:
-                self.send_response(200)
-                self.send_header('Content-Type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({"status": "UP", "instance": INSTANCE_ID}).encode())
-            else:
-                self.send_response(500)
-                self.send_header('Content-Type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({"status": "DOWN", "instance": INSTANCE_ID}).encode())
-        elif self.path == '/fail':
-            IS_HEALTHY = False
-            self.send_response(200)
-            self.end_headers()
-            self.wfile.write(b"Instance marked UNHEALTHY")
-        else:
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            response = {
-                "message": "Hello from Service Discovery!",
-                "instance": INSTANCE_ID,
-                "port": PORT
-            }
-            self.wfile.write(json.dumps(response).encode())
-
-if __name__ == '__main__':
-    server = HTTPServer(('0.0.0.0', PORT), SimpleHandler)
-    print(f"Starting {INSTANCE_ID} on port {PORT}")
-    server.serve_forever()
-EOF
-
-```
-
-2. Start two backend instances on ports `5001` and `5002`:
+#### Launch Instance 1 (Port 8081):
 
 ```bash
-python3 app.py 5001 app-node-01 > /dev/null 2>&1 &
-python3 app.py 5002 app-node-02 > /dev/null 2>&1 &
+docker run -d --name=web-backend-01 \
+  -p 8081:80 \
+  e2e-web-app:1.0
 
 ```
 
-3. Verify both nodes respond locally:
-
-```bash
-curl -s http://127.0.0.1:5001/
-curl -s http://127.0.0.1:5002/
-
-```
-
----
-
-### Task 4: Register Both Instances with Consul
-
-Register both instances with tags that instruct Traefik to expose them under the host rule `Host('api.local')`.
-
-1. Register `app-node-01`:
+Register Instance 1 into Consul with Traefik integration tags:
 
 ```bash
 curl --request PUT \
-  --url http://127.0.0.1:8500/v1/agent/service/register \
+  --url http://localhost:8500/v1/agent/service/register \
   --header 'Content-Type: application/json' \
   --data '{
-    "Name": "web-api",
-    "ID": "web-api-1",
-    "Address": "127.0.0.1",
-    "Port": 5001,
+    "ID": "web-backend-8081",
+    "Name": "catalog-api",
+    "Address": "172.17.0.1",
+    "Port": 8081,
     "Tags": [
       "traefik.enable=true",
-      "traefik.http.routers.webapi.rule=Host(`api.local`)"
+      "traefik.http.routers.catalog.rule=Host(`catalog.lab.local`)",
+      "traefik.http.routers.catalog.entrypoints=web",
+      "traefik.http.services.catalog.loadbalancer.server.port=8081"
     ],
     "Check": {
-      "HTTP": "http://127.0.0.1:5001/health",
+      "HTTP": "http://172.17.0.1:8081/",
       "Interval": "3s",
       "Timeout": "1s"
     }
@@ -868,23 +732,34 @@ curl --request PUT \
 
 ```
 
-2. Register `app-node-02`:
+#### Launch Instance 2 (Port 8082):
+
+```bash
+docker run -d --name=web-backend-02 \
+  -p 8082:80 \
+  e2e-web-app:1.0
+
+```
+
+Register Instance 2 into Consul:
 
 ```bash
 curl --request PUT \
-  --url http://127.0.0.1:8500/v1/agent/service/register \
+  --url http://localhost:8500/v1/agent/service/register \
   --header 'Content-Type: application/json' \
   --data '{
-    "Name": "web-api",
-    "ID": "web-api-2",
-    "Address": "127.0.0.1",
-    "Port": 5002,
+    "ID": "web-backend-8082",
+    "Name": "catalog-api",
+    "Address": "172.17.0.1",
+    "Port": 8082,
     "Tags": [
       "traefik.enable=true",
-      "traefik.http.routers.webapi.rule=Host(`api.local`)"
+      "traefik.http.routers.catalog.rule=Host(`catalog.lab.local`)",
+      "traefik.http.routers.catalog.entrypoints=web",
+      "traefik.http.services.catalog.loadbalancer.server.port=8082"
     ],
     "Check": {
-      "HTTP": "http://127.0.0.1:5002/health",
+      "HTTP": "http://172.17.0.1:8082/",
       "Interval": "3s",
       "Timeout": "1s"
     }
@@ -892,118 +767,86 @@ curl --request PUT \
 
 ```
 
-3. Verify both instances are registered and passing health checks in Consul:
-
-```bash
-curl -s http://127.0.0.1:8500/v1/health/service/web-api | jq '.[].flags'
-
-```
-
 ---
 
-### Task 5: Verify Traefik Dynamic Discovery & Load Balancing
+### Step 4: Validate Dynamic Load Balancing
 
-Send multiple HTTP requests to Traefik using the host header `Host: api.local` to verify round-robin traffic distribution:
+Execute curl requests against Traefik using the configured Virtual Host header:
 
 ```bash
 for i in {1..6}; do
-  curl -s --header "Host: api.local" http://127.0.0.1:8080/
-  echo ""
+  curl -s -H "Host: catalog.lab.local" http://localhost/
 done
 
 ```
 
-Expected output showing balanced traffic execution across both backends:
+Observed Output (showing round-robin load balancing across backends):
 
-```json
-{"message": "Hello from Service Discovery!", "instance": "app-node-01", "port": 5001}
-{"message": "Hello from Service Discovery!", "instance": "app-node-02", "port": 5002}
-{"message": "Hello from Service Discovery!", "instance": "app-node-01", "port": 5001}
-{"message": "Hello from Service Discovery!", "instance": "app-node-02", "port": 5002}
-{"message": "Hello from Service Discovery!", "instance": "app-node-01", "port": 5001}
-{"message": "Hello from Service Discovery!", "instance": "app-node-02", "port": 5002}
+```text
+Response from Backend Container ID: 4a8f9b1c2d3e (Port 8081)
+Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
+Response from Backend Container ID: 4a8f9b1c2d3e (Port 8081)
+Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
+Response from Backend Container ID: 4a8f9b1c2d3e (Port 8081)
+Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
 
 ```
 
 ---
 
-### Task 6: Simulate Instance Failure and Observe Failover
+### Step 5: Test Automated Failover and Rerouting
 
-1. Trigger a failure on `app-node-01` via its `/fail` endpoint:
-
-```bash
-curl -s http://127.0.0.1:5001/fail
-
-```
-
-2. Wait 3 to 5 seconds for Consul's health checker probe to run.
-3. Inspect the Consul health status for `web-api`:
+Simulate an instance failure by stopping Instance 1 (`web-backend-01`):
 
 ```bash
-curl -s http://127.0.0.1:8500/v1/health/service/web-api | jq '.[].Checks[] | {Status: .Status, Output: .Output}'
+docker stop web-backend-01
 
 ```
 
-Output confirming node failure detection:
+Wait 5 seconds for Consul's health check to fail and transition the instance state to `critical`:
 
-```json
-{
-  "Status": "critical",
-  "Output": "HTTP status code 500"
-}
-{
-  "Status": "passing",
-  "Output": "HTTP status code 200"
-}
+```bash
+curl -s http://localhost:8500/v1/health/state/critical | jq .
 
 ```
 
-4. Repeat the request loop through Traefik:
+Re-execute client requests through Traefik:
 
 ```bash
 for i in {1..4}; do
-  curl -s --header "Host: api.local" http://127.0.0.1:8080/
-  echo ""
+  curl -s -H "Host: catalog.lab.local" http://localhost/
 done
 
 ```
 
-Expected output confirming **100% automated rerouting** away from the failed instance to the remaining healthy instance (`app-node-02`):
+Observed Output (Traefik automatically routes traffic *only* to the healthy instance):
 
-```json
-{"message": "Hello from Service Discovery!", "instance": "app-node-02", "port": 5002}
-{"message": "Hello from Service Discovery!", "instance": "app-node-02", "port": 5002}
-{"message": "Hello from Service Discovery!", "instance": "app-node-02", "port": 5002}
-{"message": "Hello from Service Discovery!", "instance": "app-node-02", "port": 5002}
+```text
+Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
+Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
+Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
+Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
 
 ```
 
----
-
-### Verification and Cleanup Commands
-
-To clean up all processes and temporary files created during this lab:
+Restart the stopped container:
 
 ```bash
-# Terminate background tasks
-pkill -f "consul agent"
-pkill -f "traefik"
-pkill -f "python3 app.py"
-
-# Remove temporary files
-rm -f traefik.yml app.py traefik_${TRAEFIK_VERSION}_linux_amd64.tar.gz
-rm -rf /tmp/consul.log /tmp/traefik.log
+docker start web-backend-01
 
 ```
 
+Within 3 seconds, Consul health checks pass, the backend is restored to the active routing pool, and round-robin load balancing resumes automatically across both containers without human intervention or service reloads.
+
 ---
 
-## Chapter Summary
+### Verification Checklist
 
-In this chapter, you learned how to transition from static network configurations to fully dynamic routing pipelines:
+* Consul raft server consensus established and returning active leader address.
+* Traefik provider connected to Consul Catalog endpoint (`:8500`).
+* Dynamic HTTP tags processed and exposed on Traefik edge router (`:80`).
+* Health checks automatically pruning failed instances and restoring traffic upon recovery.
 
-1. **Service Discovery Fundamentals**: How central catalogs maintain accurate service state, contrasting client-side and server-side discovery patterns.
-2. **HashiCorp Consul Architecture**: Deploying consensus-driven Consul server clusters using Raft and Gossip protocols, with support for multi-datacenter setups.
-3. **Dynamic Reverse Proxies**: Integrating Traefik and NGINX (via `consul-template`) to update active routing tables automatically without downtime.
-4. **Health Checking & Circuit Breaking**: Implementing proactive and reactive probes to isolate faulty application instances before they cause service outages.
-5. **Practical Hands-On Skills**: Building a complete service discovery pipeline that automatically registers services, balances load, and reroutes around failures.
+---
+
+For additional practice with LPI 701-200 objectives, check out this walkthrough on [LPI 701-200 Exam Practice Questions](https://www.youtube.com/watch?v=NLzHA3CBXV4) which reviews key DevOps exam topics.
