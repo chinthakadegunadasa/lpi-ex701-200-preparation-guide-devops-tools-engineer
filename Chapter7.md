@@ -16,59 +16,9 @@ Service discovery automates three primary functions:
 2. **Resolution:** Querying a central catalog to locate healthy endpoints for a given service name.
 3. **Health Monitoring:** Continually evaluating whether registered instances can accept traffic, pruning unhealthy nodes dynamically.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        SERVICE DISCOVERY PATTERNS                      │
-│                                                                        │
-│   [ Client-Side Discovery ]             [ Server-Side Discovery ]      │
-│                                                                        │
-│         +------------+                        +------------+           │
-│         |   Client   |                        |   Client   |           │
-│         +-----+------+                        +-----+------+           │
-│               |                                     |                  │
-│         1. Query Catalog                            | Request          │
-│               v                                     v                  │
-│         +------------+                        +------------+           │
-│         | Service    |                        | Load       |           │
-│         | Registry   |                        | Balancer / |<---+      │
-│         +------------+                        | Proxy      |    |      │
-│               |                               +-----+------+    |      │
-│         2. Return IPs                               |           | Sync │
-│               |                               3. Route      | Catalog
-│               v                                     v           |      │
-│         +------------+                        +------------+    |      │
-│         | Service B  |                        | Service B  |----+      │
-│         +------------+                        +------------+           │
-└────────────────────────────────────────────────────────────────────────┘
-
-```
-
-```
-[DALL-E 3 Image Generation Prompt]
-A clean, technical light-mode architecture diagram comparing "Client-Side Discovery" and "Server-Side Discovery" patterns in distributed software systems. High-contrast line art, crisp borders, professional print style on a stark white background (#FFFFFF). Main system components styled as minimalist boxes labeled with clear titles. Arrows indicating network request flows and catalog synchronization. Clean black text using standard sans-serif styling for labels, and monospaced text for step labels. Zero grayscale gradients, zero shadows, pure black-and-white print output.
-
-```
 !["Client-Side Discovery" and "Server-Side Discovery"](assets/images/chapter7/7-1-Service-Discovery-principles.png)
 
 ### Discovery Architecture Models: Client-Side vs. Server-Side
-
-```
-+------------------------+------------------------------------+------------------------------------+
-| Feature / Dimension    | Client-Side Service Discovery      | Server-Side Service Discovery      |
-+------------------------+------------------------------------+------------------------------------+
-| Endpoint Query Location| Executed directly by client code   | Handled by intermediate proxy/LB   |
-| Load Balancing Method  | Client selects node from catalog   | Proxy balances traffic to backends |
-| Architecture Complexity| Lower network hops; high app-code  | Minimal app coupling; extra proxy  |
-| Ecosystem Examples     | Netflix Eureka, Finagle, Consul SDK| Traefik, NGINX + Consul, AWS ALB   |
-+------------------------+------------------------------------+------------------------------------+
-
-```
-
-```
-[DALL-E 3 Image Generation Prompt]
-A clean, minimal light-mode reference table summarizing "Client-Side Service Discovery vs Server-Side Service Discovery". White background, dark black horizontal gridlines, and bold monospaced headers: "Feature / Dimension", "Client-Side Service Discovery", and "Server-Side Service Discovery". Clean sans-serif text inside table cells. High-contrast black ink style, no color fills, optimized for printed technical documentation.
-
-```
 
 #### Client-Side Discovery
 
@@ -109,38 +59,7 @@ HashiCorp Consul operates as a single binary executing in either **Server** or *
 
 ### Deploying a Production-Grade Consul Cluster
 
-```
-                                  +-----------------------+
-                                  |   Consul Leader       |
-                                  |  (Server Node 1)      |
-                                  +-----------+-----------+
-                                              |
-                       +----------------------+----------------------+
-                       | Raft Consensus / Gossip (LAN Serf)          |
-                       v                                             v
-            +-----------------------+                     +-----------------------+
-            |    Consul Server      |                     |    Consul Server      |
-            |     (Node 2)          |                     |     (Node 3)          |
-            +-----------+-----------+                     +-----------+-----------+
-                        |                                             |
-  +---------------------+---------------------------------------------+---------------------+
-  |                                                                                         |
-  v                                                                                         v
-+-----------------------------------+                                     +-----------------------------------+
-|  Host A (Client Agent)            |                                     |  Host B (Client Agent)            |
-|  +-----------------------------+  |                                     |  +-----------------------------+  |
-|  | Microservice: order-api     |  |                                     |  | Microservice: payment-api   |  |
-|  | Port: 8080                  |  |                                     |  | Port: 8443                  |  |
-|  +-----------------------------+  |                                     |  +-----------------------------+  |
-+-----------------------------------+                                     +-----------------------------------+
-
-```
-
-```
-[DALL-E 3 Image Generation Prompt]
-A high-contrast light-mode topology block diagram illustrating a 3-node HashiCorp Consul Server cluster maintaining Raft consensus and Serf gossip protocols down to client agents on Host A and Host B. Strict black-and-white technical print aesthetic. High-contrast lines, clean rectangular node shapes, crisp arrows detailing internal replication flows and client registrations. Monospaced font for host and service details, clean sans-serif for node labels. White background, zero shading or ambient lighting.
-
-```
+![3-node HashiCorp Consul Server cluster](assets/images/chapter7/7-2-Production-Grade-Consul-Cluster.png)
 
 #### Production Server Configuration (`/etc/consul.d/consul.hcl`)
 
