@@ -217,35 +217,6 @@ curl -s http://127.0.0.1:8500/v1/health/service/order-api?passing=true | jq .
 
 Dynamic reverse proxies act as entry points (edge routers) to distributed clusters. Rather than manually editing proxy routing tables and executing reload commands whenever backends change, dynamic reverse proxies poll or listen to the service discovery catalog, updating routing rules immediately.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   DYNAMIC REVERSE PROXY FLOW                          │
-│                                                                        │
-│   Incoming Client HTTP Request                                         │
-│                │                                                       │
-│                v                                                       │
-│   +─────────────────────────+                                          │
-│   |  Edge Router / Proxy    | <────── Auto-discovers endpoints         │
-│   |  (Traefik / NGINX)      |         and updates routing table        │
-│   +────────────┬────────────+                                          │
-│                │                                                       │
-│        Dynamic Routing                                                 │
-│     ┌──────────┴──────────┐                                            │
-│     │                     │                                            │
-│     v                     v                                            │
-│  +─────────────────+   +─────────────────+                             │
-│  | Service A       |   | Service B       |                             │
-│  | Host 1: 10.0.0.1|   | Host 2: 10.0.0.2|                             │
-│  +─────────────────+   +─────────────────+                             │
-└────────────────────────────────────────────────────────────────────────┘
-
-```
-
-```
-[DALL-E 3 Image Generration Prompt]
-A clean light-mode diagram representing the dynamic routing execution flow of an edge reverse proxy (Traefik/NGINX) auto-discovering endpoints from a backend service registry. Professional technical documentation style on pure white background (#FFFFFF). High-contrast black outlines and text, sharp geometric shapes. Clean arows showing incoming HTTP client requests hitting the edge router, which continuously synchronizes with dynamic service backends. Monospaced font for IP definitions, standard sans-serif for components.
-
-```
 ![Dynamic routing execution flow of an edge reverse prox](assets/images/chapter7/7-3-Dynamic-routing-execution-flow-of-an-edge-reverse-proxy.png)
 
 ### Traefik Architecture and Providers
