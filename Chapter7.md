@@ -1,7 +1,3 @@
-Here is the complete, enterprise-grade, hands-on **Chapter 7** for the LPIC-3 701-200 certification guide, fully formatted in Markdown and tailored for print-ready compilation.
-
----
-
 # Chapter 7: Service Discovery & Dynamic Routing
 
 In traditional static IT infrastructure, networking was straightforward: IP addresses were fixed, server names were permanent, and load balancers were reconfigured manually or through basic configuration management scripts whenever a node was replaced.
