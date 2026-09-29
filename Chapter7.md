@@ -4,8 +4,6 @@ In traditional static IT infrastructure, service endpoints are bound to predicta
 
 This chapter details the mechanisms of dynamic service discovery and automated reverse proxying required for the LPI DevOps Tools Engineer (701-200) exam. You will explore server-side and client-side discovery patterns, deploy resilient HashiCorp Consul clusters, configure dynamic routing engines (Traefik and NGINX), and build self-healing edge routing topologies.
 
----
-
 ## 7.1 Principles of Service Discovery in Distributed Systems
 
 ### The Fallacy of Static Addressing in Cloud-Native Architectures
@@ -50,6 +48,7 @@ Service discovery automates three primary functions:
 A clean, technical light-mode architecture diagram comparing "Client-Side Discovery" and "Server-Side Discovery" patterns in distributed software systems. High-contrast line art, crisp borders, professional print style on a stark white background (#FFFFFF). Main system components styled as minimalist boxes labeled with clear titles. Arrows indicating network request flows and catalog synchronization. Clean black text using standard sans-serif styling for labels, and monospaced text for step labels. Zero grayscale gradients, zero shadows, pure black-and-white print output.
 
 ```
+!["Client-Side Discovery" and "Server-Side Discovery"](assets/images/chapter7/7-1-Service-Discovery-principles.png)
 
 ### Discovery Architecture Models: Client-Side vs. Server-Side
 
