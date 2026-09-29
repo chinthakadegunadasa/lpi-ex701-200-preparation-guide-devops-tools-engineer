@@ -211,8 +211,6 @@ curl -s http://127.0.0.1:8500/v1/health/service/order-api?passing=true | jq .
 
 ```
 
----
-
 ## 7.3 Dynamic Reverse Proxying with Traefik and NGINX
 
 Dynamic reverse proxies act as entry points (edge routers) to distributed clusters. Rather than manually editing proxy routing tables and executing reload commands whenever backends change, dynamic reverse proxies poll or listen to the service discovery catalog, updating routing rules immediately.
@@ -413,8 +411,6 @@ To prevent cascading failures across microservices, edge routers employ **Circui
 
 ```
 
----
-
 ## 7.5 Hands-On Lab: Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing
 
 This hands-on exercise guides you through building a complete, dynamic edge-routing pipeline. You will set up HashiCorp Consul alongside Traefik, deploy containerized API backends, register them dynamically with Consul, and demonstrate automatic traffic rerouting during host failures.
@@ -447,8 +443,6 @@ Verify that Consul is responding:
 curl -s http://localhost:8500/v1/status/leader
 
 ```
-
----
 
 ### Step 2: Deploy Traefik Edge Router
 
@@ -483,8 +477,6 @@ docker run -d --name=traefik-proxy \
   traefik:v2.10
 
 ```
-
----
 
 ### Step 3: Deploy Backend Services and Register into Consul
 
@@ -560,8 +552,6 @@ curl --request PUT \
 
 ```
 
----
-
 ### Step 4: Validate Dynamic Load Balancing
 
 Execute curl requests against Traefik using the configured Virtual Host header:
@@ -584,8 +574,6 @@ Response from Backend Container ID: 4a8f9b1c2d3e (Port 8081)
 Response from Backend Container ID: 8e7f6a5b4c3d (Port 8082)
 
 ```
-
----
 
 ### Step 5: Test Automated Failover and Rerouting
 
@@ -631,15 +619,11 @@ docker start web-backend-01
 
 Within 3 seconds, Consul health checks pass, the backend is restored to the active routing pool, and round-robin load balancing resumes automatically across both containers without human intervention or service reloads.
 
----
-
 ### Verification Checklist
 
 * Consul raft server consensus established and returning active leader address.
 * Traefik provider connected to Consul Catalog endpoint (`:8500`).
 * Dynamic HTTP tags processed and exposed on Traefik edge router (`:80`).
 * Health checks automatically pruning failed instances and restoring traffic upon recovery.
-
----
 
 For additional practice with LPI 701-200 objectives, check out this walkthrough on [LPI 701-200 Exam Practice Questions](https://www.youtube.com/watch?v=NLzHA3CBXV4) which reviews key DevOps exam topics.
