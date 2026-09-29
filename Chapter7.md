@@ -51,8 +51,6 @@ $$\text{Quorum} = \left\lfloor \frac{N}{2} \right\rfloor + 1$$
 * A 3-node cluster tolerates **1** node failure ($\lfloor 3/2 \rfloor + 1 = 2$ nodes required for quorum).
 * A 5-node cluster tolerates **2** node failures ($\lfloor 5/2 \rfloor + 1 = 3$ nodes required for quorum).
 
----
-
 ## 7.2 HashiCorp Consul Cluster Deployment and Service Registration
 
 HashiCorp Consul operates as a single binary executing in either **Server** or **Agent/Client** mode. Server agents participate in Raft consensus, store catalog state, and process queries. Client agents run on every workload host, running health checks, caching DNS responses, and forwarding RPCs to the server cluster.
