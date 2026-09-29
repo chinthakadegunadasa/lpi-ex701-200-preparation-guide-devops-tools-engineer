@@ -334,8 +334,6 @@ consul-template -config=/etc/consul-template/config.hcl
 
 ```
 
----
-
 ## 7.4 Health Checking and Automated Traffic Rerouting
 
 Service discovery registries must actively confirm that backends are functional before routing client traffic. If a backend degrades or crashes, the control plane updates the service catalog, causing edge proxies to remove the endpoint.
@@ -361,6 +359,8 @@ Service discovery registries must actively confirm that backends are functional 
 A high-contrast light-mode reference table outlining "Consul Health Check Types, Configurations, and Evaluation Criteria". Pure white canvas (#FFFFFF), bold monospaced headers, crisp black cell borders. Standard clear print typography, readable font rendering, optimized for technical engineering handbooks.
 
 ```
+
+![Consul Health Check Types, Configurations, and Evaluation Criteria](assets/images/chapter7/7-4-Consul-Health-Check-Types-Configurations,-and-Evaluation-Criteria.png)
 
 #### Advanced Health Check Definition (`/etc/consul.d/checks.hcl`)
 
@@ -452,6 +452,8 @@ This hands-on exercise guides you through building a complete, dynamic edge-rout
 A clean light-mode infrastructure diagram showing the Hands-On Lab target state: Traefik dynamic edge router processing requests on Port 80, querying a Consul Server instance on Port 8500, and load-balancing incoming requests dynamically across two containerized Go web applications running on ports 8081 and 8082. Clean high-contrast line drawing on a solid white canvas (#FFFFFF). Crisp black borders, standard print font style for labels, monospaced for ports and paths.
 
 ```
+
+![Hands-On Lab: Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing](assets/images/chapter7/7-5-Hands-On-Lab-Integrating-Hashi-Corp-Consul-with-Traefik.png)
 
 ### Lab Prerequisites
 
