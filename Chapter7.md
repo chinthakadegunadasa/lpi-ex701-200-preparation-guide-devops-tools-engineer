@@ -340,24 +340,6 @@ Service discovery registries must actively confirm that backends are functional 
 
 ### Health Check Protocols in Consul
 
-```
-+----------------+--------------------------------------+------------------------------------+
-| Check Type     | Example Configuration Snippet        | Evaluation Criteria                |
-+----------------+--------------------------------------+------------------------------------+
-| HTTP Check     | http = "http://10.0.1.5:8080/health" | 2xx status code = Pass; else Fail  |
-| TCP Check      | tcp  = "10.0.1.5:5432"               | Successful TCP socket handshake    |
-| Script Check   | args = ["/usr/local/bin/check.sh"]   | Exit Code 0 = Pass; 2 = Critical   |
-| gRPC Check     | grpc = "10.0.1.5:9000/Health"        | gRPC Health Checking Protocol status|
-+----------------+--------------------------------------+------------------------------------+
-
-```
-
-```
-[DALL-E 3 Image Generation Prompt]
-A high-contrast light-mode reference table outlining "Consul Health Check Types, Configurations, and Evaluation Criteria". Pure white canvas (#FFFFFF), bold monospaced headers, crisp black cell borders. Standard clear print typography, readable font rendering, optimized for technical engineering handbooks.
-
-```
-
 ![Consul Health Check Types, Configurations, and Evaluation Criteria](assets/images/chapter7/7-4-Consul-Health-Check-Types-Configurations,-and-Evaluation-Criteria.png)
 
 #### Advanced Health Check Definition (`/etc/consul.d/checks.hcl`)
