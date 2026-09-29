@@ -310,6 +310,7 @@ Unlike Traefik, standard NGINX requires updating `nginx.conf` files on disk and 
 A detailed technical workflow diagram showcasing Consul-Template watching a Consul Service Catalog, updating dynamic nginx.conf files, and sending a reload signal to the NGINX master process. Minimalist light-mode style, pure white canvas background, crisp black outlines, standard sans-serif for workflow step text, monospaced font for file configurations. Pure high-contrast technical line art.
 
 ```
+![Dynamic NGINX Management with Consul-Template](assets/images/chapter7/7-3-HashiCorp-Consul-Service-Catalog.png)
 
 #### NGINX Template (`/etc/consul-template/templates/nginx.conf.ctmpl`)
 
