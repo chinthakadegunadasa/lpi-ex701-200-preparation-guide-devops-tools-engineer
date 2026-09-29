@@ -242,10 +242,11 @@ Dynamic reverse proxies act as entry points (edge routers) to distributed cluste
 ```
 
 ```
-[DALL-E 3 Image Generation Prompt]
-A clean light-mode diagram representing the dynamic routing execution flow of an edge reverse proxy (Traefik/NGINX) auto-discovering endpoints from a backend service registry. Professional technical documentation style on pure white background (#FFFFFF). High-contrast black outlines and text, sharp geometric shapes. Clean arrows showing incoming HTTP client requests hitting the edge router, which continuously synchronizes with dynamic service backends. Monospaced font for IP definitions, standard sans-serif for components.
+[DALL-E 3 Image Generration Prompt]
+A clean light-mode diagram representing the dynamic routing execution flow of an edge reverse proxy (Traefik/NGINX) auto-discovering endpoints from a backend service registry. Professional technical documentation style on pure white background (#FFFFFF). High-contrast black outlines and text, sharp geometric shapes. Clean arows showing incoming HTTP client requests hitting the edge router, which continuously synchronizes with dynamic service backends. Monospaced font for IP definitions, standard sans-serif for components.
 
 ```
+![Dynamic routing execution flow of an edge reverse prox](assets/images/chapter7/7-3-Dynamic-routing-execution-flow-of-an-edge-reverse-proxy.png)
 
 ### Traefik Architecture and Providers
 
