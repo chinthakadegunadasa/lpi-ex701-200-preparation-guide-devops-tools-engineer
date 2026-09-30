@@ -125,6 +125,8 @@ A `Deployment` controller manages declarative updates for stateless applications
 #### Light-Mode DALL-E 3 Image Generation Prompt
 > **Prompt:** A crisp, high-contrast light-mode architectural hierarchy diagram illustrating the relationship between a Kubernetes Deployment, ReplicaSets, and managed Pods on a pure white background (#FFFFFF). The Deployment top box branches down to an old ReplicaSet (v1) and a new ReplicaSet (v2), each connecting down to individual Pod instances. Sharp vector lines, solid high-contrast borders, no drop shadows. Clean sans-serif font for controller blocks and monospaced font for Kubernetes resource names and version labels. Technical print document style. Ensure no font names or metadata labels are drawn.
 
+![Kubernetes Deployment](assets/images/chapter9/9-2-Deployments.png)
+
 ### Update Strategies: RollingUpdate vs. Recreate
 
 #### 1. Recreate Strategy (`spec.strategy.type: Recreate`)
