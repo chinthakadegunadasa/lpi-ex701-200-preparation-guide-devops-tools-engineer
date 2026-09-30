@@ -1,6 +1,6 @@
 # Chapter 9: Kubernetes Workload Management
 
-In enterprise production environments, managing applications on Kubernetes demands a deep understanding of workload primitives, stateful versus stateless abstractions, declarative deployment strategies, and traffic routing mechanisms. This chapter delivers an operational guide designed for platform engineers and operators preparing for the Linux Foundation 701-200 exam standards.
+In enterprise production environments, managing applications on Kubernetes demands a deep understanding of workload primitives, stateful versus stateless abstractions, declarative deployment strategies, and traffic routing mechanisms. This chapter delivers an operational guide designed for platform engineers and operators preparing for the LPI 701-200 exam objectives.
 
 ---
 
