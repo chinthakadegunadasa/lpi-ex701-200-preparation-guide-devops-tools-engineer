@@ -4,34 +4,6 @@
 
 The Kubernetes control plane functions as the central management brain of a distributed cluster. It makes global decisions about cluster state (e.g., scheduling workloads), detects and responds to cluster events, and maintains the actual state of the cluster to match the desired declarative state.
 
-```
-+-----------------------------------------------------------------------------------+
-|                               CONTROL PLANE NODE                                  |
-|                                                                                   |
-|   +---------------------------------------------------------------------------+   |
-|   |                            kube-apiserver                                 |   |
-|   |  - RESTful API Gateway                                                    |   |
-|   |  - Authentication / Authorization (RBAC)                                 |   |
-|   |  - Admission Controllers (Mutating & Validating)                          |   |
-|   +-------+--------------------+----------------------+-----------------------+   |
-|           |                    |                      |                           |
-|           v                    v                      v                           |
-|   +---------------+   +-------------------+  +--------------------------------+   |
-|   |     etcd      |   |  kube-scheduler   |  |    kube-controller-manager    |   |
-|   | - Key-Value   |   | - Node Filtering  |  | - NodeController               |   |
-|   |   Store       |   | - Node Scoring    |  | - ReplicaSet Controller        |   |
-|   | - Raft Proto  |   | - Affinity /      |  | - Deployment Controller        |   |
-|   |               |   |   Tolerations     |  | - EndpointSlice Controller     |   |
-|   +---------------+   +-------------------+  +--------------------------------+   |
-+-----------------------------------------------------------------------------------+
-```
-
-### DALL-E 3 Image Generation Prompt
-```text
-[DALL-E 3 Image Generation Prompt]
-A clean, high-contrast light-mode technical architecture diagram illustrating the Kubernetes Control Plane components on a pure white background (#FFFFFF). Top central component is kube-apiserver connected via sharp vector arrows to etcd, kube-scheduler, and kube-controller-manager. High-contrast line art, crisp rectangular shapes, no shadows, no gradients. Clean sans-serif font for general labels and monospaced font for code keywords and parameters. Strict black-and-white print aesthetic for technical documentation.
-```
-
 ![Kubernetes Control Plane components](assets/images/chapter8/8-1-Kubernetes-Control-Plane-Components.png)
 
 ### 1. `kube-apiserver`
