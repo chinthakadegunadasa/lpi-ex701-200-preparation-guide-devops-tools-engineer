@@ -318,33 +318,6 @@ Kubernetes Services expose applications running on a set of Pods as a network se
 
 ### Service Traffic Flow Architecture
 
-```
-                                  [ External Client ]
-                                           |
-                                           v
-                             +---------------------------+
-                             | Cloud Layer 4 LoadBalancer|
-                             +-------------+-------------+
-                                           |
-                                           v  (NodePort: 31200)
-                             +---------------------------+
-                             |  Worker Node Network IP   |
-                             +-------------+-------------+
-                                           |
-                                           v  (kube-proxy IPTables/IPVS)
-                             +---------------------------+
-                             | ClusterIP Service (Virtual)|
-                             +-------------+-------------+
-                                           |
-                                           v
-                                 +-------------------+
-                                 |  Target Pod IP    |
-                                 +-------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-> **Prompt:** A high-contrast light-mode network traffic flow diagram tracing client access down through a Cloud LoadBalancer, Worker Node NodePort, ClusterIP virtual service, and destination Pods on a pure white background (#FFFFFF). Linear top-to-bottom vector arrows connecting rectangular system blocks. Crisp dark line art with high contrast. Clean sans-serif labels for system names, and monospaced font for IP addresses, port definitions, and network rules. Professional print manual layout without font annotation metadata.
-
 ![External Client](assets/images/chapter9/9-5-External-Client.png)
 
 ### Headless Services
@@ -380,8 +353,6 @@ spec:
             port:
               number: 8080
 ```
-
----
 
 ## 9.6 Hands-On Lab: Deploying a High-Availability Stateful Workload with Ingress Routing
 
