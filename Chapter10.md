@@ -14,21 +14,7 @@ Kubernetes separates storage allocation from infrastructure consumption through 
 
 When a user deletes a PVC bound to a PV, the reclaim policy defined on the PV tells the cluster how to treat the underlying physical storage asset:
 
-```
-+-----------------------------------------------------------------------------------+
-|                             STORAGE RECLAIM POLICIES                              |
-+-----------------------------------------------------------------------------------+
-| Policy      | PV Status post-PVC Deletion  | Physical Backend Storage Action      |
-+-------------+------------------------------+--------------------------------------+
-| Retain      | Remains in 'Released' state  | Manual admin manual cleanup needed  |
-| Delete      | PV object deleted immediately| Physical volume automatically erased |
-| Recycle     | Scourged via `rm -rf /`      | Deprecated; replaced by CSI plugins  |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A high-contrast light-mode comparative table detailing Kubernetes PV Reclaim Policies (Retain, Delete, Recycle) on a pure white background (#FFFFFF). Sharp horizontal and vertical gridlines in solid black. Columns display Policy, PV Status post-PVC Deletion, and Physical Backend Storage Action. Minimalist print design aesthetic. Use clean sans-serif typography for general explanations and monospaced typography for policy status parameters. Ensure no font family labels or typography metadata text appear anywhere in the generated output.
+![Kubernetes PV Reclaim Policies](assets/images/chapter10/10-1-Storage-Reclamation-Policies.png)
 
 ### Access Modes
 
