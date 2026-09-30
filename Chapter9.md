@@ -33,23 +33,11 @@ Defined via `spec.restartPolicy`:
 ### Container Health Probes: Liveness, Readiness, and Startup
 
 The `kubelet` uses three types of health probes to monitor container health and manage runtime behavior:
-
-```
-+-----------------------------------------------------------------------------------+
-|                             KUBERNETES HEALTH PROBES                              |
-+-----------------------------------------------------------------------------------+
-| Probe Type | Primary Target Objective            | Action on Failure              |
-+------------+-------------------------------------+--------------------------------+
-| Startup    | Protect slow-starting legacy apps   | Kills container & restarts it  |
-| Liveness   | Detect deadlock or hung processes   | Kills container & restarts it  |
-| Readiness  | Determine network traffic readiness | Removes Pod IP from Endpoints  |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-> **Prompt:** A high-contrast light-mode comparative table diagram on a pure white background (#FFFFFF) contrasting Kubernetes Startup, Liveness, and Readiness probes. Clean grid lines with high-contrast dark borders. Columns detail Probe Type, Primary Target Objective, and Action on Failure. Use clean sans-serif font for table headers and descriptive text, and sharp monospaced font for probe parameters, commands, and YAML fields. Minimalist black-and-white technical document aesthetic. Do not include any visible font names or typography metadata in the generated image.
+ 
+![Container Health Probes](assets/images/chapter9/9-1-Container-Health-Probes.png)
 
 #### Probe Mechanisms
+
 1. `httpGet`: Performs an HTTP `GET` request against the container's IP on a specified port and path. Status codes $\ge 200$ and $< 400$ indicate success.
 2. `tcpSocket`: Attempts to establish a TCP connection to the specified port. If open, the probe succeeds.
 3. `exec`: Runs a specific command inside the container. Exit code `0` indicates success.
