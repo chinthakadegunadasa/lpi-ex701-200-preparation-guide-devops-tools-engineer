@@ -220,8 +220,6 @@ spec:
           storage: 10Gi
 ```
 
----
-
 ## 9.4 DaemonSets, Jobs, and CronJobs
 
 Specialized workload controllers address infrastructure-level management and scheduled or batch operations.
