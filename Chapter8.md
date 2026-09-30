@@ -169,36 +169,6 @@ kubectl create deployment payment-processor --image=internal-registry.enterprise
 
 `kubeadm` provides a standard path for building enterprise-grade, CIS-compliant Kubernetes control planes.
 
-```
-+-----------------------------------------------------------------------------------+
-|                            KUBEADM BOOTSTRAPPING FLOW                             |
-|                                                                                   |
-|  1. Pre-flight Checks (Kernel Modules, Swap Off, Cgroup Drivers)                  |
-|                                  |                                                |
-|                                  v                                                |
-|  2. Generate Certificate Authority (CA) & Control Plane Certificates             |
-|                                  |                                                |
-|                                  v                                                |
-|  3. Generate Kubeconfig Files (/etc/kubernetes/admin.conf, etc.)                  |
-|                                  |                                                |
-|                                  v                                                |
-|  4. Generate Static Pod Manifests (/etc/kubernetes/manifests/)                    |
-|     (kube-apiserver, etcd, kube-scheduler, kube-controller-manager)               |
-|                                  |                                                |
-|                                  v                                                |
-|  5. Kubelet boots local Static Pods via local manifest engine                     |
-|                                  |                                                |
-|                                  v                                                |
-|  6. Apply Core Add-ons (CoreDNS, kube-proxy, CNI plugin)                          |
-+-----------------------------------------------------------------------------------+
-```
-
-### DALL-E 3 Image Generation Prompt
-```text
-[DALL-E 3 Image Generation Prompt]
-A clean light-mode workflow diagram showing the step-by-step execution flow of kubeadm init initializing a control plane node. High-contrast line art on a pure white background (#FFFFFF). High-contrast dark borders, linear flow layout with directional arrows connecting steps from pre-flight checks to CoreDNS/CNI instantiation. Monospaced font for paths and terminal binaries, standard sans-serif for process titles.
-```
-
 ![Production Cluster Bootstrapping Standards](assets/images/chapter8/8-4-Production-Cluster-Bootstrapping-Standards.png)
 
 ### Production Cluster Requirements Summary
@@ -260,29 +230,7 @@ protectKernelDefaults: true
 ### Scenario Overview
 You are tasked with deploying an enterprise-grade, production-aligned multi-node Kubernetes cluster from scratch using `kubeadm`. The target state consists of one Control Plane node (`cp-01`) and one Worker node (`worker-01`) running `containerd` as the container runtime and `systemd` as the cgroup driver.
 
-```
-+-----------------------------------------------------------------------------------+
-|                                 TARGET LAB TOPOLOGY                               |
-|                                                                                   |
-|  +-------------------------------------+   +-----------------------------------+  |
-|  |     Control Plane: cp-01            |   |       Worker: worker-01           |  |
-|  |  - IP: 10.0.10.11                    |   |  - IP: 10.0.10.21                 |  |
-|  |  - kube-apiserver, etcd, scheduler  |   |  - kubelet, kube-proxy, containerd|  |
-|  |  - Calico CNI Control Components    |   |  - Calico CNI Engine              |  |
-|  +------------------+------------------+   +-----------------+-----------------+  |
-|                     |                                        |                    |
-|                     +-------------------+--------------------+                    |
-|                                         |                                         |
-|                                         v                                         |
-|                       Virtual Network / Subnet: 10.0.10.0/24                      |
-+-----------------------------------------------------------------------------------+
-```
-
-### DALL-E 3 Image Generation Prompt
-```text
-[DALL-E 3 Image Generation Prompt]
-A high-contrast light-mode topology block diagram illustrating a 2-node Kubernetes target lab layout on a stark white canvas (#FFFFFF). High-contrast black outlines. Top side displays Control Plane node (cp-01, IP 10.0.10.11) and Worker node (worker-01, IP 10.0.10.21) interconnected over a local network subnet (10.0.10.0/24). Clear directional arrows indicating kubelet registration flows and API communication. Monospaced font for IPs, subnets, and ports; clean sans-serif for node titles.
-```
+![hands-On Lab: Bootstrapping a Multi-Node Kubernetes](assets/images/chapter8/8-4-Production-Cluster-Bootstrapping-Standards.png)
 
 ### Pre-requisites & Target Environment
 *   **Control Plane (`cp-01`)**: Ubuntu 22.04 LTS, 2 vCPU, 4GB RAM, IP: `10.0.10.11`
