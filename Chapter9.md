@@ -226,20 +226,7 @@ spec:
 
 Specialized workload controllers address infrastructure-level management and scheduled or batch operations.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        SPECIALIZED WORKLOAD CONTROLLERS                           |
-+-----------------------------------------------------------------------------------+
-| Controller | Primary Use Case                      | Lifecycle Pattern            |
-+------------+---------------------------------------+------------------------------+
-| DaemonSet  | Node-level agents (Logs, CNI, Monitoring)| Runs 1 Pod per targeted node|
-| Job        | Batch processing & finite tasks       | Runs Pods to completion      |
-| CronJob    | Scheduled repetitive tasks            | Time-triggered Job launcher  |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-> **Prompt:** A high-contrast light-mode summary block diagram on a pure white canvas (#FFFFFF) comparing Kubernetes DaemonSet, Job, and CronJob controllers. Clean structural layout with dark borders. Columns show Controller, Primary Use Case, and Lifecycle Pattern. Clean sans-serif font for general labels and clear monospaced font for controller specs and workload fields. High-contrast line art designed for technical print manuals. Exclude any visible typography meta-labels.
+![Kubernetes DaemonSet](assets/images/chapter9/9-4-Kubernetes-DaemonSet.png)
 
 ### 1. DaemonSets
 Ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are automatically added to them. Common uses include log collectors (`fluentbit`), CNI plugins (`calico`), and monitoring agents (`node-exporter`).
