@@ -199,6 +199,8 @@ kubectl create deployment payment-processor --image=internal-registry.enterprise
 A clean light-mode workflow diagram showing the step-by-step execution flow of kubeadm init initializing a control plane node. High-contrast line art on a pure white background (#FFFFFF). High-contrast dark borders, linear flow layout with directional arrows connecting steps from pre-flight checks to CoreDNS/CNI instantiation. Monospaced font for paths and terminal binaries, standard sans-serif for process titles.
 ```
 
+![Production Cluster Bootstrapping Standards](assets/images/chapter8/8-4-Production-Cluster-Bootstrapping-Standards.png)
+
 ### Production Cluster Requirements Summary
 
 | Dimension | Minimal Dev Requirement | Enterprise Production Standard |
