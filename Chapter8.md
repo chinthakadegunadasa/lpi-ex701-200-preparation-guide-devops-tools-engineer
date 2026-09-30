@@ -64,8 +64,6 @@ The controller manager executes continuous control loops that observe the curren
     *   **Deployment Controller**: Manages declarative updates, orchestrating zero-downtime rolling updates or rollbacks.
     *   **EndpointSlice Controller**: Populates `EndpointSlice` objects to link Services with back-end Pod IP addresses.
 
----
-
 ## 8.2 Worker Node Architecture
 
 Worker nodes execute application workloads (Pods) and report status back to the control plane.
@@ -106,8 +104,6 @@ version = 2
           [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
             SystemdCgroup = true
 ```
-
----
 
 ## 8.3 `kubectl` CLI Configuration and API Interactivity
 
@@ -162,8 +158,6 @@ kubectl get pods -n production -v=8
 kubectl create deployment payment-processor --image=internal-registry.enterprise.internal/apps/payment:v2.4.0 \
   --replicas=3 --dry-run=client -o yaml > payment-deployment.yaml
 ```
-
----
 
 ## 8.4 Production Cluster Bootstrapping Standards (`kubeadm`)
 
@@ -223,8 +217,6 @@ failSwapOn: true
 protectKernelDefaults: true
 ```
 
----
-
 ## 8.5 Hands-On Lab: Bootstrapping a Multi-Node Kubernetes Control Plane via Kubeadm
 
 ### Scenario Overview
@@ -267,8 +259,6 @@ EOF
 sudo sysctl --system
 ```
 
----
-
 ### Step 2: Install and Configure `containerd` Runtime (Execute on ALL Nodes)
 
 Install `containerd` from official repositories, configure `systemd` cgroup management, and restart the service.
@@ -291,8 +281,6 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/con
 sudo systemctl restart containerd
 sudo systemctl enable containerd
 ```
-
----
 
 ### Step 3: Install Kubernetes Package Toolchain (Execute on ALL Nodes)
 
@@ -371,8 +359,6 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
----
-
 ### Step 5: Deploy CNI Network Plugin (Execute ONLY on `cp-01`)
 
 Deploy Tigera Calico CNI to enable intra-pod routing and network policy enforcement.
@@ -394,8 +380,6 @@ Verify that the control plane node reaches `Ready` status:
 kubectl get nodes -o wide
 ```
 
----
-
 ### Step 6: Join Worker Node to the Cluster (Execute ONLY on `worker-01`)
 
 Run the `kubeadm join` command provided by `kubeadm init` output on `cp-01`.
@@ -404,8 +388,6 @@ Run the `kubeadm join` command provided by `kubeadm init` output on `cp-01`.
 sudo kubeadm join 10.0.10.11:6443 --token abcdef.0123456789abcdef \
     --discovery-token-ca-cert-hash sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d67728410c10d682413319
 ```
-
----
 
 ### Step 7: Cluster Verification and Operational Readiness Testing
 
@@ -434,8 +416,6 @@ kubectl get pods -o wide
 kubectl run curl-test --image=curlimages/curl --restart=Never -it -- rm -- \
   curl http://nginx-test.default.svc.cluster.local
 ```
-
----
 
 ## 8.6 Reference Tables
 
