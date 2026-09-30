@@ -97,34 +97,6 @@ A `Deployment` controller manages declarative updates for stateless applications
 
 ### Deployment Architecture & Controller Hierarchy
 
-```
-+-----------------------------------------------------------------------------------+
-|                              DEPLOYMENT CONTROLLER HIERARCHY                     |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                +------------------+                               |
-|                                |    Deployment    |                               |
-|                                +--------+---------+                               |
-|                                         |                                         |
-|                     +-------------------+-------------------+                     |
-|                     |                                       |                     |
-|                     v                                       v                     |
-|           +-------------------+                   +-------------------+           |
-|           |  ReplicaSet (v1)  |                   |  ReplicaSet (v2)  |           |
-|           +---------+---------+                   +---------+---------+           |
-|                     |                                       |                     |
-|          +----------+----------+                 +----------+----------+          |
-|          v                     v                 v                     v          |
-|    +-----------+         +-----------+     +-----------+         +-----------+    |
-|    | Pod v1-a  |         | Pod v1-b  |     | Pod v2-a  |         | Pod v2-b  |    |
-|    +-----------+         +-----------+     +-----------+         +-----------+    |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-> **Prompt:** A crisp, high-contrast light-mode architectural hierarchy diagram illustrating the relationship between a Kubernetes Deployment, ReplicaSets, and managed Pods on a pure white background (#FFFFFF). The Deployment top box branches down to an old ReplicaSet (v1) and a new ReplicaSet (v2), each connecting down to individual Pod instances. Sharp vector lines, solid high-contrast borders, no drop shadows. Clean sans-serif font for controller blocks and monospaced font for Kubernetes resource names and version labels. Technical print document style. Ensure no font names or metadata labels are drawn.
-
 ![Kubernetes Deployment](assets/images/chapter9/9-2-Deployments.png)
 
 ### Update Strategies: RollingUpdate vs. Recreate
