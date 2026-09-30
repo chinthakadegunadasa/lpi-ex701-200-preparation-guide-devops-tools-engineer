@@ -345,6 +345,8 @@ Kubernetes Services expose applications running on a set of Pods as a network se
 #### Light-Mode DALL-E 3 Image Generation Prompt
 > **Prompt:** A high-contrast light-mode network traffic flow diagram tracing client access down through a Cloud LoadBalancer, Worker Node NodePort, ClusterIP virtual service, and destination Pods on a pure white background (#FFFFFF). Linear top-to-bottom vector arrows connecting rectangular system blocks. Crisp dark line art with high contrast. Clean sans-serif labels for system names, and monospaced font for IP addresses, port definitions, and network rules. Professional print manual layout without font annotation metadata.
 
+![External Client](assets/images/chapter9/9-5-External-Client.png)
+
 ### Headless Services
 When `spec.clusterIP: None` is set, Kubernetes does not allocate a virtual cluster IP. Instead, the cluster DNS returns individual Pod IP addresses directly in response to A/AAAA record queries. This is used for peer discovery in stateful, clustered applications.
 
