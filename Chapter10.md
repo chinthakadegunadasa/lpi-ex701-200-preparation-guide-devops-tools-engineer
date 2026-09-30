@@ -8,28 +8,7 @@ Kubernetes separates storage allocation from infrastructure consumption through 
 
 ### Storage Lifecycle Architecture
 
-```
-+-----------------------------------------------------------------------------------+
-|                         STORAGE BINDING AND LIFECYCLE                             |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  +------------------------+                        +---------------------------+  |
-|  |     StorageClass       |                        |      PersistentVolume     |  |
-|  |  (CSI Provisioner)     |                        |        (PV Cluster)       |  |
-|  +-----------+------------+                        +-------------+-------------+  |
-|              |                                                   |                |
-|              v Dynamic Provisioning                              v Bound          |
-|  +-----------+------------+                        +-------------+-------------+  |
-|  | PersistentVolumeClaim  |=======================>|    Pod Volume Mount       |  |
-|  |      (PVC Claim)       |   Binds via Capacity   | (/var/lib/data)           |  |
-|  +------------------------+   & Access Modes       +---------------------------+  |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A crisp, high-contrast light-mode technical architectural diagram illustrating the Kubernetes Storage binding model on a pure white background (#FFFFFF). Top boxes represent StorageClass and PersistentVolume (PV). A directional arrow shows Dynamic Provisioning connecting StorageClass down to a PersistentVolumeClaim (PVC), which binds to a Pod Volume Mount. Clean geometric boxes, sharp black outlines, zero shadows, zero gradients. Minimalist black-and-white publication layout. Use clean sans-serif typography for resource names and sharp monospaced typography for volume path parameters. Strictly do not render any font family labels, font names, or typography metadata.
+![Kubernetes Storage binding model](assets/images/chapter10/10-1-Kubernetes-Storage-binding-model.png)
 
 ### Storage Reclamation Policies
 
