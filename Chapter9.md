@@ -161,29 +161,7 @@ kubectl rollout undo deployment/payment-api --to-revision=2 -n production
 2. **Stable Storage**: Storage is provisioned via `volumeClaimTemplates`. Each Pod gets its own `PersistentVolumeClaim` (PVC) that persists across Pod reschedules or deletions.
 3. **Ordered Deployment and Scaling**: By default, Pods are created sequentially from $0$ to $N-1$, and terminated in reverse order ($N-1$ down to $0$).
 
-```
-+-----------------------------------------------------------------------------------+
-|                            STATEFULSET ARCHITECTURE                               |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  Headless Service: redis-hs.production.svc.cluster.local                          |
-|                                                                                   |
-|  +--------------------+    +--------------------+    +--------------------+       |
-|  | Pod: redis-0       |    | Pod: redis-1       |    | Pod: redis-2       |       |
-|  | IP: 10.244.1.10    |    | IP: 10.244.2.15    |    | IP: 10.244.1.18    |       |
-|  +---------+----------+    +---------+----------+    +---------+----------+       |
-|            |                         |                         |                  |
-|            v                         v                         v                  |
-|  +--------------------+    +--------------------+    +--------------------+       |
-|  | PVC: data-redis-0  |    | PVC: data-redis-1  |    | PVC: data-redis-2  |       |
-|  | PV:  pv-nfs-001    |    | PV:  pv-nfs-002    |    | PV:  pv-nfs-003    |       |
-|  +--------------------+    +--------------------+    +--------------------+       |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-> **Prompt:** A precise, high-contrast light-mode technical diagram showing a 3-replica Kubernetes StatefulSet tied to a Headless Service on a pure white background (#FFFFFF). Displays Pods labeled redis-0, redis-1, and redis-2 mapped directly to distinct, bound Persistent Volume Claims (PVCs data-redis-0, data-redis-1, data-redis-2). Clean rectangular layout with dark vector arrows establishing identity mapping. Clean sans-serif headers and crisp monospaced font for Pod names, PVC identifiers, and DNS record paths. Black-and-white print documentation style. No font name text displayed.
+![Kubernetes StatefulSet](assets/images/chapter9/9-3-Kubernetes-Statefulsets.png)
 
 ### Production StatefulSet Manifest with Headless Service
 
