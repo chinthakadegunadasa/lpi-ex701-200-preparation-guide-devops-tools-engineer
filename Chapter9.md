@@ -12,22 +12,7 @@ A Pod is the smallest deployable atomic unit in Kubernetes. Understanding its li
 
 A Pod passes through distinct phases during its lifetime:
 
-```
-+-----------------------------------------------------------------------------------+
-|                                   POD LIFECYCLE                                   |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  [ Pending ] ----> [ Running ] ----> [ Succeeded ] (Job Completed: Exit Code 0)   |
-|         |                 |                                                       |
-|         |                 +--------> [ Failed ]    (Container Crashed: Exit != 0) |
-|         v                                                                         |
-|    [ Unknown ] (Node Unreachable / Lost Heartbeat)                                |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-> **Prompt:** A clean, high-contrast light-mode state machine diagram illustrating the Kubernetes Pod Lifecycle on a pure white background (#FFFFFF). Rectangular node boxes representing states: Pending, Running, Succeeded, Failed, and Unknown. Connected via sharp vector arrows showing linear and conditional state transitions. Crisp black line art, no shadows, no gradients. Clean sans-serif font for state names and monospaced font for status condition parameters and exit codes. Strict black-and-white print aesthetic for technical documentation. Render text using clean typography without rendering any font family labels or names.
+![Kubernetes Pod Lifecycle](assets/images/chapter9/9-1-Pod-Lifecycle.png)
 
 1. **Pending**: The API server has accepted the Pod manifest, but one or more containers have not been scheduled or created. This includes time spent downloading container images over the network.
 2. **Running**: The Pod has been bound to a worker node, and all containers have been created. At least one container is currently running, or is in the process of starting or restarting.
