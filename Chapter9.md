@@ -314,21 +314,7 @@ Kubernetes Services expose applications running on a set of Pods as a network se
 
 ### Service Types Overview
 
-```
-+-----------------------------------------------------------------------------------+
-|                             KUBERNETES SERVICE TYPES                              |
-+-----------------------------------------------------------------------------------+
-| Service Type  | Scope & Accessibility           | Operational Routing Mechanism   |
-+---------------+---------------------------------+---------------------------------+
-| ClusterIP     | Internal to cluster only        | Virtual IP assigned via kube-proxy|
-| NodePort      | External via Node IP + Port     | Static Port allocated (30000-32767)|
-| LoadBalancer  | Public via Cloud Provider LB    | Provisions External L4 Balancer|
-| ExternalName  | External CNAME mapping          | DNS CNAME record redirection    |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-> **Prompt:** A crisp, high-contrast light-mode comparative layout table detailing Kubernetes Service Types (ClusterIP, NodePort, LoadBalancer, ExternalName) on a pure white background (#FFFFFF). High-contrast dark borders. Columns display Service Type, Scope & Accessibility, and Operational Routing Mechanism. Clean sans-serif font for text, and monospaced font for port ranges, syntax parameters, and networking directives. Black-and-white publication visual layout. Do not display font family names in the image.
+![Kubernetes Service Types](assets/images/chapter9/9-5-Kubernetes-Service-Types.png)
 
 ### Service Traffic Flow Architecture
 
