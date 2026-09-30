@@ -89,8 +89,6 @@ spec:
       failureThreshold: 2
 ```
 
----
-
 ## 9.2 Deployments, Rollouts, and Rollback Mechanics
 
 A `Deployment` controller manages declarative updates for stateless applications by orchestrating underlying `ReplicaSets`.
@@ -148,8 +146,6 @@ kubectl rollout undo deployment/payment-api -n production
 # Rollback to a specific target revision
 kubectl rollout undo deployment/payment-api --to-revision=2 -n production
 ```
-
----
 
 ## 9.3 StatefulSets: Ordered Provisioning and Persistent Identity
 
@@ -305,8 +301,6 @@ spec:
             image: registry.enterprise.internal/tools/backup-agent:v1.0
             command: ["/bin/sh", "-c", "backup-tool --target s3://db-backups"]
 ```
-
----
 
 ## 9.5 Kubernetes Services and Ingress Controllers
 
@@ -485,8 +479,6 @@ kubectl run --rm -i --tty dns-test --image=busybox:1.36 --namespace=lab-producti
 kubectl get ingress web-db-ingress -n lab-production
 kubectl get endpoints web-db-frontend -n lab-production
 ```
-
----
 
 ## 9.7 Chapter Review and Operational Checklist
 
