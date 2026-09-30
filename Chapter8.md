@@ -32,7 +32,7 @@ The Kubernetes control plane functions as the central management brain of a dist
 A clean, high-contrast light-mode technical architecture diagram illustrating the Kubernetes Control Plane components on a pure white background (#FFFFFF). Top central component is kube-apiserver connected via sharp vector arrows to etcd, kube-scheduler, and kube-controller-manager. High-contrast line art, crisp rectangular shapes, no shadows, no gradients. Clean sans-serif font for general labels and monospaced font for code keywords and parameters. Strict black-and-white print aesthetic for technical documentation.
 ```
 
-![Kubernetes Control Plane components o](assets/images/chapter8/8-1-Kubeadm-bootstrafing-flow.png)
+![Kubernetes Control Plane components](assets/images/chapter8/8-1-Kubernetes-Control-Plane-Components.png)
 
 ### 1. `kube-apiserver`
 The `kube-apiserver` exposes the Kubernetes REST API and serves as the front door to the control plane. All components—both internal (scheduler, controllers, kubelet) and external (`kubectl`, CI/CD pipelines)—communicate exclusively through the API server. **No control plane component or worker node communicates directly with `etcd` except `kube-apiserver`.**
