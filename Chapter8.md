@@ -70,34 +70,7 @@ The controller manager executes continuous control loops that observe the curren
 
 Worker nodes execute application workloads (Pods) and report status back to the control plane.
 
-```
-+-----------------------------------------------------------------------------------+
-|                                  WORKER NODE                                      |
-|                                                                                   |
-|  +-----------------------------------------------------------------------------+  |
-|  |                                  kubelet                                    |  |
-|  |  - Syncs PodSpecs with API Server                                           |  |
-|  |  - Communicates over CRI gRPC to Container Runtime                         |  |
-|  |  - Executes Liveness / Readiness Probes                                   |  |
-|  +-------------------------------------+---------------------------------------+  |
-|                                        |                                          |
-|                     +------------------+------------------+                       |
-|                     | gRPC (CRI)                          |                       |
-|                     v                                     v                       |
-|  +--------------------------------------+   +----------------------------------+  |
-|  |    Container Runtime (containerd)    |   |            kube-proxy            |  |
-|  |  - Container Lifecycle Management    |   | - Service Virtual IPs            |  |
-|  |  - Image Pulling & Storage Layer     |   | - IPTables / IPVS Traffic        |  |
-|  |  - CNI Interface Management          |   |   Load Balancing Routing         |  |
-|  +--------------------------------------+   +----------------------------------+  |
-+-----------------------------------------------------------------------------------+
-```
-
-### DALL-E 3 Image Generation Prompt
-```text
-[DALL-E 3 Image Generation Prompt]
-A crisp, minimal light-mode architecture diagram detailing a Kubernetes Worker Node. Shows kubelet at the top issuing CRI gRPC commands to containerd, while kube-proxy updates host-level network routing tables (IPTables/IPVS). High-contrast black outlines on a pure white canvas (#FFFFFF). Monospaced font for ports, binaries, and interface protocols, clean sans-serif for main component headers. Technical print style with clean geometric borders.
-```
+![Worker Node Architecture](assets/images/chapter8/8-2-Kubernetes-Worker-Node-Architecture.png)
 
 ### 1. `kubelet`
 The primary agent running on every node. It receives `PodSpecs` from `kube-apiserver` (or local file manifests) and verifies that the defined containers are running and healthy.
