@@ -313,5 +313,3 @@ Before moving forward, ensure proficiency in the following key domain concepts:
 
 ### Summary of Generated Files
 - **`Chapter10.md`**: Enterprise-grade guide covering persistent storage, CSI driver architecture, ConfigMaps, Secrets, External Secrets Operator (ESO), HashiCorp Vault integration, and a production lab environment with Ceph CSI.
-
-Would you like to move directly into Chapter 11 (Security, RBAC, and Policy Enforcement) or generate the visual assets for Chapter 10 first?
