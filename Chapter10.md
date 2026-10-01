@@ -51,8 +51,6 @@ spec:
       storage: 50Gi
 ```
 
----
-
 ## 10.2 Container Storage Interface (CSI) Drivers
 
 The Container Storage Interface (CSI) standardizes the out-of-tree interface between storage vendors and container orchestrators.
@@ -132,8 +130,6 @@ spec:
             path: app-spec.yaml
 ```
 
----
-
 ## 10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
 
 Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS certificates.
@@ -156,33 +152,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 
 Deploy an enterprise-grade setup consisting of a Ceph CSI StorageClass for dynamic storage provisioning, along with the External Secrets Operator (ESO) syncing sensitive credentials from HashiCorp Vault into native Kubernetes Secrets.
 
-```
-+-----------------------------------------------------------------------------------+
-|                             LAB ARCHITECTURE TARGET                               |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  [ HashiCorp Vault ]                                [ Ceph Storage Cluster ]      |
-|         | Sync Credentials                                    | Dynamic Storage   |
-|         v                                                     v Provisioning      |
-|  +--------------------+                             +--------------------------+  |
-|  |  K8s Native Secret |                             | Ceph CSI StorageClass    |  |
-|  | (db-credentials)   |                             | (ceph-rbd-sc)            |  |
-|  +---------+----------+                             +------------+-------------+  |
-|            |                                                     |                |
-|            +-----------------------+-----------------------------+                |
-|                                    |                                              |
-|                                    v Mounts Secrets & PVC                         |
-|                       +--------------------------+                                |
-|                       | Production Application   |                                |
-|                       | Pod (stateful-db-0)      |                                |
-|                       +--------------------------+                                |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A precise, high-contrast light-mode hands-on lab architecture diagram on a pure white background (#FFFFFF). Displays HashiCorp Vault and Ceph Storage Cluster supplying dynamic secrets and persistent volumes down to a Kubernetes Stateful Application Pod via an ExternalSecret-generated K8s Native Secret and Ceph CSI StorageClass. High-contrast solid line vectors, geometric rectangular containers, sharp black ink style. Clean sans-serif typography for node names and monospaced typography for secret keys, volume targets, and command syntax. Technical manual style without font annotation metadata.
+![Hands-on lab architecture diagram](assets/images/chapter10/10-5-Hands-on-Lab-Architecture-Diagram.png)
 
 ### Step 1: Configure Namespace and StorageClass for Ceph CSI
 
@@ -329,11 +299,10 @@ kubectl get pvc db-data-pvc -n lab-storage-sec
 kubectl exec -it stateful-db-0 -n lab-storage-sec -- df -h /var/lib/postgresql/data
 ```
 
----
-
 ## 10.6 Chapter Review and Operational Checklist
 
 Before moving forward, ensure proficiency in the following key domain concepts:
+
 
 * [ ] Understanding PV access modes (`RWO`, `ROX`, `RWX`, `RWOP`) and reclaim policies (`Retain`, `Delete`).
 * [ ] Differentiating between in-tree volume plugins and out-of-tree CSI driver RPC operations (`CreateVolume`, `NodeStageVolume`, `NodePublishVolume`).
