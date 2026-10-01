@@ -16,24 +16,7 @@ Every request to the Kubernetes API server (`kube-apIServer`) undergoes a sequen
 
 Kubernetes does not manage `User` database objects natively. Users are represented externally via client certificates, OpenID Connect (OIDC) identity tokens, or webhook authenticators.
 
-```
-+-----------------------------------------------------------------------------------+
-|                             AUTHENTICATION MECHANISMS                             |
-+-----------------------------------------------------------------------------------+
-| Method                | Credentials Type              | Operational Mechanism     |
-+-----------------------+-------------------------------+---------------------------+
-| X.509 Client Certs    | RSA/ECDSA Keypairs            | Verified via CA root flag |
-| OIDC Tokens           | JWT Identity Tokens           | ID Provider (Keycloak)    |
-| ServiceAccount Tokens | Bound ServiceAccount JWTs     | TokenRequest API / Kubelet|
-| Webhook Tokens        | External HTTP Bearer Tokens   | Remote Auth Server check  |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A crisp, high-contrast light-mode reference table summarizing Kubernetes Authentication Mechanisms on a pure white background (#FFFFFF). Solid black horizontal and vertical gridlines. Columns titled Method, Credentials Type, and Operational Mechanism. Minimalist technical documentation layout. Render general descriptive labels in Google Sans Flex 12Pt style and protocol terms, credentials parameters, and flags in Google Sans Code 12Pt monospaced font style. Ensure no font family name labels or metadata text appear anywhere in the output image.
-
----
+![Kubernetes Authentication Mechanisms](assets/images/chapter11/11-1-Request-Handling-Pipeline-Architecture.png)
 
 ## 11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
 
