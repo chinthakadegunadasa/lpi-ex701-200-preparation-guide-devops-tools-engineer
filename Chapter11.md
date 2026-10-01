@@ -10,43 +10,6 @@ Every request to the Kubernetes API server (`kube-apIServer`) undergoes a sequen
 
 ### Request Handling Pipeline Architecture
 
-```
-+-----------------------------------------------------------------------------------+
-|                        KUBERNETES API REQUEST PIPELINE                            |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  [ Ingress Request ]                                                              |
-|          |                                                                        |
-|          v                                                                        |
-|  +-----------------------+   Reject 401   +------------------------------------+  |
-|  | Phase 1: AuthN        |--------------->| Anonymous / Unauthenticated Client |  |
-|  | (X.509 / OIDC / Token)|                +------------------------------------+  |
-|  +-----------+-----------+                                                        |
-|              | Authenticated User / ServiceAccount                                |
-|              v                                                                    |
-|  +-----------------------+   Reject 403   +------------------------------------+  |
-|  | Phase 2: AuthZ        |--------------->| Access Denied (Forbidden)          |  |
-|  | (RBAC / ABAC / Node)  |                +------------------------------------+  |
-|  +-----------+-----------+                                                        |
-|              | Authorized Request                                                 |
-|              v                                                                    |
-|  +-----------------------+   Reject 422   +------------------------------------+  |
-|  | Phase 3: Admission    |--------------->| Policy Violation (Validation Fail) |  |
-|  | (Mutating/Validating) |                +------------------------------------+  |
-|  +-----------+-----------+                                                        |
-|              | Mutated & Validated                                                |
-|              v                                                                    |
-|  [ Persisted to etcd ]                                                            |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A precise, high-contrast light-mode technical diagram showing the Kubernetes API Server Request Processing Pipeline on a pure white background (#FFFFFF). Top box represents incoming Ingress HTTP Request moving down vertically through three distinct processing boxes: Phase 1: Authentication (X.509, OIDC, Tokens) with a 401 Rejection side-branch, Phase 2: Authorization (RBAC, Node) with a 403 Rejection side-branch, and Phase 3: Admission Control (Mutating and Validating Webhooks) with a 422 Rejection side-branch, leading to a final block labeled Persisted to etcd. Sharp black geometric boxes, clean vector directional arrows. High contrast black ink on white. Render general system text in Google Sans Flex 12Pt style and technical paths/error codes in Google Sans Code 12Pt monospaced font style. Strictly do not draw any text stating font names or typography metadata labels.
-
----
-
 ![Request Handling Pipeline Architecture](assets/images/chapter11/11-1-Request-Handling-Pipeline-Architecture.png)
 
 ### Authentication Modules Overview
