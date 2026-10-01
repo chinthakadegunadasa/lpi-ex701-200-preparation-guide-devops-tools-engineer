@@ -59,34 +59,7 @@ The Container Storage Interface (CSI) standardizes the out-of-tree interface bet
 
 ### CSI Driver Subsystem Architecture
 
-```
-+-----------------------------------------------------------------------------------+
-|                              CSI SUBSYSTEM TOPOLOGY                               |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  [ Kube-APIServer ] <---> [ External Provisioner ] <---> [ Storage Backend API ]  |
-|                                    |                                              |
-|                                    v gRPC (UNIX Socket)                           |
-|                         +--------------------------+                              |
-|                         |  CSI Controller Plugin   |                              |
-|                         +--------------------------+                              |
-|                                    |                                              |
-|  [ Worker Node ]                   v gRPC                                         |
-|  [ Kubelet ]        <---> +--------------------------+                            |
-|                           |    CSI Node Plugin       |                            |
-|                           +------------+-------------+                            |
-|                                        |                                          |
-|                                        v Mount Target Target                      |
-|                           +--------------------------+                            |
-|                           | Linux Target /dev/sdX    |                            |
-|                           +--------------------------+                            |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A crisp, high-contrast light-mode block diagram showing the operational topology of a Kubernetes CSI Driver on a pure white background (#FFFFFF). Illustrates interaction between Kube-APIServer, External Provisioner, CSI Controller Plugin, Kubelet, CSI Node Plugin, and the host block storage device (/dev/sdX). Clean, sharp black outlines with vector arrows indicating gRPC and API communication streams. Crisp black-and-white print layout. Use clean sans-serif typography for system blocks and crisp monospaced typography for gRPC commands, driver endpoints, and Linux device paths. Do not display font family names in the image.
+![CSI Driver Subsystem Architecture](assets/images/chapter10/10-2-CSI-Driver-Subsystem-Architecture.png)
 
 ### CSI RPC Methods Breakdown
 
