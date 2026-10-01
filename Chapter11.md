@@ -47,6 +47,8 @@ Every request to the Kubernetes API server (`kube-apIServer`) undergoes a sequen
 
 ---
 
+![Request Handling Pipeline Architecture](assets/images/chapter11/11-1-Request-Handling-Pipeline-Architecture.png)
+
 ### Authentication Modules Overview
 
 Kubernetes does not manage `User` database objects natively. Users are represented externally via client certificates, OpenID Connect (OIDC) identity tokens, or webhook authenticators.
