@@ -54,7 +54,7 @@ Kubernetes RBAC evaluates incoming operations using additive authorization rules
 
 > **Prompt:** A high-contrast light-mode technical diagram showing the Kubernetes RBAC Resource Mapping Model on a pure white background (#FFFFFF). Divided horizontally into Namespaced Scope (top) and Cluster-Wide Scope (bottom). Illustrates Role linked via RoleBinding to a Subject (User, Group, ServiceAccount), and ClusterRole linked via ClusterRoleBinding to the same Subject. Geometric rectangular containers, sharp black directional arrows, zero shading. High-contrast black print layout. Render general resource labels in Google Sans Flex 12Pt style and API parameters or subject names in Google Sans Code 12Pt monospaced font style. Exclude any visible typography metadata or font name labels.
 
----
+![Kubernetes RBAC Resource Mapping Model](assets/images/chapter11/11-2-Kubernetes-RBAC-Resource-Mapping-Model.png)
 
 ### RBAC Manifest Configuration
 
