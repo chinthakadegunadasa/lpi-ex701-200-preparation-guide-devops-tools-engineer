@@ -71,27 +71,11 @@ The Container Storage Interface (CSI) standardizes the out-of-tree interface bet
    * `NodeStageVolume()`: Formats the block device with a file system (`ext4`, `xfs`) and mounts it to a global staging directory.
    * `NodePublishVolume()`: Bind-mounts the staged volume into the container's isolated mount namespace (`/var/lib/kubelet/pods/<pod-uid>/volumes/...`).
 
----
-
 ## 10.3 Decoupling Configuration using ConfigMaps
 
 ConfigMaps store non-confidential configuration data as key-value pairs, decoupling application binaries from platform configuration.
 
-```
-+-----------------------------------------------------------------------------------+
-|                         CONFIGMAP CONSUMPTION PATTERNS                            |
-+-----------------------------------------------------------------------------------+
-| Approach             | Injected Manifest Syntax        | Application Visibility   |
-+----------------------+---------------------------------+--------------------------+
-| Environment Variable | `valueFrom.configMapKeyRef`    | Fixed at Container Init  |
-| Env From Source      | `envFrom.configMapRef`         | Bulk Env Injection       |
-| Volume Mount         | `volumes.configMap`             | Live Dynamic Re-reads    |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A high-contrast light-mode technical comparison table on a pure white background (#FFFFFF) summarizing Kubernetes ConfigMap Consumption Patterns. Columns show Approach, Injected Manifest Syntax, and Application Visibility. High-contrast solid black borderlines. Clean print-manual layout style. Clean sans-serif typography for table text and monospaced typography for YAML syntax, key references, and path mounting variables. Do not include any visible font names or typography metadata.
+![Kubernetes PV Reclaim Policies](assets/images/chapter10/10-3.Kubernetes-ConfigMap-Consumption-Patterns.png)
 
 ### Production ConfigMap Manifest with Multi-Pattern Consumption
 
