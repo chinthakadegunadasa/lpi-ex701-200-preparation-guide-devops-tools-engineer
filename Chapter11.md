@@ -16,7 +16,7 @@ Every request to the Kubernetes API server (`kube-apIServer`) undergoes a sequen
 
 Kubernetes does not manage `User` database objects natively. Users are represented externally via client certificates, OpenID Connect (OIDC) identity tokens, or webhook authenticators.
 
-![Kubernetes Authentication Mechanisms](assets/images/chapter11/11-1-Request-Handling-Pipeline-Architecture.png)
+![Kubernetes Authentication Mechanisms](assets/images/chapter11/11-1-Kubernetes-Authentication-Mechanisms.png)
 
 ## 11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
 
