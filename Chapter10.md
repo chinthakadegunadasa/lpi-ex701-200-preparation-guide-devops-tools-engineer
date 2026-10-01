@@ -140,8 +140,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 
 ### Built-In Secret Types
 
-![Kubernetes Built-In Secret Types](assets/images/chapter10/10-4-External-Secrets-Operator.png)
-
+![Kubernetes Built-In Secret Types](assets/images/chapter10/10-4-Built-in-Secrets-Types.png)
 ### Native Secrets Security Limitations
 
 1. **Base64 Encoding**: Native Secret objects are only base64-encoded, **not encrypted**, when stored or queried unless Encryption at Rest is explicitly configured on the API server.
@@ -149,30 +148,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 
 ### External Secrets Operator (ESO) & Vault Integration Architecture
 
-```
-+-----------------------------------------------------------------------------------+
-|                        EXTERNAL SECRETS INTEGRATION FLOW                          |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  +--------------------+     Authenticates     +--------------------------------+  |
-|  | HashiCorp Vault    |<----------------------| External Secrets Operator (ESO)|  |
-|  |  (AppRole / K8s)   |                       +---------------+----------------+  |
-|  +---------+----------+                                       |                   |
-|            | Fetch Secret                                     | Reconciles        |
-|            v Value                                            v Creation          |
-|  +--------------------+   Populates Secret    +--------------------------------+  |
-|  | ExternalSecret Spec|---------------------->| Native K8s Secret              |  |
-|  +--------------------+                       | (opaque / tls)                 |  |
-|                                               +--------------------------------+  |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A clean light-mode integration architecture diagram illustrating the synchronization flow between HashiCorp Vault, the External Secrets Operator (ESO), an ExternalSecret CRD, and a native Kubernetes Secret on a pure white background (#FFFFFF). Shows rectangular boxes connected by sharp directional vector lines with clear arrowheads. Crisp black line art, no shadows, high contrast. Clean sans-serif typography for component boxes and monospaced typography for custom resource names and operational labels. Technical documentation aesthetic. Ensure no font names or metadata labels are drawn.
-
----
+![](assets/images/chapter10/10-4-External-Secrets-Operator.png)
 
 ## 10.5 Hands-On Lab: Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
 
