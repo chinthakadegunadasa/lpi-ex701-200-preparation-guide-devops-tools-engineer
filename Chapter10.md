@@ -140,23 +140,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 
 ### Built-In Secret Types
 
-```
-+-----------------------------------------------------------------------------------+
-|                             BUILT-IN SECRET TYPES                                 |
-+-----------------------------------------------------------------------------------+
-| Type Name                            | Mandatory Data Keys                        |
-+--------------------------------------+--------------------------------------------+
-| Opaque                               | Arbitrary key-value base64-encoded strings |
-| kubernetes.io/service-account-token  | `token`, `ca.crt`, `namespace`             |
-| kubernetes.io/dockercfg              | `~/.dockercfg` JSON blob                   |
-| kubernetes.io/dockerconfigjson       | `.dockerconfigjson` base64 structure       |
-| kubernetes.io/tls                    | `tls.crt`, `tls.key`                       |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A crisp, high-contrast light-mode table diagram summarizing Kubernetes Built-In Secret Types on a pure white background (#FFFFFF). High-contrast dark structural grid lines. Columns represent Type Name and Mandatory Data Keys. Clean sans-serif typography for general descriptive content and crisp monospaced typography for Secret object types, field keys, and certificate parameters. Minimalist technical documentation aesthetic. Do not display font name in images.
+![Kubernetes Built-In Secret Types](assets/images/chapter10/10-4-External-Secrets-Operator.png)
 
 ### Native Secrets Security Limitations
 
