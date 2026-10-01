@@ -2,8 +2,6 @@
 
 Securing enterprise Kubernetes clusters requires a layered, defense-in-depth architecture spanning identity verification, authorization bounds, traffic isolation, and runtime workload policy enforcement. This chapter covers the Kubernetes authentication and authorization pipeline, Role-Based Access Control (RBAC) resource primitives, NetworkPolicies for zero-trust traffic control, Pod Security Standards (PSS), and admission controller operations as aligned with the LPI 701-200 DevOps Tools Engineer objectives.
 
----
-
 ## 11.1 Kubernetes Authentication & Authorization Engine
 
 Every request to the Kubernetes API server (`kube-apIServer`) undergoes a sequential three-phase control flow: **Authentication (AuthN)**, **Authorization (AuthZ)**, and **Admission Control**.
@@ -23,36 +21,6 @@ Kubernetes does not manage `User` database objects natively. Users are represent
 Kubernetes RBAC evaluates incoming operations using additive authorization rules (`allow` only; no explicit `deny`).
 
 ### RBAC Resource Hierarchy and Scope
-
-```
-+-----------------------------------------------------------------------------------+
-|                            RBAC RESOURCE MAPPING MODEL                            |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  NAMESPACED SCOPE                                                                 |
-|  +------------------------+      Binds Via       +-----------------------------+  |
-|  |       Role             |<-------------------->|        RoleBinding          |  |
-|  | (API Group / Verbs)    |                      | (Links Role to Subject)     |  |
-|  +------------------------+                      +--------------+--------------+  |
-|                                                                 |                 |
-|                                                                 v                 |
-|                                                  +-----------------------------+  |
-|                                                  |    Subject (User / Group /  |  |
-|                                                  |        ServiceAccount)      |  |
-|                                                  +--------------+--------------+  |
-|                                                                 ^                 |
-|  CLUSTER-WIDE SCOPE                                             |                 |
-|  +------------------------+      Binds Via                      |                 |
-|  |    ClusterRole         |<------------------------------------+                 |
-|  | (Non-namespaced / All) |                 ClusterRoleBinding                  |  |
-|  +------------------------+                                                       |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
-
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A high-contrast light-mode technical diagram showing the Kubernetes RBAC Resource Mapping Model on a pure white background (#FFFFFF). Divided horizontally into Namespaced Scope (top) and Cluster-Wide Scope (bottom). Illustrates Role linked via RoleBinding to a Subject (User, Group, ServiceAccount), and ClusterRole linked via ClusterRoleBinding to the same Subject. Geometric rectangular containers, sharp black directional arrows, zero shading. High-contrast black print layout. Render general resource labels in Google Sans Flex 12Pt style and API parameters or subject names in Google Sans Code 12Pt monospaced font style. Exclude any visible typography metadata or font name labels.
 
 ![Kubernetes RBAC Resource Mapping Model](assets/images/chapter11/11-2-Kubernetes-RBAC-Resource-Mapping-Model.png)
 
