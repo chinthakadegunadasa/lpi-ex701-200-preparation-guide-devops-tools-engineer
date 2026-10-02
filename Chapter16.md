@@ -31,18 +31,7 @@ Packer uses HashiCorp Configuration Language (HCL2) to define automated image cr
 
 ### Core Architectural Components
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                     PACKER EXECUTION PIPELINE                                     |
-|                                                                                                   |
-|  +--------------------+        +------------------------------+        +-----------------------+  |
-|  |     BUILDERS       |  ───►  |         PROVISIONERS         |  ───►  |    POST-PROCESSORS    |  |
-|  | (Launch temporary  |        | (Install packages, run       |        | (Compress, artifact   |  |
-|  |  build instance)   |        |  scripts, harden OS state)   |        |  manifests, tag AMIs) |  |
-|  +--------------------+        +------------------------------+        +-----------------------+  |
-+---------------------------------------------------------------------------------------------------+
-
-```
+![PACKER EXECUTION PIPELINE](assets/images/chapter16/16-2.-PACKER-EXECUTION-PIPELINE.png)
 
 #### 1. Plugins & Packer Block
 
