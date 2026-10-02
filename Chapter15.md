@@ -139,25 +139,7 @@ ansible-galaxy role init roles/app_service_node
 
 Enterprise environments require protecting sensitive data such as API keys, database credentials, Private Keys, and service account passwords. `ansible-vault` provides block-level and file-level encryption using AES-256 encryption.
 
-```text
-                  +-----------------------------------+
-                  |   Unencrypted Playbook / Data     |
-                  +-----------------------------------+
-                                    |
-                                    v
-                  +-----------------------------------+
-                  |  Ansible Vault (AES-256 Cipher)   |
-                  |  Key / Password File Integration  |
-                  +-----------------------------------+
-                                    |
-                                    v
-                  +-----------------------------------+
-                  | Encrypted Secrets (vault_vars.yml)|
-                  +-----------------------------------+
-
-```
-
----
+![Managing Secrets with Ansible Vault](assets/images/chapter15/15-2-Managing-Secrets-with-Ansible-Vault.png)
 
 ### 15.2.1 File-Level vs. Variable-Level Encryption
 
