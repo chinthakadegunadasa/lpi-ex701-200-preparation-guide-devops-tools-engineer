@@ -771,7 +771,7 @@ ansible-playbook site.yml
 
 **Answer**: **B**
 
-*Explanation*: `defaults/main.yml` holds role variables with the lowest precedence level (Level 2), making them designed specifically for easy overriding. Variables in `vars/main.yml` have a much higher precedence (Level 15) and override most inventory/playbook variables.
+**Explanation**: `defaults/main.yml` holds role variables with the lowest precedence level (Level 2), making them designed specifically for easy overriding. Variables in `vars/main.yml` have a much higher precedence (Level 15) and override most inventory/playbook variables.
 
 **Question 2**: Which Ansible Vault command allows an engineer to encrypt a single variable value directly into an unencrypted variable file without encrypting the entire file?
 
