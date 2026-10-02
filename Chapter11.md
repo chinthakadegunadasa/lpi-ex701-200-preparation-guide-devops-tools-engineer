@@ -1,422 +1,450 @@
 # Chapter 11: Kubernetes Security & RBAC
 
-Securing enterprise Kubernetes clusters requires a layered, defense-in-depth architecture spanning identity verification, authorization bounds, traffic isolation, and runtime workload policy enforcement. This chapter covers the Kubernetes authentication and authorization pipeline, Role-Based Access Control (RBAC) resource primitives, NetworkPolicies for zero-trust traffic control, Pod Security Standards (PSS), and admission controller operations as aligned with the LPI 701-200 DevOps Tools Engineer objectives.
+This chapter covers the complete security model of Kubernetes, structured directly for enterprise operations and aligned with the LPI 701-200 (DevOps Tools Engineer) exam objectives. It explores API request validation, fine-grained access management, network isolation controls, pod execution standards, and dynamic request admission.
+
+---
 
 ## 11.1 Kubernetes Authentication & Authorization Engine
 
-Every request to the Kubernetes API server (`kube-apIServer`) undergoes a sequential three-phase control flow: **Authentication (AuthN)**, **Authorization (AuthZ)**, and **Admission Control**.
+Every operation in a Kubernetes cluster flows through the `kube-apiserver` via RESTful HTTP calls. To protect state transitions in `etcd`, the API server subjects incoming requests to a three-stage validation pipeline: **Authentication (AuthN)**, **Authorization (AuthZ)**, and **Admission Control**.
 
-### Request Handling Pipeline Architecture
+```
++-----------------------------------------------------------------------------------+
+|                            KUBERNETES API REQUEST PIPELINE                        |
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|  [ Ingress Request ]                                                              |
+|          |                                                                        |
+|          v                                                                        |
+|  +-----------------------+   Reject 401   +------------------------------------+  |
+|  | Phase 1: AuthN        |--------------->| Anonymous / Unauthenticated Client |  |
+|  | (X.509 / OIDC / Token)|                +------------------------------------+  |
+|  +-----------+-----------+                                                        |
+|              | Authenticated User / ServiceAccount                                |
+|              v                                                                    |
+|  +-----------------------+   Reject 403   +------------------------------------+  |
+|  | Phase 2: AuthZ        |--------------->| Access Denied (Forbidden)          |  |
+|  | (RBAC / ABAC / Node)  |                +------------------------------------+  |
+|  +-----------+-----------+                                                        |
+|              | Authorized Request                                                 |
+|              v                                                                    |
+|  +-----------------------+   Reject 422   +------------------------------------+  |
+|  | Phase 3: Admission    |--------------->| Policy Violation (Validation Fail) |  |
+|  | (Mutating/Validating) |                +------------------------------------+  |
+|  +-----------+-----------+                                                        |
+|              | Mutated & Validated                                                |
+|              v                                                                    |
+|  [ Persisted to etcd ]                                                            |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
 
-![Request Handling Pipeline Architecture](assets/images/chapter11/11-1-Request-Handling-Pipeline-Architecture.png)
+```
 
-### Authentication Modules Overview
+### Authentication (AuthN)
 
-Kubernetes does not manage `User` database objects natively. Users are represented externally via client certificates, OpenID Connect (OIDC) identity tokens, or webhook authenticators.
+Authentication inspects the HTTP header, client certificates, or bearer tokens to determine the identity of the requester. Kubernetes recognizes two principal identity categories:
 
-![Kubernetes Authentication Mechanisms](assets/images/chapter11/11-1-Kubernetes-Authentication-Mechanisms.png)
+1. **Human Users**: Managed externally (e.g., via Corporate IdP/OIDC, X.509 Client Certificates, or Static Token files). Kubernetes does **not** store `User` objects in its API database.
+2. **ServiceAccounts**: Managed natively by Kubernetes as API objects within specific Namespaces for in-cluster workload identities.
+
+#### Common Authentication Methods
+
+* **X.509 Client Certificates**: The API server trusts certificates signed by the Cluster Certificate Authority (CA). The Certificate Subject's Common Name (`CN`) is interpreted as the **User**, and Organization entries (`O`) are mapped to **Groups**.
+* Flag: `--client-ca-file=/etc/kubernetes/pki/ca.crt`
+
+
+* **OpenID Connect (OIDC) Tokens**: Delegates identity verification to external IdPs (Keycloak, Okta, Azure AD, Dex) using OAuth 2.0 JWT tokens.
+* API Server Flags:
+```bash
+--oidc-issuer-url=https://auth.enterprise.internal/auth/realms/master
+--oidc-client-id=kubernetes-cluster
+--oidc-username-claim=preferred_username
+--oidc-groups-claim=groups
+
+```
+
+
+
+
+* **ServiceAccount Service Account Tokens**: Short-lived, auto-rotating JSON Web Tokens (JWT) issued via the `TokenRequest` API (bound to Pod life cycles).
+
+---
+
+### Authorization (AuthZ)
+
+Once identity is verified, authorization modules evaluate whether the user or service account has permission to perform the requested verb (e.g., `get`, `create`, `delete`) on the target resource (e.g., `pods`, `services`, `secrets`).
+
+Multiple authorization modes can be configured sequentially using the `--authorization-mode` API server flag. Authorization evaluation stops as soon as a module explicitly **allows** or **denies** the request; if a module is indecisive, evaluation falls back to the next module in the chain.
+
+| Authorization Mode | Evaluation Model | Best Use Case |
+| --- | --- | --- |
+| **RBAC** | Evaluates roles and role bindings stored in Kubernetes. | Standard enterprise production deployments. |
+| **Node** | Authorizes API calls made specifically by `kubelet` instances based on assigned workloads. | Node isolation and infrastructure control plane security. |
+| **ABAC** | Evaluates arbitrary field-based policy rules written in JSON files. | Legacy static cluster configurations (requires API server restarts to edit). |
+| **Webhook** | Delegates authorization decisions to an external HTTP REST endpoint (e.g., OPA / Gatekeeper). | Fine-grained or dynamic enterprise policy engine integration. |
+
+---
 
 ## 11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
 
-Kubernetes RBAC evaluates incoming operations using additive authorization rules (`allow` only; no explicit `deny`).
+Kubernetes RBAC controls authorization using four primary API objects under the `rbac.authorization.k8s.io/v1` API group.
 
-### RBAC Resource Hierarchy and Scope
+```
++-----------------------------------------------------------------------------------+
+|                        KUBERNETES RBAC RESOURCE MODEL                             |
++-----------------------------------------------------------------------------------+
+|                                                                                   |
+|  NAMESPACED SCOPE                                                                 |
+|  +---------------------+      RoleBinding      +-------------------------------+  |
+|  |     Role            |---------------------->| Subject                       |  |
+|  | (Rules: API Verbs,  |                       | (User / Group /               |  |
+|  |  Resources, Names)  |                       |  ServiceAccount)              |  |
+|  +---------------------+                       +-------------------------------+  |
+|                                                                ^                  |
+|  CLUSTER-WIDE SCOPE                                            |                  |
+|  +---------------------+   ClusterRoleBinding                  |                  |
+|  |     ClusterRole     |---------------------------------------+                  |
+|  | (Cluster Resources: |                                                          |  |
+|  |  Nodes, PVs, CRDs)  |                                                          |  |
+|  +---------------------+                                                          |  |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
 
-![Kubernetes RBAC Resource Mapping Model](assets/images/chapter11/11-2-Kubernetes-RBAC-Resource-Mapping-Model.png)
+```
 
-### RBAC Manifest Configuration
+### RBAC Scope Breakdown
 
-#### 1. Namespaced Role & RoleBinding
+#### 1. Roles vs. ClusterRoles
+
+* **Role**: Defines permissions **within a single namespace**.
+* **ClusterRole**: Defines permissions across the **entire cluster** (including cluster-scoped resources like `Node`, `PersistentVolume`, `CustomResourceDefinition`, or non-resource endpoints like `/healthz`).
+
+#### 2. RoleBindings vs. ClusterRoleBindings
+
+* **RoleBinding**: Grants permissions defined in a `Role` or `ClusterRole` to subjects **within a specific namespace**.
+* **ClusterRoleBinding**: Grants permissions across **all namespaces** cluster-wide.
+
+> **Key Architectural Pattern**: Binding a `ClusterRole` via a standard `RoleBinding` grants the specified cluster-wide role templates (e.g., standard `view` or `edit` roles) **only** within the target namespace of the `RoleBinding`.
+
+---
+
+### Manifest Examples
+
+#### Role (Namespaced)
+
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: staging
+  namespace: production
   name: deployment-manager
 rules:
-- apiGroups: ["apps"]
-  resources: ["deployments", "statefulsets"]
-  verbs: ["get", "list", "watch", "create", "update", "patch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+
+```
+
+#### ServiceAccount & RoleBinding
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ci-cd-deployer
+  namespace: production
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: bind-deployment-manager
-  namespace: staging
+  name: bind-ci-cd-deployer
+  namespace: production
 subjects:
-- kind: ServiceAccount
-  name: cd-pipeline-sa
-  namespace: staging
+  - kind: ServiceAccount
+    name: ci-cd-deployer
+    namespace: production
 roleRef:
   kind: Role
   name: deployment-manager
   apiGroup: rbac.authorization.k8s.io
-```
 
-#### 2. ClusterRole & ClusterRoleBinding
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: node-reader
-rules:
-- apiGroups: [""]
-  resources: ["nodes", "persistentvolumes"]
-  verbs: ["get", "list", "watch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: bind-node-reader
-subjects:
-- kind: User
-  name: site-reliability-engineer
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: ClusterRole
-  name: node-reader
-  apiGroup: rbac.authorization.k8s.io
 ```
 
 ---
 
 ## 11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
 
-By default, Kubernetes networking operates on an **all-to-all non-isolated model**. `NetworkPolicy` resources introduce L3/L4 firewall rules using label selectors.
+By default, Kubernetes uses a non-isolated flat network model: **any Pod can send packets to any other Pod across all namespaces**.
 
-### NetworkPolicy Traffic Scope Architecture
+A `NetworkPolicy` object isolates Pod traffic using standard `podSelector` and `namespaceSelector` fields. To enforce NetworkPolicies, the cluster must run a Container Network Interface (CNI) plugin that supports layer 3/4 filtering (such as **Calico**, **Cilium**, **Weave Net**, or **Kube-Router**). Flannel **does not** enforce NetworkPolicies natively.
 
 ```
 +-----------------------------------------------------------------------------------+
 |                        NETWORKPOLICY INGRESS & EGRESS SCOPE                       |
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
-|    [ Ingress Source ]                                   [ Egress Destination ]    |
-|   (namespaceSelector /                                  (ipBlock CIDR /           |
+|    [ Ingress Source ]                                    [ Egress Destination ]    |
+|   (namespaceSelector /                                   (ipBlock CIDR /          |
 |      podSelector)                                          podSelector)           |
 |           |                                                     ^                 |
 |           | Allowed Ingress Port 8080                           | Allowed Egress  |
 |           v                                                     | Port 5432       |
 |  +-----------------------------------------------------------------------------+  |
-|  |                         TARGET POD (podSelector)                            |  |
-|  |                         app: payment-processor                              |  |
+|  |                          TARGET POD (podSelector)                           |  |
+|  |                          app: payment-processor                             |  |
 |  +-----------------------------------------------------------------------------+  |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
+
 ```
 
-#### Light-Mode DALL-E 3 Image Generation Prompt
+### Policy Evaluation Rules
 
-> **Prompt:** A crisp light-mode network architecture diagram showing Kubernetes NetworkPolicy evaluation on a pure white background (#FFFFFF). Central box labeled Target Pod (app: payment-processor). Directed incoming vector arrow from Ingress Source (namespaceSelector/podSelector) specifying port 8080. Directed outgoing vector arrow to Egress Destination (ipBlock/podSelector) specifying port 5432. High contrast black lines and sharp vector arrowheads. Render structural text in Google Sans Flex 12Pt style and YAML keys, selectors, or IP ranges in Google Sans Code 12Pt monospaced font style. Strictly do not render any font family labels or typography metadata text.
+1. **Default Allow**: If no `NetworkPolicy` selects a Pod, all inbound and outbound traffic to/from that Pod is permitted.
+2. **Default Deny / Isolation**: Once a Pod is selected by *any* `NetworkPolicy`, it isolates that Pod. Unmatched traffic is blocked (implicit drop).
+3. **Additive Policies**: NetworkPolicies are additive. If multiple policies select the same Pod, the allowed rules from all matching policies are combined (OR logic).
 
 ---
 
-### Production Zero-Trust NetworkPolicy Manifests
+### Manifest: Ingress & Egress Isolation
 
-#### Default Deny-All Ingress & Egress (Per-Namespace Isolation)
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny-all
-  namespace: secure-workloads
-spec:
-  podSelector: {}
-  policyTypes:
-  - Ingress
-  - Egress
-```
-
-#### Fine-Grained Allowed Traffic Policy
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-payment-pipeline
-  namespace: secure-workloads
+  name: secure-payment-processor
+  namespace: finance
 spec:
   podSelector:
     matchLabels:
-      app: payment-service
+      app: payment-processor
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          role: api-gateway
-    ports:
-    - protocol: TCP
-      port: 8080
+    # Allow Ingress traffic from frontend pods in the same namespace on TCP 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: api-gateway
+      ports:
+        - protocol: TCP
+          port: 8080
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          role: database
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - ipBlock:
-        cidr: 10.100.0.0/16
-        except:
-        - 10.100.50.0/24
-    ports:
-    - protocol: TCP
-      port: 443
+    # Allow Egress traffic to PostgreSQL pods in database namespace on TCP 5432
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: database
+          podSelector:
+            matchLabels:
+              app: postgresql
+      ports:
+        - protocol: TCP
+          port: 5432
+
 ```
 
 ---
 
 ## 11.4 Pod Security Standards (PSS) and Admission Controllers
 
-Kubernetes enforces runtime workload security profiles through **Pod Security Standards (PSS)** managed via the built-in `PodSecurity` admission controller.
+### Pod Security Standards (PSS)
 
-### Pod Security Standards Profiles
+Kubernetes Pod Security Standards replace the deprecated `PodSecurityPolicy` (PSP). PSS categorizes workload isolation requirements into three distinct profiles:
 
-```
-+-----------------------------------------------------------------------------------+
-|                            POD SECURITY STANDARDS (PSS)                           |
-+-----------------------------------------------------------------------------------+
-| Profile     | Security Controls & Restrictions                                    |
-+-------------+---------------------------------------------------------------------+
-| Privileged  | Unrestricted. Allows host namespaces, hostPath, privileged containers.|
-| Baseline    | Prevents known privilege escalations. Blocks host ports/namespaces. |
-| Restricted  | Hardened. Enforces non-root execution, drops ALL capabilities, RO fs.|
-+-----------------------------------------------------------------------------------+
-```
+| Profile | Description |
+| --- | --- |
+| **Privileged** | Unrestricted execution. Gives workloads maximum capabilities (allows host namespaces, root execution, and host path mounts). Intended for system-level daemons (e.g., CNI, storage drivers). |
+| **Baseline** | Minimal restrictive policy. Prevents known privilege escalations while allowing default pod configurations. Blocks `hostNetwork`, `hostPID`, `hostIPC`, and privileged escalation options. |
+| **Restricted** | Hardened execution environment following enterprise best practices. Requires pods to run as non-root, drop all capabilities (except `NET_BIND_SERVICE`), and enforce read-only root filesystems. |
 
-#### Light-Mode DALL-E 3 Image Generation Prompt
+#### Applying PSS via Namespace Labels
 
-> **Prompt:** A crisp, high-contrast light-mode technical comparison table detailing Kubernetes Pod Security Standards (Privileged, Baseline, Restricted) on a pure white background (#FFFFFF). High-contrast dark horizontal borders and gridlines. Columns titled Profile and Security Controls & Restrictions. Clean print publication layout. Render profile titles in Google Sans Flex 12Pt style and technical parameters (like hostPath, non-root, privilegeEscalation) in Google Sans Code 12Pt monospaced font style. Ensure no font name metadata or typography labels are rendered.
+The built-in `PodSecurity` Admission Controller enforces profiles based on namespace labels, evaluated at three distinct modes:
 
----
-
-### Namespace Label Enforcement for Pod Security Admission
-
-The `PodSecurity` admission controller is controlled via namespace labels using three operational modes: `enforce`, `audit`, and `warn`.
+* `enforce`: Rejects pods violating the profile.
+* `audit`: Generates audit log events for violations while allowing creation.
+* `warn`: Returns a user-facing warning during deployment creation.
 
 ```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: production-restricted
+  name: hardened-apps
   labels:
     pod-security.kubernetes.io/enforce: restricted
-    pod-security.kubernetes.io/enforce-version: "v1.30"
-    pod-security.kubernetes.io/audit: restricted
-    pod-security.kubernetes.io/audit-version: "v1.30"
+    pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/warn: restricted
-    pod-security.kubernetes.io/warn-version: "v1.30"
+    pod-security.kubernetes.io/warn-version: latest
+
 ```
+
+---
+
+### Dynamic Admission Control Webhooks
+
+When an API request passes Authentication and Authorization, it hits the **Admission Control** phase prior to object persistence in `etcd`.
+
+Admission controllers run in two sequential stages:
+
+1. **Mutating Admission Webhooks**: Can intercept, modify, or inject defaults into incoming API payloads (e.g., inject sidecars, add required labels).
+2. **Validating Admission Webhooks**: Evaluate payloads against specific validation logic. Rejects requests with HTTP `422 Unprocessable Entity` if rules are violated (e.g., blocking `latest` container image tags).
+
+Popular policy engines such as **Kyverno** and **OPA / Gatekeeper** run as dynamic validating and mutating admission webhooks.
 
 ---
 
 ## 11.5 Hands-On Lab: Implementing Zero-Trust Network Policies and Granular RBAC
 
-### Objective
-Deploy a multi-tier secure architecture consisting of restricted namespaces, service accounts bound to least-privilege RBAC roles, a default-deny network posture, and strict Pod Security Standards.
+### Lab Objective
 
-```
-+-----------------------------------------------------------------------------------+
-|                            LAB ARCHITECTURE TOPOLOGY                              |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  [ Namespace: zero-trust-lab ]                                                    |
-|  Labels: pod-security.kubernetes.io/enforce = restricted                          |
-|                                                                                   |
-|  +-------------------------+   Allowed L4 TCP 8080   +-------------------------+  |
-|  | Frontend Gateway Pod    |------------------------>| Secure Backend DB Pod   |  |
-|  | (SA: frontend-sa)       |                         | (SA: backend-sa)        |  |
-|  +-------------------------+                         +-------------------------+  |
-|               |                                                   |               |
-|               v Blocked by NetworkPolicy                          v               |
-|  +-----------------------------------------------------------------------------+  |
-|  |                Default Deny Ingress & Egress Baseline                       |  |
-|  +-----------------------------------------------------------------------------+  |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-```
+Build a zero-trust namespace architecture inside a cluster:
 
-#### Light-Mode DALL-E 3 Image Generation Prompt
-
-> **Prompt:** A high-contrast light-mode lab topology block diagram on a pure white canvas (#FFFFFF). Displays a outer box representing Namespace: zero-trust-lab with a Pod Security Enforcement label. Inside, a Frontend Gateway Pod connects to a Secure Backend DB Pod via an allowed L4 TCP 8080 arrow. An overarching box at the bottom indicates Default Deny Ingress & Egress Baseline blocking all unauthorized paths. Black geometric containers, sharp vector arrows, high-contrast ink style. Render system names in Google Sans Flex 12Pt style and ServiceAccount names, labels, and network ports in Google Sans Code 12Pt monospaced font style. Do not display font family names in the image.
+1. Create isolated namespaces (`secure-backend` and `data-tier`).
+2. Enforce a **Default Deny All** network posture across all namespaces.
+3. Configure a fine-grained `ServiceAccount` and `Role` to permit limited access.
+4. Verify RBAC rules using `kubectl auth can-i`.
 
 ---
 
-### Step 1: Create Secured Namespace with PSS Enforcement
+### Step 1: Create Namespaces & Apply Pod Security Enforcements
 
 ```bash
-kubectl create namespace zero-trust-lab
+kubectl create namespace secure-backend
+kubectl create namespace data-tier
 
-kubectl label namespace zero-trust-lab \
-  pod-security.kubernetes.io/enforce=restricted \
-  pod-security.kubernetes.io/enforce-version=latest \
-  pod-security.kubernetes.io/warn=restricted \
-  pod-security.kubernetes.io/warn-version=latest
+# Label namespaces for Restricted Pod Security Standards
+kubectl label namespace secure-backend pod-security.kubernetes.io/enforce=restricted
+kubectl label namespace data-tier pod-security.kubernetes.io/enforce=restricted
+
 ```
 
 ---
 
-### Step 2: Configure Least-Privilege ServiceAccount and RBAC
+### Step 2: Enforce Default Deny All Network Policies
 
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: backend-operator-sa
-  namespace: zero-trust-lab
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: pod-read-patch-role
-  namespace: zero-trust-lab
-rules:
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list", "watch", "patch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: bind-backend-operator
-  namespace: zero-trust-lab
-subjects:
-- kind: ServiceAccount
-  name: backend-operator-sa
-  namespace: zero-trust-lab
-roleRef:
-  kind: Role
-  name: pod-read-patch-role
-  apiGroup: rbac.authorization.k8s.io
-EOF
-```
-
----
-
-### Step 3: Apply Zero-Trust Network Policies
+Apply a Default-Deny policy to block all ingress and egress traffic in `secure-backend`.
 
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: deny-all-traffic
-  namespace: zero-trust-lab
+  name: default-deny-all
+  namespace: secure-backend
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-frontend-to-backend
-  namespace: zero-trust-lab
-spec:
-  podSelector:
-    matchLabels:
-      app: backend
-  policyTypes:
-  - Ingress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: frontend
-    ports:
-    - protocol: TCP
-      port: 8080
+    - Ingress
+    - Egress
 EOF
+
 ```
 
 ---
 
-### Step 4: Deploy Hardened Workload Compliant with Restricted PSS
+### Step 3: Create Granular RBAC Infrastructure
+
+Create a dedicated ServiceAccount and assign it permissions to view Pods and manage StatefulSets only inside `secure-backend`.
 
 ```bash
+# 1. Create ServiceAccount
+kubectl create serviceaccount developer-sa -n secure-backend
+
+# 2. Create Namespaced Role
 cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Pod
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
 metadata:
-  name: backend-app
-  namespace: zero-trust-lab
-  labels:
-    app: backend
-spec:
-  serviceAccountName: backend-operator-sa
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 10001
-    runAsGroup: 10001
-    fsGroup: 10001
-    seccompProfile:
-      type: RuntimeDefault
-  containers:
-  - name: server
-    image: nginx:1.25-alpine
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop:
-        - ALL
-    ports:
-    - containerPort: 8080
-    volumeMounts:
-    - name: cache-vol
-      mountPath: /var/cache/nginx
-    - name: run-vol
-      mountPath: /var/run
-  volumes:
-  - name: cache-vol
-    emptyDir: {}
-  - name: run-vol
-    emptyDir: {}
+  name: developer-role
+  namespace: secure-backend
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
 EOF
+
+# 3. Bind Role to ServiceAccount
+kubectl create rolebinding developer-rb \
+  --role=developer-role \
+  --serviceaccount=secure-backend:developer-sa \
+  --namespace=secure-backend
+
 ```
 
 ---
 
-### Step 5: Verification and Security Auditing
+### Step 4: Verify Authorization Matrix (`kubectl auth can-i`)
+
+Verify RBAC privileges using `kubectl auth can-i` with the `--as` impersonation flag:
 
 ```bash
-# 1. Verify RBAC permissions for the ServiceAccount using auth can-i
+# Test 1: Check if developer-sa can list pods in secure-backend (Expected: yes)
 kubectl auth can-i list pods \
-  --as=system:serviceaccount:zero-trust-lab:backend-operator-sa \
-  -n zero-trust-lab
+  --as=system:serviceaccount:secure-backend:developer-sa \
+  -n secure-backend
 
+# Test 2: Check if developer-sa can delete pods in secure-backend (Expected: no)
 kubectl auth can-i delete pods \
-  --as=system:serviceaccount:zero-trust-lab:backend-operator-sa \
-  -n zero-trust-lab
+  --as=system:serviceaccount:secure-backend:developer-sa \
+  -n secure-backend
 
-# 2. Confirm Pod Security Enforcement active status
-kubectl get ns zero-trust-lab --show-labels
+# Test 3: Check if developer-sa can list secrets in secure-backend (Expected: no)
+kubectl auth can-i list secrets \
+  --as=system:serviceaccount:secure-backend:developer-sa \
+  -n secure-backend
 
-# 3. Test NetworkPolicy enforcement with an unauthorized client pod
-kubectl run unauthorized-tester --image=alpine -n zero-trust-lab -- rm -rf /
+# Test 4: Check if developer-sa can access another namespace (Expected: no)
+kubectl auth can-i list pods \
+  --as=system:serviceaccount:secure-backend:developer-sa \
+  -n data-tier
+
 ```
 
 ---
 
-## 11.6 Chapter Review and Operational Checklist
+## 11.6 Self-Assessment & Exam Practice Questions
 
-Before proceeding to Chapter 12, verify full operational mastery over the following domain capabilities:
+**Question 1**: An administrator wants to grant a user permission to list secrets across all namespaces in a cluster using a minimum set of bindings. Which approach should be used?
 
-- [ ] Trace an API server request through Authentication, Authorization, and Mutating/Validating Admission phases.
-- [ ] Construct namespaced `Role`/`RoleBinding` and cluster-scoped `ClusterRole`/`ClusterRoleBinding` manifests.
-- [ ] Implement default-deny NetworkPolicies alongside microsegmentation rules.
-- [ ] Audit and enforce Pod Security Standards (`Privileged`, `Baseline`, `Restricted`) using namespace labels.
-- [ ] Evaluate effective user/ServiceAccount permissions using `kubectl auth can-i`.
-```
+* A) Create a `Role` with permissions on secrets in the `default` namespace and bind it with a `ClusterRoleBinding`.
+* B) Create a `ClusterRole` with permissions on secrets and bind it using a `ClusterRoleBinding`.
+* C) Create a `Role` in every namespace and bind each one with a separate `RoleBinding`.
+* D) Create a `ClusterRole` with permissions on secrets and bind it using a `RoleBinding` in the `kube-system` namespace.
+
+**Answer**: **B**
+
+*Explanation*: `ClusterRole` combined with `ClusterRoleBinding` grants access to resources across all namespaces cluster-wide.
 
 ---
 
-### Summary of Generated Files
-- **`Chapter11.md`**: Complete, enterprise-focused markdown document covering Kubernetes Security & RBAC, including Authentication/Authorization flows, RBAC scopes, zero-trust NetworkPolicies, Pod Security Standards (PSS), and a step-by-step hands-on security lab with light-mode DALL-E 3 image prompts.
+**Question 2**: You create a `NetworkPolicy` targeting pods with `app: frontend`. The policy explicitly defines an `ingress` rule allowing traffic from `app: gateway`. What happens to traffic from `app: monitoring` attempting to reach `app: frontend` on an unlisted port?
 
-Would you like to move on to **Chapter 12** or generate the visual assets for Chapter 11?
+* A) Traffic is allowed because default ingress behavior permits all connections unless explicitly blocked with a Deny rule.
+* B) Traffic is forwarded to an admission controller for inspection.
+* C) Traffic is dropped because targeting `app: frontend` puts it in an isolated state, blocking all non-matched ingress traffic.
+* D) Traffic is accepted, but logged to the API server audit pipeline.
+
+**Answer**: **C**
+
+*Explanation*: NetworkPolicies are default-deny upon selector match. Once a Pod is selected by a policy, any unallowed traffic is implicitly dropped.
+
+---
+
+**Question 3**: What type of Admission Controller should be used if an organization requires all created pods to automatically have a security label (`environment: production`) attached upon request creation?
+
+* A) Validating Admission Webhook
+* B) Mutating Admission Webhook
+* C) RoleBinding Evaluator
+* D) Node Restriction Controller
+
+**Answer**: **B**
+
+*Explanation*: Mutating admission webhooks modify incoming object payloads prior to validation and persistence in `etcd`.
