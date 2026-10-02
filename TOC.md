@@ -98,7 +98,7 @@ Table of Contents
 ### 13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types
 ### 13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
 ### 13.3 Enterprise Module Architecture and Reusability
-### 3.4 Resource Lifecycle Management and Workspace Management
+### 13.4 Resource Lifecycle Management and Workspace Management
 ### 13.5 **Hands-On Lab:** Building Modular Terraform Code for Automated Cloud Node Provisioning
 
 ## Chapter 14: Ansible Architecture & Core Playbooks
@@ -116,6 +116,7 @@ Table of Contents
 ### 15.5 **Hands-On Lab:** Implementing Encrypted Ansible Roles with Automated Dynamic Inventories
 
 ## Chapter 16: Automated Immutable Image Pipelines
+### 16.1 Packer and Cloud-init
 ### 16.2 HashiCorp Packer Architecture: Builders, Provisioners, and Post-Processors
 ### 16.3 Automating OS Provisioning via Cloud-Init and Kickstart
 ### 16.4 Integrating Packer into CI/CD Automated Pipelines
