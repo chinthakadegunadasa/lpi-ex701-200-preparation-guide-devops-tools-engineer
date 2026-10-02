@@ -10,38 +10,6 @@ Every operation in a Kubernetes cluster flows through the `kube-apiserver` via R
 
 ![KUBERNETES API REQUEST PIPELINE](assets/images/chapter11/11-1-KUBERNETES-API-REQUEST-PIPELINE.png)
 
-```
-+-----------------------------------------------------------------------------------+
-|                            KUBERNETES API REQUEST PIPELINE                        |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  [ Ingress Request ]                                                              |
-|          |                                                                        |
-|          v                                                                        |
-|  +-----------------------+   Reject 401   +------------------------------------+  |
-|  | Phase 1: AuthN        |--------------->| Anonymous / Unauthenticated Client |  |
-|  | (X.509 / OIDC / Token)|                +------------------------------------+  |
-|  +-----------+-----------+                                                        |
-|              | Authenticated User / ServiceAccount                                |
-|              v                                                                    |
-|  +-----------------------+   Reject 403   +------------------------------------+  |
-|  | Phase 2: AuthZ        |--------------->| Access Denied (Forbidden)          |  |
-|  | (RBAC / ABAC / Node)  |                +------------------------------------+  |
-|  +-----------+-----------+                                                        |
-|              | Authorized Request                                                 |
-|              v                                                                    |
-|  +-----------------------+   Reject 422   +------------------------------------+  |
-|  | Phase 3: Admission    |--------------->| Policy Violation (Validation Fail) |  |
-|  | (Mutating/Validating) |                +------------------------------------+  |
-|  +-----------+-----------+                                                        |
-|              | Mutated & Validated                                                |
-|              v                                                                    |
-|  [ Persisted to etcd ]                                                            |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-
-```
-
 ### Authentication (AuthN)
 
 Authentication inspects the HTTP header, client certificates, or bearer tokens to determine the identity of the requester. Kubernetes recognizes two principal identity categories:
@@ -64,9 +32,6 @@ Authentication inspects the HTTP header, client certificates, or bearer tokens t
 --oidc-groups-claim=groups
 
 ```
-
-
-
 
 * **ServiceAccount Service Account Tokens**: Short-lived, auto-rotating JSON Web Tokens (JWT) issued via the `TokenRequest` API (bound to Pod life cycles).
 
@@ -113,6 +78,8 @@ Kubernetes RBAC controls authorization using four primary API objects under the 
 +-----------------------------------------------------------------------------------+
 
 ```
+
+![KUBERNETES RBAC RESOURCE MODEL](assets/images/chapter11/11-1-KUBERNETES-RBAC-RESOURCE-MODEL.png)
 
 ### RBAC Scope Breakdown
 
