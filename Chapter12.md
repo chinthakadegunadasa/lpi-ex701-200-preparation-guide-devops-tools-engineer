@@ -35,24 +35,7 @@ The declarative approach defines infrastructure by describing the desired final 
 
 The diagram below illustrates how an enterprise architect views this decision, derived from the core logic of determining project requirements and organizational readiness for declarative state management.
 
-```mermaid
-graph TD
-    A[Organization Infrastructure Needs] --> B{Scale and Complexity?}
-    B -- High (Enterprise Scale) --> C[Declarative IaC<br/>(Terraform/OpenTofu)]
-    B -- Low/Simple --> D[Imperative Scripts<br/>(Bash/CLI)]
-    
-    C --> C1[Workflow: Describe Desired End State]
-    C --> C2[Tool handles 'How'<br/>Calculates necessary actions]
-    C --> C3[Benefit: Ideal for scale, complex dependency mapping]
-    
-    D --> D1[Workflow: Script exact execution steps]
-    D --> D2[Admin must know 'How'<br/>Handles complex logic manually]
-    D --> D3[Benefit: Quick setup for very small environments]
-
-    C3 --> E(Idempotency Supported Natively)
-    D3 --> F(Idempotency Must be Handled in Code)
-
-```
+![Declarative Paradigm](assets/images/chapter12/12-1-Declarative-Paradigm.png)
 
 **Enterprise Use Case:** For a 701-200 DevOps Tool Engineer, **Declarative IaC is the standard for infrastructure provisioning** due to its scalability, safety (dry-run capability), and ease of use in CI/CD pipelines. Imperative tools are still valuable for *configuration management* (OS-level settings) *inside* the infrastructure provisioned by declarative tools.
 
@@ -103,6 +86,7 @@ provider "aws" {
 }
 
 ```
+
 
 * **Private Registries (For Air-Gapped Environments):** While most use the public Terraform Registry, enterprise network security may require hosting internal versions of providers or restricting access to the internet. Organizations can run private registries to serve trusted, audited provider binaries to their developers.
 
