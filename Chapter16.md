@@ -230,15 +230,11 @@ packer_build_production:
 
 ```
 
----
-
 ## 16.5 Hands-On Lab: Building Automated Hardened Debian 13 Golden Machine Images
 
 ### Lab Scenario
 
 You are tasked with engineering a fully automated, reproducible Packer pipeline that provisions a hardened **Debian 13 (Trixie)** Golden Machine Image. The output artifact must be pre-configured with core system utilities, security baselines, and system hardening configurations, ready for enterprise deployment.
-
----
 
 ### Step 1: Directory Setup
 
