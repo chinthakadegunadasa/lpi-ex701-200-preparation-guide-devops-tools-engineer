@@ -127,25 +127,7 @@ By default, Kubernetes uses a non-isolated flat network model: **any Pod can sen
 
 A `NetworkPolicy` object isolates Pod traffic using standard `podSelector` and `namespaceSelector` fields. To enforce NetworkPolicies, the cluster must run a Container Network Interface (CNI) plugin that supports layer 3/4 filtering (such as **Calico**, **Cilium**, **Weave Net**, or **Kube-Router**). Flannel **does not** enforce NetworkPolicies natively.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        NETWORKPOLICY INGRESS & EGRESS SCOPE                       |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|    [ Ingress Source ]                                    [ Egress Destination ]    |
-|   (namespaceSelector /                                   (ipBlock CIDR /          |
-|      podSelector)                                          podSelector)           |
-|           |                                                     ^                 |
-|           | Allowed Ingress Port 8080                           | Allowed Egress  |
-|           v                                                     | Port 5432       |
-|  +-----------------------------------------------------------------------------+  |
-|  |                          TARGET POD (podSelector)                           |  |
-|  |                          app: payment-processor                             |  |
-|  +-----------------------------------------------------------------------------+  |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-
-```
+![NETWORKPOLICY INGRESS & EGRESS SCOPE](assets/images/chapter11/11-3-NETWORKPOLICY-INGRESS-and-EGRESS-SCOPE.png)
 
 ### Policy Evaluation Rules
 
