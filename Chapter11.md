@@ -56,29 +56,6 @@ Multiple authorization modes can be configured sequentially using the `--authori
 
 Kubernetes RBAC controls authorization using four primary API objects under the `rbac.authorization.k8s.io/v1` API group.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        KUBERNETES RBAC RESOURCE MODEL                             |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  NAMESPACED SCOPE                                                                 |
-|  +---------------------+      RoleBinding      +-------------------------------+  |
-|  |     Role            |---------------------->| Subject                       |  |
-|  | (Rules: API Verbs,  |                       | (User / Group /               |  |
-|  |  Resources, Names)  |                       |  ServiceAccount)              |  |
-|  +---------------------+                       +-------------------------------+  |
-|                                                                ^                  |
-|  CLUSTER-WIDE SCOPE                                            |                  |
-|  +---------------------+   ClusterRoleBinding                  |                  |
-|  |     ClusterRole     |---------------------------------------+                  |
-|  | (Cluster Resources: |                                                          |  |
-|  |  Nodes, PVs, CRDs)  |                                                          |  |
-|  +---------------------+                                                          |  |
-|                                                                                   |
-+-----------------------------------------------------------------------------------+
-
-```
-
 ![KUBERNETES RBAC RESOURCE MODEL](assets/images/chapter11/11-1-KUBERNETES-RBAC-RESOURCE-MODEL.png)
 
 ### RBAC Scope Breakdown
