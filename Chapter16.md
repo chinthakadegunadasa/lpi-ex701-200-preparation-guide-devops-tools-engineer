@@ -8,18 +8,7 @@ This chapter explores the architectural concepts, component mechanisms, and oper
 
 In traditional configuration management, server instances are provisioned as bare operating systems and subsequently configured in-place using tools like Ansible, Puppet, or Chef. Over time, this model can suffer from **configuration drift**, where subtle variations emerge across instances due to failed updates, manually applied hotfixes, or non-deterministic package installations.
 
-```
-TRADITIONAL CONFIGURATION MANAGEMENT (MUTABLE):
-[ Base OS Image ] ──► [ Provision Server ] ──► [ Apply Configuration (Ansible/Chef) ] ──► [ Live Production Server ]
-                                                                                           ▲
-                                                                                           │ (Drift occurs over time via manual changes/patches)
-
-IMMUTABLE INFRASTRUCTURE PATTERN:
-[ Base OS + App Code ] ──► [ Packer Build ] ──► [ Immutable Golden Image (AMI/QCOW2) ] ──► [ Deploy Instance ]
-                                                                                           ▲
-                                                                                           │ (Never patched live; replaced on update)
-
-```
+![TRADITIONAL CONFIGURATION MANAGEMENT](assets/images/chapter16/16-1-TRADITIONAL-CONFIGURATION-MANAGEMENT.png)
 
 ### The Immutable Infrastructure Paradigm
 
