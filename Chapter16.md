@@ -2,8 +2,6 @@
 
 This chapter explores the architectural concepts, component mechanisms, and operational workflows required to build automated, immutable machine image pipelines for enterprise environments. It comprehensively covers the requirements of the **LPI 701-200 DevOps Tools Engineer Exam Objectives** under Subject Area 701.
 
----
-
 ## 16.1 Packer and Cloud-init in Immutable Infrastructure
 
 In traditional configuration management, server instances are provisioned as bare operating systems and subsequently configured in-place using tools like Ansible, Puppet, or Chef. Over time, this model can suffer from **configuration drift**, where subtle variations emerge across instances due to failed updates, manually applied hotfixes, or non-deterministic package installations.
@@ -22,8 +20,6 @@ To eliminate configuration drift and reduce deployment risks, modern enterprise 
 
 * **HashiCorp Packer:** Serves as the build-time engine. It automates the creation of identical machine images across multiple platforms (AWS AMI, OpenStack QCOW2, VMware OVA, GCP Images) from a single source specification.
 * **Cloud-init:** Serves as the launch-time boot engine. It performs early-stage initialization on cloud instances during their first boot cycle (e.g., setting hostnames, expanding storage partitions, configuring network interfaces, injecting SSH public keys).
-
----
 
 ## 16.2 HashiCorp Packer Architecture: Builders, Provisioners, and Post-Processors
 
@@ -113,8 +109,6 @@ build {
 
 ```
 
----
-
 ## 16.3 Automating OS Provisioning via Cloud-Init and Kickstart
 
 When bootstrapping machine images from raw operating system ISO binaries (unattended installation), specialized installer responses are required to automate interactive OS prompts (partitioning, timezone, user creation, network configuration).
@@ -183,8 +177,6 @@ source "qemu" "debian_iso" {
 }
 
 ```
-
----
 
 ## 16.4 Integrating Packer into CI/CD Automated Pipelines
 
@@ -258,8 +250,6 @@ cd packer-debian13-lab
 
 ```
 
----
-
 ### Step 2: Define Automated Installer Preseed Configuration
 
 Create the Debian automated installer configuration file (`http/preseed.cfg`) to perform an unattended installation without interactive prompts:
@@ -322,8 +312,6 @@ d-i finish-install/reboot_in_progress note
 
 ```
 
----
-
 ### Step 3: Write Hardening & Provisioning Shell Scripts
 
 Create `scripts/setup.sh` to apply OS security baselines, install telemetry utilities, and clean up temporary deployment logs:
@@ -379,8 +367,6 @@ Make the script executable:
 chmod +x scripts/setup.sh
 
 ```
-
----
 
 ### Step 4: Construct the Master Packer Template
 
@@ -465,8 +451,6 @@ build {
 
 ```
 
----
-
 ### Step 5: Format, Validate, and Execute the Build
 
 Execute the build pipeline using the Packer CLI:
@@ -486,8 +470,6 @@ packer build debian13.pkr.hcl
 
 ```
 
----
-
 ### Step 6: Verify Build Artifacts
 
 Confirm that the output directory and manifest metadata were generated correctly:
@@ -501,8 +483,6 @@ cat manifest.json
 
 ```
 
----
-
 ## Self-Assessment & Exam Practice Questions
 
 **Question 1**: An administrator needs to build identical machine images for both AWS and VMware vSphere using HashiCorp Packer. Which block in the Packer template defines the target platform mechanisms used to spin up instances and produce snapshots?
@@ -514,9 +494,7 @@ cat manifest.json
 
 **Answer**: **B**
 
-*Explanation*: The `source` block defines the platform builders (such as `amazon-ebs` or `vsphere-iso`) that interact with target environments, launch build instances, and snapshot output artifacts.
-
----
+*Explanation*: The `source` block defines the platform builders (such as `amazon-ebs` or `vsphere-iso`) that interact with target environments, launch build instances, and snapshot output artifacts.\
 
 **Question 2**: Which utility is primarily responsible for performing first-boot machine customization (e.g., expanding root volumes, writing network configs, injecting public keys) on cloud instances deployed from an immutable Golden Image?
 
@@ -528,8 +506,6 @@ cat manifest.json
 **Answer**: **A**
 
 *Explanation*: `cloud-init` is the standard multi-distribution package used to handle early instance initialization on first boot within cloud and virtualization environments.
-
----
 
 **Question 3**: In a CI/CD pipeline running automated Packer builds, what is the best practice for passing cloud vendor secret access keys to the build template?
 
