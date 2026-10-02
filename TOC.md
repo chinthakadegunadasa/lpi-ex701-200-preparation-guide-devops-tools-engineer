@@ -126,9 +126,9 @@ Table of Contents
 ## Chapter 17: Enterprise Git Workflows & Internal Internals
 ### 17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)
 ### 17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching
-### 7.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
+### 17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
 ### 17.4 Client-Side and Server-Side Git Hooks
-###   17.5 **Hands-On Lab:** Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
+### 17.5 **Hands-On Lab:** Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
 
 ## Chapter 18: Continuous Integration Architecture
 ### 18.1 Continuous Integration Core Principles and Artifact Management
