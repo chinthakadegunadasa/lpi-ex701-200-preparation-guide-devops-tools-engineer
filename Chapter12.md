@@ -20,8 +20,6 @@ The imperative approach defines infrastructure by prescribing the exact sequence
 * Knowledge of the current state is critical before executing the automation.
 * Harder to maintain at scale; subtle differences in current state across environments can cause imperative scripts to fail (lack of idempotency).
 
-
-
 ### Declarative Paradigm
 
 The declarative approach defines infrastructure by describing the desired final state.
@@ -34,8 +32,6 @@ The declarative approach defines infrastructure by describing the desired final 
 * The tool calculates the *diff* between reality and configuration.
 * To modify infrastructure, you edit the configuration file, and the tool creates a new plan.
 * Significantly easier to maintain; naturally supports **idempotency** (running the same configuration multiple times yields the same result without duplicate resource creation).
-
-
 
 The diagram below illustrates how an enterprise architect views this decision, derived from the core logic of determining project requirements and organizational readiness for declarative state management.
 
@@ -60,8 +56,6 @@ graph TD
 
 **Enterprise Use Case:** For a 701-200 DevOps Tool Engineer, **Declarative IaC is the standard for infrastructure provisioning** due to its scalability, safety (dry-run capability), and ease of use in CI/CD pipelines. Imperative tools are still valuable for *configuration management* (OS-level settings) *inside* the infrastructure provisioned by declarative tools.
 
----
-
 ## 12.2 Terraform / OpenTofu Architecture and Provider Ecosystem
 
 To operate Terraform or OpenTofu effectively in an enterprise context, you must understand their core architecture and how they interact with infrastructure interfaces (APIs).
@@ -85,8 +79,6 @@ The power of Terraform and OpenTofu lies in the **Provider Ecosystem**. The tool
 2. Core creates a plan based on the diff between reality and configuration.
 3. When applying, Core passes the plan to the provider.
 4. The provider executes the necessary API calls (e.g., `ec2:RunInstances`) to modify infrastructure.
-
-
 
 ### Enterprise Provider Management
 
@@ -114,8 +106,6 @@ provider "aws" {
 
 * **Private Registries (For Air-Gapped Environments):** While most use the public Terraform Registry, enterprise network security may require hosting internal versions of providers or restricting access to the internet. Organizations can run private registries to serve trusted, audited provider binaries to their developers.
 
----
-
 ## 12.3 Managing State Files: Remote Backends, State Locking, and Security
 
 The State File (`.tfstate`) is the most crucial asset and also the primary security vulnerability in an IaC implementation. In an enterprise team, **you must never store state files locally**. If multiple engineers run Terraform simultaneously against the same infrastructure, state corruption and resource collisions are inevitable.
@@ -136,8 +126,6 @@ Common enterprise backends are prioritized by their ability to support state loc
 1. **S3 (AWS) or GCS (GCP):** Prioritized for high durability and granular access controls (IAM), combined with separate mechanism for locking (DynamoDB for S3).
 2. **Terraform Cloud / OpenTofu Web Console:** Built-in locking, security, and state management.
 3. **Azure Storage:** Integrated locking and security features.
-
-
 
 ### State Locking and Race Condition Avoidance
 
@@ -170,8 +158,6 @@ terraform {
 }
 
 ```
-
----
 
 ## 12.4 State Inspection, Import, and Refactoring Strategies
 
@@ -245,9 +231,7 @@ terraform state mv aws_subnet.public module.app_vpc.aws_subnet.public
 
 ```
 
----
-
-## 12.5 Hands-On Lab: Provisioning Remote State Storage with S3 Backend and Lock Table
+# 12.5 Hands-On Lab: Provisioning Remote State Storage with S3 Backend and Lock Table
 
 ### Lab Overview
 
