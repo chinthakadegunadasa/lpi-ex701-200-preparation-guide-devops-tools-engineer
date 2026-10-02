@@ -2,8 +2,6 @@
 
 This chapter covers the operational mechanics, language constructs, and design patterns required to write enterprise-grade HashiCorp Configuration Language (HCL) code. It maps directly to the **LPI 701-200 DevOps Tools Engineer Exam Objectives** under Subject Area 701 (Infrastructure as Code and Automation).
 
----
-
 ## 13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types
 
 HashiCorp Configuration Language (HCL2) is a declarative, human-readable, and machine-friendly language optimized for defining infrastructure resources. Understanding its underlying syntax rules, block types, and type system is essential for developing predictable IaC configurations.
@@ -70,8 +68,6 @@ variable "database_config" {
 }
 
 ```
-
----
 
 ## 13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
 
@@ -150,8 +146,6 @@ output "db_password" {
 }
 
 ```
-
----
 
 ## 13.3 Enterprise Module Architecture and Reusability
 
@@ -238,8 +232,6 @@ resource "aws_subnet" "subnet" {
 
 ```
 
----
-
 ## 13.4 Resource Lifecycle Management and Workspace Management
 
 Managing infrastructure state safely requires control over resource update behaviors and environment isolates.
@@ -313,8 +305,6 @@ resource "aws_instance" "web" {
 
 ```
 
----
-
 ## 13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning
 
 ### Objective
@@ -332,8 +322,6 @@ mkdir -p terraform-lab13/modules/compute
 cd terraform-lab13
 
 ```
-
----
 
 ### Step 2: Build the Child Compute Module
 
@@ -419,8 +407,6 @@ output "private_ip" {
 }
 
 ```
-
----
 
 ### Step 3: Configure Root Module and Invocation
 
@@ -521,8 +507,6 @@ output "deployed_node_details" {
 
 ```
 
----
-
 ### Step 4: Validate, Plan, and Apply
 
 Execute the standard validation and deployment workflow:
@@ -541,8 +525,6 @@ terraform plan -out=tfplan.binary
 terraform apply tfplan.binary
 
 ```
-
----
 
 ### Step 5: Verification and Cleanup
 
