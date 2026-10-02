@@ -46,8 +46,6 @@ ssh_args        = -o ControlMaster=auto -o ControlPersist=60s -o StrictHostKeyCh
 * **Pipelining (`pipelining = True`):** Bypasses the file-transfer step (`SFTP`/`SCP`) by piping Python scripts directly into the SSH session stdin. This significantly improves task execution performance across large fleets.
 * **ControlPersist (`ControlPersist=60s`):** Reuses established SSH sockets for subsequent commands executed against the same target within the specified idle window.
 
----
-
 ## 14.2 Inventory Files (Static vs. Dynamic Inventory Engines)
 
 Ansible manages targets defined in an **inventory**. An inventory maps managed targets to logical groups for targeted configuration execution.
@@ -135,8 +133,6 @@ ansible-inventory -i aws_ec2.yaml --list
 ansible-inventory -i aws_ec2.yaml --graph
 ```
 
----
-
 ## 14.3 Writing Idempotent Ansible Tasks and Playbooks
 
 **Idempotency** ensures that executing an Ansible task multiple times results in the same system state as running it once, without causing unintended side effects or redundant changes on subsequent runs.
@@ -160,6 +156,7 @@ Most native Ansible modules (e.g., `ansible.builtin.copy`, `ansible.builtin.pack
 ```
 
 #### Idempotent Guard Pattern
+
 ```yaml
 # GOOD: Constrained using creates or checks
 - name: Uncompress software archive idempotently
@@ -177,8 +174,6 @@ Most native Ansible modules (e.g., `ansible.builtin.copy`, `ansible.builtin.pack
   args:
     creates: /opt/app/init.marker
 ```
-
----
 
 ## 14.4 Variables, Facts, Handlers, and Conditionals
 
@@ -257,16 +252,12 @@ handlers:
       state: restarted
 ```
 
----
-
 ## 14.5 Hands-On Lab: Writing an Idempotent Multi-Tier Application Server Playbook
 
 ### Scenario Overview
 In this lab, you will write a complete, production-grade, idempotent Ansible playbook that configures a multi-tier application stack consisting of:
 1. **Frontend Tier:** Nginx Reverse Proxy
 2. **Application Tier:** Node.js Application service running with systemd
-
----
 
 ### Step 1: Lab Directory Structure Setup
 
@@ -282,8 +273,6 @@ mkdir -p multi-tier-lab/roles/app/tasks
 mkdir -p multi-tier-lab/roles/app/templates
 cd multi-tier-lab
 ```
-
----
 
 ### Step 2: Configure Static Inventory and Variables
 
@@ -312,11 +301,10 @@ node_version: "18"
 domain_name: "app.enterprise.internal"
 ```
 
----
-
 ### Step 3: Develop the Nginx Frontend Role
 
 #### `roles/nginx/handlers/main.yml`
+
 ```yaml
 ---
 - name: Reload Nginx Service
@@ -326,6 +314,7 @@ domain_name: "app.enterprise.internal"
 ```
 
 #### `roles/nginx/templates/nginx_proxy.conf.j2`
+
 ```nginx
 server {
     listen 80;
@@ -363,8 +352,6 @@ server {
     state: started
     enabled: true
 ```
-
----
 
 ### Step 4: Develop the Application Tier Role
 
@@ -468,8 +455,6 @@ server.listen(port, () => {
     state: restarted
 ```
 
----
-
 ### Step 5: Master Site Playbook (`site.yml`)
 
 Create the orchestrator playbook in the root project folder:
@@ -488,8 +473,6 @@ Create the orchestrator playbook in the root project folder:
   roles:
     - nginx
 ```
-
----
 
 ### Step 6: Validate and Run the Playbook
 
