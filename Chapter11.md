@@ -66,8 +66,6 @@ Kubernetes RBAC controls authorization using four primary API objects under the 
 
 > **Key Architectural Pattern**: Binding a `ClusterRole` via a standard `RoleBinding` grants the specified cluster-wide role templates (e.g., standard `view` or `edit` roles) **only** within the target namespace of the `RoleBinding`.
 
----
-
 ### Manifest Examples
 
 #### Role (Namespaced)
