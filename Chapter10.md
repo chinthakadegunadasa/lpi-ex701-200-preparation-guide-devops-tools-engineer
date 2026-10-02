@@ -303,7 +303,7 @@ kubectl exec -it stateful-db-0 -n lab-storage-sec -- df -h /var/lib/postgresql/d
 
 Before moving forward, ensure proficiency in the following key domain concepts:
 
-
+```
 * [ ] Understanding PV access modes (`RWO`, `ROX`, `RWX`, `RWOP`) and reclaim policies (`Retain`, `Delete`).
 * [ ] Differentiating between in-tree volume plugins and out-of-tree CSI driver RPC operations (`CreateVolume`, `NodeStageVolume`, `NodePublishVolume`).
 * [ ] Utilizing ConfigMaps via Environment Variables, `envFrom`, and volume mounts.
@@ -312,4 +312,6 @@ Before moving forward, ensure proficiency in the following key domain concepts:
 ```
 
 ### Summary of Generated Files
+
 - **`Chapter10.md`**: Enterprise-grade guide covering persistent storage, CSI driver architecture, ConfigMaps, Secrets, External Secrets Operator (ESO), HashiCorp Vault integration, and a production lab environment with Ceph CSI.
+  
