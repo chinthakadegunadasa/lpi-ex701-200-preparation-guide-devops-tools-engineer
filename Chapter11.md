@@ -2,8 +2,6 @@
 
 This chapter covers the complete security model of Kubernetes, structured directly for enterprise operations and aligned with the LPI 701-200 (DevOps Tools Engineer) exam objectives. It explores API request validation, fine-grained access management, network isolation controls, pod execution standards, and dynamic request admission.
 
----
-
 ## 11.1 Kubernetes Authentication & Authorization Engine
 
 Every operation in a Kubernetes cluster flows through the `kube-apiserver` via RESTful HTTP calls. To protect state transitions in `etcd`, the API server subjects incoming requests to a three-stage validation pipeline: **Authentication (AuthN)**, **Authorization (AuthZ)**, and **Admission Control**.
@@ -22,9 +20,9 @@ Authentication inspects the HTTP header, client certificates, or bearer tokens t
 * **X.509 Client Certificates**: The API server trusts certificates signed by the Cluster Certificate Authority (CA). The Certificate Subject's Common Name (`CN`) is interpreted as the **User**, and Organization entries (`O`) are mapped to **Groups**.
 * Flag: `--client-ca-file=/etc/kubernetes/pki/ca.crt`
 
-
 * **OpenID Connect (OIDC) Tokens**: Delegates identity verification to external IdPs (Keycloak, Okta, Azure AD, Dex) using OAuth 2.0 JWT tokens.
 * API Server Flags:
+
 ```bash
 --oidc-issuer-url=https://auth.enterprise.internal/auth/realms/master
 --oidc-client-id=kubernetes-cluster
@@ -34,8 +32,6 @@ Authentication inspects the HTTP header, client certificates, or bearer tokens t
 ```
 
 * **ServiceAccount Service Account Tokens**: Short-lived, auto-rotating JSON Web Tokens (JWT) issued via the `TokenRequest` API (bound to Pod life cycles).
-
----
 
 ### Authorization (AuthZ)
 
@@ -49,8 +45,6 @@ Multiple authorization modes can be configured sequentially using the `--authori
 | **Node** | Authorizes API calls made specifically by `kubelet` instances based on assigned workloads. | Node isolation and infrastructure control plane security. |
 | **ABAC** | Evaluates arbitrary field-based policy rules written in JSON files. | Legacy static cluster configurations (requires API server restarts to edit). |
 | **Webhook** | Delegates authorization decisions to an external HTTP REST endpoint (e.g., OPA / Gatekeeper). | Fine-grained or dynamic enterprise policy engine integration. |
-
----
 
 ## 11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
 
@@ -119,8 +113,6 @@ roleRef:
 
 ```
 
----
-
 ## 11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
 
 By default, Kubernetes uses a non-isolated flat network model: **any Pod can send packets to any other Pod across all namespaces**.
@@ -134,8 +126,6 @@ A `NetworkPolicy` object isolates Pod traffic using standard `podSelector` and `
 1. **Default Allow**: If no `NetworkPolicy` selects a Pod, all inbound and outbound traffic to/from that Pod is permitted.
 2. **Default Deny / Isolation**: Once a Pod is selected by *any* `NetworkPolicy`, it isolates that Pod. Unmatched traffic is blocked (implicit drop).
 3. **Additive Policies**: NetworkPolicies are additive. If multiple policies select the same Pod, the allowed rules from all matching policies are combined (OR logic).
-
----
 
 ### Manifest: Ingress & Egress Isolation
 
@@ -176,8 +166,6 @@ spec:
 
 ```
 
----
-
 ## 11.4 Pod Security Standards (PSS) and Admission Controllers
 
 ### Pod Security Standards (PSS)
@@ -211,8 +199,6 @@ metadata:
 
 ```
 
----
-
 ### Dynamic Admission Control Webhooks
 
 When an API request passes Authentication and Authorization, it hits the **Admission Control** phase prior to object persistence in `etcd`.
@@ -223,8 +209,6 @@ Admission controllers run in two sequential stages:
 2. **Validating Admission Webhooks**: Evaluate payloads against specific validation logic. Rejects requests with HTTP `422 Unprocessable Entity` if rules are violated (e.g., blocking `latest` container image tags).
 
 Popular policy engines such as **Kyverno** and **OPA / Gatekeeper** run as dynamic validating and mutating admission webhooks.
-
----
 
 ## 11.5 Hands-On Lab: Implementing Zero-Trust Network Policies and Granular RBAC
 
@@ -237,8 +221,6 @@ Build a zero-trust namespace architecture inside a cluster:
 3. Configure a fine-grained `ServiceAccount` and `Role` to permit limited access.
 4. Verify RBAC rules using `kubectl auth can-i`.
 
----
-
 ### Step 1: Create Namespaces & Apply Pod Security Enforcements
 
 ```bash
@@ -250,8 +232,6 @@ kubectl label namespace secure-backend pod-security.kubernetes.io/enforce=restri
 kubectl label namespace data-tier pod-security.kubernetes.io/enforce=restricted
 
 ```
-
----
 
 ### Step 2: Enforce Default Deny All Network Policies
 
@@ -272,8 +252,6 @@ spec:
 EOF
 
 ```
-
----
 
 ### Step 3: Create Granular RBAC Infrastructure
 
@@ -307,8 +285,6 @@ kubectl create rolebinding developer-rb \
 
 ```
 
----
-
 ### Step 4: Verify Authorization Matrix (`kubectl auth can-i`)
 
 Verify RBAC privileges using `kubectl auth can-i` with the `--as` impersonation flag:
@@ -336,8 +312,6 @@ kubectl auth can-i list pods \
 
 ```
 
----
-
 ## 11.6 Self-Assessment & Exam Practice Questions
 
 **Question 1**: An administrator wants to grant a user permission to list secrets across all namespaces in a cluster using a minimum set of bindings. Which approach should be used?
@@ -351,8 +325,6 @@ kubectl auth can-i list pods \
 
 *Explanation*: `ClusterRole` combined with `ClusterRoleBinding` grants access to resources across all namespaces cluster-wide.
 
----
-
 **Question 2**: You create a `NetworkPolicy` targeting pods with `app: frontend`. The policy explicitly defines an `ingress` rule allowing traffic from `app: gateway`. What happens to traffic from `app: monitoring` attempting to reach `app: frontend` on an unlisted port?
 
 * A) Traffic is allowed because default ingress behavior permits all connections unless explicitly blocked with a Deny rule.
@@ -363,8 +335,6 @@ kubectl auth can-i list pods \
 **Answer**: **C**
 
 *Explanation*: NetworkPolicies are default-deny upon selector match. Once a Pod is selected by a policy, any unallowed traffic is implicitly dropped.
-
----
 
 **Question 3**: What type of Admission Controller should be used if an organization requires all created pods to automatically have a security label (`environment: production`) attached upon request creation?
 
