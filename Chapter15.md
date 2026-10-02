@@ -12,30 +12,7 @@ Ansible Roles provide a framework for fully independent, reusable, and modular a
 
 A standard Ansible Role consists of specific directories. Each directory must contain a `main.yml` file (or `main.yaml`) defining its respective component logic:
 
-```text
-roles/enterprise_webserver/
-├── README.md                   # Documentation on usage, variables, and dependencies
-├── defaults/
-│   └── main.yml                # Lowest priority default variables
-├── vars/
-│   └── main.yml                # High priority non-overrideable role variables
-├── tasks/
-│   ├── main.yml                # Main execution entry point for tasks
-│   ├── install.yml            # Sub-task for package installation
-│   └── configure.yml          # Sub-task for configuration template placement
-├── handlers/
-│   └── main.yml                # Service restart triggers and event handlers
-├── templates/
-│   └── nginx.conf.j2           # Jinja2 configuration templates
-├── files/
-│   └── enterprise_ssl.crt      # Static, non-templated binary or text assets
-├── tests/
-│   ├── inventory              # Test execution inventory
-│   └── test.yml               # Local testing entry point
-└── meta/
-    └── main.yml                # Role metadata, platform requirements, and dependencies
-
-```
+![Enterprise Role Architecture & Directory Standards](assets/images/chapter15/15-1.-1-Enterprise-Role-Architecture-and-Directory-Standards.png)
 
 #### Directory Purpose Reference
 
