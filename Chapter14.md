@@ -2,35 +2,11 @@
 
 This chapter covers the architecture, configuration management principles, inventory control mechanisms, and playbook execution models of Ansible. It directly addresses Subject Area 701 (Configuration Management and Automation) of the **LPI 701-200 DevOps Tools Engineer Exam Objectives**.
 
----
-
 ## 14.1 Agentless Configuration Management Engine & SSH Control
 
 Unlike agent-based configuration management tools (such as Puppet or Chef) that require a daemon running on managed nodes, Ansible utilizes an **agentless architecture**.
 
-```
-+-------------------------------------------------------------------------+
-|                       ANSIBLE CONTROL NODE                              |
-|                                                                         |
-|  +-------------------+      +------------------+     +---------------+  |
-|  | Ansible Playbooks | ---> | Execution Engine | --> | Python Engine |  |
-|  +-------------------+      +------------------+     +---------------+  |
-+--------------------------------------|----------------------------------+
-                                       |
-                       OpenSSH / SFTP / WinRM Protocol
-                                       |
-          +----------------------------+----------------------------+
-          |                                                         |
-          v                                                         v
-+------------------------------------+    +------------------------------------+
-|          MANAGED NODE 1            |    |          MANAGED NODE 2            |
-| (Linux Target - Python Required)   |    | (Windows Target - WinRM/PowerShell)|
-|                                    |    |                                    |
-| +--------------------------------+ |    | +--------------------------------+ |
-| | Ephemeral Module Executed      | |    | | Ephemeral PowerShell Executed   | |
-| +--------------------------------+ |    | +--------------------------------+ |
-+------------------------------------+    +------------------------------------+
-```
+![ANSIBLE CONTROL NODE](assets/images/chapter14/14-1-ANSIBLE-CONTROL-NODE.png)
 
 ### Operational Mechanics
 
