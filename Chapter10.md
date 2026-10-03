@@ -136,7 +136,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 
 ### Built-In Secret Types
 
-![Kubernetes Built-In Secret Types](aassets/images/chapter10/10-4-BUILT-IN-SECRET-TYPES.png)
+![Kubernetes Built-In Secret Types](assets/images/chapter10/10-4-BUILT-IN-SECRET-TYPES.png)
 ### Native Secrets Security Limitations
 
 1. **Base64 Encoding**: Native Secret objects are only base64-encoded, **not encrypted**, when stored or queried unless Encryption at Rest is explicitly configured on the API server.
