@@ -102,15 +102,7 @@ GitFlow utilizes strict separation of roles across multiple long-running branche
 
 Trunk-Based Development enforces a single active branch (`main`/`trunk`). Engineers push micro-commits directly to `main` or via short-lived feature branches (<24-hour lifetime).
 
-```text
-main (trunk) ───●───●───●───●───●───●───●───●───●───●───●───► (CD Pipeline / Production)
-                │       ▲   │       ▲
-                │       │   │       │
-feat/short-1    └───●───┘   │       │   (Branches merged within hours)
-                            │       │
-feat/short-2                └───●───┘
-
-```
+![Trunk-Based Development](assets/images/chapter17/17-2-2-Trunk-Based-Development.png)
 
 * Eliminates long-lived branch drift and large merge conflicts.
 * Relies heavily on **Feature Flags** (Feature Toggles) in source code to decouple code deployment from feature release.
