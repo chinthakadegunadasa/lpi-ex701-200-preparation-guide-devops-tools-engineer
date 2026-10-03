@@ -15,7 +15,7 @@ Kubernetes separates storage allocation from infrastructure consumption through 
 
 When a user deletes a PVC bound to a PV, the reclaim policy defined on the PV tells the cluster how to treat the underlying physical storage asset:
 
-![Kubernetes PV Reclaim Policies](assets/images/chapter10/10-1-Storage-Reclamation-Policies.png)
+![Kubernetes PV Reclaim Policies](assets/images/chapter10/10-1-STORAGE-RECLAIM-POLICIES.png)
 
 ### Access Modes
 
