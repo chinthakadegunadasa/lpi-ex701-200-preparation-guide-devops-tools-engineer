@@ -59,7 +59,6 @@ git cat-file -s 8f3a2c4b...
 
 # 5. Display the formatted CONTENTS of an object
 git cat-file -p 8f3a2c4b...
-
 ```
 
 ## 17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching
@@ -236,14 +235,6 @@ SERVER-SIDE HOOKS (Remote Repository / Git Server):
 
 ![Hook Execution Matrix](assets/images/chapter17/17-4-Hook-Execution-Matrix.png)
 
-| Hook Name | Location | Trigger Event | Primary Enterprise Use Case |
-| --- | --- | --- | --- |
-| `pre-commit` | Client | Executed before commit message prompt | Linting, secret scanning, code formatting |
-| `commit-msg` | Client | Executed after commit message creation | Enforce conventional commit standards |
-| `pre-push` | Client | Executed before remote push transmission | Run fast local unit tests |
-| `pre-receive` | Server | Executed when push is received | Block non-compliant code, enforce branch rules |
-| `post-receive` | Server | Executed after objects are updated | Trigger CI/CD pipelines, notify Slack/Jira |
-
 ### Enforcing Pre-Commit Standards (Client-Side)
 
 Client hooks reside under `.git/hooks/`. Files must be executable (`chmod +x`).
@@ -270,7 +261,6 @@ if ! [[ "$COMMIT_MSG" =~ $JIRA_PATTERN ]]; then
     echo "================================================================="
     exit 1
 fi
-
 ```
 
 ### Server-Side Push Guardrails (`pre-receive`)
@@ -306,7 +296,6 @@ while read -r oldrev newrev refname; do
 done
 
 exit 0
-
 ```
 
 ## 17.5 Hands-On Lab: Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
@@ -342,7 +331,6 @@ EOF
 
 git add app_config.py
 git commit -m "PROJ-100: Initial application configuration"
-
 ```
 
 ### Step 2: Create Conflicting Concurrent Branches
@@ -362,7 +350,6 @@ EOF
 
 git add app_config.py
 git commit -m "PROJ-101: Expand database connection pooling"
-
 ```
 
 #### Create Branch `feature/security-hardening` (Off Base Commit)
@@ -384,7 +371,6 @@ EOF
 
 git add app_config.py
 git commit -m "PROJ-102: Enforce SSL and disable verbose logging"
-
 ```
 
 ### Step 3: Trigger and Resolve the Conflict
@@ -393,7 +379,6 @@ Merge `feature/database-pool` into `feature/security-hardening`:
 
 ```bash
 git merge feature/database-pool
-
 ```
 
 #### Expected Terminal Output
@@ -402,7 +387,6 @@ git merge feature/database-pool
 Auto-merging app_config.py
 CONFLICT (content): Merge conflict in app_config.py
 Automatic merge failed; fix conflicts and then commit the result.
-
 ```
 
 #### Inspect Conflict Markers
@@ -423,7 +407,6 @@ MAX_CONNECTIONS = 100
 POOL_TIMEOUT = 30
 ENABLE_LOGGING = True
 >>>>>>> feature/database-pool
-
 ```
 
 #### Resolve Conflict Manually
@@ -437,7 +420,6 @@ MAX_CONNECTIONS = 100
 POOL_TIMEOUT = 30
 ENABLE_LOGGING = False
 SSL_MODE = "verify-full"
-
 ```
 
 #### Finalize the Merge
@@ -445,7 +427,6 @@ SSL_MODE = "verify-full"
 ```bash
 git add app_config.py
 git commit -m "PROJ-103: Merge feature/database-pool into feature/security-hardening with resolved config"
-
 ```
 
 ### Step 4: Build Automated Pre-Commit Security Hook
@@ -479,7 +460,6 @@ EOF
 
 # Grant execution permissions to hook
 chmod +x .git/hooks/pre-commit
-
 ```
 
 ### Step 5: Test and Validate the Pre-Commit Hook
@@ -497,7 +477,6 @@ EOF
 
 git add deploy_key.pem
 git commit -m "PROJ-104: Add deployment key"
-
 ```
 
 #### Expected Terminal Output
@@ -509,7 +488,6 @@ COMMIT REJECTED BY PRE-COMMIT SECURITY SCAN!
 Staged changes contain confidential credentials or private keys.
 Review diffs using 'git diff --cached' before retrying.
 =================================================================
-
 ```
 
 #### 2. Clean Up and Verify
@@ -518,7 +496,6 @@ Unstage and remove the invalid key file:
 
 ```bash
 git rm -f deploy_key.pem
-
 ```
 
 Commit a valid change to confirm the hook allows compliant commits:
@@ -527,7 +504,6 @@ Commit a valid change to confirm the hook allows compliant commits:
 echo "# Verified enterprise app config" >> README.md
 git add README.md
 git commit -m "PROJ-105: Add documentation verifying app configuration"
-
 ```
 
 #### Expected Terminal Output
