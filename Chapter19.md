@@ -143,6 +143,8 @@ graph LR
 
 ```
 
+![MULTI-STAGE PIPELINE LOGIC](assets/images/chapter19/19-1-MULTI-STAGE-PIPELINE-LOGIC.png)
+
 ### 19.3.2 Stage Breakdown
 
 * **Build:** The first stage. Compiles the source code into a binary artifact (e.g., a `.jar`, `.tar.gz`, or executable). Dependencies are resolved here.
