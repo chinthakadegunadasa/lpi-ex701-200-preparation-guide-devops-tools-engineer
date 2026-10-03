@@ -2,8 +2,6 @@
 
 This chapter covers the low-level internals, object models, advanced branch management techniques, and automation hooks within Git. It aligns directly with the **LPI 701-200 DevOps Tools Engineer Exam Objectives** under Subject Area 701 (Software Configuration Management and Architecture).
 
----
-
 ## 17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)
 
 At its core, Git is a content-addressable filesystem topped by a Version Control System (VCS) interface. Every object stored within Git—whether a file, directory structure, commit history, or tag—is indexed using a 160-bit SHA-1 hash (or 256-bit SHA-256 hash in modern configurations) computed from its contents and headers.
@@ -12,26 +10,7 @@ At its core, Git is a content-addressable filesystem topped by a Version Control
 
 Understanding the internal structure of the `.git` directory is crucial for low-level troubleshooting and recovery:
 
-```text
-.git/
-├── HEAD                    # Points to the currently checked-out branch or commit hash
-├── config                  # Repository-specific configuration parameters
-├── description             # Used by GitWeb/bare repos to describe the repository
-├── hooks/                  # Client-side and server-side hook scripts
-├── info/
-│   └── exclude             # Repository-specific local ignore file (untracked in VCS)
-├── objects/                # Object database storing blobs, trees, commits, and tags
-│   ├── [0-9a-f][0-9a-f]/   # Loose objects partitioned by first two hex characters
-│   ├── pack/               # Compressed packfiles and index mappings (.pack, .idx)
-│   └── info/               # Packfile metadata
-└── refs/                   # References to commit hashes
-    ├── heads/              # Local branch pointers (e.g., refs/heads/main)
-    ├── remotes/            # Remote tracking pointers (e.g., refs/remotes/origin/main)
-    └── tags/               # Annotated and lightweight tag pointers
-
-```
-
----
+![The `.git` Directory Hierarchy](assets/images/chapter17/The-.gitt-Directory-Hierarchy.png)
 
 ### The Four Core Git Object Types
 
