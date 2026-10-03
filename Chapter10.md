@@ -73,7 +73,7 @@ The Container Storage Interface (CSI) standardizes the out-of-tree interface bet
 
 ConfigMaps store non-confidential configuration data as key-value pairs, decoupling application binaries from platform configuration.
 
-![Kubernetes PV Reclaim Policies](assets/images/chapter10/10-3.Kubernetes-ConfigMap-Consumption-Patterns.png)
+![Kubernetes PV Reclaim Policies](assets/images/chapter10/10-3-CONFIGMAP-CONSUMPTION-PATTERNS.png)
 
 ### Production ConfigMap Manifest with Multi-Pattern Consumption
 
