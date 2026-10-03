@@ -234,6 +234,8 @@ SERVER-SIDE HOOKS (Remote Repository / Git Server):
 
 #### Hook Execution Matrix
 
+![Hook Execution Matrix](assets/images/chapter17/17-4-Hook-Execution-Matrix.png)
+
 | Hook Name | Location | Trigger Event | Primary Enterprise Use Case |
 | --- | --- | --- | --- |
 | `pre-commit` | Client | Executed before commit message prompt | Linting, secret scanning, code formatting |
@@ -241,7 +243,6 @@ SERVER-SIDE HOOKS (Remote Repository / Git Server):
 | `pre-push` | Client | Executed before remote push transmission | Run fast local unit tests |
 | `pre-receive` | Server | Executed when push is received | Block non-compliant code, enforce branch rules |
 | `post-receive` | Server | Executed after objects are updated | Trigger CI/CD pipelines, notify Slack/Jira |
-
 
 ### Enforcing Pre-Commit Standards (Client-Side)
 
@@ -555,10 +556,10 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 
 **Question 2**: An operations team needs to enforce a policy where pushes containing invalid commit message formats are rejected at the remote repository level before objects are written. Which Git hook must be deployed on the central Git server?
 
-* A) `pre-commit`
-* B) `pre-receive`
-* C) `post-commit`
-* D) `pre-push`
+A) `pre-commit`
+B) `pre-receive`
+C) `post-commit`
+D) `pre-push`
 
 **Answer**: **B**
 
