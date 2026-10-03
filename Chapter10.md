@@ -152,7 +152,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 
 Deploy an enterprise-grade setup consisting of a Ceph CSI StorageClass for dynamic storage provisioning, along with the External Secrets Operator (ESO) syncing sensitive credentials from HashiCorp Vault into native Kubernetes Secrets.
 
-![Hands-on lab architecture diagram](assets/images/chapter10/10-5-Hands-on-Lab-Architecture-Diagram.png)
+![Hands-on lab architecture diagram](assets/images/chapter10/10-5-LAB-ARCHITECTURE-TARGET.png)
 
 ### Step 1: Configure Namespace and StorageClass for Ceph CSI
 
