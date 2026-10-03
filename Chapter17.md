@@ -545,10 +545,10 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 
 **Question 1**: Which low-level Git object stores directory paths, POSIX file permissions, and maps relative filenames to their respective SHA-1 object references?
 
-- A) Commit object
-- B) Blob object
-- C) Tree object
-- D) Tag object
+A) Commit object
+B) Blob object
+C) Tree object
+D) Tag object
 
 **Answer**: **C**
 
@@ -556,10 +556,10 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 
 **Question 2**: An operations team needs to enforce a policy where pushes containing invalid commit message formats are rejected at the remote repository level before objects are written. Which Git hook must be deployed on the central Git server?
 
-- A) `pre-commit`
-- B) `pre-receive`
-- C) `post-commit`
-- D) `pre-push`
+A) `pre-commit`
+B) `pre-receive`
+C) `post-commit`
+D) `pre-push`
 
 **Answer**: **B**
 
@@ -567,10 +567,10 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 
 **Question 3**: An engineer wants to isolate a regression in a codebase containing 500 commits between release `v1.0` and `v2.0`. Which Git command uses binary search to identify the exact commit that introduced the bug automatically?
 
-- A) `git rebase -i`
-- B) `git cherry-pick`
-- C) `git bisect`
-- D) `git reflog`
+A) `git rebase -i`
+B) `git cherry-pick`
+C) `git bisect`
+D) `git reflog`
 
 **Answer**: **C**
 
