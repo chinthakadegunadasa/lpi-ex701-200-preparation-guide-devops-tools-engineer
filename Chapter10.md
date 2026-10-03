@@ -9,7 +9,7 @@ Kubernetes separates storage allocation from infrastructure consumption through 
 ### Storage Lifecycle Architecture
 
 
-![Kubernetes Storage binding model](assets/images/chapter10/10-1-Kubernetes-Storage-binding-model.png)
+![Kubernetes Storage binding model](assets/images/chapter10/10-1-STORAGE-BINDING-AND-LIFECYCLE.png)
 
 ### Storage Reclamation Policies
 
