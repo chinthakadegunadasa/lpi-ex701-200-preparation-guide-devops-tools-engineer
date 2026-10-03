@@ -144,7 +144,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 
 ### External Secrets Operator (ESO) & Vault Integration Architecture
 
-![](assets/images/chapter10/10-4-External-Secrets-Operator.png)
+![External Secrets Operator](assets/images/chapter10/10-4-EXTERNAL-SECRETS-INTEGRATION-FLOW.png)
 
 ## 10.5 Hands-On Lab: Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
 
