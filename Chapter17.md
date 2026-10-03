@@ -10,28 +10,11 @@ At its core, Git is a content-addressable filesystem topped by a Version Control
 
 Understanding the internal structure of the `.git` directory is crucial for low-level troubleshooting and recovery:
 
-![The `.git` Directory Hierarchy](assets/images/chapter17/The-.gitt-Directory-Hierarchy.png)
+![The `.git` Directory Hierarchy](assets/images/chapter17/17-1-The-.gitt-Directory-Hierarchy.png)
 
 ### The Four Core Git Object Types
 
-```text
-+---------------------------------------------------------------------------------+
-|                              GIT OBJECT DATABASE                                |
-|                                                                                 |
-|  +------------------+         +-----------------+         +------------------+  |
-|  |   TAG OBJECT     |  ───►   |  COMMIT OBJECT  |  ───►   |   TREE OBJECT    |  |
-|  | (GPG key, tagger,|         | (Author, committer|       | (Directory table |  |
-|  |  target commit)  |         |  parents, tree) |         |  modes, hashes)  |  |
-|  +------------------+         +-----------------+         +------------------+  |
-|                                                                    │            |
-|                                                                    ▼            |
-|                                                           +------------------+  |
-|                                                           |   BLOB OBJECT    |  |
-|                                                           | (Raw file data)  |  |
-|                                                           +------------------+  |
-+---------------------------------------------------------------------------------+
-
-```
+![GIT OBJECT DATABASE](assets/images/chapter17/17-1-GIT-OBJECT-DATABASE.png)
 
 #### 1. Blob (Binary Large Object)
 
