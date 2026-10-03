@@ -61,8 +61,7 @@ message AuditLogResponse {
 }
 ```
 
-![API Protocol Interaction Patterns](assets/images/chapter1/1-2-API-Protocol-Interaction-Patterns.png)
-
+![API Protocol Interaction Patterns](assets/images/chapter1/1-2-API-Protocol-Interaction-Pattern.png)
 ## 1.3 Event-Driven Architecture & Message Queuing
 
 Event-Driven Architecture (EDA) decouples producers and consumers using event brokers, providing asynchronous execution, buffering, and message replay capabilities.
