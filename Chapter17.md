@@ -88,22 +88,7 @@ Choosing an appropriate branching strategy directly influences CI/CD release fre
 
 GitFlow utilizes strict separation of roles across multiple long-running branches.
 
-```text
-main     ───────────────────────────────────────● (v1.0.0) ─────────────────────────● (v1.0.1)
-                                               ▲                                   ▲
-                                               │ (Merge Release)                   │ (Merge Hotfix)
-release/v1.0                 ┌───●─────────────┘                                   │
-                            │                                                      │
-develop  ───●───────●───────┴───────●───────────────────────────────●──────────────┼───
-            │       ▲               ▲                               ▲              │
-            │       │               │                               │              │
-feature/A   └─●─────┘               │                               │              │
-                                    │                               │              │
-hotfix/1.0.1                        └───────────────────────────────┼──────────────┘
-                                                                    │
-feature/B                                   └─────────●─────────────┘
-
-```
+![GitFlow Model](assets/images/chapter17/17-2-1-GitFlow-Model.png)
 
 * **`main`**: Stores official production history. Every commit is tagged with a release version.
 * **`develop`**: Serves as the integration branch for features.
