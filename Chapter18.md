@@ -2,8 +2,6 @@
 
 This chapter covers enterprise Continuous Integration (CI) architectures, artifact lifecycle management, dependency caching mechanisms, static code quality gates, and secure private registries, aligning with the **LPI 701-200 DevOps Tools Engineer Exam Objectives** under Subject Area 702 (Continuous Delivery and Infrastructure Automation).
 
----
-
 ## 18.1 Continuous Integration Core Principles and Artifact Management
 
 Continuous Integration (CI) is a software engineering practice where developers regularly merge their code changes into a central repository. Every push triggers an automated build and test sequence to detect integration bugs early and ensure trunk stability.
@@ -18,27 +16,20 @@ Continuous Integration (CI) is a software engineering practice where developers 
 4. **Immediate Feedback:** Build and test results are reported to the developer within minutes to maintain fast development loops.
 5. **Build Idempotency & Immutaibility:** A built artifact (e.g., Jar, Wheel, Container Image) is compiled **once** during the CI phase and promoted through environments (Staging, Production) without recompilation.
 
----
-
 ### The Build Artifact Lifecycle
 
 An **artifact** is a compiled, versioned, and deployable file generated during the CI process.
 
 ```
 [ Developer Commit ] ──► [ CI Engine Compilation ] ──► [ Package & Version Artifact ] ──► [ Publish to Registry ] ──► [ CD Deployment ]
-
 ```
 
 * **Transient Workspace Files:** Intermediate files (such as `.o`, `.class`, or temporary test logs) generated during compilation that are discarded after build completion.
 * **Release Artifacts:** Immutable binary archives (e.g., `.tar.gz`, `.rpm`, `.deb`, `.jar`, `.whl`) or OCI container images tagged with unique, immutable versions (semantic versioning or Git commit SHAs).
 
----
-
 ## 18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)
 
 In enterprise ecosystems, raw binaries and container images should never be checked directly into Git repositories. Instead, **Artifact Registries** act as single sources of truth for storing, versioning, scanning, and distributing build outputs.
-
----
 
 ### Enterprise Registry Types
 
@@ -48,8 +39,6 @@ In enterprise ecosystems, raw binaries and container images should never be chec
 | **Language Package Registries** | Nexus, Artifactory, PyPI, npm, Maven | `.whl` (Python), `.jar` (Java), Node modules, Gems |
 | **OS Package Repositories** | Nexus, Artifactory, Aptly, Repoman | `.deb` (Debian/Ubuntu), `.rpm` (RHEL/Rocky/Fedora) |
 | **Container & Helm Registries** | Harbor, Quay, AWS ECR, Docker Hub | OCI Container Images, Helm Charts (`.tgz`) |
-
----
 
 ### Proxy, Hosted, and Virtual Repositories
 
@@ -61,29 +50,6 @@ Enterprise registries like Nexus and Artifactory structure repositories into thr
 
 ![VIRTUAL REPOSITORY](assets/images/chapter18/18-2-VIRTUAL-REPOSITORY.png)
 
-```
-                                  +---------------------------------------+
-                                  |         VIRTUAL REPOSITORY            |
-                                  |     (Single Client Endpoint)          |
-                                  +---------------------------------------+
-                                                     │
-                         ┌───────────────────────────┴───────────────────────────┐
-                         ▼                                                       ▼
-        +---------------------------------+                     +---------------------------------+
-        |        HOSTED REPOSITORY        |                     |        PROXY REPOSITORY         |
-        |   (Internal Enterprise Builds)  |                     |  (Cached Upstream Dependencies) |
-        +---------------------------------+                     +---------------------------------+
-                                                                                 │
-                                                                                 ▼
-                                                                     +-----------------------+
-                                                                     |   PUBLIC UPSTREAM     |
-                                                                     | (PyPI/npm/DockerHub)  |
-                                                                     +-----------------------+
-
-```
-
----
-
 ## 18.3 Automated Build Engines and Dependency Caching Strategies
 
 Continuous Integration engines (such as GitLab CI runners, GitHub Actions runners, or Jenkins agents) download project dependencies during build steps. Without caching, downloading external packages repeatedly slows down pipelines and increases bandwidth usage.
@@ -92,8 +58,6 @@ Continuous Integration engines (such as GitLab CI runners, GitHub Actions runner
 
 * **Cache:** Temporary storage for external dependencies (e.g., `~/.m2`, `node_modules/`, `~/.cache/pip`). Caches persist across pipeline runs to speed up execution, but missing cache entries do not break the build.
 * **Artifacts:** Formal outputs generated by a pipeline stage (e.g., compiled binary, code coverage report) that are explicitly passed to subsequent pipeline stages or published to a registry.
-
----
 
 ### Enterprise Caching Strategies in GitLab CI & GitHub Actions
 
@@ -133,7 +97,6 @@ test_job:
   script:
     - source venv/bin/activate
     - pytest tests/
-
 ```
 
 #### 2. Docker Layer Caching (BuildKit & Inline Cache)
@@ -152,10 +115,7 @@ docker build \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --cache-from registry.enterprise.internal/app/backend:latest \
   -t registry.enterprise.internal/app/backend:v1.2.0 .
-
 ```
-
----
 
 ## 18.4 Code Quality Gates and Static Analysis Integration
 
@@ -166,8 +126,6 @@ Static Application Security Testing (SAST) and code quality analysis inspect sou
 1. **Linters:** Enforce syntax rules, styling guidelines, and code formatting standards (e.g., `flake8`, `eslint`, `rubocop`).
 2. **SAST Scanners:** Identify security anti-patterns, hardcoded credentials, SQL injection vectors, and buffer overflows (e.g., `bandit`, `semgrep`, `SonarQube`).
 3. **Software Composition Analysis (SCA):** Scans open-source library dependencies for known Common Vulnerabilities and Exposures (CVEs) (e.g., `trivy`, `dependency-check`, `snyk`).
-
----
 
 ### Quality Gate Pipeline Integration
 
@@ -189,15 +147,11 @@ stage_quality:
 
 ```
 
----
-
 ## 18.5 Hands-On Lab: Setting Up a Local Private Container and Artifact Registry with Access Controls
 
 ### Lab Scenario
 
 You are tasked with deploying a secure, production-grade local container and artifact registry infrastructure using **Distribution Registry** and **htpasswd** authentication. You will configure basic access controls, generate TLS encryption certificates, authenticate via Docker CLI, and manage image artifacts.
-
----
 
 ### Step 1: Directory & Security Certificate Initialization
 
@@ -213,10 +167,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
   -out certs/domain.crt \
   -subj "/CN=registry.local/O=CyberGate Services/C=LK" \
   -addext "subjectAltName=DNS:registry.local,IP:127.0.0.1"
-
 ```
-
----
 
 ### Step 2: Configure Authentication Credentials
 
@@ -233,10 +184,7 @@ htpasswd -B -c auth/htpasswd admin
 # Add a read-only developer user
 htpasswd -B auth/htpasswd developer
 # Enter Password: DevRegistryPass2026!
-
 ```
-
----
 
 ### Step 3: Deploy the Private Container Registry Service
 
@@ -264,14 +212,12 @@ services:
       - ./data:/var/lib/registry
       - ./certs:/certs
       - ./auth:/auth
-
 ```
 
 Launch the registry container:
 
 ```bash
 docker compose up -d
-
 ```
 
 Verify service execution:
@@ -300,10 +246,7 @@ sudo update-ca-certificates
 sudo mkdir -p /etc/docker/certs.d/registry.local:5000
 sudo cp certs/domain.crt /etc/docker/certs.d/registry.local:5000/ca.crt
 sudo systemctl restart docker
-
 ```
-
----
 
 ### Step 5: Authenticate, Push, and Manage Artifacts
 
@@ -311,7 +254,6 @@ sudo systemctl restart docker
 
 ```bash
 docker login registry.local:5000 -u admin -p AdminRegistryPass2026!
-
 ```
 
 #### 2. Pull, Tag, and Push a Test Image
@@ -325,7 +267,6 @@ docker tag alpine:3.19 registry.local:5000/infrastructure/alpine:v3.19
 
 # Push the image to the private registry
 docker push registry.local:5000/infrastructure/alpine:v3.19
-
 ```
 
 #### 3. Verify Stored Artifact Catalog via API
@@ -344,45 +285,38 @@ curl -u admin:AdminRegistryPass2026! --cacert certs/domain.crt \
   https://registry.local:5000/v2/infrastructure/alpine/tags/list
 
 # Output: {"name":"infrastructure/alpine","tags":["v3.19"]}
-
 ```
-
----
 
 ## Self-Assessment & Exam Practice Questions
 
 **Question 1**: An enterprise team wants to ensure that external Python dependencies downloaded from PyPI are cached locally so builds succeed even during external internet outages. Which artifact repository configuration mode should be used?
 
-* A) Hosted Repository
-* B) Virtual Repository
-* C) Proxy Repository
-* D) Snapshot Repository
+A) Hosted Repository
+B) Virtual Repository
+C) Proxy Repository
+D) Snapshot Repository
 
 **Answer**: **C**
 
 *Explanation*: A **Proxy Repository** acts as a local mirror cache for public upstream package registries (e.g., PyPI, npm, Maven Central), guaranteeing build reproducibility and resilience against upstream downtime.
 
----
-
 **Question 2**: What is the primary functional difference between a build **Cache** and a build **Artifact** in a CI/CD pipeline?
 
-* A) Caches are versioned and immutable; artifacts are temporary files deleted after execution.
-* B) Caches speed up builds by storing reusable dependencies across pipeline runs; artifacts are formal build outputs passed between stages or published to a registry.
-* C) Artifacts are used exclusively for Docker images; caches are used exclusively for source code files.
-* D) Caches require an external database; artifacts require a Git repository.
+A) Caches are versioned and immutable; artifacts are temporary files deleted after execution.
+B) Caches speed up builds by storing reusable dependencies across pipeline runs; artifacts are formal build outputs passed between stages or published to a registry.
+C) Artifacts are used exclusively for Docker images; caches are used exclusively for source code files.
+D) Caches require an external database; artifacts require a Git repository.
 
 **Answer**: **B**
 
 *Explanation*: Caches store temporary external dependencies across builds to accelerate runtime, whereas artifacts are the formal compiled outputs generated by a build stage.
 
----
-
 **Question 3**: In an enterprise CI quality gate, which type of tool analyzes compiled dependencies against databases of known Common Vulnerabilities and Exposures (CVEs)?
 
-* A) Linter
-* B) Static Application Security Testing (SAST)
-* C) Software Composition Analysis (SCA)
-* D) Dynamic Application Security Testing (DAST)
+A) Linter
+B) Static Application Security Testing (SAST)
+C) Software Composition Analysis (SCA)
+D) Dynamic Application Security Testing (DAST)
 
 **Answer**: **C**
 
