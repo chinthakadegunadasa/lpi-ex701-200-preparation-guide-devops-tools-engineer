@@ -40,8 +40,6 @@ A **commit** links a root tree object to a historical timeline. It contains:
 
 An **annotated tag** creates an explicit reference to a specific commit object. It contains the target commit SHA-1, tag name, tagger details, timestamp, message, and optional cryptographic signature. (Note: *Lightweight tags* are simple pointers stored under `.git/refs/tags/` without creating a dedicated object in `.git/objects/`).
 
----
-
 ### Low-Level Plumbing Commands for Object Inspection
 
 Git commands fall into two categories: **Porcelain** (high-level user commands like `git add`, `git commit`) and **Plumbing** (low-level structural commands like `git cat-file`, `git hash-object`).
@@ -64,8 +62,6 @@ git cat-file -p 8f3a2c4b...
 
 ```
 
----
-
 ## 17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching
 
 Choosing an appropriate branching strategy directly influences CI/CD release frequency, merge conflict probability, and team collaboration speed.
@@ -79,8 +75,6 @@ Choosing an appropriate branching strategy directly influences CI/CD release fre
 | **Integration Frequency** | Low (at end of release cycle) | High (multiple times per day) | Medium (upon feature completion) |
 | **Deployment Target** | Scheduled enterprise releases | Continuous Deployment (CD) | Continuous Integration (CI) |
 | **Complexity / Overhead** | High branch maintenance overhead | Low overhead; requires feature flags | Moderate overhead |
-
----
 
 ### Branching Model Architectures
 
@@ -96,8 +90,6 @@ GitFlow utilizes strict separation of roles across multiple long-running branche
 * **`release/*`**: Forked off `develop` when a release scope is met; only bug fixes and documentation are committed here before merging to both `main` and `develop`.
 * **`hotfix/*`**: Forked directly off `main` to address critical production issues; merged back to both `main` and `develop`.
 
----
-
 #### 2. Trunk-Based Development (TBD)
 
 Trunk-Based Development enforces a single active branch (`main`/`trunk`). Engineers push micro-commits directly to `main` or via short-lived feature branches (<24-hour lifetime).
@@ -107,8 +99,6 @@ Trunk-Based Development enforces a single active branch (`main`/`trunk`). Engine
 * Eliminates long-lived branch drift and large merge conflicts.
 * Relies heavily on **Feature Flags** (Feature Toggles) in source code to decouple code deployment from feature release.
 * Demands automated unit and integration tests executing within robust CI pipelines.
-
----
 
 ## 17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
 
@@ -154,8 +144,6 @@ drop 7b8c9d0 chore: clean up debug print statements
 
 ```
 
----
-
 ### Cherry-Picking (`git cherry-pick`)
 
 `cherry-pick` applies the exact patch introduced by an existing commit from another branch onto the current working branch.
@@ -171,8 +159,6 @@ git cherry-pick e4f2a1b
 git cherry-pick -n 9c8b7a6
 
 ```
-
----
 
 ### Automated Binary Search Regression Isolator (`git bisect`)
 
@@ -208,8 +194,6 @@ git bisect run pytest tests/test_payment_gateway.py
 
 ```
 
----
-
 ### Advanced Stashing Options (`git stash`)
 
 `git stash` shelves uncommitted changes (staged and unstaged) for later retrieval.
@@ -231,8 +215,6 @@ git stash pop
 git stash apply stash@{1}
 
 ```
-
----
 
 ## 17.4 Client-Side and Server-Side Git Hooks
 
@@ -260,7 +242,6 @@ SERVER-SIDE HOOKS (Remote Repository / Git Server):
 | `pre-receive` | Server | Executed when push is received | Block non-compliant code, enforce branch rules |
 | `post-receive` | Server | Executed after objects are updated | Trigger CI/CD pipelines, notify Slack/Jira |
 
----
 
 ### Enforcing Pre-Commit Standards (Client-Side)
 
@@ -290,8 +271,6 @@ if ! [[ "$COMMIT_MSG" =~ $JIRA_PATTERN ]]; then
 fi
 
 ```
-
----
 
 ### Server-Side Push Guardrails (`pre-receive`)
 
@@ -329,8 +308,6 @@ exit 0
 
 ```
 
----
-
 ## 17.5 Hands-On Lab: Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
 
 ### Objective
@@ -340,8 +317,6 @@ In this lab, you will simulate a enterprise scenario:
 1. Initialize a local repository and simulate concurrent conflicting edits across two branches.
 2. Resolve complex structural merge conflicts using low-level Git diagnostic utilities.
 3. Construct and deploy a client-side `pre-commit` hook that scans for accidentally committed private keys and hardcoded passwords before commits are finalized.
-
----
 
 ### Step 1: Initialize Workspace & Base Repository
 
@@ -368,8 +343,6 @@ git add app_config.py
 git commit -m "PROJ-100: Initial application configuration"
 
 ```
-
----
 
 ### Step 2: Create Conflicting Concurrent Branches
 
@@ -412,8 +385,6 @@ git add app_config.py
 git commit -m "PROJ-102: Enforce SSL and disable verbose logging"
 
 ```
-
----
 
 ### Step 3: Trigger and Resolve the Conflict
 
@@ -476,8 +447,6 @@ git commit -m "PROJ-103: Merge feature/database-pool into feature/security-harde
 
 ```
 
----
-
 ### Step 4: Build Automated Pre-Commit Security Hook
 
 Create a custom executable `pre-commit` hook to scan staged files for private keys or AWS credentials before allowing a commit:
@@ -511,8 +480,6 @@ EOF
 chmod +x .git/hooks/pre-commit
 
 ```
-
----
 
 ### Step 5: Test and Validate the Pre-Commit Hook
 
@@ -573,8 +540,6 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 
 ```
 
----
-
 ## Self-Assessment & Exam Practice Questions
 
 **Question 1**: Which low-level Git object stores directory paths, POSIX file permissions, and maps relative filenames to their respective SHA-1 object references?
@@ -588,8 +553,6 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 
 *Explanation*: A **Tree object** represents a directory listing. It maps file names, permissions, and modes to child blob objects or nested tree objects.
 
----
-
 **Question 2**: An operations team needs to enforce a policy where pushes containing invalid commit message formats are rejected at the remote repository level before objects are written. Which Git hook must be deployed on the central Git server?
 
 * A) `pre-commit`
@@ -600,8 +563,6 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 **Answer**: **B**
 
 *Explanation*: The `pre-receive` hook executes on the remote Git server when handling incoming pushes. If the script exits with a non-zero code, the push transaction is aborted completely.
-
----
 
 **Question 3**: An engineer wants to isolate a regression in a codebase containing 500 commits between release `v1.0` and `v2.0`. Which Git command uses binary search to identify the exact commit that introduced the bug automatically?
 
