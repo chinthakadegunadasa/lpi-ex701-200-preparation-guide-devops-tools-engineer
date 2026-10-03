@@ -59,6 +59,8 @@ Enterprise registries like Nexus and Artifactory structure repositories into thr
 2. **Proxy Repositories:** External mirror caches pointing to public upstream repositories (e.g., PyPI, npm registry, Maven Central, Docker Hub). They cache external dependencies locally to accelerate builds and ensure availability during upstream outages.
 3. **Virtual Repositories:** Unified logical endpoints combining multiple Hosted and Proxy repositories under a single access URL.
 
+![VIRTUAL REPOSITORY](assets/images/chapter18/18-2-VIRTUAL-REPOSITORY.png)
+
 ```
                                   +---------------------------------------+
                                   |         VIRTUAL REPOSITORY            |
