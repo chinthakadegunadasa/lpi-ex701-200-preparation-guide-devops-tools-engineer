@@ -10,23 +10,7 @@ Continuous Integration (CI) is a software engineering practice where developers 
 
 ### Core CI Principles
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                CONTINUOUS INTEGRATION PIPELINE                                    |
-|                                                                                                   |
-|  +--------------------+        +------------------------------+        +-----------------------+  |
-|  |   SOURCE CONTROL   |  ───►  |      AUTOMATED BUILD         |  ───►  |   STATIC ANALYSIS     |  |
-|  |  (Git Commit/Push) |        |   (Compile & Unit Tests)     |        | (Quality Gates/Sonar) |  |
-|  +--------------------+        +------------------------------+        +-----------------------+  |
-|                                                                                    │              |
-|                                                                                    ▼              |
-|                                                                        +-----------------------+  |
-|                                                                        |   ARTIFACT PUBLISH    |  |
-|                                                                        | (Versioned Binary/Img)|  |
-|                                                                        +-----------------------+  |
-+---------------------------------------------------------------------------------------------------+
-
-```
+![Core CI Principles](assets/images/chapter18/18-1-CONTINUOUS-INTEGRATION-PIPELINE.png)
 
 1. **Single Source Repository:** All project assets—including source code, IaC templates, configuration scripts, and pipeline definitions—must reside in a centralized, version-controlled repository.
 2. **Automated Build Execution:** Every commit to the primary branch (or via pull/merge requests) automatically initiates an isolated build environment without manual intervention.
