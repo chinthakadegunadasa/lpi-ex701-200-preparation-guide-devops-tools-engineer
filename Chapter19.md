@@ -2,8 +2,6 @@
 
 This chapter covers the creation, scaling, and security of end-to-end continuous integration and delivery pipelines, focusing on declarative syntaxes, robust artifact handling, security integration, and optimizing build performance.
 
----
-
 ## 19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions
 
 Modern DevOps practices lean heavily toward **Declarative Pipelines**, which are configuration files stored alongside the source code in version control. This approach defines the expected final state of the pipeline, and the automation engine manages the steps to achieve it. This contrasts with Scripted Pipelines, which can lead to maintainability challenges.
@@ -42,7 +40,6 @@ pipeline {
         }
     }
 }
-
 ```
 
 ### 19.1.2 GitLab CI (`.gitlab-ci.yml`)
@@ -168,7 +165,6 @@ cache:
   paths:
     - .cache/pip/ # Path to the cache directory
     - venv/
-
 ```
 
 ### 19.4.2 Parameterization and Triggers
@@ -320,30 +316,30 @@ Go to the GitLab project sidebar -> **CI/CD** -> **Pipelines** and examine the e
 
 **Question 1:** An enterprise pipeline is taking 25 minutes to complete because it downloads 400MB of Maven Java dependencies on every run. Which component of the CI configuration must be utilized to accelerate subsequent pipeline execution?
 
-* A) Artifacts
-* B) Cache
-* C) Scripted Pipeline syntax
-* D) Static runners
+A) Artifacts
+B) Cache
+C) Scripted Pipeline syntax
+D) Static runners
 
 **Answer:** **B**
 *Explanation:* **Cache** is used specifically to store downloaded external dependencies (like Maven repositories or `node_modules`) between pipeline runs, accelerating execution by avoiding duplicate downloads.
 
 **Question 2:** When migrating from a scripted Jenkins pipeline to a declarative Jenkinsfile, which block becomes the primary container for all major functional phases (such as Build, Test, and Package)?
 
-* A) `pipeline`
-* B) `agent`
-* C) `stages`
-* D) `steps`
+A) `pipeline`
+B) `agent`
+C) `stages`
+D) `steps`
 
 **Answer:** **C**
 *Explanation:* The **`stages`** block defines the sequential and parallel functional phases (or quality gates) of the declarative pipeline, separating logic like building, testing, security, and packaging.
 
 **Question 3:** Which specific trigger mechanic is a best practice for a CD workflow, ensuring that full artifact publication and deployment to production only occur when a stable semantic version tag is pushed?
 
-* A) Commit Triggers
-* B) Scheduled Triggers
-* C) Parameterization
-* D) Tag Triggers
+A) Commit Triggers
+B) Scheduled Triggers
+C) Parameterization
+D) Tag Triggers
 
 **Answer:** **D**
 *Explanation:* **Tag Triggers** allow the CD logic to be decoupled from every commit, ensuring that full release automation is only initiated upon explicit semantic version tagging (e.g., `v1.2.0`).
