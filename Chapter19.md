@@ -131,18 +131,6 @@ A linear "Build and Test" pipeline is rarely enough for enterprise needs. Modern
 
 A robust enterprise pipeline follows a specific logical flow:
 
-```mermaid
-graph LR
-    subgraph pipeline [MULTI-STAGE PIPELINE LOGIC]
-    direction LR
-        A[<b>Build Stage</b><br>Compile binary<br>Resolve Dependencies] -->|Success| B
-        B[<b>Test Stage</b><br>Unit Tests<br>Integration Tests] -->|Success| C
-        C[<b>Security Stage</b><br>Code Quality (SAST)<br>Dependency Scanning] -->|Success| D
-        D[<b>Package Stage</b><br>Containerize Binary<br>Push Immutable Image]
-    end
-
-```
-
 ![MULTI-STAGE PIPELINE LOGIC](assets/images/chapter19/19-1-MULTI-STAGE-PIPELINE-LOGIC.png)
 
 ### 19.3.2 Stage Breakdown
