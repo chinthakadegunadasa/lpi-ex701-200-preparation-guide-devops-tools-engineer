@@ -4,8 +4,6 @@ Collecting metrics and aggregated logs is only effective if SRE and DevOps teams
 
 This chapter covers enterprise dashboard design, threshold methodologies, Prometheus Alertmanager pipeline routing, multi-channel notification integrations, and a end-to-end hands-on laboratory aligned with the LPI 701-200 DevOps Tools Engineer certification objectives.
 
----
-
 ## 23.1 Building Enterprise Dashboards in Grafana
 
 Grafana is the industry-standard open-source platform for data visualization, dashboarding, and operational monitoring. In enterprise environments, creating effective dashboards requires strict design patterns, reusable templates, and robust organizational access controls.
@@ -24,8 +22,6 @@ To avoid clutter and "dashboard fatigue," enterprise dashboards are organized us
 * **Utilization:** The average time that the resource was busy (e.g., CPU %, Memory usage %).
 * **Saturation:** The degree to which the resource has extra work which it can't service, often waiting in a queue (e.g., Load Average, Disk I/O Wait).
 * **Errors:** The count of error events at the infrastructure level (e.g., network packet drops, disk read errors).
-
-
 
 ### 2. Templating with Variables and Dynamic Dashboards
 
@@ -47,7 +43,6 @@ In an Enterprise DevOps workflow, manual creation of dashboards via the Grafana 
 │   └── prometheus.yml
 └── dashboards/
     └── default.yml
-
 ```
 
 **Example Dashboard Provider Config (`/etc/grafana/provisioning/dashboards/default.yml`):**
@@ -64,10 +59,7 @@ providers:
     editable: true
     options:
       path: /var/lib/grafana/dashboards
-
 ```
-
----
 
 ## 23.2 Alert Rule Design: Static Thresholds vs. Anomaly Detection
 
@@ -82,7 +74,6 @@ Static alerting evaluates a metric against a fixed, predefined constant value.
 ```promql
 # Alert if CPU usage exceeds 85% for more than 5 minutes
 (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 85
-
 ```
 
 * **Pros:** Easy to write, simple to understand, low computational cost on Prometheus.
@@ -96,25 +87,18 @@ For non-linear or highly variable workloads, static thresholds are insufficient.
 ```promql
 # Alert if disk space is predicted to fill up within 4 hours based on the last 1-hour trend
 predict_linear(node_filesystem_free_bytes{mountpoint="/"}[1h], 4 * 3600) < 0
-
 ```
-
 
 * **Diurnal / Seasonal Comparison (Offsetting):** Compares current performance against the exact same time window from previous weeks.
 ```promql
 # Alert if request rate drops by more than 50% compared to last week
 http_requests_total < (http_requests_total offset 1w * 0.5)
-
 ```
-
-
 
 ### 3. Symptom-Based Alerting vs. Cause-Based Alerting
 
 * **Symptom-Based (Preferred for PagerDuty/On-Call):** Focuses on user impact (e.g., "High HTTP 5xx error rate" or "Latency exceeds SLA").
 * **Cause-Based (Preferred for Dashboards/Informational Alerts):** Focuses on internal component state (e.g., "High Host CPU" or "Garbage Collection pause time high").
-
----
 
 ## 23.3 Prometheus Alertmanager Configuration: Grouping, Inhibitions, and Silences
 
@@ -145,7 +129,6 @@ inhibit_rules:
     target_match:
       severity: 'warning'
     equal: ['node', 'instance']
-
 ```
 
 ### 3. Silences
@@ -158,10 +141,7 @@ amtool silence add alertname="HighMemoryUsage" instance="node-01:9100" \
   --author="OpsTeam" \
   --duration=2h \
   --comment="Planned memory expansion maintenance"
-
 ```
-
----
 
 ## 23.4 Notification Integrations: Slack, PagerDuty, Webhooks, and Email
 
@@ -212,10 +192,7 @@ receivers:
     webhook_configs:
       - url: 'http://secops-automation.internal/api/v1/alerts'
         send_resolved: true
-
 ```
-
----
 
 ## 23.5 Hands-On Lab: Building Real-Time Operational Dashboards and Configuring Alerting Pipelines
 
@@ -230,8 +207,6 @@ In this practical lab, you will deploy a complete, fully integrated observabilit
 3. **Node Exporter:** Exposes host-level infrastructure metrics (USE method).
 4. **Grafana:** Provides real-time operational dashboards and alert status monitoring.
 
----
-
 ### Step 1: Create Lab Directory Structure
 
 Execute the following commands to initialize your environment:
@@ -242,10 +217,7 @@ mkdir -p enterprise-monitoring/grafana/provisioning/datasources
 mkdir -p enterprise-monitoring/grafana/provisioning/dashboards
 mkdir -p enterprise-monitoring/grafana/dashboards
 cd enterprise-monitoring
-
 ```
-
----
 
 ### Step 2: Configure Prometheus Alert Rules (`prometheus/alert.rules.yml`)
 
@@ -274,10 +246,7 @@ groups:
         annotations:
           summary: "Disk fill predicted on {{ $labels.instance }}"
           description: "Root filesystem on {{ $labels.instance }} is predicted to run out of disk space within 2 hours based on 1-hour write trends."
-
 ```
-
----
 
 ### Step 3: Configure Prometheus Server (`prometheus/prometheus.yml`)
 
@@ -305,10 +274,7 @@ scrape_configs:
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['node-exporter:9100']
-
 ```
-
----
 
 ### Step 4: Configure Alertmanager (`prometheus/alertmanager.yml`)
 
@@ -329,10 +295,7 @@ receivers:
   - name: 'log-webhook-receiver'
     webhook_configs:
       - url: 'http://127.0.0.1:9093/' # Internal loopback stub for local testing
-
 ```
-
----
 
 ### Step 5: Automate Grafana Data Source Provisioning
 
@@ -348,10 +311,7 @@ datasources:
     url: http://prometheus:9090
     isDefault: true
     editable: false
-
 ```
-
----
 
 ### Step 6: Create Docker Compose Stack (`docker-compose.yml`)
 
@@ -419,38 +379,30 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning
     networks:
       - monitoring
-
 ```
-
----
 
 ### Step 7: Launch and Verify the Stack
 
 1. **Spin up the stack using Docker Compose:**
+
 ```bash
 docker-compose up -d
-
 ```
 
 
 2. **Verify container operational status:**
+
 ```bash
 docker-compose ps
-
 ```
-
 
 *All 4 containers (`prometheus`, `alertmanager`, `node-exporter`, and `grafana`) must show state `Up`.*
 3. **Verify Prometheus Target Scrapes:**
 Open a browser or run `curl` to confirm targets are healthy (`UP` state):
+
 ```bash
 curl -s http://localhost:9090/api/v1/targets | grep -o '"health":"up"'
-
 ```
-
-
-
----
 
 ### Step 8: Simulate Metric Spike to Trigger Firing Alerts
 
@@ -459,23 +411,21 @@ Access the Prometheus Alert Web UI at `http://localhost:9090/alerts`. Note that 
 2. **Generate artificial memory load on the system:**
 Run a temporary memory stress process or execute a PromQL test query using lower artificial threshold bounds in Prometheus UI to force rule evaluation to `PENDING` -> `FIRING`:
 Alternatively, trigger an active rule directly by temporarily updating `prometheus/alert.rules.yml` threshold from `75%` to `1%` and reloading Prometheus:
+
 ```bash
 sed -i 's/> 75/> 1/g' prometheus/alert.rules.yml
 curl -X POST http://localhost:9090/-/reload || docker restart prometheus
-
 ```
 
-
 3. **Observe State Transitions in Prometheus:**
+   
 * **INACTIVE:** Metric value is within normal baseline.
 * **PENDING:** Threshold exceeded (`> 1%`), but pending the `for: 1m` duration window to avoid flapping.
 * **FIRING:** Active threshold exceeded longer than duration window. Alert dispatched to Alertmanager.
 
-
 4. **Verify Active Alert in Alertmanager Dashboard:**
+   
 Navigate to `http://localhost:9093`. Confirm the alert `HostHighMemoryUsage` is listed with label `severity="warning"`.
-
----
 
 ### Step 9: Configure and Visualize Firing Alerts in Grafana
 
@@ -484,19 +434,14 @@ Navigate to `http://localhost:9093`. Confirm the alert `HostHighMemoryUsage` is 
 3. Query the current status of firing alerts using Prometheus metric vectors:
 ```promql
 ALERTS{alertstate="firing"}
-
 ```
 
-
 4. Create a new dashboard panel:
+   
 * Select **Stat** or **Alert List** visualization.
 * Enter expression: `count(ALERTS{alertstate="firing"})`.
 * Configure Thresholds: Green = 0, Red $\ge$ 1.
 * Save the dashboard under the "Infrastructure" folder.
-
-
-
----
 
 ### Lab Conclusion & Key Learning Verification
 
