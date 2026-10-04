@@ -74,7 +74,7 @@ Connecting on-premises datacenters to public cloud providers—or establishing d
 
 For enterprise-critical operations, a single network line is a single point of failure (SPOF). Production hybrid architecture utilizes a high-bandwidth Dedicated Connection as the primary pipeline, with an encrypted IPsec VPN tunnel acting as an automated fallback mechanism over the public internet.
 
-[Enterprise Hybrid Topology](assets/images/chapter25/25-2-Enterprise-Hybrid-Topology.png)
+![Enterprise Hybrid Topology](assets/images/chapter25/25-2-Enterprise-Hybrid-Topology.png)
 
 ### BGP Routing & Dynamic Failover
 
