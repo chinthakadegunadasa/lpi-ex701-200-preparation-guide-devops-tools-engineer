@@ -314,10 +314,10 @@ kubectl auth can-i list pods \
 
 **Question 1**: An administrator wants to grant a user permission to list secrets across all namespaces in a cluster using a minimum set of bindings. Which approach should be used?
 
-* A) Create a `Role` with permissions on secrets in the `default` namespace and bind it with a `ClusterRoleBinding`.
-* B) Create a `ClusterRole` with permissions on secrets and bind it using a `ClusterRoleBinding`.
-* C) Create a `Role` in every namespace and bind each one with a separate `RoleBinding`.
-* D) Create a `ClusterRole` with permissions on secrets and bind it using a `RoleBinding` in the `kube-system` namespace.
+A) Create a `Role` with permissions on secrets in the `default` namespace and bind it with a `ClusterRoleBinding`.
+B) Create a `ClusterRole` with permissions on secrets and bind it using a `ClusterRoleBinding`.
+C) Create a `Role` in every namespace and bind each one with a separate `RoleBinding`.
+D) Create a `ClusterRole` with permissions on secrets and bind it using a `RoleBinding` in the `kube-system` namespace.
 
 **Answer**: **B**
 
@@ -325,10 +325,10 @@ kubectl auth can-i list pods \
 
 **Question 2**: You create a `NetworkPolicy` targeting pods with `app: frontend`. The policy explicitly defines an `ingress` rule allowing traffic from `app: gateway`. What happens to traffic from `app: monitoring` attempting to reach `app: frontend` on an unlisted port?
 
-* A) Traffic is allowed because default ingress behavior permits all connections unless explicitly blocked with a Deny rule.
-* B) Traffic is forwarded to an admission controller for inspection.
-* C) Traffic is dropped because targeting `app: frontend` puts it in an isolated state, blocking all non-matched ingress traffic.
-* D) Traffic is accepted, but logged to the API server audit pipeline.
+A) Traffic is allowed because default ingress behavior permits all connections unless explicitly blocked with a Deny rule.
+B) Traffic is forwarded to an admission controller for inspection.
+C) Traffic is dropped because targeting `app: frontend` puts it in an isolated state, blocking all non-matched ingress traffic.
+D) Traffic is accepted, but logged to the API server audit pipeline.
 
 **Answer**: **C**
 
@@ -336,10 +336,10 @@ kubectl auth can-i list pods \
 
 **Question 3**: What type of Admission Controller should be used if an organization requires all created pods to automatically have a security label (`environment: production`) attached upon request creation?
 
-* A) Validating Admission Webhook
-* B) Mutating Admission Webhook
-* C) RoleBinding Evaluator
-* D) Node Restriction Controller
+A) Validating Admission Webhook
+B) Mutating Admission Webhook
+C) RoleBinding Evaluator
+D) Node Restriction Controller
 
 **Answer**: **B**
 
