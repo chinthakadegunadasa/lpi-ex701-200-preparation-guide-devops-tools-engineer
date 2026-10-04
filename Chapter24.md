@@ -451,12 +451,7 @@ docker-compose logs checkout-service
 
 3. Identify the structure of a W3C `traceparent` header during inter-service calls:
 
-```text
-traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
-             |  |                                |                |
-             |  +--> Trace ID                    +--> Parent Span +--> Trace Flags
-             +-----> Version                          ID               (01 = Sampled)
-```
+   ![Identify the structure](assets/images/chapter24/24-5-4-3-Identify-the-structure.png)
 
 ### Step 5: Post-Mortem Remediation Simulation
 
