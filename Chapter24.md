@@ -15,7 +15,9 @@ To achieve observability in an enterprise environment, we rely on three distinct
 Metrics are numeric measurements recorded over time. They are aggregate data points used to assess the overall health, performance, and resource usage of the system.
 
 * **Characteristics:** Highly compact, efficient to store and query, excellent for dashboarding and alerting.
+
 * **Examples:** CPU usage, memory consumption, HTTP requests per second, error rates, queue depth.
+
 * **Enterprise Tooling:** Prometheus, Grafana, Datadog.
 
 ### 2. Logs (Why is it happening in a specific process?)
@@ -23,7 +25,9 @@ Metrics are numeric measurements recorded over time. They are aggregate data poi
 Logs are structured or unstructured text records of discrete events that occurred within an application or the infrastructure.
 
 * **Characteristics:** Detailed context about a specific execution path, high volume, expensive to index and search, excellent for forensic analysis.
+
 * **Examples:** Application stack traces, kernel panic messages, security access logs, Nginx access logs.
+
 * **Enterprise Tooling:** ELK/EFK Stack (Elasticsearch, Logstash/Fluentd, Kibana), Grafana Loki.
 
 ### 3. Traces (Where is it happening in the system?)
@@ -31,7 +35,9 @@ Logs are structured or unstructured text records of discrete events that occurre
 Traces follow the path of a single request or transaction as it propagates through a multi-service architecture.
 
 * **Characteristics:** Visualizes dependencies between components, highlights latency bottlenecks, captures context across service boundaries.
+
 * **Examples:** A user request hits a Frontend API Gateway, which calls an Auth Service, which calls a Payment Gateway, which writes to a Postgres Database. The trace connects all these events.
+
 * **Enterprise Tooling:** Jaeger, Tempo, OpenTelemetry.
 
 ## 24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation
@@ -55,6 +61,7 @@ A span is the fundamental workflow unit of a trace. It represents a discrete act
 Spans can be enriched with detailed metadata:
 
 * **Attributes (Tags):** Key-value pairs used to query traces. Examples: `http.method="POST"`, `http.status_code="500"`, `db.statement="SELECT * FROM users"`, `customer_id="enterprise_1"`.
+
 * **Events (Logs):** Timestamped notes within a span. Examples: "Connecting to database", "Cache miss", "Payment accepted".
 
 #### 4. Trace View (The DAG)
@@ -70,6 +77,7 @@ When Service A calls Service B via HTTP, Service A must inject the tracing conte
 **Common Header Formats:**
 
 * **W3C Trace Context (Standard):** Uses headers like `traceparent` (e.g., `00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01`).
+
 * **B3 (Zipkin Legacy):** Uses headers like `X-B3-TraceId`, `X-B3-SpanId`.
 
 If context propagation fails at any point in the chain, the trace is fragmented, and cross-service visibility is lost.
@@ -85,7 +93,9 @@ OTel is not a backend store. It is the ingestion and pipeline infrastructure tha
 ![OpenTelemetry Architecture](assets/images/chapter24/24-3-OpenTelemetry-Architecture.png)
 
 1. **OTel SDK:** Libraries integrated into the application (via code or zero-code auto-instrumentation) to generate spans, metrics, and logs.
+
 2. **OTLP Protocol:** OpenTelemetry Line Protocol, a standardized, high-performance protocol (usually running over gRPC or HTTP/protobuf) for transmitting telemetry data.
+
 3. **OTel Collector:** A vendor-neutral proxy/agent that receives, processes, filters, transforms, and exports telemetry. This decouples application runtime dependencies from storage backends.
 
 ### Jaeger Architecture
@@ -93,14 +103,20 @@ OTel is not a backend store. It is the ingestion and pipeline infrastructure tha
 Jaeger is a widely deployed, open-source distributed tracing backend originally developed at Uber.
 
 * **Jaeger Collector:** Receives traces from OTel Collectors or agents, validates them, and persists them into long-term storage.
+
 * **Jaeger Query:** Fetches traces from persistent storage and serves the REST API for the Jaeger UI.
+
 * **Jaeger UI:** The web interface for trace searching, latency breakdown, and root-cause visualization.
+
 * **Storage Backends:** Production Jaeger deployments rely on persistent databases like **Elasticsearch** or **OpenSearch**. For local development or lightweight testing, in-memory storage is used.
 
 **Enterprise Deployment Considerations:**
 
 1. **Elasticsearch/OpenSearch Backing:** Essential for production Jaeger deployments to support indexing and rapid search across millions of spans.
-2. **Sampling Strategies:** Generating and storing 100% of traces in high-throughput enterprise systems creates immense storage and processing overhead. Use OTel Collectors to implement **Head-based Sampling** (sampling at request start) or **Tail-based Sampling** (sampling decisions made after inspecting the full trace, e.g., keep 100% of errors and latencies > 2s, but only 1% of HTTP 200 requests).
+
+2. **Sampling Strategies:** Generating and storing 100% of traces in high-throughput enterprise systems creates immense storage and processing overhead. Use OTel Collectors to implement **Head-based Sampling** (sampling at request start) or **Tail-based Sampling** (sampling decisions made after inspecting the full trace,
+
+e.g., keep 100% of errors and latencies > 2s, but only 1% of HTTP 200 requests).
 
 ## 24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture
 
@@ -113,13 +129,17 @@ When an automated observability alert triggers, a structured incident response w
 **Key Roles:**
 
 1. **Incident Commander (IC):** Holds single-point accountability for directing the response. The IC does not troubleshoot code directly; they focus on coordination, task delegation, and overall triage strategy.
+
 2. **Communications Lead (Comm Lead):** Responsible for maintaining stakeholder updates, customer status pages, and internal executive communications.
+
 3. **Technical Operations / Subject Matter Experts (SMEs):** Engineers actively investigating telemetry, executing playbooks, and performing technical mitigations.
 
 **Response Sequence:**
 
 * **Triage & Declaration:** Assess severity (e.g., P1/SEV1 - Total service outage; P2/SEV2 - Core feature degraded). Assign an IC and establish a dedicated incident bridge/channel.
+
 * **Mitigation (First Priority):** The primary objective during an incident is to **restore service health**, not to fix the underlying root cause. Common mitigation tactics include rolling back recent deployments, toggling feature flags, shedding non-critical load, or scaling horizontally.
+
 * **Resolution:** Applied after service stabilization to permanently fix the underlying technical issue.
 
 ### Post-Mortems (Incident Reports)
@@ -129,8 +149,11 @@ A Post-Mortem is a formal, retrospective document created after an incident is m
 **Key Sections of an Enterprise Post-Mortem:**
 
 * **Executive Summary:** High-level description of what happened, customer impact, and resolution.
+
 * **Timeline:** Detailed chronological log of events (trigger time, alert detection time, incident declaration, mitigation steps, final resolution).
+
 * **Root Cause Analysis (RCA):** Systematic investigation into the systemic failure (utilizing tools like the "5 Whys" methodology).
+
 * **Action Items (Preventative Remediation):** Concrete, prioritized tasks assigned to engineering owners with strict completion dates to ensure the failure mode cannot recur.
 
 ### Blameless Culture
@@ -142,7 +165,9 @@ Post-mortems must focus strictly on system flaws rather than human errors. Assig
 **Core Tenets:**
 
 1. **Assume Good Intent:** Engineers make decisions based on the best information available to them at the time.
+
 2. **Design Resilient Systems:** If a single human mistake (e.g., a typo in a CLI command) causes a production outage, the failure belongs to the system safety design, lack of automated validation guards, or deployment controls—not the engineer.
+
 3. **Shift Focus from "Who" to "How" and "Why":** Replace "Who ran the script?" with "Why was the script executed without pre-flight validation?" and "How can our deployment pipelines automatically detect invalid configurations?".
 
 ## 24.5 Hands-On Lab: End-to-End Distributed Tracing Analysis for Microservice Bottlenecks
@@ -154,10 +179,15 @@ In this lab, you will troubleshoot a multi-tier microservice architecture experi
 **Target Architecture:**
 
 * **Frontend Service (Python/Flask):** Exposes public HTTP endpoints.
+
 * **Product Service (Python/Flask):** Returns product catalog details.
+
 * **Inventory Service (Python/Flask):** Checks product stock levels against a backend database.
+
 * **Checkout Service (Python/Flask):** Handles payment processing workflows.
+
 * **OpenTelemetry Auto-Instrumentation:** Injects context headers and extracts span data.
+
 * **Jaeger Server:** Collects OTLP spans and visualizes traces.
 
 ![Hands-On Lab](assets/images/chapter24/24-5-Hands-On-Lab.png)
@@ -165,6 +195,7 @@ In this lab, you will troubleshoot a multi-tier microservice architecture experi
 ### Step 1: Lab Environment Setup
 
 1. Create a project workspace directory:
+
 ```bash
 mkdir -p ~/tracing-lab && cd ~/tracing-lab
 ```
