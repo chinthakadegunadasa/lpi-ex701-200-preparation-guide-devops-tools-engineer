@@ -4,8 +4,6 @@ Modern enterprise infrastructure has evolved beyond single-datacenter or single-
 
 This chapter covers the core mechanics of cloud service models, the network and security design patterns behind hybrid interconnects, storage tiering strategies, FinOps practices, and a hands-on lab demonstrating multi-provider infrastructure orchestration.
 
----
-
 ## 25.1 Cloud Computing Models: IaaS, PaaS, SaaS, and FaaS
 
 Understanding the division of responsibility between the enterprise and the cloud service provider (CSP) is essential for architectural governance, operational efficiency, and security compliance.
@@ -36,8 +34,11 @@ Understanding the division of responsibility between the enterprise and the clou
 IaaS provides raw, virtualized computing resources (virtual machines, block storage, software-defined networks, and firewalls) over the internet.
 
 * **Customer Scope:** Operating system installation, patching, runtime configuration, network security rules, middleware, and application code.
+
 * **Provider Scope:** Hypervisor execution, physical hardware, rack power/cooling, and physical network infrastructure.
+
 * **Enterprise Use Case:** Legacy workload migration ("lift-and-shift"), custom kernel-level performance tuning, and strict compliance environments requiring direct OS control.
+
 * **Examples:** AWS EC2, Google Compute Engine (GCE), Azure VMs, OpenStack.
 
 ### 2. Platform as a Service (PaaS)
@@ -45,8 +46,11 @@ IaaS provides raw, virtualized computing resources (virtual machines, block stor
 PaaS abstracts away underlying virtual machines, operating systems, and runtime management, providing a managed platform where developers deploy code without managing infrastructure.
 
 * **Customer Scope:** Application code, environment variables, dependencies, and database schemas.
+
 * **Provider Scope:** OS provisioning and patching, runtime maintenance (e.g., Node.js, Python, Java runtime updates), container orchestration, and underlying scaling infrastructure.
+
 * **Enterprise Use Case:** Rapid development velocity, standardized runtime environments, reducing sysadmin overhead for web applications.
+
 * **Examples:** AWS Elastic Beanstalk, Red Hat OpenShift, Google App Engine, Heroku.
 
 ### 3. Function as a Service (FaaS / Serverless)
@@ -54,8 +58,11 @@ PaaS abstracts away underlying virtual machines, operating systems, and runtime 
 FaaS executes code in short-lived, event-driven containers that are spun up dynamically per request and immediately destroyed upon execution completion.
 
 * **Customer Scope:** Individual function logic, event trigger definitions, execution timeout configurations, and memory allocation settings.
+
 * **Provider Scope:** Complete infrastructure, zero-to-N autoscaling, request routing, execution environment initialization, and concurrency limits.
+
 * **Enterprise Use Case:** Asynchronous background job processing, webhooks, real-time file processing, microservice event routing.
+
 * **Examples:** AWS Lambda, Google Cloud Functions, Azure Functions, OpenFaaS.
 
 ### 4. Software as a Service (SaaS)
@@ -63,10 +70,10 @@ FaaS executes code in short-lived, event-driven containers that are spun up dyna
 SaaS delivers complete, fully managed applications directly to end consumers or enterprise users via web browsers or APIs.
 
 * **Customer Scope:** User access management (IAM/SSO), data classification, and application-level configuration settings.
-* **Provider Scope:** End-to-end management of software code, database engines, infrastructure, security patching, and uptime SLAs.
-* **Examples:** Salesforce, Microsoft 365, Google Workspace, GitHub Enterprise SaaS.
 
----
+* **Provider Scope:** End-to-end management of software code, database engines, infrastructure, security patching, and uptime SLAs.
+
+* **Examples:** Salesforce, Microsoft 365, Google Workspace, GitHub Enterprise SaaS.
 
 ## 25.2 Hybrid Cloud and Multi-Cloud Interconnect Design
 
@@ -143,8 +150,11 @@ Choosing the correct storage architecture impacts system throughput, access patt
 Block storage exposes raw, unformatted storage volumes to compute instances, behaving like local physical hard drives or SAN (Storage Area Network) arrays.
 
 * **Protocol / Interface:** NVMe, iSCSI, proprietary hypervisor volume drivers.
+
 * **Access Pattern:** High-performance, low-latency random read/write operations. Volumes are formatted with filesystems (e.g., `ext4`, `xfs`) by the instance OS.
+
 * **Use Cases:** Relational Database management systems (PostgreSQL, MySQL), transactional log stores, OS boot disks.
+
 * **Examples:** AWS EBS, Google Cloud Persistent Disk, Azure Managed Disks.
 
 ### 2. File Storage
@@ -152,8 +162,11 @@ Block storage exposes raw, unformatted storage volumes to compute instances, beh
 File storage provides network-attached filesystem capabilities accessible simultaneously across multiple compute nodes.
 
 * **Protocol / Interface:** NFSv3/NFSv4, SMB/CIFS.
-* **Access Pattern:** Hierarchical tree directory structure supporting POSIX file permissions, concurrent multi-writer support, and file locking mechanisms.
+
+**Access Pattern:** Hierarchical tree directory structure supporting POSIX file permissions, concurrent multi-writer support, and file locking mechanisms.
+
 * **Use Cases:** Shared application assets, enterprise content management, shared configuration hubs, legacy enterprise applications requiring shared filesystems.
+
 * **Examples:** AWS EFS, Google Cloud Filestore, Azure Files.
 
 ### 3. Object Storage
@@ -161,8 +174,11 @@ File storage provides network-attached filesystem capabilities accessible simult
 Object storage manages data as discrete, independent objects within flat namespace buckets, accessible over HTTP REST APIs rather than standard block or filesystem drivers.
 
 * **Protocol / Interface:** HTTP/HTTPS REST APIs (S3 API standard).
+
 * **Access Pattern:** Write-once-read-many (WORM) access, unstructured data stores. Each object consists of raw data, a unique key, and arbitrary custom metadata tags.
+
 * **Use Cases:** Data lakes, backup archives, static asset distribution, media hosting, log storage.
+
 * **Examples:** AWS S3, Google Cloud Storage, Ceph RADOS Gateway, MinIO.
 
 ### Object Lifecycle Management
@@ -170,7 +186,9 @@ Object storage manages data as discrete, independent objects within flat namespa
 To control cost growth in object storage, lifecycle rules automate data transitions between performance and archive storage classes based on access frequency or age:
 
 1. **Standard Hot Storage:** High availability, immediate access, standard pricing per GB (e.g., Active application uploads).
+
 2. **Infrequent Access (Cool):** Lower storage cost, small retrieval fee per GB, milliseconds access time (e.g., Logs > 30 days old).
+
 3. **Cold Archive (Glacier / Deep Archive):** Extremely low storage cost per GB, retrieval time takes minutes to hours (e.g., Compliance backups > 90 days old).
 
 ---
@@ -198,7 +216,9 @@ To control cost growth in object storage, lifecycle rules automate data transiti
 ### Core FinOps Phases
 
 1. **Inform:** Establish full visibility into cloud costs. Implement tag-based cost allocation (e.g., `CostCenter`, `Owner`, `Environment`, `Project`) to attribute every cloud dollar directly to engineering teams or business units.
+
 2. **Optimize:** Identify cost-saving opportunities through right-sizing, terminating idle resources, reserving capacity, and leveraging spot instances.
+
 3. **Operate:** Continuously monitor cost metrics, enforce automated budget alerts, integrate cost checks into CI/CD deployment pipelines, and establish governance policies.
 
 ### Resource Optimization Strategies
@@ -210,16 +230,18 @@ Continuously track CPU utilization, memory consumption, disk IOPS, and network I
 #### 2. Pricing Architecture Selection
 
 * **On-Demand / Pay-As-You-Go:** No commitment, highest hourly rate. Best for unpredictable workloads, temporary testing, or initial development.
+
 * **Reserved Instances / Savings Plans:** 1-year or 3-year commitment to a specific volume of compute usage in exchange for up to 60–72% cost reductions compared to On-Demand rates. Ideal for baseline production capacity.
+
 * **Spot / Preemptible Instances:** Bidding on unused cloud capacity at discounts up to 80–90%. The cloud provider can reclaim these instances with short notice (e.g., 30–120 seconds). Ideal for stateless, fault-tolerant workloads, batch processing, and Kubernetes worker nodes running non-critical tasks.
 
 #### 3. Storage Garbage Collection & Automated Pruning
 
 * Identify and delete orphaned Block Storage volumes (e.g., EBS volumes left behind after VM termination).
-* Delete obsolete snapshot trees and stale container image tags in container registries.
-* Enforce S3 non-current object version expiration rules for buckets with object versioning enabled.
 
----
+* Delete obsolete snapshot trees and stale container image tags in container registries.
+
+* Enforce S3 non-current object version expiration rules for buckets with object versioning enabled.
 
 ## 25.5 Hands-On Lab: Orchestrating Infrastructure Deployments Across Hybrid Cloud Interfaces
 
@@ -247,18 +269,17 @@ v              v                                                   v            
 
 ```
 
----
-
 ### Step 1: Environment Setup & Local MinIO Deployment
 
 1. Create a workspace directory for the multi-cloud project:
+
 ```bash
 mkdir -p ~/multicloud-lab && cd ~/multicloud-lab
-
 ```
 
 
 2. Deploy a local MinIO container to simulate an on-premises enterprise S3-compatible storage cluster:
+
 ```bash
 docker run -d \
   --name minio-onprem \
@@ -267,23 +288,18 @@ docker run -d \
   -e "MINIO_ROOT_USER=enterprise_admin" \
   -e "MINIO_ROOT_PASSWORD=EnterpriseSecurePassword123!" \
   minio/minio server /data --console-address ":9001"
-
 ```
-
 
 3. Verify that the MinIO server is running:
+
 ```bash
 docker ps -f name=minio-onprem
-
 ```
-
-
-
----
 
 ### Step 2: Define Multi-Provider Infrastructure Code
 
 1. Create `providers.tf` to define both the MinIO provider (on-premises interface) and the AWS provider (public cloud interface):
+
 ```hcl
 terraform {
   required_version = ">= 1.5.0"
@@ -319,11 +335,11 @@ provider "aws" {
     s3 = "http://localhost:9000" # Mapping to local endpoint for standalone execution
   }
 }
-
 ```
 
 
 2. Create `main.tf` to define the storage buckets across both environments, including lifecycle policies and governance tags:
+
 ```hcl
 # --------------------------------------------------
 # ON-PREMISES INFRASTRUCTURE: Primary Data Ingestion
@@ -347,7 +363,6 @@ resource "aws_s3_bucket" "cloud_archive" {
     FinOpsPolicy = "AutoArchive-Standard"
   }
 }
-
 # FinOps Governance: Lifecycle configuration for Public Cloud Bucket
 resource "aws_s3_bucket_lifecycle_configuration" "archive_lifecycle" {
   bucket = aws_s3_bucket.cloud_archive.id
@@ -370,106 +385,90 @@ resource "aws_s3_bucket_lifecycle_configuration" "archive_lifecycle" {
     }
   }
 }
-
 ```
-
-
-
----
 
 ### Step 3: Initialize and Provision Cross-Cloud Infrastructure
 
 1. Initialize the Terraform workspace and download required provider plugins:
+
 ```bash
 terraform init
-
 ```
 
 
 2. Review the execution plan to verify the resources that will be created across both provider interfaces:
+
 ```bash
 terraform plan
-
 ```
 
 
 3. Apply the configuration to provision the multi-cloud storage infrastructure:
+
 ```bash
 terraform apply -auto-approve
-
 ```
 
 
 *Expected Output Snippet:*
+
 ```text
 Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
-
 ```
-
-
-
----
 
 ### Step 4: Configure & Test Hybrid Object Synchronization Script
 
 1. Install the MinIO Client (`mc`) CLI utility or use Docker to execute synchronization between local on-premises buckets and public cloud targets:
+
 ```bash
 # Set alias for local MinIO on-premises cluster
 docker exec -it minio-onprem mc alias set onprem http://localhost:9000 enterprise_admin EnterpriseSecurePassword123!
-
 ```
 
 
 2. Create a dummy sample payload representing enterprise log files:
+
 ```bash
 mkdir -p /tmp/hybrid-data
 echo "TIMESTAMP,EVENT,USER_ID" > /tmp/hybrid-data/audit_log.csv
 echo "2026-10-04T12:00:00Z,LOGIN_SUCCESS,usr_99182" >> /tmp/hybrid-data/audit_log.csv
-
 ```
-
 
 3. Upload the data payload into the local on-premises primary bucket:
+
 ```bash
 docker exec -i minio-onprem mc cp - onprem/datacenter-primary-ingest/logs/audit_log.csv < /tmp/hybrid-data/audit_log.csv
-
 ```
-
 
 4. Execute a dry-run cross-cloud synchronization from the on-premises bucket to the archive bucket:
+
 ```bash
 docker exec -it minio-onprem mc mirror --dry-run onprem/datacenter-primary-ingest onprem/enterprise-offsite-archive-bucket
-
 ```
-
 
 5. Execute the actual cross-cloud synchronization:
+
 ```bash
 docker exec -it minio-onprem mc mirror onprem/datacenter-primary-ingest onprem/enterprise-offsite-archive-bucket
-
 ```
-
 
 6. Verify the contents of the public cloud archive target bucket:
+
 ```bash
 docker exec -it minio-onprem mc ls onprem/enterprise-offsite-archive-bucket/logs/
-
 ```
-
-
-
----
 
 ### Step 5: FinOps Compliance & Tag Audit Verification
 
 1. Inspect the local Terraform state file to audit resource tags for FinOps compliance tracking:
+
 ```bash
 terraform show | grep -A 8 "tags"
-
 ```
 
 
 2. Verify that all public cloud resources have required metadata tags (`Environment`, `CostCenter`, `Owner`) assigned to ensure cost attribution:
+
 ```text
 tags = {
     "CostCenter"   = "CC-7782-STORAGE"
@@ -477,21 +476,15 @@ tags = {
     "FinOpsPolicy" = "AutoArchive-Standard"
     "Owner"        = "DataOps-Team"
 }
-
 ```
 
-
 3. Clean up the lab environment:
+
 ```bash
 terraform destroy -auto-approve
 docker stop minio-onprem && docker rm minio-onprem
 rm -rf /tmp/hybrid-data ~/multicloud-lab
-
 ```
-
-
-
----
 
 ### Lab Summary
 
