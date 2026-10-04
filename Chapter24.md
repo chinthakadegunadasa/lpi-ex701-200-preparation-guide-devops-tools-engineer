@@ -82,33 +82,7 @@ In the past, tracing required proprietary agent installation. Today, the industr
 
 OTel is not a backend store. It is the ingestion and pipeline infrastructure that sits between your application and your observability storage backends (like Jaeger, Prometheus, or Tempo).
 
-```
-+-------------------------------------------------------------+
-|                      Application Code                       |
-|  +-------------------------------------------------------+  |
-|  |           OpenTelemetry SDK / Auto-Instrument         |  |
-|  +-------------------------------------------------------+  |
-+------------------------------+------------------------------+
-                               |
-                               | OTLP / gRPC (Port 4317)
-                               v
-+-------------------------------------------------------------+
-|                   OpenTelemetry Collector                   |
-|  +------------------+  +---------------+  +---------------+ |
-|  |  OTLP Receiver   |->| Batch Processor|->|Jaeger Exporter| |
-|  +------------------+  +---------------+  +---------------+ |
-+------------------------------+------------------------------+
-                               |
-                               | OTLP / gRPC
-                               v
-+-------------------------------------------------------------+
-|                 Jaeger Distributed Backend                  |
-|  +------------------+  +---------------+  +---------------+ |
-|  | Jaeger Collector |->| Elasticsearch |<-| Jaeger Query  | |
-|  +------------------+  +---------------+  +---------------+ |
-+-------------------------------------------------------------+
-
-```
+![OpenTelemetry Architecture](assets/images/chapter24/24-3-OpenTelemetry-Architecture.png)
 
 1. **OTel SDK:** Libraries integrated into the application (via code or zero-code auto-instrumentation) to generate spans, metrics, and logs.
 2. **OTLP Protocol:** OpenTelemetry Line Protocol, a standardized, high-performance protocol (usually running over gRPC or HTTP/protobuf) for transmitting telemetry data.
