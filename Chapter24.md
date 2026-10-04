@@ -160,32 +160,18 @@ In this lab, you will troubleshoot a multi-tier microservice architecture experi
 * **OpenTelemetry Auto-Instrumentation:** Injects context headers and extracts span data.
 * **Jaeger Server:** Collects OTLP spans and visualizes traces.
 
-```
-[ User Request ] ---> ( Frontend Service )
-                           |
-            +--------------+--------------+
-            |                             |
-            v                             v
-   ( Product Service )          ( Checkout Service )
-                                          |
-                                          v
-                                 ( Inventory Service )
-                                          |
-                                          v
-                                    [ Database ]
-
-```
+![Hands-On Lab](assets/images/chapter24/24-5-Hands-On-Lab.png)
 
 ### Step 1: Lab Environment Setup
 
 1. Create a project workspace directory:
 ```bash
 mkdir -p ~/tracing-lab && cd ~/tracing-lab
-
 ```
 
 
 2. Create a unified `docker-compose.yml` defining the observability stack and microservices:
+
 ```yaml
 version: '3.8'
 
