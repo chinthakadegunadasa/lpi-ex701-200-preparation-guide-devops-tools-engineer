@@ -59,6 +59,7 @@ The Container Storage Interface (CSI) standardizes the out-of-tree interface bet
 ### CSI Driver Subsystem Architecture
 
 ![CSI Driver Subsystem Architecture](assets/images/chapter10/10-2-CSI-SUBSYSTEM-TOPOLOGY.png)
+
 ### CSI RPC Methods Breakdown
 
 1. **CSI Controller Service**:
