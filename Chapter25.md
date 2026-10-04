@@ -74,32 +74,7 @@ Connecting on-premises datacenters to public cloud providers—or establishing d
 
 For enterprise-critical operations, a single network line is a single point of failure (SPOF). Production hybrid architecture utilizes a high-bandwidth Dedicated Connection as the primary pipeline, with an encrypted IPsec VPN tunnel acting as an automated fallback mechanism over the public internet.
 
-```
-+-----------------------------------------------------------------------------------+
-|                            On-Premises Datacenter                                 |
-|  +------------------------+                           +------------------------+  |
-|  | Enterprise Router A    |                           | Enterprise Router B    |  |
-|  +-----------+------------+                           +-----------+------------+  |
-+--------------|----------------------------------------------------|---------------+
-               | Primary Line                                       | Secondary / Fallback
-               | (Direct Connect / ExpressRoute)                    | (Encrypted IPsec VPN)
-               v                                                    v
-+-----------------------------------------------------------------------------------+
-|                              Public Cloud / VPC                                   |
-|  +------------------------+                           +------------------------+  |
-|  | Cloud Direct Gateway   |                           | Cloud VPN Gateway      |  |
-|  +-----------+------------+                           +-----------+------------+  |
-|              |                                                    |               |
-|              +--------------------+-------------------------------+               |
-|                                   |                                               |
-|                                   v                                               |
-|                      +------------------------+                                   |
-|                      |  BGP Route Propagation |                                   |
-|                      | (Dynamic Failover)     |                                   |
-|                      +------------------------+                                   |
-+-----------------------------------------------------------------------------------+
-
-```
+[Enterprise Hybrid Topology](assets/images/chapter25/25-2-Enterprise-Hybrid-Topology.png)
 
 ### BGP Routing & Dynamic Failover
 
