@@ -10,24 +10,7 @@ Understanding the division of responsibility between the enterprise and the clou
 
 ### The Shared Responsibility Model
 
-```
-+------------------+------------------+------------------+------------------+
-|      IaaS        |       PaaS       |       FaaS       |       SaaS       |
-+------------------+------------------+------------------+------------------+
-| Application      | Application      | Application Code | Enterprise Data  |
-| Data             | Data             | (Functions)      | User Access / IAM|
-| Runtime          | Runtime          |------------------|------------------|
-| Middleware       |------------------| Managed Runtime  |                  |
-| OS / Kernel      | Managed Runtime  | Event Triggers   |                  |
-|------------------| Managed OS       | Managed Scaling  | Fully Managed    |
-| Virtualization   | Virtualization   | Virtualization   | Application,     |
-| Hardware         | Hardware         | Hardware         | Infrastructure,  |
-| Networking       | Networking       | Networking       | & Security       |
-| Datacenter       | Datacenter       | Datacenter       |                  |
-+------------------+------------------+------------------+------------------+
-  [ Customer Managed ]              [ Provider Managed ]
-
-```
+![The Shared Responsibility Model](assets/images/chapter25/25-1-The-Shared-Responsibility-Model.png)
 
 ### 1. Infrastructure as a Service (IaaS)
 
