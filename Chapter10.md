@@ -92,7 +92,6 @@ data:
       timeout: 30s
     database:
       pool_size: 20
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -252,7 +251,7 @@ spec:
   resources:
     requests:
       storage: 20Gi
----
+
 apiVersion: v1
 kind: Pod
 metadata:
