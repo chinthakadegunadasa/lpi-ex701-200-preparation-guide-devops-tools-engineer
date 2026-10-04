@@ -120,17 +120,7 @@ http_requests_total < (http_requests_total offset 1w * 0.5)
 
 Prometheus server evaluates rules and fires alerts to an independent binary: **Alertmanager**. Alertmanager manages alert routing, deduplication, grouping, silencing, and notification dispatching.
 
-```
-+-------------------+      Firing Alerts     +------------------------+
-| Prometheus Server | ---------------------> | Prometheus Alertmanager|
-+-------------------+                        +------------------------+
-                                                         |
-                                        +----------------+----------------+
-                                        |                |                |
-                                        v                v                v
-                                   [ Slack ]       [ PagerDuty ]    [ Webhooks ]
-
-```
+![Prometheus Alertmanager Configuration](assets/images/chapter23/23-3-Prometheus-Alertmanager-Configuration.png)
 
 ### 1. Alert Grouping
 
