@@ -1,0 +1,61 @@
+name: Publish Book to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install MkDocs & Extensions
+        run: |
+          pip install mkdocs mkdocs-material mkdocs-awesome-pages-plugin
+
+      - name: Prepare Documentation Structure
+        run: |
+          mkdir -p docs
+          cp *.md docs/ 2>/dev/null || true
+          if [ -d "chapters" ]; then cp -r chapters/* docs/ 2>/dev/null || true; fi
+          if [ -f "docs/TOC.md" ]; then cp docs/TOC.md docs/index.md; fi
+
+      - name: Generate MkDocs Configuration
+        run: |
+          cat << 'EOF' > mkdocs.yml
+          site_name: LPI 701-200 Preparation Guide
+          docs_dir: docs
+          theme:
+            name: material
+            palette:
+              scheme: slate
+              primary: indigo
+            features:
+              - navigation.top
+              - search.suggest
+              - search.highlight
+              - content.code.copy
+          plugins:
+            - search
+            - awesome-pages
+          markdown_extensions:
+            - pymdownx.highlight
+            - pymdownx.superfences
+            - tables
+          EOF
+
+      - name: Deploy to GitHub Pages
+        run: |
+          mkdocs gh-deploy --force
