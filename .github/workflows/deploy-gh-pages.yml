@@ -1,0 +1,137 @@
+name: Deploy Markdown Book to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # or 'master'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install MkDocs Material & Extensions
+        run: |
+          pip install mkdocs \
+                      mkdocs-material \
+                      pymdown-extensions
+
+      - name: Generate mkdocs.yml and Process Natural Chapter Order
+        run: |
+          python3 -c "
+          import os
+          import re
+
+          def natural_sort_key(s):
+              return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
+
+          # Gather all markdown files excluding hidden and infrastructure docs
+          md_files = []
+          for root, _, files in os.walk('.'):
+              if '_site' in root or '.github' in root:
+                  continue
+              for f in files:
+                  if f.endswith('.md') and f != 'TOC.md' and f != 'README.md':
+                      rel_path = os.path.relpath(os.path.join(root, f), '.').replace('\\\\', '/')
+                      md_files.append(rel_path)
+
+          md_files.sort(key=natural_sort_key)
+
+          # Build MkDocs Navigation structure
+          nav_lines = []
+          if os.path.exists('TOC.md'):
+              nav_lines.append('  - \"Table of Contents\": \"TOC.md\"')
+
+          for f in md_files:
+              # Format clean title from filename (e.g., Chapter25.md -> Chapter 25)
+              clean_name = os.path.splitext(os.path.basename(f))[0]
+              clean_title = re.sub(r'([a-zA-Z]+)(\d+)', r'\1 \2', clean_name).replace('_', ' ').replace('-', ' ').title()
+              nav_lines.append(f'  - \"{clean_title}\": \"{f}\"')
+
+          nav_yaml = '\n'.join(nav_lines)
+
+          config_content = f\"\"\"site_name: LPI 701-200 DevOps Tools Engineer Handbook
+  site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200
+  site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa
+
+  theme:
+    name: material
+    palette:
+      - media: \"(prefers-color-scheme: light)\"
+        scheme: default
+        primary: indigo
+        accent: indigo
+        toggle:
+          icon: material/brightness-7
+          name: Switch to dark mode
+      - media: \"(prefers-color-scheme: dark)\"
+        scheme: slate
+        primary: indigo
+        accent: lime
+        toggle:
+          icon: material/brightness-4
+          name: Switch to light mode
+    features:
+      - navigation.instant
+      - navigation.tracking
+      - navigation.top
+      - navigation.tabs
+      - navigation.sections
+      - search.suggest
+      - search.highlight
+      - content.code.copy
+
+  markdown_extensions:
+    - admonition
+    - pymdownx.superfences
+    - pymdownx.highlight:
+        anchor_linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.tabbed:
+        alternate_style: true
+    - tables
+    - attr_list
+
+  nav:
+  {nav_yaml}
+  \"\"\"
+
+          with open('mkdocs.yml', 'w', encoding='utf-8') as f:
+              f.write(config_content)
+          "
+
+      - name: Build Site with MkDocs
+        run: |
+          mkdocs build --site-dir _site
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
