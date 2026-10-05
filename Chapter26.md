@@ -214,21 +214,7 @@ Feature: Payment Gateway Processing
 
 In this lab, you will build an automated local testing and deployment validation pipeline. You will set up an API service, execute a k6 performance load test, enforce automated SLA quality gate assertions, and automate pipeline execution using a local runner script.
 
-```
-+-----------------------------------------------------------------------------------+
-|                                Local Pipeline Execution                           |
-|                                                                                   |
-|  +--------------------+     +---------------------+     +----------------------+  |
-|  | Start Target API   | --> | Execute k6 Load     | --> | SLA Assertion Gate   |  |
-|  | Container          |     | Performance Engine  |     | (P95 < 200ms, err<1%)|  |
-|  +--------------------+     +---------------------+     +----------------------+  |
-|                                                                    |              |
-|                                                                    v              |
-|                                                         [ PASS: Release Build ]   |
-|                                                         [ FAIL: Abort Release ]   |
-+-----------------------------------------------------------------------------------+
-
-```
+![Hands-On Lab](assets/images/chapter26/26-5-Hands-On-Lab.png)
 
 ### Step 1: Provision target API service
 
