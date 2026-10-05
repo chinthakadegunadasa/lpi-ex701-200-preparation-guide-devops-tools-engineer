@@ -35,7 +35,7 @@ jobs:
                       mkdocs-material \
                       pymdown-extensions
 
-      - name: Generate mkdocs.yml and Process Natural Chapter Order
+      - name: Generate mkdocs.yml and Process Natural Chapter Order & Relative Assets
         run: |
           python3 -c "
           import os
@@ -44,25 +44,25 @@ jobs:
           def natural_sort_key(s):
               return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
-          # Gather all markdown files excluding hidden and infrastructure docs
+          # Collect all markdown files excluding build and pipeline folders
           md_files = []
           for root, _, files in os.walk('.'):
               if '_site' in root or '.github' in root:
                   continue
               for f in files:
-                  if f.endswith('.md') and f != 'TOC.md' and f != 'README.md':
+                  if f.endswith('.md') and f.lower() not in ['toc.md', 'readme.md']:
                       rel_path = os.path.relpath(os.path.join(root, f), '.').replace('\\\\', '/')
                       md_files.append(rel_path)
 
+          # Natural ascending numerical sort (Chapter 1, Chapter 2 ... Chapter 10, Chapter 25)
           md_files.sort(key=natural_sort_key)
 
-          # Build MkDocs Navigation structure
+          # Build navigation list
           nav_lines = []
           if os.path.exists('TOC.md'):
               nav_lines.append('  - \"Table of Contents\": \"TOC.md\"')
 
           for f in md_files:
-              # Format clean title from filename (e.g., Chapter25.md -> Chapter 25)
               clean_name = os.path.splitext(os.path.basename(f))[0]
               clean_title = re.sub(r'([a-zA-Z]+)(\d+)', r'\1 \2', clean_name).replace('_', ' ').replace('-', ' ').title()
               nav_lines.append(f'  - \"{clean_title}\": \"{f}\"')
@@ -72,6 +72,9 @@ jobs:
           config_content = f\"\"\"site_name: LPI 701-200 DevOps Tools Engineer Handbook
   site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200
   site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa
+  site_url: https://chinthakadegunadasa.github.io/lpi-ex701-200-preparation-guide-devops-tools-engineer/
+
+  use_directory_urls: false
 
   theme:
     name: material
@@ -111,6 +114,7 @@ jobs:
         alternate_style: true
     - tables
     - attr_list
+    - md_in_html
 
   nav:
   {nav_yaml}
