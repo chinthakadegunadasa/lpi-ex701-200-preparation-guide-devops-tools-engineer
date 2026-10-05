@@ -6,11 +6,11 @@ This chapter covers foundational cloud-native architectural patterns for the **D
 
 Selecting an application architecture requires evaluating operational complexity, deployment velocity, fault isolation, and resource consumption. Enterprise environments often transition from monolithic codebases to microservices or serverless architectures to increase velocity and scalability.
 
-![Architectural Evolution Paradigms](assets/images/chapter1/1-1-Architectural-Evolution-Paradigms.png)
+![Architectural Evolution Paradigms](./assets/images/chapter1/1-1-Architectural-Evolution-Paradigms.png)
 
 ### Paradigm Comparison Matrix
 
-![Architectural Paradigms Matrix](assets/images/chapter1/1-1-Architectural-Paradigms-Matrix.png)
+![Architectural Paradigms Matrix](./assets/images/chapter1/1-1-Architectural-Paradigms-Matrix.png)
 
 ## 1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL
 
@@ -61,7 +61,7 @@ message AuditLogResponse {
 }
 ```
 
-![API Protocol Interaction Patterns](assets/images/chapter1/1-2-API-Protocol-Interaction-Pattern.png)
+![API Protocol Interaction Patterns](./assets/images/chapter1/1-2-API-Protocol-Interaction-Pattern.png)
 ## 1.3 Event-Driven Architecture & Message Queuing
 
 Event-Driven Architecture (EDA) decouples producers and consumers using event brokers, providing asynchronous execution, buffering, and message replay capabilities.
@@ -72,7 +72,7 @@ Event-Driven Architecture (EDA) decouples producers and consumers using event br
 - **Point-to-Point (Queue):** Messages are consumed by exactly one consumer worker from a shared pool (e.g., SQS, RabbitMQ Queues).
 - **Event Sourcing:** State changes are logged as an immutable sequence of events, allowing point-in-time reconstruction.
 
-![Event Routing and DLX Processing Workflow](assets/images/chapter1/1-3-Event-Routing-and-DLX-Processing-Workflow.png)
+![Event Routing and DLX Processing Workflow](./assets/images/chapter1/1-3-Event-Routing-and-DLX-Processing-Workflow.png)
 
 ## 1.4 Enterprise Scalability, Fault Tolerance, and High Availability
 
@@ -84,7 +84,7 @@ Building resilient systems requires engineering for failure at every layer of th
 2. **Bulkhead:** Isolates critical resource pools (e.g., separate thread pools per downstream dependency) so that an outage in one pool does not starve others.
 3. **Rate Limiting & Throttling:** Protects services from overload by enforcing upper limits on incoming request rates using algorithms like token bucket or leaky bucket.
 
-![Circuit Breaker State Machine Topology](assets/images/chapter1/1-4-Circuit-Breaker-State-Machine-Topology.png)
+![Circuit Breaker State Machine Topology](./assets/images/chapter1/1-4-Circuit-Breaker-State-Machine-Topology.png)
 
 ## 1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices
 
@@ -92,7 +92,7 @@ This lab demonstrates decoupling a synchronous monolithic processing path into a
 
 ### Lab Topology Schematic
 
-![Hands-On Decoupled Lab Infrastructur](assets/images/chapter1/1-5-Hands-On-Decoupled-Lab-Infrastructure.png)
+![Hands-On Decoupled Lab Infrastructur](./assets/images/chapter1/1-5-Hands-On-Decoupled-Lab-Infrastructure.png)
 
 ### Deployment Orchestration (`docker-compose.yml`)
 
