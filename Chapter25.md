@@ -89,19 +89,7 @@ To achieve seamless automated traffic rerouting during a transport failure, ente
 
 Choosing the correct storage architecture impacts system throughput, access patterns, application refactoring effort, and ongoing monthly spend.
 
-```
-+-----------------------------------------------------------------------------------+
-|                             Cloud Storage Mechanics                               |
-+----------------------+---------------------------------+--------------------------+
-| Block Storage        | File Storage                    | Object Storage           |
-| (EBS, Persistent Disk)| (EFS, Azure Files, Filestore)   | (S3, GCS, Blob Storage)  |
-+----------------------+---------------------------------+--------------------------+
-| Raw Block Allocation | Shared Network File System      | Key-Value Storage API    |
-| Attach to Single VM  | Concurrent Multi-Node Access    | HTTP REST (GET/PUT/DELETE|
-| High IOPS / Low Lat. | POSIX File Locking              | Flat Hierarchy + Metadata|
-+----------------------+---------------------------------+--------------------------+
-
-```
+![Cloud Storage Mechanics](assets/images/chapter25/25-3-Cloud-Storage-Mechanics.png)
 
 ### 1. Block Storage
 
