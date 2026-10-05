@@ -7,22 +7,11 @@ This chapter explores the architectural mechanics of continuous testing, from th
 ## 26.1 The Automated Testing Pyramid: Unit, Integration, System, and End-to-End
 
 The **Automated Testing Pyramid** provides a structural model for balancing test velocity, execution cost, operational reliability, and isolation depth across software release cycles.
-```
 
-```
-                  / \
-                 /   \
-                / E2E \             <- High Cost, Slow, Low Isolation
-               /-------\
-              / System  \
-             /-----------\
-            / Integration \
-           /---------------\
-          /   Unit Tests    \       <- Low Cost, Fast, High Isolation
-         /-------------------\
-```
+![26.1 The Automated Testing Pyramid](assets/images/chapter26/26-1-The-Automated-Testing-Pyramid.png)
 
 ### 1. Unit Testing
+
 Unit tests isolate individual procedures, methods, functions, or modules from external dependencies (such as databases, remote network sockets, message queues, or third-party APIs).
 
 *   **Scope:** Function and method logic validation.
