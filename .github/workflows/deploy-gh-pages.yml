@@ -35,39 +35,61 @@ jobs:
                       mkdocs-material \
                       pymdown-extensions
 
-      - name: Generate mkdocs.yml and Process Natural Chapter Order & Relative Assets
+      - name: Prepare Content Directory & Enforce Natural Sorting
         run: |
           python3 -c "
           import os
+          import shutil
           import re
 
           def natural_sort_key(s):
-              # Splits string into integers and non-digits for natural numerical sorting
               return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
-          # Collect all chapter markdown files
+          # Prepare clean staging docs folder
+          if os.path.exists('docs_build'):
+              shutil.rmtree('docs_build')
+          os.makedirs('docs_build')
+
+          # 1. Copy all non-markdown assets (images, assets)
+          for root, dirs, files in os.walk('.'):
+              if any(ignored in root for ignored in ['_site', '.github', '.git', 'docs_build']):
+                  continue
+              for f in files:
+                  if not f.endswith('.md'):
+                      src = os.path.join(root, f)
+                      rel = os.path.relpath(src, '.')
+                      dst = os.path.join('docs_build', rel)
+                      os.makedirs(os.path.dirname(dst), exist_ok=True)
+                      shutil.copy2(src, dst)
+
+          # 2. Process and collect Markdown files
           md_files = []
-          for root, _, files in os.walk('.'):
-              # Exclude site output, github actions, and temporary directories
-              if any(ignored in root for ignored in ['_site', '.github', '.git', 'site']):
+          for root, dirs, files in os.walk('.'):
+              if any(ignored in root for ignored in ['_site', '.github', '.git', 'docs_build']):
                   continue
               for f in files:
                   if f.endswith('.md') and f.lower() not in ['toc.md', 'readme.md']:
-                      rel_path = os.path.relpath(os.path.join(root, f), '.').replace('\\\\', '/')
-                      md_files.append(rel_path)
+                      rel = os.path.relpath(os.path.join(root, f), '.').replace('\\\\', '/')
+                      md_files.append(rel)
 
-          # Force natural numerical sort on file paths
           md_files.sort(key=natural_sort_key)
 
-          # Construct navigation tree for MkDocs
-          nav_entries = []
+          # 3. Copy Markdown files to docs_build
           if os.path.exists('TOC.md'):
-              nav_entries.append('  - \"Table of Contents\": \"TOC.md\"')
+              shutil.copy2('TOC.md', 'docs_build/index.md')
+          elif os.path.exists('README.md'):
+              shutil.copy2('README.md', 'docs_build/index.md')
 
           for f in md_files:
-              filename = os.path.splitext(os.path.basename(f))[0]
-              # Format clean title (e.g. Chapter25 -> Chapter 25)
-              clean_title = re.sub(r'([a-zA-Z]+)(\d+)', r'\1 \2', filename).replace('_', ' ').replace('-', ' ').title()
+              dst = os.path.join('docs_build', f)
+              os.makedirs(os.path.dirname(dst), exist_ok=True)
+              shutil.copy2(f, dst)
+
+          # 4. Generate Nav config with natural numerical order
+          nav_entries = ['  - \"Table of Contents\": \"index.md\"']
+          for f in md_files:
+              clean_name = os.path.splitext(os.path.basename(f))[0]
+              clean_title = re.sub(r'([a-zA-Z]+)(\d+)', r'\1 \2', clean_name).replace('_', ' ').replace('-', ' ').title()
               nav_entries.append(f'  - \"{clean_title}\": \"{f}\"')
 
           nav_yaml = '\n'.join(nav_entries)
@@ -77,7 +99,7 @@ jobs:
   site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa
   site_url: https://chinthakadegunadasa.github.io/lpi-ex701-200-preparation-guide-devops-tools-engineer/
 
-  docs_dir: '.'
+  docs_dir: 'docs_build'
   use_directory_urls: false
 
   theme:
@@ -102,7 +124,6 @@ jobs:
       - navigation.tracking
       - navigation.top
       - navigation.tabs
-      - navigation.sections
       - search.suggest
       - search.highlight
       - content.code.copy
@@ -131,21 +152,6 @@ jobs:
       - name: Build Site with MkDocs
         run: |
           mkdocs build --site-dir _site
-
-      - name: Sync Static Assets and Images into Site Root
-        run: |
-          # Copy all non-markdown media assets (png, jpg, svg, gif) into the output directory
-          rsync -av --include='*/' \
-                    --include='*.png' \
-                    --include='*.jpg' \
-                    --include='*.jpeg' \
-                    --include='*.svg' \
-                    --include='*.gif' \
-                    --exclude='*' \
-                    --exclude='.git' \
-                    --exclude='.github' \
-                    --exclude='_site' \
-                    ./ _site/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
