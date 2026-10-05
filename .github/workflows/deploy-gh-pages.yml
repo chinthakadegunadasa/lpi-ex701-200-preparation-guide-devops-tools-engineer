@@ -27,45 +27,76 @@ jobs:
       - name: Install Pandoc & Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc rsync
+          sudo apt-get install -y pandoc rsync python3
 
-      - name: Build HTML Site from Markdown
+      - name: Build HTML Site with Ascending Chapter Order
         run: |
           mkdir -p _site
 
-          REPO_NAME="${{ github.event.repository.name }}"
-          BASE_URL="/${REPO_NAME}/"
-
-          # 1. Copy all static assets (images, assets, media) first
+          # 1. Copy all non-markdown static assets (images, CSS, code snippets)
           rsync -av --exclude='.git' --exclude='.github' --exclude='_site' ./ _site/
 
-          # 2. Convert TOC.md into index.html
+          # 2. Re-order TOC.md into natural ascending numerical order using Python
+          python3 -c "
+          import re
+
+          def natural_sort_key(text):
+              # Splits string into integers and non-integer chunks for natural numerical sorting
+              return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', text)]
+
+          try:
+              with open('TOC.md', 'r', encoding='utf-8') as f:
+                  content = f.read()
+
+              lines = content.splitlines()
+              header_lines = []
+              chapter_lines = []
+
+              for line in lines:
+                  # Detect list items or links referencing chapter files
+                  if re.search(r'\[.*\]\(.*\.md\)', line) or line.strip().startswith(('-', '*', '1.')):
+                      chapter_lines.append(line)
+                  else:
+                      header_lines.append(line)
+
+              # Sort chapter links using natural numerical sorting
+              chapter_lines.sort(key=natural_sort_key)
+
+              # Write back sorted TOC.md
+              with open('TOC.md', 'w', encoding='utf-8') as f:
+                  f.write('\n'.join(header_lines) + '\n\n' + '\n'.join(chapter_lines) + '\n')
+          except Exception as e:
+              print(f'TOC processing note: {e}')
+          "
+
+          # 3. Convert sorted TOC.md to index.html
           if [ -f "TOC.md" ]; then
             pandoc TOC.md -s \
               --metadata title="LPI 701-200 Preparation Guide" \
               -A <(echo "<script>
-                // Convert remaining .md links in client-side DOM to .html
-                document.querySelectorAll('a[href$=\"\"]').forEach(a => {
-                  if (a.getAttribute('href').endsWith('.md')) {
-                    a.setAttribute('href', a.getAttribute('href').replace(/\.md$/, '.html'));
-                  }
+                document.addEventListener('DOMContentLoaded', () => {
+                  document.querySelectorAll('a[href$=\"\"]').forEach(a => {
+                    if (a.getAttribute('href').endsWith('.md')) {
+                      a.setAttribute('href', a.getAttribute('href').replace(/\.md$/, '.html'));
+                    }
+                  });
                 });
               </script>") \
               -o _site/index.html
           fi
 
-          # 3. Convert all Markdown (.md) files to HTML and fix internal markdown links
-          find . -name "*.md" ! -path "./_site/*" ! -path "./.github/*" | while read -r md_file; do
+          # 4. Convert all Markdown files in natural numerical order (`sort -V`)
+          find . -name "*.md" ! -path "./_site/*" ! -path "./.github/*" | sort -V | while read -r md_file; do
             rel_path="${md_file#./}"
             html_path="_site/${rel_path%.md}.html"
             mkdir -p "$(dirname "$html_path")"
             
-            # Convert markdown to html using pandoc
+            # Convert markdown file to standalone HTML page
             pandoc "$md_file" -s \
               --metadata title="LPI 701-200 Preparation Guide" \
               -o "$html_path"
 
-            # Post-process generated HTML: convert links pointing to .md files to .html
+            # Post-process generated HTML: update internal markdown links to HTML
             sed -i -E 's/href="([^"]+)\.md"/href="\1.html"/g' "$html_path"
             sed -i -E 's/href="([^"]+)\.md#([^"]+)"/href="\1.html#\2"/g' "$html_path"
           done
