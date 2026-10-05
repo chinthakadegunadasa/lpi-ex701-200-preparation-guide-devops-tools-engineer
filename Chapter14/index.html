@@ -1,0 +1,2557 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter13/">
+      
+      
+        <link rel="next" href="../Chapter15/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 14: Ansible Architecture & Core Playbooks - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-14-ansible-architecture-core-playbooks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 14: Ansible Architecture &amp; Core Playbooks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#141-agentless-configuration-management-engine-ssh-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.1 Agentless Configuration Management Engine &amp; SSH Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.1 Agentless Configuration Management Engine &amp; SSH Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operational-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements-for-managed-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements for Managed Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-ssh-tuning-ansiblecfg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise SSH Tuning (ansible.cfg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#142-inventory-files-static-vs-dynamic-inventory-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.2 Inventory Files (Static vs. Dynamic Inventory Engines)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.2 Inventory Files (Static vs. Dynamic Inventory Engines)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-inventories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Inventories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Static Inventories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ini-format-inventoryhostsini" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        INI Format (inventory/hosts.ini)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-format-inventoryhostsyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML Format (inventory/hosts.yaml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-inventory-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Inventory Engines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Inventory Engines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-dynamic-inventory-configuration-aws-ec2-plugin-aws_ec2yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Dynamic Inventory Configuration: AWS EC2 Plugin (aws_ec2.yaml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-inventory-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Inventory Parsing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#143-writing-idempotent-ansible-tasks-and-playbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3 Writing Idempotent Ansible Tasks and Playbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.3 Writing Idempotent Ansible Tasks and Playbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-status-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Status Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-idempotent-tasks-declarative-vs-imperative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Idempotent Tasks (Declarative vs. Imperative)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing Idempotent Tasks (Declarative vs. Imperative)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#non-idempotent-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-Idempotent (Anti-Pattern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotent-guard-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotent Guard Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotent-shell-execution-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotent Shell Execution Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#144-variables-facts-handlers-and-conditionals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.4 Variables, Facts, Handlers, and Conditionals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.4 Variables, Facts, Handlers, and Conditionals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-precedence-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Precedence Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ansible-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Facts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditionals-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditionals (when)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handlers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#145-hands-on-lab-writing-an-idempotent-multi-tier-application-server-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.5 Hands-On Lab: Writing an Idempotent Multi-Tier Application Server Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.5 Hands-On Lab: Writing an Idempotent Multi-Tier Application Server Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-lab-directory-structure-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Lab Directory Structure Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-static-inventory-and-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Static Inventory and Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure Static Inventory and Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inventoryhostsini" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inventory/hosts.ini
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group_varsallyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group_vars/all.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-develop-the-nginx-frontend-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Develop the Nginx Frontend Role
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Develop the Nginx Frontend Role">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rolesnginxhandlersmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/nginx/handlers/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesnginxtemplatesnginx_proxyconfj2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/nginx/templates/nginx_proxy.conf.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesnginxtasksmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/nginx/tasks/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-develop-the-application-tier-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Develop the Application Tier Role
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Develop the Application Tier Role">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rolesapptemplatesappservicej2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/templates/app.service.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesapptemplatesindexjsj2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/templates/index.js.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesapptasksmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/tasks/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesapphandlersmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/handlers/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-master-site-playbook-siteyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Master Site Playbook (site.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-validate-and-run-the-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Validate and Run the Playbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#141-agentless-configuration-management-engine-ssh-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.1 Agentless Configuration Management Engine &amp; SSH Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.1 Agentless Configuration Management Engine &amp; SSH Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operational-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements-for-managed-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements for Managed Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-ssh-tuning-ansiblecfg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise SSH Tuning (ansible.cfg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#142-inventory-files-static-vs-dynamic-inventory-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.2 Inventory Files (Static vs. Dynamic Inventory Engines)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.2 Inventory Files (Static vs. Dynamic Inventory Engines)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-inventories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Inventories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Static Inventories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ini-format-inventoryhostsini" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        INI Format (inventory/hosts.ini)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-format-inventoryhostsyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML Format (inventory/hosts.yaml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-inventory-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Inventory Engines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Inventory Engines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-dynamic-inventory-configuration-aws-ec2-plugin-aws_ec2yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Dynamic Inventory Configuration: AWS EC2 Plugin (aws_ec2.yaml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-inventory-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Inventory Parsing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#143-writing-idempotent-ansible-tasks-and-playbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3 Writing Idempotent Ansible Tasks and Playbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.3 Writing Idempotent Ansible Tasks and Playbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-status-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Status Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-idempotent-tasks-declarative-vs-imperative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Idempotent Tasks (Declarative vs. Imperative)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing Idempotent Tasks (Declarative vs. Imperative)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#non-idempotent-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-Idempotent (Anti-Pattern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotent-guard-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotent Guard Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotent-shell-execution-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotent Shell Execution Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#144-variables-facts-handlers-and-conditionals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.4 Variables, Facts, Handlers, and Conditionals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.4 Variables, Facts, Handlers, and Conditionals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-precedence-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Precedence Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ansible-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Facts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditionals-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditionals (when)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handlers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#145-hands-on-lab-writing-an-idempotent-multi-tier-application-server-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.5 Hands-On Lab: Writing an Idempotent Multi-Tier Application Server Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.5 Hands-On Lab: Writing an Idempotent Multi-Tier Application Server Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-lab-directory-structure-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Lab Directory Structure Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-static-inventory-and-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Static Inventory and Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure Static Inventory and Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inventoryhostsini" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inventory/hosts.ini
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group_varsallyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group_vars/all.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-develop-the-nginx-frontend-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Develop the Nginx Frontend Role
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Develop the Nginx Frontend Role">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rolesnginxhandlersmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/nginx/handlers/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesnginxtemplatesnginx_proxyconfj2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/nginx/templates/nginx_proxy.conf.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesnginxtasksmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/nginx/tasks/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-develop-the-application-tier-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Develop the Application Tier Role
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Develop the Application Tier Role">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rolesapptemplatesappservicej2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/templates/app.service.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesapptemplatesindexjsj2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/templates/index.js.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesapptasksmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/tasks/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesapphandlersmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles/app/handlers/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-master-site-playbook-siteyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Master Site Playbook (site.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-validate-and-run-the-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Validate and Run the Playbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-14-ansible-architecture-core-playbooks">Chapter 14: Ansible Architecture &amp; Core Playbooks</h1>
+<p>This chapter covers the architecture, configuration management principles, inventory control mechanisms, and playbook execution models of Ansible. It directly addresses Subject Area 701 (Configuration Management and Automation) of the <strong>LPI 701-200 DevOps Tools Engineer Exam Objectives</strong>.</p>
+<h2 id="141-agentless-configuration-management-engine-ssh-control">14.1 Agentless Configuration Management Engine &amp; SSH Control</h2>
+<p>Unlike agent-based configuration management tools (such as Puppet or Chef) that require a daemon running on managed nodes, Ansible utilizes an <strong>agentless architecture</strong>.</p>
+<p><img alt="ANSIBLE CONTROL NODE" src="assets/images/chapter14/14-1-ANSIBLE-CONTROL-NODE.png" /></p>
+<h3 id="operational-mechanics">Operational Mechanics</h3>
+<ol>
+<li><strong>Control Node:</strong> The system where Ansible is installed. Ansible processes playbooks, parses inventories, resolves dependencies, and renders templates locally on the Control Node.</li>
+<li><strong>Transport Layer:</strong> Communication with managed nodes occurs via standard protocols:</li>
+<li><strong>OpenSSH / SFTP / SCP:</strong> Default transport mechanism for Linux/Unix platforms.</li>
+<li><strong>WinRM / WinPSSession:</strong> Used for native Windows target management.</li>
+<li><strong>Execution Model:</strong> Ansible connects to managed nodes over SSH, transfers small ephemeral Python scripts (modules) to a temporary directory on the target, executes those scripts, extracts JSON formatted results, and cleans up the temporary files.</li>
+</ol>
+<h3 id="requirements-for-managed-nodes">Requirements for Managed Nodes</h3>
+<ul>
+<li><strong>POSIX/Linux Targets:</strong> Standard SSH daemon and a Python interpreter installed (<code>Python &gt;= 3.9</code>).</li>
+<li><strong>Windows Targets:</strong> PowerShell 3.0+ and WinRM configured for remote management.</li>
+</ul>
+<h3 id="enterprise-ssh-tuning-ansiblecfg">Enterprise SSH Tuning (<code>ansible.cfg</code>)</h3>
+<p>To operate efficiently across thousands of enterprise targets, the default SSH transport settings must be tuned in <code>ansible.cfg</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[defaults]</span>
+<span class="na">inventory</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s">./inventory</span>
+<span class="na">remote_user</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">devops_admin</span>
+<span class="na">private_key_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">~/.ssh/id_ed25519_enterprise</span>
+<span class="na">host_key_checking</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">forks</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s">50</span><span class="w">            </span><span class="c1">; Parallel connections per task execution</span>
+
+<span class="k">[privilege_escalation]</span>
+<span class="na">become</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">become_method</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">sudo</span>
+<span class="na">become_user</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">root</span>
+<span class="na">become_ask_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+
+<span class="k">[ssh_connection]</span>
+<span class="na">pipelining</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w">          </span><span class="c1">; Reduces SSH operations required to execute a module</span>
+<span class="na">ssh_args</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">-o ControlMaster=auto -o ControlPersist=60s -o StrictHostKeyChecking=accept-new</span>
+</code></pre></div>
+<ul>
+<li><strong>Pipelining (<code>pipelining = True</code>):</strong> Bypasses the file-transfer step (<code>SFTP</code>/<code>SCP</code>) by piping Python scripts directly into the SSH session stdin. This significantly improves task execution performance across large fleets.</li>
+<li><strong>ControlPersist (<code>ControlPersist=60s</code>):</strong> Reuses established SSH sockets for subsequent commands executed against the same target within the specified idle window.</li>
+</ul>
+<h2 id="142-inventory-files-static-vs-dynamic-inventory-engines">14.2 Inventory Files (Static vs. Dynamic Inventory Engines)</h2>
+<p>Ansible manages targets defined in an <strong>inventory</strong>. An inventory maps managed targets to logical groups for targeted configuration execution.</p>
+<h3 id="static-inventories">Static Inventories</h3>
+<p>Static inventories use INI or YAML file formats to list hosts and host groups.</p>
+<h4 id="ini-format-inventoryhostsini">INI Format (<code>inventory/hosts.ini</code>)</h4>
+<div class="highlight"><pre><span></span><code><span class="k">[webservers]</span>
+<span class="na">web-node-01.example.com ansible_host</span><span class="o">=</span><span class="s">10.0.1.10</span>
+<span class="na">web-node-02.example.com ansible_host</span><span class="o">=</span><span class="s">10.0.1.11</span>
+
+<span class="k">[dbservers]</span>
+<span class="na">db-node-01.example.com ansible_host</span><span class="o">=</span><span class="s">10.0.2.20</span>
+
+<span class="k">[production:children]</span>
+<span class="na">webservers</span>
+<span class="na">dbservers</span>
+
+<span class="k">[production:vars]</span>
+<span class="na">env</span><span class="o">=</span><span class="s">production</span>
+<span class="na">ansible_port</span><span class="o">=</span><span class="s">22</span>
+</code></pre></div>
+<h4 id="yaml-format-inventoryhostsyaml">YAML Format (<code>inventory/hosts.yaml</code>)</h4>
+<div class="highlight"><pre><span></span><code><span class="nt">all</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">children</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">webservers</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">web-node-01.example.com</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.1.10</span>
+<span class="w">        </span><span class="nt">web-node-02.example.com</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.1.11</span>
+<span class="w">    </span><span class="nt">dbservers</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">db-node-01.example.com</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.2.20</span>
+<span class="w">      </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+</code></pre></div>
+<h3 id="dynamic-inventory-engines">Dynamic Inventory Engines</h3>
+<p>In cloud environments (AWS, Azure, GCP, OpenStack), static IP addresses and hostnames change frequently. <strong>Dynamic Inventory Plugins</strong> query cloud provider APIs at runtime to dynamically build host lists and group metadata using tags.</p>
+<h4 id="enterprise-dynamic-inventory-configuration-aws-ec2-plugin-aws_ec2yaml">Enterprise Dynamic Inventory Configuration: AWS EC2 Plugin (<code>aws_ec2.yaml</code>)</h4>
+<p>To use the dynamic inventory plugin, name the file ending with <code>aws_ec2.yaml</code> or <code>aws_ec2.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amazon.aws.aws_ec2</span>
+<span class="nt">regions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-west-2</span>
+
+<span class="c1"># Filter target instances by state and tags</span>
+<span class="nt">filters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">instance-state-name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">running</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">tag:Environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+
+<span class="c1"># Group hosts logically using Jinja2 expressions</span>
+<span class="nt">keyed_groups</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags.Role</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">role</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags.Environment</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">placement.availability_zone</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">az</span>
+
+<span class="c1"># Set connection properties dynamically</span>
+<span class="nt">compose</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">private_ip_address</span>
+</code></pre></div>
+<h4 id="testing-inventory-parsing">Testing Inventory Parsing</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify static or dynamic inventory output in JSON format</span>
+ansible-inventory<span class="w"> </span>-i<span class="w"> </span>aws_ec2.yaml<span class="w"> </span>--list
+
+<span class="c1"># View logical graph structure of target groups</span>
+ansible-inventory<span class="w"> </span>-i<span class="w"> </span>aws_ec2.yaml<span class="w"> </span>--graph
+</code></pre></div>
+<h2 id="143-writing-idempotent-ansible-tasks-and-playbooks">14.3 Writing Idempotent Ansible Tasks and Playbooks</h2>
+<p><strong>Idempotency</strong> ensures that executing an Ansible task multiple times results in the same system state as running it once, without causing unintended side effects or redundant changes on subsequent runs.</p>
+<h3 id="task-status-lifecycle">Task Status Lifecycle</h3>
+<p>When an Ansible task completes on a managed node, it returns one of three primary states:
+1. <strong><code>ok</code>:</strong> Target is already in the desired state; no changes were made.
+2. <strong><code>changed</code>:</strong> Target was modified to reach the desired state.
+3. <strong><code>failed</code>:</strong> Task encountered an error and execution stopped on that host.</p>
+<h3 id="writing-idempotent-tasks-declarative-vs-imperative">Writing Idempotent Tasks (Declarative vs. Imperative)</h3>
+<p>Most native Ansible modules (e.g., <code>ansible.builtin.copy</code>, <code>ansible.builtin.package</code>, <code>ansible.builtin.service</code>, <code>ansible.builtin.user</code>) are inherently idempotent. However, command-execution modules (<code>ansible.builtin.command</code>, <code>ansible.builtin.shell</code>, <code>ansible.builtin.raw</code>) are imperative and will trigger a <code>changed</code> status on every execution unless explicitly constrained.</p>
+<h4 id="non-idempotent-anti-pattern">Non-Idempotent (Anti-Pattern)</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># BAD: Executes every time and always returns status "changed"</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Uncompress software archive</span>
+<span class="w">  </span><span class="nt">ansible.builtin.shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tar -xzf /tmp/app.tar.gz -C /opt/app/</span>
+</code></pre></div>
+<h4 id="idempotent-guard-pattern">Idempotent Guard Pattern</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># GOOD: Constrained using creates or checks</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Uncompress software archive idempotently</span>
+<span class="w">  </span><span class="nt">ansible.builtin.unarchive</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/app.tar.gz</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/app/</span>
+<span class="w">    </span><span class="nt">remote_src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">creates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/app/bin/executable</span>
+</code></pre></div>
+<h4 id="idempotent-shell-execution-pattern">Idempotent Shell Execution Pattern</h4>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run initialization script only if marker file is missing</span>
+<span class="w">  </span><span class="nt">ansible.builtin.shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/app/init.sh &amp;&amp; touch /opt/app/init.marker</span>
+<span class="w">  </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">creates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/app/init.marker</span>
+</code></pre></div>
+<h2 id="144-variables-facts-handlers-and-conditionals">14.4 Variables, Facts, Handlers, and Conditionals</h2>
+<h3 id="variable-precedence-hierarchy">Variable Precedence Hierarchy</h3>
+<p>Ansible allows variables to be defined in multiple locations. When the same variable name exists in multiple scopes, Ansible evaluates them according to a strict precedence order (listed below from lowest to highest precedence):</p>
+<ol>
+<li>Command-line role defaults (<code>roles/x/defaults/main.yml</code>)</li>
+<li>Inventory group vars (<code>group_vars/all.yml</code>, <code>group_vars/groupname.yml</code>)</li>
+<li>Inventory host vars (<code>host_vars/hostname.yml</code>)</li>
+<li>Playbook <code>vars</code> block</li>
+<li>Playbook <code>vars_files</code></li>
+<li>Task-level variables (<code>vars</code> inside a task)</li>
+<li>Role variables (<code>roles/x/vars/main.yml</code>)</li>
+<li>Registered task variables (<code>register: variable_name</code>)</li>
+<li>Extra CLI variables (<code>-e "var_name=value"</code>) — <strong>Highest Precedence</strong></li>
+</ol>
+<h3 id="ansible-facts">Ansible Facts</h3>
+<p>Facts are system-level variables automatically gathered from target systems by the <code>ansible.builtin.setup</code> module at the start of a playbook execution.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Display target machine details using gathered facts</span>
+<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">"Node</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_facts['hostname']</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_facts['distribution']</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_facts['distribution_version']</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">IP</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_facts['default_ipv4']['address']</span><span class="nv"> </span><span class="s">}}"</span>
+</code></pre></div>
+<p>To improve execution performance on hosts where facts are not used in tasks, disable fact gathering:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Perform fast tasks without fact gathering</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ping host</span>
+<span class="w">      </span><span class="nt">ansible.builtin.ping</span><span class="p">:</span>
+</code></pre></div>
+<h3 id="conditionals-when">Conditionals (<code>when</code>)</h3>
+<p>Tasks can be conditionally executed based on variables, facts, or registered results:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Apache web server on RedHat-based systems</span>
+<span class="w">  </span><span class="nt">ansible.builtin.dnf</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">httpd</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible_facts['os_family'] == "RedHat"</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Apache web server on Debian-based systems</span>
+<span class="w">  </span><span class="nt">ansible.builtin.apt</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache2</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible_facts['os_family'] == "Debian"</span>
+</code></pre></div>
+<h3 id="handlers">Handlers</h3>
+<p>Handlers are special tasks that execute only when notified by another task returning a status of <code>changed</code>. They are grouped and run at the very end of the play execution phase to optimize execution speed (e.g., preventing unnecessary service restarts).</p>
+<div class="highlight"><pre><span></span><code><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update Nginx Configuration File</span>
+<span class="w">    </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">templates/nginx.conf.j2</span>
+<span class="w">      </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/nginx.conf</span>
+<span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">      </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">'0644'</span>
+<span class="w">    </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Nginx Service</span>
+
+<span class="nt">handlers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Nginx Service</span>
+<span class="w">    </span><span class="nt">ansible.builtin.service</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">      </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
+</code></pre></div>
+<h2 id="145-hands-on-lab-writing-an-idempotent-multi-tier-application-server-playbook">14.5 Hands-On Lab: Writing an Idempotent Multi-Tier Application Server Playbook</h2>
+<h3 id="scenario-overview">Scenario Overview</h3>
+<p>In this lab, you will write a complete, production-grade, idempotent Ansible playbook that configures a multi-tier application stack consisting of:
+1. <strong>Frontend Tier:</strong> Nginx Reverse Proxy
+2. <strong>Application Tier:</strong> Node.js Application service running with systemd</p>
+<h3 id="step-1-lab-directory-structure-setup">Step 1: Lab Directory Structure Setup</h3>
+<p>Create a dedicated directory structure following Ansible best practices:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>multi-tier-lab/inventory
+mkdir<span class="w"> </span>-p<span class="w"> </span>multi-tier-lab/group_vars
+mkdir<span class="w"> </span>-p<span class="w"> </span>multi-tier-lab/roles/nginx/tasks
+mkdir<span class="w"> </span>-p<span class="w"> </span>multi-tier-lab/roles/nginx/templates
+mkdir<span class="w"> </span>-p<span class="w"> </span>multi-tier-lab/roles/nginx/handlers
+mkdir<span class="w"> </span>-p<span class="w"> </span>multi-tier-lab/roles/app/tasks
+mkdir<span class="w"> </span>-p<span class="w"> </span>multi-tier-lab/roles/app/templates
+<span class="nb">cd</span><span class="w"> </span>multi-tier-lab
+</code></pre></div>
+<h3 id="step-2-configure-static-inventory-and-variables">Step 2: Configure Static Inventory and Variables</h3>
+<h4 id="inventoryhostsini"><code>inventory/hosts.ini</code></h4>
+<div class="highlight"><pre><span></span><code><span class="k">[webservers]</span>
+<span class="na">web-01.lab.internal ansible_host</span><span class="o">=</span><span class="s">127.0.0.1 ansible_port=2222</span>
+
+<span class="k">[appservers]</span>
+<span class="na">app-01.lab.internal ansible_host</span><span class="o">=</span><span class="s">127.0.0.1 ansible_port=2223</span>
+
+<span class="k">[multi_tier:children]</span>
+<span class="na">webservers</span>
+<span class="na">appservers</span>
+
+<span class="k">[multi_tier:vars]</span>
+<span class="na">ansible_user</span><span class="o">=</span><span class="s">devops</span>
+<span class="na">ansible_ssh_private_key_file</span><span class="o">=</span><span class="s">~/.ssh/id_rsa</span>
+</code></pre></div>
+<h4 id="group_varsallyml"><code>group_vars/all.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nt">app_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span>
+<span class="nt">app_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/node_app</span>
+<span class="nt">node_version</span><span class="p">:</span><span class="w"> </span><span class="s">"18"</span>
+<span class="nt">domain_name</span><span class="p">:</span><span class="w"> </span><span class="s">"app.enterprise.internal"</span>
+</code></pre></div>
+<h3 id="step-3-develop-the-nginx-frontend-role">Step 3: Develop the Nginx Frontend Role</h3>
+<h4 id="rolesnginxhandlersmainyml"><code>roles/nginx/handlers/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload Nginx Service</span>
+<span class="w">  </span><span class="nt">ansible.builtin.service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reloaded</span>
+</code></pre></div>
+<h4 id="rolesnginxtemplatesnginx_proxyconfj2"><code>roles/nginx/templates/nginx_proxy.conf.j2</code></h4>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="p">{</span><span class="kn">{</span><span class="w"> </span><span class="s">domain_name</span><span class="w"> </span><span class="err">}}</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:</span><span class="p">{</span><span class="kn">{</span><span class="w"> </span><span class="s">app_port</span><span class="w"> </span><span class="err">}}</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="rolesnginxtasksmainyml"><code>roles/nginx/tasks/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure Nginx package is installed</span>
+<span class="w">  </span><span class="nt">ansible.builtin.package</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Nginx reverse proxy configuration</span>
+<span class="w">  </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx_proxy.conf.j2</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/conf.d/app_proxy.conf</span>
+<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">'0644'</span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload Nginx Service</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure Nginx service is enabled and started</span>
+<span class="w">  </span><span class="nt">ansible.builtin.service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="step-4-develop-the-application-tier-role">Step 4: Develop the Application Tier Role</h3>
+<h4 id="rolesapptemplatesappservicej2"><code>roles/app/templates/app.service.j2</code></h4>
+<div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Node.js Application Service</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<span class="na">User</span><span class="o">=</span><span class="s">appuser</span>
+<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">{{ app_directory }}</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/node {{ app_directory }}/index.js</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">PORT={{ app_port }}</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div>
+<h4 id="rolesapptemplatesindexjsj2"><code>roles/app/templates/index.js.j2</code></h4>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{{</span><span class="w"> </span><span class="nx">app_port</span><span class="w"> </span><span class="p">}};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">200</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">'Content-Type'</span><span class="p">,</span><span class="w"> </span><span class="s1">'text/plain'</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Multi-Tier App Running Successfully\n'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Server running on port </span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<h4 id="rolesapptasksmainyml"><code>roles/app/tasks/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create isolated system group for application</span>
+<span class="w">  </span><span class="nt">ansible.builtin.group</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appuser</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">system</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create isolated system user for application</span>
+<span class="w">  </span><span class="nt">ansible.builtin.user</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appuser</span>
+<span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appuser</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">system</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sbin/nologin</span>
+<span class="w">    </span><span class="nt">create_home</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure application deployment directory exists</span>
+<span class="w">  </span><span class="nt">ansible.builtin.file</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">app_directory</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">directory</span>
+<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appuser</span>
+<span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appuser</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">'0755'</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Node.js application index script</span>
+<span class="w">  </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index.js.j2</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">app_directory</span><span class="nv"> </span><span class="s">}}/index.js"</span>
+<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appuser</span>
+<span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appuser</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">'0644'</span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Application Service</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy systemd unit file</span>
+<span class="w">  </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.service.j2</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/systemd/system/nodeapp.service</span>
+<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">    </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">'0644'</span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload Systemd Daemon</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Application Service</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure Node.js application service is started and enabled</span>
+<span class="w">  </span><span class="nt">ansible.builtin.service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodeapp</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h4 id="rolesapphandlersmainyml"><code>roles/app/handlers/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload Systemd Daemon</span>
+<span class="w">  </span><span class="nt">ansible.builtin.systemd</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">daemon_reload</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Application Service</span>
+<span class="w">  </span><span class="nt">ansible.builtin.service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodeapp</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
+</code></pre></div>
+<h3 id="step-5-master-site-playbook-siteyml">Step 5: Master Site Playbook (<code>site.yml</code>)</h3>
+<p>Create the orchestrator playbook in the root project folder:</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure Application Tier Hosts</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appservers</span>
+<span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure Web Frontend Tier Hosts</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
+<span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+</code></pre></div>
+<h3 id="step-6-validate-and-run-the-playbook">Step 6: Validate and Run the Playbook</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Validate playbook syntax</span>
+ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.ini<span class="w"> </span>site.yml<span class="w"> </span>--syntax-check
+
+<span class="c1"># 2. Perform a dry-run execution (Check Mode)</span>
+ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.ini<span class="w"> </span>site.yml<span class="w"> </span>--check
+
+<span class="c1"># 3. Execute the actual playbook configuration</span>
+ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.ini<span class="w"> </span>site.yml
+
+<span class="c1"># 4. Re-run the playbook to verify complete IDEMPOTENCY</span>
+<span class="c1"># Expected output: changed=0 for all hosts</span>
+ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.ini<span class="w"> </span>site.yml
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

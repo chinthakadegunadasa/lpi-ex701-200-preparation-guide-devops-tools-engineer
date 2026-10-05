@@ -1,0 +1,2065 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter17/">
+      
+      
+        <link rel="next" href="../Chapter19/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 18: Continuous Integration Architecture - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-18-continuous-integration-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 18: Continuous Integration Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#181-continuous-integration-core-principles-and-artifact-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.1 Continuous Integration Core Principles and Artifact Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.1 Continuous Integration Core Principles and Artifact Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-ci-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core CI Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-build-artifact-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Build Artifact Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#182-artifact-registries-nexus-jfrog-artifactory-container-registries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-registry-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Registry Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-hosted-and-virtual-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy, Hosted, and Virtual Repositories
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#183-automated-build-engines-and-dependency-caching-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.3 Automated Build Engines and Dependency Caching Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.3 Automated Build Engines and Dependency Caching Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependency-caching-vs-build-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Caching vs. Build Artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-caching-strategies-in-gitlab-ci-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Caching Strategies in GitLab CI &amp; GitHub Actions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enterprise Caching Strategies in GitLab CI &amp; GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-caching-dependencies-in-gitlab-ci-gitlab-ciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Caching Dependencies in GitLab CI (.gitlab-ci.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-docker-layer-caching-buildkit-inline-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Docker Layer Caching (BuildKit &amp; Inline Cache)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#184-code-quality-gates-and-static-analysis-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.4 Code Quality Gates and Static Analysis Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.4 Code Quality Gates and Static Analysis Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-analysis-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Analysis Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-gate-pipeline-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Gate Pipeline Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#185-hands-on-lab-setting-up-a-local-private-container-and-artifact-registry-with-access-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.5 Hands-On Lab: Setting Up a Local Private Container and Artifact Registry with Access Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.5 Hands-On Lab: Setting Up a Local Private Container and Artifact Registry with Access Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-directory-security-certificate-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Directory &amp; Security Certificate Initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-authentication-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Authentication Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-deploy-the-private-container-registry-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Deploy the Private Container Registry Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-local-dns-and-trust-tls-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure Local DNS and Trust TLS Certificates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-authenticate-push-and-manage-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Authenticate, Push, and Manage Artifacts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Authenticate, Push, and Manage Artifacts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-authenticate-against-the-private-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Authenticate against the Private Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-pull-tag-and-push-a-test-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Pull, Tag, and Push a Test Image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verify-stored-artifact-catalog-via-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verify Stored Artifact Catalog via API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#181-continuous-integration-core-principles-and-artifact-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.1 Continuous Integration Core Principles and Artifact Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.1 Continuous Integration Core Principles and Artifact Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-ci-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core CI Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-build-artifact-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Build Artifact Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#182-artifact-registries-nexus-jfrog-artifactory-container-registries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-registry-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Registry Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-hosted-and-virtual-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy, Hosted, and Virtual Repositories
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#183-automated-build-engines-and-dependency-caching-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.3 Automated Build Engines and Dependency Caching Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.3 Automated Build Engines and Dependency Caching Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependency-caching-vs-build-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Caching vs. Build Artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-caching-strategies-in-gitlab-ci-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Caching Strategies in GitLab CI &amp; GitHub Actions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enterprise Caching Strategies in GitLab CI &amp; GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-caching-dependencies-in-gitlab-ci-gitlab-ciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Caching Dependencies in GitLab CI (.gitlab-ci.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-docker-layer-caching-buildkit-inline-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Docker Layer Caching (BuildKit &amp; Inline Cache)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#184-code-quality-gates-and-static-analysis-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.4 Code Quality Gates and Static Analysis Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.4 Code Quality Gates and Static Analysis Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-analysis-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Analysis Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-gate-pipeline-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Gate Pipeline Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#185-hands-on-lab-setting-up-a-local-private-container-and-artifact-registry-with-access-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18.5 Hands-On Lab: Setting Up a Local Private Container and Artifact Registry with Access Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="18.5 Hands-On Lab: Setting Up a Local Private Container and Artifact Registry with Access Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-directory-security-certificate-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Directory &amp; Security Certificate Initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-authentication-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Authentication Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-deploy-the-private-container-registry-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Deploy the Private Container Registry Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-local-dns-and-trust-tls-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure Local DNS and Trust TLS Certificates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-authenticate-push-and-manage-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Authenticate, Push, and Manage Artifacts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Authenticate, Push, and Manage Artifacts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-authenticate-against-the-private-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Authenticate against the Private Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-pull-tag-and-push-a-test-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Pull, Tag, and Push a Test Image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verify-stored-artifact-catalog-via-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verify Stored Artifact Catalog via API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-18-continuous-integration-architecture">Chapter 18: Continuous Integration Architecture</h1>
+<p>This chapter covers enterprise Continuous Integration (CI) architectures, artifact lifecycle management, dependency caching mechanisms, static code quality gates, and secure private registries, aligning with the <strong>LPI 701-200 DevOps Tools Engineer Exam Objectives</strong> under Subject Area 702 (Continuous Delivery and Infrastructure Automation).</p>
+<h2 id="181-continuous-integration-core-principles-and-artifact-management">18.1 Continuous Integration Core Principles and Artifact Management</h2>
+<p>Continuous Integration (CI) is a software engineering practice where developers regularly merge their code changes into a central repository. Every push triggers an automated build and test sequence to detect integration bugs early and ensure trunk stability.</p>
+<h3 id="core-ci-principles">Core CI Principles</h3>
+<p><img alt="Core CI Principles" src="assets/images/chapter18/18-1-CONTINUOUS-INTEGRATION-PIPELINE.png" /></p>
+<ol>
+<li><strong>Single Source Repository:</strong> All project assets—including source code, IaC templates, configuration scripts, and pipeline definitions—must reside in a centralized, version-controlled repository.</li>
+<li><strong>Automated Build Execution:</strong> Every commit to the primary branch (or via pull/merge requests) automatically initiates an isolated build environment without manual intervention.</li>
+<li><strong>Self-Testing Builds:</strong> The build pipeline must execute comprehensive unit and integration test suites. A build is marked as successful only if all tests pass.</li>
+<li><strong>Immediate Feedback:</strong> Build and test results are reported to the developer within minutes to maintain fast development loops.</li>
+<li><strong>Build Idempotency &amp; Immutaibility:</strong> A built artifact (e.g., Jar, Wheel, Container Image) is compiled <strong>once</strong> during the CI phase and promoted through environments (Staging, Production) without recompilation.</li>
+</ol>
+<h3 id="the-build-artifact-lifecycle">The Build Artifact Lifecycle</h3>
+<p>An <strong>artifact</strong> is a compiled, versioned, and deployable file generated during the CI process.</p>
+<div class="highlight"><pre><span></span><code>[ Developer Commit ] ──► [ CI Engine Compilation ] ──► [ Package &amp; Version Artifact ] ──► [ Publish to Registry ] ──► [ CD Deployment ]
+</code></pre></div>
+<ul>
+<li><strong>Transient Workspace Files:</strong> Intermediate files (such as <code>.o</code>, <code>.class</code>, or temporary test logs) generated during compilation that are discarded after build completion.</li>
+<li><strong>Release Artifacts:</strong> Immutable binary archives (e.g., <code>.tar.gz</code>, <code>.rpm</code>, <code>.deb</code>, <code>.jar</code>, <code>.whl</code>) or OCI container images tagged with unique, immutable versions (semantic versioning or Git commit SHAs).</li>
+</ul>
+<h2 id="182-artifact-registries-nexus-jfrog-artifactory-container-registries">18.2 Artifact Registries (Nexus, JFrog Artifactory, Container Registries)</h2>
+<p>In enterprise ecosystems, raw binaries and container images should never be checked directly into Git repositories. Instead, <strong>Artifact Registries</strong> act as single sources of truth for storing, versioning, scanning, and distributing build outputs.</p>
+<h3 id="enterprise-registry-types">Enterprise Registry Types</h3>
+<table>
+<thead>
+<tr>
+<th>Registry Category</th>
+<th>Examples</th>
+<th>Target Formats &amp; Ecosystems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Generic Binary Repositories</strong></td>
+<td>Sonatype Nexus, JFrog Artifactory</td>
+<td>Zip, Tarballs, Raw Binaries, ISOs, Custom Releases</td>
+</tr>
+<tr>
+<td><strong>Language Package Registries</strong></td>
+<td>Nexus, Artifactory, PyPI, npm, Maven</td>
+<td><code>.whl</code> (Python), <code>.jar</code> (Java), Node modules, Gems</td>
+</tr>
+<tr>
+<td><strong>OS Package Repositories</strong></td>
+<td>Nexus, Artifactory, Aptly, Repoman</td>
+<td><code>.deb</code> (Debian/Ubuntu), <code>.rpm</code> (RHEL/Rocky/Fedora)</td>
+</tr>
+<tr>
+<td><strong>Container &amp; Helm Registries</strong></td>
+<td>Harbor, Quay, AWS ECR, Docker Hub</td>
+<td>OCI Container Images, Helm Charts (<code>.tgz</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="proxy-hosted-and-virtual-repositories">Proxy, Hosted, and Virtual Repositories</h3>
+<p>Enterprise registries like Nexus and Artifactory structure repositories into three operational modes:</p>
+<ol>
+<li><strong>Hosted Repositories:</strong> Internal repositories used to store proprietary artifacts published by local CI/CD pipelines.</li>
+<li><strong>Proxy Repositories:</strong> External mirror caches pointing to public upstream repositories (e.g., PyPI, npm registry, Maven Central, Docker Hub). They cache external dependencies locally to accelerate builds and ensure availability during upstream outages.</li>
+<li><strong>Virtual Repositories:</strong> Unified logical endpoints combining multiple Hosted and Proxy repositories under a single access URL.</li>
+</ol>
+<p><img alt="VIRTUAL REPOSITORY" src="assets/images/chapter18/18-2-VIRTUAL-REPOSITORY.png" /></p>
+<h2 id="183-automated-build-engines-and-dependency-caching-strategies">18.3 Automated Build Engines and Dependency Caching Strategies</h2>
+<p>Continuous Integration engines (such as GitLab CI runners, GitHub Actions runners, or Jenkins agents) download project dependencies during build steps. Without caching, downloading external packages repeatedly slows down pipelines and increases bandwidth usage.</p>
+<h3 id="dependency-caching-vs-build-artifacts">Dependency Caching vs. Build Artifacts</h3>
+<ul>
+<li><strong>Cache:</strong> Temporary storage for external dependencies (e.g., <code>~/.m2</code>, <code>node_modules/</code>, <code>~/.cache/pip</code>). Caches persist across pipeline runs to speed up execution, but missing cache entries do not break the build.</li>
+<li><strong>Artifacts:</strong> Formal outputs generated by a pipeline stage (e.g., compiled binary, code coverage report) that are explicitly passed to subsequent pipeline stages or published to a registry.</li>
+</ul>
+<h3 id="enterprise-caching-strategies-in-gitlab-ci-github-actions">Enterprise Caching Strategies in GitLab CI &amp; GitHub Actions</h3>
+<h4 id="1-caching-dependencies-in-gitlab-ci-gitlab-ciyml">1. Caching Dependencies in GitLab CI (<code>.gitlab-ci.yml</code>)</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci.yml</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+
+<span class="nt">variables</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">PIP_CACHE_DIR</span><span class="p">:</span><span class="w"> </span><span class="s">"$CI_PROJECT_DIR/.cache/pip"</span>
+
+<span class="c1"># Shared cache configuration using the lockfile hash as the key</span>
+<span class="nt">cache</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">key</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requirements.txt</span>
+<span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.cache/pip/</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">venv/</span>
+
+<span class="nt">build_job</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python3 -m venv venv</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source venv/bin/activate</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements.txt</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">venv/</span>
+<span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 hours</span>
+
+<span class="nt">test_job</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source venv/bin/activate</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest tests/</span>
+</code></pre></div>
+<h4 id="2-docker-layer-caching-buildkit-inline-cache">2. Docker Layer Caching (BuildKit &amp; Inline Cache)</h4>
+<p>To accelerate container image compilation inside CI pipelines, leverage Docker BuildKit multi-stage builds and inline remote caching (<code>--cache-from</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Enable Docker BuildKit</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DOCKER_BUILDKIT</span><span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># Pull previous image layer cache from enterprise container registry</span>
+docker<span class="w"> </span>pull<span class="w"> </span>registry.enterprise.internal/app/backend:latest<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+
+<span class="c1"># Build new container image leveraging layer cache</span>
+docker<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--build-arg<span class="w"> </span><span class="nv">BUILDKIT_INLINE_CACHE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cache-from<span class="w"> </span>registry.enterprise.internal/app/backend:latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-t<span class="w"> </span>registry.enterprise.internal/app/backend:v1.2.0<span class="w"> </span>.
+</code></pre></div>
+<h2 id="184-code-quality-gates-and-static-analysis-integration">18.4 Code Quality Gates and Static Analysis Integration</h2>
+<p>Static Application Security Testing (SAST) and code quality analysis inspect source code without executing it. Integrating quality gates into CI pipelines enforces coding standards and blocks vulnerability accumulation early in the lifecycle.</p>
+<h3 id="static-analysis-components">Static Analysis Components</h3>
+<ol>
+<li><strong>Linters:</strong> Enforce syntax rules, styling guidelines, and code formatting standards (e.g., <code>flake8</code>, <code>eslint</code>, <code>rubocop</code>).</li>
+<li><strong>SAST Scanners:</strong> Identify security anti-patterns, hardcoded credentials, SQL injection vectors, and buffer overflows (e.g., <code>bandit</code>, <code>semgrep</code>, <code>SonarQube</code>).</li>
+<li><strong>Software Composition Analysis (SCA):</strong> Scans open-source library dependencies for known Common Vulnerabilities and Exposures (CVEs) (e.g., <code>trivy</code>, <code>dependency-check</code>, <code>snyk</code>).</li>
+</ol>
+<h3 id="quality-gate-pipeline-integration">Quality Gate Pipeline Integration</h3>
+<p>A <strong>Quality Gate</strong> is a policy threshold (e.g., zero critical security vulnerabilities, test coverage $\ge 80\%$, zero hardcoded secrets) that must pass before code can be merged or published.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example SAST &amp; SCA Integration Stage</span>
+<span class="nt">stage_quality</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># 1. Run Python SAST scanner</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bandit -r src/ -f json -o bandit-report.json</span>
+
+<span class="w">    </span><span class="c1"># 2. Run SCA dependency check</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trivy fs --exit-code 1 --severity CRITICAL,HIGH .</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">sast</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bandit-report.json</span>
+</code></pre></div>
+<h2 id="185-hands-on-lab-setting-up-a-local-private-container-and-artifact-registry-with-access-controls">18.5 Hands-On Lab: Setting Up a Local Private Container and Artifact Registry with Access Controls</h2>
+<h3 id="lab-scenario">Lab Scenario</h3>
+<p>You are tasked with deploying a secure, production-grade local container and artifact registry infrastructure using <strong>Distribution Registry</strong> and <strong>htpasswd</strong> authentication. You will configure basic access controls, generate TLS encryption certificates, authenticate via Docker CLI, and manage image artifacts.</p>
+<h3 id="step-1-directory-security-certificate-initialization">Step 1: Directory &amp; Security Certificate Initialization</h3>
+<p>Create the project workspace and generate self-signed TLS certificates for local encryption:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/private_registry_lab/<span class="o">{</span>certs,data,auth<span class="o">}</span>
+<span class="nb">cd</span><span class="w"> </span>~/private_registry_lab
+
+<span class="c1"># Generate a self-signed TLS Certificate for secure HTTPS transport</span>
+openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-nodes<span class="w"> </span>-days<span class="w"> </span><span class="m">365</span><span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-keyout<span class="w"> </span>certs/domain.key<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-out<span class="w"> </span>certs/domain.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-subj<span class="w"> </span><span class="s2">"/CN=registry.local/O=CyberGate Services/C=LK"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-addext<span class="w"> </span><span class="s2">"subjectAltName=DNS:registry.local,IP:127.0.0.1"</span>
+</code></pre></div>
+<h3 id="step-2-configure-authentication-credentials">Step 2: Configure Authentication Credentials</h3>
+<p>Create an encrypted user credential database using <code>htpasswd</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure apache2-utils or httpd-tools is installed</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>apache2-utils
+
+<span class="c1"># Create admin user credentials inside the auth directory</span>
+htpasswd<span class="w"> </span>-B<span class="w"> </span>-c<span class="w"> </span>auth/htpasswd<span class="w"> </span>admin
+<span class="c1"># Enter Password: AdminRegistryPass2026!</span>
+
+<span class="c1"># Add a read-only developer user</span>
+htpasswd<span class="w"> </span>-B<span class="w"> </span>auth/htpasswd<span class="w"> </span>developer
+<span class="c1"># Enter Password: DevRegistryPass2026!</span>
+</code></pre></div>
+<h3 id="step-3-deploy-the-private-container-registry-service">Step 3: Deploy the Private Container Registry Service</h3>
+<p>Create a Docker Compose definition (<code>docker-compose.yml</code>) to run the isolated private container registry with TLS and htpasswd auth enabled:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">registry</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry:2.8.3</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">private_registry</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"5000:5000"</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">REGISTRY_AUTH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">htpasswd</span>
+<span class="w">      </span><span class="nt">REGISTRY_AUTH_HTPASSWD_REALM</span><span class="p">:</span><span class="w"> </span><span class="s">"Enterprise</span><span class="nv"> </span><span class="s">Secure</span><span class="nv"> </span><span class="s">Registry"</span>
+<span class="w">      </span><span class="nt">REGISTRY_AUTH_HTPASSWD_PATH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/auth/htpasswd</span>
+<span class="w">      </span><span class="nt">REGISTRY_HTTP_TLS_CERTIFICATE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/certs/domain.crt</span>
+<span class="w">      </span><span class="nt">REGISTRY_HTTP_TLS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/certs/domain.key</span>
+<span class="w">      </span><span class="nt">REGISTRY_STORAGE_DELETE_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data:/var/lib/registry</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./certs:/certs</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./auth:/auth</span>
+</code></pre></div>
+<p>Launch the registry container:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Verify service execution:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>ps<span class="w"> </span>-f<span class="w"> </span><span class="nv">name</span><span class="o">=</span>private_registry
+</code></pre></div>
+<hr />
+<h3 id="step-4-configure-local-dns-and-trust-tls-certificates">Step 4: Configure Local DNS and Trust TLS Certificates</h3>
+<p>To allow the local system to resolve <code>registry.local</code> and trust the self-signed TLS certificate:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Map hostname in local /etc/hosts file</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"127.0.0.1 registry.local"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/hosts
+
+<span class="c1"># 2. Add local certificate to system CA trust store</span>
+sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/local/share/ca-certificates/registry
+sudo<span class="w"> </span>cp<span class="w"> </span>certs/domain.crt<span class="w"> </span>/usr/local/share/ca-certificates/registry/domain.crt
+sudo<span class="w"> </span>update-ca-certificates
+
+<span class="c1"># 3. Add certificate trust for Docker engine</span>
+sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/docker/certs.d/registry.local:5000
+sudo<span class="w"> </span>cp<span class="w"> </span>certs/domain.crt<span class="w"> </span>/etc/docker/certs.d/registry.local:5000/ca.crt
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</code></pre></div>
+<h3 id="step-5-authenticate-push-and-manage-artifacts">Step 5: Authenticate, Push, and Manage Artifacts</h3>
+<h4 id="1-authenticate-against-the-private-registry">1. Authenticate against the Private Registry</h4>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>login<span class="w"> </span>registry.local:5000<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>AdminRegistryPass2026!
+</code></pre></div>
+<h4 id="2-pull-tag-and-push-a-test-image">2. Pull, Tag, and Push a Test Image</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pull a lightweight base image</span>
+docker<span class="w"> </span>pull<span class="w"> </span>alpine:3.19
+
+<span class="c1"># Tag the image for the private registry namespace</span>
+docker<span class="w"> </span>tag<span class="w"> </span>alpine:3.19<span class="w"> </span>registry.local:5000/infrastructure/alpine:v3.19
+
+<span class="c1"># Push the image to the private registry</span>
+docker<span class="w"> </span>push<span class="w"> </span>registry.local:5000/infrastructure/alpine:v3.19
+</code></pre></div>
+<h4 id="3-verify-stored-artifact-catalog-via-api">3. Verify Stored Artifact Catalog via API</h4>
+<p>Query the registry HTTP API to verify stored image repositories and tags:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List all repositories in the registry</span>
+curl<span class="w"> </span>-u<span class="w"> </span>admin:AdminRegistryPass2026!<span class="w"> </span>--cacert<span class="w"> </span>certs/domain.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://registry.local:5000/v2/_catalog
+
+<span class="c1"># Output: {"repositories":["infrastructure/alpine"]}</span>
+
+<span class="c1"># List tags for the specific repository</span>
+curl<span class="w"> </span>-u<span class="w"> </span>admin:AdminRegistryPass2026!<span class="w"> </span>--cacert<span class="w"> </span>certs/domain.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://registry.local:5000/v2/infrastructure/alpine/tags/list
+
+<span class="c1"># Output: {"name":"infrastructure/alpine","tags":["v3.19"]}</span>
+</code></pre></div>
+<h2 id="self-assessment-exam-practice-questions">Self-Assessment &amp; Exam Practice Questions</h2>
+<p><strong>Question 1</strong>: An enterprise team wants to ensure that external Python dependencies downloaded from PyPI are cached locally so builds succeed even during external internet outages. Which artifact repository configuration mode should be used?</p>
+<p>A) Hosted Repository
+B) Virtual Repository
+C) Proxy Repository
+D) Snapshot Repository</p>
+<p><strong>Answer</strong>: <strong>C</strong></p>
+<p><em>Explanation</em>: A <strong>Proxy Repository</strong> acts as a local mirror cache for public upstream package registries (e.g., PyPI, npm, Maven Central), guaranteeing build reproducibility and resilience against upstream downtime.</p>
+<p><strong>Question 2</strong>: What is the primary functional difference between a build <strong>Cache</strong> and a build <strong>Artifact</strong> in a CI/CD pipeline?</p>
+<p>A) Caches are versioned and immutable; artifacts are temporary files deleted after execution.
+B) Caches speed up builds by storing reusable dependencies across pipeline runs; artifacts are formal build outputs passed between stages or published to a registry.
+C) Artifacts are used exclusively for Docker images; caches are used exclusively for source code files.
+D) Caches require an external database; artifacts require a Git repository.</p>
+<p><strong>Answer</strong>: <strong>B</strong></p>
+<p><em>Explanation</em>: Caches store temporary external dependencies across builds to accelerate runtime, whereas artifacts are the formal compiled outputs generated by a build stage.</p>
+<p><strong>Question 3</strong>: In an enterprise CI quality gate, which type of tool analyzes compiled dependencies against databases of known Common Vulnerabilities and Exposures (CVEs)?</p>
+<p>A) Linter
+B) Static Application Security Testing (SAST)
+C) Software Composition Analysis (SCA)
+D) Dynamic Application Security Testing (DAST)</p>
+<p><strong>Answer</strong>: <strong>C</strong></p>
+<p><em>Explanation</em>: <strong>Software Composition Analysis (SCA)</strong> tools scan project dependency manifests and third-party libraries against known CVE databases to flag security risks in open-source components.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2513 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter12/">
+      
+      
+        <link rel="next" href="../Chapter14/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 13: Declarative Infrastructure Provisioning - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-13-declarative-infrastructure-provisioning" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 13: Declarative Infrastructure Provisioning
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#131-hcl-hashicorp-configuration-language-syntax-and-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hcl-core-syntax-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HCL Core Syntax Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hcl-primitive-and-complex-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HCL Primitive and Complex Data Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HCL Primitive and Complex Data Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primitive-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primitive Data Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complex-collection-and-structural-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex (Collection and Structural) Data Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structural-type-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structural Type Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#132-dynamic-infrastructure-with-variables-outputs-and-locals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.2 Dynamic Infrastructure with Variables, Outputs, and Locals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-variables-variablestf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Variables (variables.tf)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Variables (variables.tf)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-precedence-hierarchy-lowest-to-highest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Precedence Hierarchy (Lowest to Highest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-values-localstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Values (locals.tf)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-values-outputstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Values (outputs.tf)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#133-enterprise-module-architecture-and-reusability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.3 Enterprise Module Architecture and Reusability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.3 Enterprise Module Architecture and Reusability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-module-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Module Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instantiating-child-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instantiating Child Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-resource-generation-for_each-and-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Resource Generation: for_each and count
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Resource Generation: for_each and count">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#count-meta-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        count Meta-Argument
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for_each-meta-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        for_each Meta-Argument
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#134-resource-lifecycle-management-and-workspace-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.4 Resource Lifecycle Management and Workspace Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.4 Resource Lifecycle Management and Workspace Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controlling-resource-lifecycles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlling Resource Lifecycles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workspace-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workspace Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#utilizing-workspace-name-in-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilizing Workspace Name in Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#135-hands-on-lab-building-modular-terraform-code-for-automated-cloud-node-provisioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-directory-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Directory Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-build-the-child-compute-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Build the Child Compute Module
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Build the Child Compute Module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulescomputevariablestf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modules/compute/variables.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulescomputemaintf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modules/compute/main.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulescomputeoutputstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modules/compute/outputs.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-configure-root-module-and-invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Configure Root Module and Invocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Configure Root Module and Invocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#versionstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        versions.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variablestf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        variables.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maintf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        outputs.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-validate-plan-and-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Validate, Plan, and Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verification-and-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verification and Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#131-hcl-hashicorp-configuration-language-syntax-and-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hcl-core-syntax-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HCL Core Syntax Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hcl-primitive-and-complex-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HCL Primitive and Complex Data Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HCL Primitive and Complex Data Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primitive-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primitive Data Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complex-collection-and-structural-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex (Collection and Structural) Data Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structural-type-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structural Type Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#132-dynamic-infrastructure-with-variables-outputs-and-locals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.2 Dynamic Infrastructure with Variables, Outputs, and Locals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-variables-variablestf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Variables (variables.tf)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Variables (variables.tf)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-precedence-hierarchy-lowest-to-highest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Precedence Hierarchy (Lowest to Highest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-values-localstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Values (locals.tf)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-values-outputstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Values (outputs.tf)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#133-enterprise-module-architecture-and-reusability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.3 Enterprise Module Architecture and Reusability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.3 Enterprise Module Architecture and Reusability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-module-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Module Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instantiating-child-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instantiating Child Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-resource-generation-for_each-and-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Resource Generation: for_each and count
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Resource Generation: for_each and count">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#count-meta-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        count Meta-Argument
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for_each-meta-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        for_each Meta-Argument
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#134-resource-lifecycle-management-and-workspace-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.4 Resource Lifecycle Management and Workspace Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.4 Resource Lifecycle Management and Workspace Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controlling-resource-lifecycles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controlling Resource Lifecycles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workspace-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workspace Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#utilizing-workspace-name-in-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilizing Workspace Name in Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#135-hands-on-lab-building-modular-terraform-code-for-automated-cloud-node-provisioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-directory-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Directory Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-build-the-child-compute-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Build the Child Compute Module
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Build the Child Compute Module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulescomputevariablestf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modules/compute/variables.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulescomputemaintf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modules/compute/main.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulescomputeoutputstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modules/compute/outputs.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-configure-root-module-and-invocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Configure Root Module and Invocation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Configure Root Module and Invocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#versionstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        versions.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variablestf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        variables.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maintf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        outputs.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-validate-plan-and-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Validate, Plan, and Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verification-and-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verification and Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-13-declarative-infrastructure-provisioning">Chapter 13: Declarative Infrastructure Provisioning</h1>
+<p>This chapter covers the operational mechanics, language constructs, and design patterns required to write enterprise-grade HashiCorp Configuration Language (HCL) code. It maps directly to the <strong>LPI 701-200 DevOps Tools Engineer Exam Objectives</strong> under Subject Area 701 (Infrastructure as Code and Automation).</p>
+<h2 id="131-hcl-hashicorp-configuration-language-syntax-and-data-types">13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types</h2>
+<p>HashiCorp Configuration Language (HCL2) is a declarative, human-readable, and machine-friendly language optimized for defining infrastructure resources. Understanding its underlying syntax rules, block types, and type system is essential for developing predictable IaC configurations.</p>
+<h3 id="hcl-core-syntax-architecture">HCL Core Syntax Architecture</h3>
+<p>An HCL configuration file consists of <strong>blocks</strong>, <strong>arguments</strong>, and <strong>expressions</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Block Type: "resource"</span>
+<span class="c1"># Block Labels: "aws_instance" (Type), "app_node" (Local Name)</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"app_node"</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">  # Argument Key = Expression Value</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.micro"</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production-app-node"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><strong>Blocks:</strong> Containers for configuration objects. Blocks have a type (e.g., <code>resource</code>, <code>variable</code>, <code>data</code>, <code>output</code>, <code>module</code>) and zero or more block labels.</li>
+<li><strong>Arguments:</strong> Assign values to names within a block using the <code>=</code> operator.</li>
+<li><strong>Expressions:</strong> Represent values, either literally or by referencing other elements in the configuration graph.</li>
+</ul>
+<h3 id="hcl-primitive-and-complex-data-types">HCL Primitive and Complex Data Types</h3>
+<p>HCL enforces strong typing to validate infrastructure configurations prior to API execution.</p>
+<h4 id="primitive-data-types">Primitive Data Types</h4>
+<ul>
+<li><code>string</code>: A sequence of Unicode characters (e.g., <code>"t3.micro"</code>, <code>"us-east-1"</code>).</li>
+<li><code>number</code>: Integer or floating-point numeric value (e.g., <code>80</code>, <code>3.14</code>).</li>
+<li><code>bool</code>: Boolean flag (<code>true</code> or <code>false</code>).</li>
+</ul>
+<h4 id="complex-collection-and-structural-data-types">Complex (Collection and Structural) Data Types</h4>
+<table>
+<thead>
+<tr>
+<th>Type Construct</th>
+<th>Description</th>
+<th>Example Syntax</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list(...)</code></td>
+<td>Ordered collection of elements of a single type. Indexing is zero-based (<code>[0]</code>).</td>
+<td><code>list(string)</code> → <code>["subnet-a", "subnet-b"]</code></td>
+</tr>
+<tr>
+<td><code>set(...)</code></td>
+<td>Unordered collection of unique values of a single type. Automatically removes duplicates.</td>
+<td><code>set(string)</code> → <code>["sg-123", "sg-456"]</code></td>
+</tr>
+<tr>
+<td><code>map(...)</code></td>
+<td>Collection of key-value pairs where all values must share the same type.</td>
+<td><code>map(string)</code> → <code>{ env = "prod", owner = "ops" }</code></td>
+</tr>
+<tr>
+<td><code>object(...)</code></td>
+<td>Structural type defining specific named attributes, each with its own designated type.</td>
+<td><code>object({ id = string, port = number, active = bool })</code></td>
+</tr>
+<tr>
+<td><code>tuple(...)</code></td>
+<td>Sequence of elements where each element position has a distinct, predefined type.</td>
+<td><code>tuple([string, number, bool])</code> → <code>["vpc-1", 443, true]</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="structural-type-example">Structural Type Example</h4>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"database_config"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">object</span><span class="p">({</span>
+<span class="w">    </span><span class="na">instance_class</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="na">allocated_storage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span>
+<span class="w">    </span><span class="na">multi_az</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">    </span><span class="na">engine_version</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="w">  </span><span class="nb">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">instance_class</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"db.r6g.xlarge"</span>
+<span class="w">    </span><span class="na">allocated_storage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+<span class="w">    </span><span class="na">multi_az</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">engine_version</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"15.3"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="132-dynamic-infrastructure-with-variables-outputs-and-locals">13.2 Dynamic Infrastructure with Variables, Outputs, and Locals</h2>
+<p>Enterprise IaC configurations must be dynamic, parameterized, and modular. Hardcoding values into resource blocks is anti-pattern in production environments.</p>
+<h3 id="input-variables-variablestf">Input Variables (<code>variables.tf</code>)</h3>
+<p>Input variables serve as parameters for a module or workspace.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"environment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Target execution environment (dev, staging, prod)"</span>
+
+<span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">"dev", "staging", "prod"</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Environment must be one of: dev, staging, prod."</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"ingress_ports"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kt">number</span><span class="p">)</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"List of allowed inbound ports"</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="m">80</span><span class="p">,</span><span class="w"> </span><span class="m">443</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="variable-precedence-hierarchy-lowest-to-highest">Variable Precedence Hierarchy (Lowest to Highest)</h4>
+<p>When the same variable is defined in multiple places, Terraform resolves the value according to the following strict order of precedence (1 is lowest, 6 is highest):</p>
+<ol>
+<li>Default value in <code>variable</code> block.</li>
+<li>Environment variables (<code>TF_VAR_variable_name</code>).</li>
+<li><code>terraform.tfvars</code> or <code>terraform.tfvars.json</code> file.</li>
+<li><code>*.auto.tfvars</code> or <code>*.auto.tfvars.json</code> files (loaded lexicographically).</li>
+<li>Command-line flag <code>-var</code> or <code>-var-file</code> explicitly passed during run execution.</li>
+</ol>
+<h3 id="local-values-localstf">Local Values (<code>locals.tf</code>)</h3>
+<p>Local values assign a name to an expression, preventing repetitive code and simplifying complex calculations.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.organization}-${var.environment}"</span>
+
+<span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Organization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.organization</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
+<span class="w">    </span><span class="na">Project</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"Core-Infrastructure"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"primary"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
+<span class="w">  </span><span class="na">tags</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${local.name_prefix}-vpc"</span><span class="w"> </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="output-values-outputstf">Output Values (<code>outputs.tf</code>)</h3>
+<p>Outputs expose specific infrastructure attributes for consumption by external pipelines, root configurations, or remote state lookups.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">"vpc_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The ID of the provisioned primary VPC"</span>
+<span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.primary.id</span>
+<span class="p">}</span>
+
+<span class="kr">output</span><span class="w"> </span><span class="nv">"db_password"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Sensitive master database password"</span>
+<span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_db_instance.main.password</span>
+<span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1"> # Prevents value from displaying in standard console outputs</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="133-enterprise-module-architecture-and-reusability">13.3 Enterprise Module Architecture and Reusability</h2>
+<p>A Terraform/OpenTofu module is a container for multiple resources configured together. A <strong>Root Module</strong> executes from the main working directory, while <strong>Child Modules</strong> are instantiated inside configurations to standardize patterns.</p>
+<h3 id="standard-module-structure">Standard Module Structure</h3>
+<p>An enterprise-ready child module maintains a clean interface boundary:</p>
+<div class="highlight"><pre><span></span><code>modules/aws-compute-node/
+├── README.md           # Documentation and usage examples
+├── main.tf             # Core resource definitions
+├── variables.tf        # Explicit input parameters
+├── outputs.tf          # Explicit output exports
+├── versions.tf         # Terraform and provider version pinning
+└── tests/              # Native unit/integration tests
+</code></pre></div>
+<h3 id="instantiating-child-modules">Instantiating Child Modules</h3>
+<div class="highlight"><pre><span></span><code><span class="kr">module</span><span class="w"> </span><span class="nv">"app_server_cluster"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"git::https://github.com/enterprise/terraform-aws-compute.git//modules/instance?ref=v2.1.0"</span>
+
+<span class="w">  </span><span class="na">environment</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">data.terraform_remote_state.network.outputs.private_subnet_ids</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="dynamic-resource-generation-for_each-and-count">Dynamic Resource Generation: <code>for_each</code> and <code>count</code></h3>
+<p>To generate multiple instances of a resource or module dynamically, use <code>count</code> or <code>for_each</code>.</p>
+<h4 id="count-meta-argument"><code>count</code> Meta-Argument</h4>
+<p>Useful when creating identical copies based on an integer value:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"worker"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">var.worker_count</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.micro"</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"worker-node-${count.index + 1}"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="for_each-meta-argument"><code>for_each</code> Meta-Argument</h4>
+<p>Preferred for collection-driven provisioning. Prevents cascading updates when items are removed from the middle of a list:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"subnets"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">object</span><span class="p">({</span>
+<span class="w">    </span><span class="na">cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="na">az</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}))</span>
+<span class="w">  </span><span class="nb">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"public-a"</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.1.0/24", az = "us-east-1a"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="s2">"public-b"</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.2.0/24", az = "us-east-1b"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="s2">"private-a"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.10.0/24", az = "us-east-1a"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"subnet"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">for_each</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.subnets</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.primary.id</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value.cidr</span>
+<span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value.az</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"subnet-${each.key}"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="134-resource-lifecycle-management-and-workspace-management">13.4 Resource Lifecycle Management and Workspace Management</h2>
+<p>Managing infrastructure state safely requires control over resource update behaviors and environment isolates.</p>
+<h3 id="controlling-resource-lifecycles">Controlling Resource Lifecycles</h3>
+<p>The <code>lifecycle</code> meta-block customizes default creation/destruction behaviors for individual resources:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"critical_app"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.large"</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">    # 1. Prevent accidental destruction via 'terraform destroy'</span>
+<span class="w">    </span><span class="na">prevent_destroy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="c1">    # 2. Create replacement before destroying old resource during immutable updates</span>
+<span class="w">    </span><span class="na">create_before_destroy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="c1">    # 3. Ignore external modifications to specific attributes (prevents drift conflict)</span>
+<span class="w">    </span><span class="na">ignore_changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="err">tags</span><span class="p">[</span><span class="s2">"LastScanned"</span><span class="p">],</span>
+<span class="w">      </span><span class="err">user_data</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="workspace-management">Workspace Management</h3>
+<p>Workspaces allow multiple state files to be managed from the same root configuration directory.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List existing workspaces</span>
+terraform<span class="w"> </span>workspace<span class="w"> </span>list
+
+<span class="c1"># Create and switch to a new workspace</span>
+terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>staging
+
+<span class="c1"># Select an existing workspace</span>
+terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>production
+
+<span class="c1"># Display current active workspace</span>
+terraform<span class="w"> </span>workspace<span class="w"> </span>show
+</code></pre></div>
+<h4 id="utilizing-workspace-name-in-code">Utilizing Workspace Name in Code</h4>
+<div class="highlight"><pre><span></span><code><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">  # Dynamically scale instance type depending on active workspace</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lookup</span><span class="p">({</span>
+<span class="w">    </span><span class="na">dev</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.micro"</span>
+<span class="w">    </span><span class="na">staging</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
+<span class="w">    </span><span class="na">production</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"c6i.xlarge"</span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="nv">terraform.workspace</span><span class="p">,</span><span class="w"> </span><span class="s2">"t3.micro"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.instance_type</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"web-server-${terraform.workspace}"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">terraform.workspace</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="135-hands-on-lab-building-modular-terraform-code-for-automated-cloud-node-provisioning">13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning</h2>
+<h3 id="objective">Objective</h3>
+<p>Design and deploy a reusable enterprise module that provisions AWS compute instances attached to a customized VPC, using dynamic variable inputs, outputs, and local tags.</p>
+<hr />
+<h3 id="step-1-directory-setup">Step 1: Directory Setup</h3>
+<p>Create a structured workspace containing both the child module definition and a root caller configuration:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>terraform-lab13/modules/compute
+<span class="nb">cd</span><span class="w"> </span>terraform-lab13
+</code></pre></div>
+<h3 id="step-2-build-the-child-compute-module">Step 2: Build the Child Compute Module</h3>
+<h4 id="modulescomputevariablestf"><code>modules/compute/variables.tf</code></h4>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"ami_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"AMI ID to launch instance"</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"instance_type"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Compute instance SKU"</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.micro"</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"subnet_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Target subnet ID"</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"node_name"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Logical name tag for instance"</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"environment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Deployment environment"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="modulescomputemaintf"><code>modules/compute/main.tf</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.5.0"</span>
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 5.0"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">module_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="w">    </span><span class="na">NodeName</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.node_name</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"node"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ami_id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.subnet_id</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.module_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"node-${var.node_name}-${var.environment}"</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">create_before_destroy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="modulescomputeoutputstf"><code>modules/compute/outputs.tf</code></h4>
+<div class="highlight"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">"instance_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ID of created EC2 instance"</span>
+<span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_instance.node.id</span>
+<span class="p">}</span>
+
+<span class="kr">output</span><span class="w"> </span><span class="nv">"private_ip"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Private IP address assigned to node"</span>
+<span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_instance.node.private_ip</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="step-3-configure-root-module-and-invocation">Step 3: Configure Root Module and Invocation</h3>
+<p>Return to the root <code>terraform-lab13</code> folder and construct the root caller configuration.</p>
+<h4 id="versionstf"><code>versions.tf</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.5.0"</span>
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 5.0"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">provider</span><span class="w"> </span><span class="nv">"aws"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="variablestf"><code>variables.tf</code></h4>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"aws_region"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"environment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="maintf"><code>main.tf</code></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Look up latest Amazon Linux 2 AMI dynamically</span>
+<span class="kr">data</span><span class="w"> </span><span class="nc">"aws_ami"</span><span class="w"> </span><span class="nv">"amazon_linux"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">most_recent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">owners</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"amazon"</span><span class="p">]</span>
+
+<span class="w">  </span><span class="nb">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">name</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"name"</span>
+<span class="w">    </span><span class="na">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"amzn2-ami-hvm-*-x86_64-gp2"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Provision foundational Network infrastructure</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"lab_vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.100.0.0/16"</span>
+<span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"lab-vpc-${var.environment}"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"lab_subnet"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.lab_vpc.id</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.100.1.0/24"</span>
+<span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.aws_region}a"</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"lab-subnet-a"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Call local child module</span>
+<span class="kr">module</span><span class="w"> </span><span class="nv">"app_node"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"./modules/compute"</span>
+
+<span class="w">  </span><span class="na">ami_id</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.amazon_linux.id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.micro"</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.lab_subnet.id</span>
+<span class="w">  </span><span class="na">node_name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"primary-api"</span>
+<span class="w">  </span><span class="na">environment</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="outputstf"><code>outputs.tf</code></h4>
+<div class="highlight"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">"deployed_node_details"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Details exported from child compute module"</span>
+<span class="w">  </span><span class="nb">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">instance_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">module.app_node.instance_id</span>
+<span class="w">    </span><span class="na">private_ip</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">module.app_node.private_ip</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="step-4-validate-plan-and-apply">Step 4: Validate, Plan, and Apply</h3>
+<p>Execute the standard validation and deployment workflow:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Initialize working directory and load providers/modules</span>
+terraform<span class="w"> </span>init
+
+<span class="c1"># 2. Validate configuration syntax and consistency</span>
+terraform<span class="w"> </span>validate
+
+<span class="c1"># 3. Perform dry-run plan step</span>
+terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan.binary
+
+<span class="c1"># 4. Apply execution plan</span>
+terraform<span class="w"> </span>apply<span class="w"> </span>tfplan.binary
+</code></pre></div>
+<h3 id="step-5-verification-and-cleanup">Step 5: Verification and Cleanup</h3>
+<p>Confirm that outputs are correctly populated from the child module:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Display output values</span>
+terraform<span class="w"> </span>output<span class="w"> </span>deployed_node_details
+
+<span class="c1"># Clean up resources to prevent cloud cost accumulation</span>
+terraform<span class="w"> </span>destroy<span class="w"> </span>-auto-approve
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

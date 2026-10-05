@@ -1,0 +1,1846 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter4/">
+      
+      
+        <link rel="next" href="../Chapter6/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 5: Docker Containerization Architecture & Core Operations - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-5-docker-containerization-architecture-core-operations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 5: Docker Containerization Architecture &amp; Core Operations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51-container-internals-namespaces-cgroups-and-overlayfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Container Internals: Namespaces, cgroups, and OverlayFS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1 Container Internals: Namespaces, cgroups, and OverlayFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-kernel-namespaces-and-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Dive: Kernel Namespaces and Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-groups-v2-cgroups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Groups v2 (cgroups)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overlayfs-storage-driver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OverlayFS Storage Driver
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-docker-engine-architecture-docker-daemon-containerd-and-runc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#component-breakdown-execution-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Breakdown &amp; Execution Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-writing-enterprise-dockerfiles-multi-stage-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Writing Enterprise Dockerfiles &amp; Multi-Stage Builds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3 Writing Enterprise Dockerfiles &amp; Multi-Stage Builds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-multi-stage-dockerfile-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Multi-Stage Dockerfile Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-image-optimization-layer-caching-and-security-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Image Optimization, Layer Caching, and Security Hardening
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 Image Optimization, Layer Caching, and Security Hardening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secrets-handling-with-docker-buildkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Handling with Docker BuildKit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-hands-on-lab-constructing-minimalistic-hardened-multi-stage-container-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Hands-On Lab: Constructing Minimalistic, Hardened Multi-Stage Container Images
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.5 Hands-On Lab: Constructing Minimalistic, Hardened Multi-Stage Container Images">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-dockerignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create .dockerignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-author-the-hardened-dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Author the Hardened Dockerfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-build-verify-layer-history-and-validate-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Build, Verify Layer History, and Validate Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-exam-takeaways-lpi-701-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Exam Takeaways (LPI 701-200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51-container-internals-namespaces-cgroups-and-overlayfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Container Internals: Namespaces, cgroups, and OverlayFS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1 Container Internals: Namespaces, cgroups, and OverlayFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-kernel-namespaces-and-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Dive: Kernel Namespaces and Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-groups-v2-cgroups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Groups v2 (cgroups)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overlayfs-storage-driver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OverlayFS Storage Driver
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-docker-engine-architecture-docker-daemon-containerd-and-runc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#component-breakdown-execution-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Breakdown &amp; Execution Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-writing-enterprise-dockerfiles-multi-stage-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Writing Enterprise Dockerfiles &amp; Multi-Stage Builds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3 Writing Enterprise Dockerfiles &amp; Multi-Stage Builds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-multi-stage-dockerfile-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Multi-Stage Dockerfile Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-image-optimization-layer-caching-and-security-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Image Optimization, Layer Caching, and Security Hardening
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 Image Optimization, Layer Caching, and Security Hardening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secrets-handling-with-docker-buildkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Handling with Docker BuildKit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-hands-on-lab-constructing-minimalistic-hardened-multi-stage-container-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Hands-On Lab: Constructing Minimalistic, Hardened Multi-Stage Container Images
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.5 Hands-On Lab: Constructing Minimalistic, Hardened Multi-Stage Container Images">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-dockerignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create .dockerignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-author-the-hardened-dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Author the Hardened Dockerfile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-build-verify-layer-history-and-validate-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Build, Verify Layer History, and Validate Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-exam-takeaways-lpi-701-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Exam Takeaways (LPI 701-200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-5-docker-containerization-architecture-core-operations">Chapter 5: Docker Containerization Architecture &amp; Core Operations</h1>
+<h2 id="51-container-internals-namespaces-cgroups-and-overlayfs">5.1 Container Internals: Namespaces, cgroups, and OverlayFS</h2>
+<p>Unlike full hardware virtualization provided by hypervisors, containers leverage Linux kernel primitives to achieve isolate processes. Understanding these core Linux kernel mechanics—Linux Namespaces, Control Groups (cgroups), and OverlayFS—is fundamental for troubleshooting and securing enterprise container environments.</p>
+<p><img alt="Linux Kernel Container Isolation Primitives" src="assets/images/chapter5/5-1-Linux-Kernel-Container-Isolation-Primitives.png" /></p>
+<h3 id="deep-dive-kernel-namespaces-and-isolation">Deep Dive: Kernel Namespaces and Isolation</h3>
+<p>Namespaces wrap global system resources in abstractions. A process within a namespace sees only its isolated instance of that resource:</p>
+<ol>
+<li><strong>PID Namespace (<code>clone</code> flag <code>CLONE_NEWPID</code>):</strong> Isolates process IDs. The main process inside a container becomes PID 1, while maintaining a standard PID on the host system.</li>
+<li><strong>NET Namespace (<code>CLONE_NEWNET</code>):</strong> Provides isolated network devices, IP routing tables, port bindings, and firewall rules.</li>
+<li><strong>MNT Namespace (<code>CLONE_NEWNS</code>):</strong> Isolates file system mount points, ensuring process file system operations do not leak into the host.</li>
+<li><strong>IPC Namespace (<code>CLONE_NEWIPC</code>):</strong> Isolates System V IPC and POSIX message queues.</li>
+<li><strong>UTS Namespace (<code>CLONE_NEWUTS</code>):</strong> Isolates hostnames and NIS domain names.</li>
+<li><strong>USER Namespace (<code>CLONE_NEWUSER</code>):</strong> Maps container root users (UID 0) to non-privileged UIDs on the host system for enhanced security.</li>
+</ol>
+<p>To inspect namespaces of running processes on an enterprise host:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Obtain PID of a containerized application process</span>
+<span class="nv">CONTAINER_PID</span><span class="o">=</span><span class="k">$(</span>docker<span class="w"> </span>inspect<span class="w"> </span>--format<span class="w"> </span><span class="s1">'{{ .State.Pid }}'</span><span class="w"> </span>enterprise_app<span class="k">)</span>
+
+<span class="c1"># Inspect namespace associations for the container PID</span>
+ls<span class="w"> </span>-l<span class="w"> </span>/proc/<span class="nv">$CONTAINER_PID</span>/ns
+
+<span class="c1"># Execute a command inside a specific namespace without entering the container runtime</span>
+sudo<span class="w"> </span>nsenter<span class="w"> </span>--target<span class="w"> </span><span class="nv">$CONTAINER_PID</span><span class="w"> </span>--net<span class="w"> </span>--pid<span class="w"> </span>ip<span class="w"> </span>addr<span class="w"> </span>show
+</code></pre></div>
+<h3 id="control-groups-v2-cgroups">Control Groups v2 (cgroups)</h3>
+<p>Control groups restrict and account for system resource consumption. Under cgroups v2, resource tracking uses a unified hierarchy, preventing resource starvation attacks.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Creating a custom cgroup v2 slice for an application under systemd</span>
+<span class="c1"># /etc/systemd/system/enterprise-app.slice</span>
+<span class="o">[</span>Slice<span class="o">]</span>
+<span class="nv">MemoryAccounting</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">MemoryHigh</span><span class="o">=</span>1G
+<span class="nv">MemoryMax</span><span class="o">=</span><span class="m">1</span>.5G
+<span class="nv">CPUAccounting</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">CPUQuota</span><span class="o">=</span><span class="m">200</span>%
+<span class="nv">IOAccounting</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">IOWeight</span><span class="o">=</span><span class="m">100</span>
+</code></pre></div>
+<h3 id="overlayfs-storage-driver">OverlayFS Storage Driver</h3>
+<p>OverlayFS combines two directories on a single host host into a single merged view using Copy-on-Write (CoW):</p>
+<ul>
+<li><strong><code>lowerdir</code>:</strong> Read-only image layers stacked sequentially.</li>
+<li><strong><code>upperdir</code>:</strong> Read-write container layer storing file modifications, additions, and deletions.</li>
+<li><strong><code>workdir</code>:</strong> Internal staging directory used by OverlayFS to prepare files before committing to <code>upperdir</code>.</li>
+<li><strong><code>merged</code>:</strong> The unified view presented to the containerized application process.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Inspecting OverlayFS mount details of an active container</span>
+docker<span class="w"> </span>inspect<span class="w"> </span>enterprise_app<span class="w"> </span>--format<span class="w"> </span><span class="s1">'{{ json .GraphDriver.Data }}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<h2 id="52-docker-engine-architecture-docker-daemon-containerd-and-runc">5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc</h2>
+<p>Modern Docker uses a modular, decoupled architecture rather than a single monolithic daemon. This structure adheres to Open Container Initiative (OCI) standards for runtime and image specifications.</p>
+<p><img alt="Docker Engine &amp; OCI Runtime Component Topology" src="assets/images/chapter5/5-2-Docker-Engine-and-OCI-Runtime-Component-Topology.png" /></p>
+<h3 id="component-breakdown-execution-lifecycle">Component Breakdown &amp; Execution Lifecycle</h3>
+<ol>
+<li><strong>Docker Daemon (<code>dockerd</code>):</strong> Exposes the REST API, manages Docker networks, volumes, image builds, and orchestrates calls to <code>containerd</code>.</li>
+<li><strong><code>containerd</code>:</strong> An industry-standard container runtime manager. It handles image distribution, storage management, container execution lifecycle, and supervisor operations.</li>
+<li><strong><code>containerd-shim</code>:</strong> A lightweight daemon process spawned for each container. It allows daemonless containers—enabling <code>dockerd</code> or <code>containerd</code> to be restarted or upgraded without stopping running containers.</li>
+<li><strong><code>runc</code>:</strong> The lightweight CLI tool built according to OCI specifications. It interacts directly with the kernel to configure namespaces and cgroups, starts the container process, and then terminates.</li>
+</ol>
+<p>To directly monitor <code>containerd</code> activities bypassing the Docker daemon:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List active containers via containerd CLI tool (ctr)</span>
+sudo<span class="w"> </span>ctr<span class="w"> </span>--namespace<span class="w"> </span>moby<span class="w"> </span>containers<span class="w"> </span>list
+
+<span class="c1"># Pull image directly using containerd</span>
+sudo<span class="w"> </span>ctr<span class="w"> </span>images<span class="w"> </span>pull<span class="w"> </span>docker.io/library/alpine:latest
+</code></pre></div>
+<h2 id="53-writing-enterprise-dockerfiles-multi-stage-builds">5.3 Writing Enterprise Dockerfiles &amp; Multi-Stage Builds</h2>
+<p>Enterprise container build pipelines must produce secure, minimal, and deterministic images. Multi-stage builds decouple the compilation toolchain from the final operational runtime image, dramatically shrinking the attack surface and image size.</p>
+<p><img alt="Enterprise Multi-Stage Container Build Workflow" src="assets/images/chapter5/5-3-Enterprise-Multi-Stage-Container-Build-Workflow.png" /></p>
+<h3 id="enterprise-multi-stage-dockerfile-example">Enterprise Multi-Stage <code>Dockerfile</code> Example</h3>
+<p>The following Dockerfile demonstrates a production-grade build for a Go application using non-root execution and minimal dependencies.</p>
+<div class="highlight"><pre><span></span><code><span class="c"># =================----------------=============================================</span>
+<span class="c"># STAGE 1: Build &amp; Compilation Environment</span>
+<span class="c"># =================----------------=============================================</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+
+<span class="c"># Install security certificates and build tools</span>
+<span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>ca-certificates<span class="w"> </span>git
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/src</span>
+
+<span class="c"># Leverage layer caching by copying dependency manifests first</span>
+<span class="k">COPY</span><span class="w"> </span>go.mod<span class="w"> </span>go.sum<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>go<span class="w"> </span>mod<span class="w"> </span>download<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>go<span class="w"> </span>mod<span class="w"> </span>verify
+
+<span class="c"># Copy application source code</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+
+<span class="c"># Compile static binary (CGO_ENABLED=0 prevents dynamic glibc binding)</span>
+<span class="k">RUN</span><span class="w"> </span><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">GOOS</span><span class="o">=</span>linux<span class="w"> </span><span class="nv">GOARCH</span><span class="o">=</span>amd64<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-ldflags<span class="o">=</span><span class="s2">"-w -s -extldflags '-static'"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-o<span class="w"> </span>/bin/enterprise-service<span class="w"> </span>./cmd/api
+
+<span class="c"># =================----------------=============================================</span>
+<span class="c"># STAGE 2: Hardened Runtime Environment</span>
+<span class="c"># =================----------------=============================================</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">gcr.io/distroless/static-debian12:nonroot</span>
+
+<span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.title<span class="o">=</span><span class="s2">"Enterprise Core API"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.vendor<span class="o">=</span><span class="s2">"Enterprise IT Ops"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">"1.4.0"</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="c"># Import compiled static binary from builder stage</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/bin/enterprise-service<span class="w"> </span>/app/enterprise-service
+
+<span class="c"># Import system CA certificates from builder stage</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>/etc/ssl/certs/
+
+<span class="c"># Expose internal service port</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
+
+<span class="c"># Enforce non-root execution (UID 65532 is built-in distroless nonroot user)</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">65532:65532</span>
+
+<span class="c"># Set entrypoint execution</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"/app/enterprise-service"</span><span class="p">]</span>
+</code></pre></div>
+<h2 id="54-image-optimization-layer-caching-and-security-hardening">5.4 Image Optimization, Layer Caching, and Security Hardening</h2>
+<p>Securing enterprise container images requires a defense-in-depth approach. Every statement in a Dockerfile creates an immutable layer. Optimizing these layers speeds up build times, minimizes network bandwidth usage, and limits security exposure.</p>
+<p><img alt="Container Layer Optimization &amp; Runtime Hardening" src="assets/images/chapter5/5-4-Container-Layer-Optimization-and-Runtime-Hardening.png" /></p>
+<h3 id="secrets-handling-with-docker-buildkit">Secrets Handling with Docker BuildKit</h3>
+<p>Never hardcode or pass sensitive credentials using build arguments (<code>ARG</code>), as they persist in the image metadata. Instead, utilize BuildKit secret mounts.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dockerfile leveraging BuildKit secret mounts</span>
+<span class="c1"># syntax=docker/dockerfile:1.4</span>
+FROM<span class="w"> </span>alpine:3.19
+
+RUN<span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>api_token<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>/run/secrets/api_token<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span>https://internal.repo/config<span class="w"> </span>-o<span class="w"> </span>/app/config.json
+</code></pre></div>
+<p>Execute the secure build command:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Execute build mounting the secret securely without persisting it in layer history</span>
+<span class="nv">DOCKER_BUILDKIT</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>--secret<span class="w"> </span><span class="nv">id</span><span class="o">=</span>api_token,src<span class="o">=</span>./tokens/prod_token.txt<span class="w"> </span>-t<span class="w"> </span>enterprise-app:v1<span class="w"> </span>.
+</code></pre></div>
+<h2 id="55-hands-on-lab-constructing-minimalistic-hardened-multi-stage-container-images">5.5 Hands-On Lab: Constructing Minimalistic, Hardened Multi-Stage Container Images</h2>
+<h3 id="lab-scenario">Lab Scenario</h3>
+<p>You are tasked with refactoring an insecure, legacy Node.js application container configuration into an enterprise-ready, hardened multi-stage image. You will write the optimized <code>Dockerfile</code>, construct a custom <code>.dockerignore</code> file, enforce non-root execution, and scan the final artifact for vulnerability compliance using Trivy.</p>
+<p><img alt="Hands-On Hardened Build &amp; Scanning Pipeline" src="assets/images/chapter5/5-5-Hands-On-Hardened-Build-Scanning-Pipeline.png" /></p>
+<h3 id="step-by-step-implementation">Step-by-Step Implementation</h3>
+<h4 id="step-1-create-dockerignore">Step 1: Create <code>.dockerignore</code></h4>
+<p>Exclude unnecessary files to accelerate build contexts and prevent sensitive leakages into the daemon.</p>
+<div class="highlight"><pre><span></span><code># .dockerignore
+.git
+.gitignore
+node_modules
+npm-debug.log
+Dockerfile
+README.md
+.env*
+coverage/
+dist/
+</code></pre></div>
+<h4 id="step-2-author-the-hardened-dockerfile">Step 2: Author the Hardened <code>Dockerfile</code></h4>
+<p>Create an optimized multi-stage <code>Dockerfile</code> leveraging Node.js Alpine base images.</p>
+<div class="highlight"><pre><span></span><code><span class="c"># =================----------------=============================================</span>
+<span class="c"># STAGE 1: Build Dependencies and Transpile</span>
+<span class="c"># =================----------------=============================================</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build-stage</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/usr/src/app</span>
+
+<span class="c"># Install package manifests</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
+
+<span class="c"># Clean install all dependencies (including devDependencies)</span>
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
+
+<span class="c"># Copy application source code</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+
+<span class="c"># Transpile/Build application artifacts</span>
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
+
+<span class="c"># Prune development dependencies to retain only production packages</span>
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>prune<span class="w"> </span>--production
+
+<span class="c"># =================----------------=============================================</span>
+<span class="c"># STAGE 2: Hardened Production Runtime</span>
+<span class="c"># =================----------------=============================================</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production-stage</span>
+
+<span class="k">ENV</span><span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span>production
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/usr/src/app</span>
+
+<span class="c"># Create a explicit system user and group for non-root execution</span>
+<span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">10001</span><span class="w"> </span>-S<span class="w"> </span>appgroup<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>adduser<span class="w"> </span>-u<span class="w"> </span><span class="m">10001</span><span class="w"> </span>-S<span class="w"> </span>appuser<span class="w"> </span>-G<span class="w"> </span>appgroup
+
+<span class="c"># Copy production node_modules and built code from build-stage</span>
+<span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appgroup<span class="w"> </span>--from<span class="o">=</span>build-stage<span class="w"> </span>/usr/src/app/node_modules<span class="w"> </span>./node_modules
+<span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appgroup<span class="w"> </span>--from<span class="o">=</span>build-stage<span class="w"> </span>/usr/src/app/dist<span class="w"> </span>./dist
+<span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appgroup<span class="w"> </span>--from<span class="o">=</span>build-stage<span class="w"> </span>/usr/src/app/package.json<span class="w"> </span>./
+
+<span class="c"># Switch execution context to non-root user</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
+
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
+
+<span class="c"># Set health check for container health monitoring</span>
+<span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>CMD<span class="w"> </span>wget<span class="w"> </span>--no-verbose<span class="w"> </span>--tries<span class="o">=</span><span class="m">1</span><span class="w"> </span>--spider<span class="w"> </span>http://localhost:3000/healthz<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/server.js"</span><span class="p">]</span>
+</code></pre></div>
+<h4 id="step-3-build-verify-layer-history-and-validate-security">Step 3: Build, Verify Layer History, and Validate Security</h4>
+<ol>
+<li><strong>Build the container using Docker BuildKit:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">DOCKER_BUILDKIT</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>enterprise/node-app:1.0.0<span class="w"> </span>.
+</code></pre></div>
+<ol>
+<li><strong>Inspect Layer Sizes and Metadata:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">history</span><span class="w"> </span>enterprise/node-app:1.0.0
+</code></pre></div>
+<ol>
+<li><strong>Verify Non-Root Process Isolation at Runtime:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>test-hardened<span class="w"> </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span>enterprise/node-app:1.0.0
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>test-hardened<span class="w"> </span>id
+</code></pre></div>
+<p><em>Expected Output:</em> <code>uid=10001(appuser) gid=10001(appgroup) groups=10001(appgroup)</code></p>
+<ol>
+<li><strong>Execute Security Vulnerability Scan using Trivy:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>trivy<span class="w"> </span>image<span class="w"> </span>--severity<span class="w"> </span>HIGH,CRITICAL<span class="w"> </span>enterprise/node-app:1.0.0
+</code></pre></div>
+<h3 id="key-exam-takeaways-lpi-701-200">Key Exam Takeaways (LPI 701-200)</h3>
+<ul>
+<li><strong>Linux Namespaces vs cgroups:</strong> Namespaces provide <strong>isolation</strong> (what a process can see), whereas Control Groups (cgroups) provide <strong>resource limits</strong> (what a process can use).</li>
+<li><strong>Decoupled Architecture:</strong> The Docker CLI communicates via REST API to <code>dockerd</code>, which delegates container life-cycle operations to <code>containerd</code> via gRPC. <code>containerd</code> relies on <code>containerd-shim</code> to execute containers via <code>runc</code>.</li>
+<li><strong>Multi-Stage Build Efficiency:</strong> Multi-stage builds reduce total container image size and eliminate security vulnerabilities by keeping compilers, SDKs, and source code out of the production layer.</li>
+<li><strong>Security Controls:</strong> Production containers must avoid running as <code>root</code> (UID 0), utilize read-only root filesystems where possible, drop unneeded Linux capabilities (<code>--cap-drop=ALL</code>), and mount secrets dynamically via BuildKit rather than storing them in environment variables or layers.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

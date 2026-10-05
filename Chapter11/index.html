@@ -1,0 +1,2137 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter10/">
+      
+      
+        <link rel="next" href="../Chapter12/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 11: Kubernetes Security & RBAC - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-11-kubernetes-security-rbac" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 11: Kubernetes Security &amp; RBAC
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#111-kubernetes-authentication-authorization-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Kubernetes Authentication &amp; Authorization Engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.1 Kubernetes Authentication &amp; Authorization Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-authn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication (AuthN)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication (AuthN)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Authentication Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-authz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization (AuthZ)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-role-based-access-control-rbac-serviceaccounts-roles-clusterroles-and-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rbac-scope-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Scope Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RBAC Scope Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-roles-vs-clusterroles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Roles vs. ClusterRoles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rolebindings-vs-clusterrolebindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. RoleBindings vs. ClusterRoleBindings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifest-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Manifest Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-namespaced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role (Namespaced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serviceaccount-rolebinding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceAccount &amp; RoleBinding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-restricting-network-traffic-using-kubernetes-networkpolicies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.3 Restricting Network Traffic using Kubernetes NetworkPolicies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#policy-evaluation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Evaluation Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifest-ingress-egress-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest: Ingress &amp; Egress Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-pod-security-standards-pss-and-admission-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 Pod Security Standards (PSS) and Admission Controllers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.4 Pod Security Standards (PSS) and Admission Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pod-security-standards-pss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Security Standards (PSS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pod Security Standards (PSS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#applying-pss-via-namespace-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying PSS via Namespace Labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-admission-control-webhooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Admission Control Webhooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#115-hands-on-lab-implementing-zero-trust-network-policies-and-granular-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 Hands-On Lab: Implementing Zero-Trust Network Policies and Granular RBAC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.5 Hands-On Lab: Implementing Zero-Trust Network Policies and Granular RBAC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-namespaces-apply-pod-security-enforcements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Namespaces &amp; Apply Pod Security Enforcements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-enforce-default-deny-all-network-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Enforce Default Deny All Network Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-granular-rbac-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create Granular RBAC Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-authorization-matrix-kubectl-auth-can-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify Authorization Matrix (kubectl auth can-i)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#116-self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#111-kubernetes-authentication-authorization-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Kubernetes Authentication &amp; Authorization Engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.1 Kubernetes Authentication &amp; Authorization Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-authn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication (AuthN)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication (AuthN)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Authentication Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-authz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization (AuthZ)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-role-based-access-control-rbac-serviceaccounts-roles-clusterroles-and-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rbac-scope-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Scope Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RBAC Scope Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-roles-vs-clusterroles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Roles vs. ClusterRoles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rolebindings-vs-clusterrolebindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. RoleBindings vs. ClusterRoleBindings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifest-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Manifest Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-namespaced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role (Namespaced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serviceaccount-rolebinding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceAccount &amp; RoleBinding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-restricting-network-traffic-using-kubernetes-networkpolicies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Restricting Network Traffic using Kubernetes NetworkPolicies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.3 Restricting Network Traffic using Kubernetes NetworkPolicies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#policy-evaluation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Evaluation Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifest-ingress-egress-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest: Ingress &amp; Egress Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-pod-security-standards-pss-and-admission-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 Pod Security Standards (PSS) and Admission Controllers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.4 Pod Security Standards (PSS) and Admission Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pod-security-standards-pss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Security Standards (PSS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pod Security Standards (PSS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#applying-pss-via-namespace-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying PSS via Namespace Labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-admission-control-webhooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Admission Control Webhooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#115-hands-on-lab-implementing-zero-trust-network-policies-and-granular-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 Hands-On Lab: Implementing Zero-Trust Network Policies and Granular RBAC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11.5 Hands-On Lab: Implementing Zero-Trust Network Policies and Granular RBAC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-namespaces-apply-pod-security-enforcements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Namespaces &amp; Apply Pod Security Enforcements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-enforce-default-deny-all-network-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Enforce Default Deny All Network Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-granular-rbac-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create Granular RBAC Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-authorization-matrix-kubectl-auth-can-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify Authorization Matrix (kubectl auth can-i)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#116-self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-11-kubernetes-security-rbac">Chapter 11: Kubernetes Security &amp; RBAC</h1>
+<p>This chapter covers the complete security model of Kubernetes, structured directly for enterprise operations and aligned with the LPI 701-200 (DevOps Tools Engineer) exam objectives. It explores API request validation, fine-grained access management, network isolation controls, pod execution standards, and dynamic request admission.</p>
+<h2 id="111-kubernetes-authentication-authorization-engine">11.1 Kubernetes Authentication &amp; Authorization Engine</h2>
+<p>Every operation in a Kubernetes cluster flows through the <code>kube-apiserver</code> via RESTful HTTP calls. To protect state transitions in <code>etcd</code>, the API server subjects incoming requests to a three-stage validation pipeline: <strong>Authentication (AuthN)</strong>, <strong>Authorization (AuthZ)</strong>, and <strong>Admission Control</strong>.</p>
+<p><img alt="KUBERNETES API REQUEST PIPELINE" src="assets/images/chapter11/11-1-KUBERNETES-API-REQUEST-PIPELINE.png" /></p>
+<h3 id="authentication-authn">Authentication (AuthN)</h3>
+<p>Authentication inspects the HTTP header, client certificates, or bearer tokens to determine the identity of the requester. Kubernetes recognizes two principal identity categories:</p>
+<ol>
+<li><strong>Human Users</strong>: Managed externally (e.g., via Corporate IdP/OIDC, X.509 Client Certificates, or Static Token files). Kubernetes does <strong>not</strong> store <code>User</code> objects in its API database.</li>
+<li><strong>ServiceAccounts</strong>: Managed natively by Kubernetes as API objects within specific Namespaces for in-cluster workload identities.</li>
+</ol>
+<h4 id="common-authentication-methods">Common Authentication Methods</h4>
+<ul>
+<li><strong>X.509 Client Certificates</strong>: The API server trusts certificates signed by the Cluster Certificate Authority (CA). The Certificate Subject's Common Name (<code>CN</code>) is interpreted as the <strong>User</strong>, and Organization entries (<code>O</code>) are mapped to <strong>Groups</strong>.</li>
+<li>
+<p>Flag: <code>--client-ca-file=/etc/kubernetes/pki/ca.crt</code></p>
+</li>
+<li>
+<p><strong>OpenID Connect (OIDC) Tokens</strong>: Delegates identity verification to external IdPs (Keycloak, Okta, Azure AD, Dex) using OAuth 2.0 JWT tokens.</p>
+</li>
+<li>API Server Flags:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>--oidc-issuer-url<span class="o">=</span>https://auth.enterprise.internal/auth/realms/master
+--oidc-client-id<span class="o">=</span>kubernetes-cluster
+--oidc-username-claim<span class="o">=</span>preferred_username
+--oidc-groups-claim<span class="o">=</span>groups
+</code></pre></div>
+<ul>
+<li><strong>ServiceAccount Service Account Tokens</strong>: Short-lived, auto-rotating JSON Web Tokens (JWT) issued via the <code>TokenRequest</code> API (bound to Pod life cycles).</li>
+</ul>
+<h3 id="authorization-authz">Authorization (AuthZ)</h3>
+<p>Once identity is verified, authorization modules evaluate whether the user or service account has permission to perform the requested verb (e.g., <code>get</code>, <code>create</code>, <code>delete</code>) on the target resource (e.g., <code>pods</code>, <code>services</code>, <code>secrets</code>).</p>
+<p>Multiple authorization modes can be configured sequentially using the <code>--authorization-mode</code> API server flag. Authorization evaluation stops as soon as a module explicitly <strong>allows</strong> or <strong>denies</strong> the request; if a module is indecisive, evaluation falls back to the next module in the chain.</p>
+<table>
+<thead>
+<tr>
+<th>Authorization Mode</th>
+<th>Evaluation Model</th>
+<th>Best Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RBAC</strong></td>
+<td>Evaluates roles and role bindings stored in Kubernetes.</td>
+<td>Standard enterprise production deployments.</td>
+</tr>
+<tr>
+<td><strong>Node</strong></td>
+<td>Authorizes API calls made specifically by <code>kubelet</code> instances based on assigned workloads.</td>
+<td>Node isolation and infrastructure control plane security.</td>
+</tr>
+<tr>
+<td><strong>ABAC</strong></td>
+<td>Evaluates arbitrary field-based policy rules written in JSON files.</td>
+<td>Legacy static cluster configurations (requires API server restarts to edit).</td>
+</tr>
+<tr>
+<td><strong>Webhook</strong></td>
+<td>Delegates authorization decisions to an external HTTP REST endpoint (e.g., OPA / Gatekeeper).</td>
+<td>Fine-grained or dynamic enterprise policy engine integration.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="112-role-based-access-control-rbac-serviceaccounts-roles-clusterroles-and-bindings">11.2 Role-Based Access Control (RBAC): ServiceAccounts, Roles, ClusterRoles, and Bindings</h2>
+<p>Kubernetes RBAC controls authorization using four primary API objects under the <code>rbac.authorization.k8s.io/v1</code> API group.</p>
+<p><img alt="KUBERNETES RBAC RESOURCE MODEL" src="assets/images/chapter11/11-1-KUBERNETES-RBAC-RESOURCE-MODEL.png" /></p>
+<h3 id="rbac-scope-breakdown">RBAC Scope Breakdown</h3>
+<h4 id="1-roles-vs-clusterroles">1. Roles vs. ClusterRoles</h4>
+<ul>
+<li><strong>Role</strong>: Defines permissions <strong>within a single namespace</strong>.</li>
+<li><strong>ClusterRole</strong>: Defines permissions across the <strong>entire cluster</strong> (including cluster-scoped resources like <code>Node</code>, <code>PersistentVolume</code>, <code>CustomResourceDefinition</code>, or non-resource endpoints like <code>/healthz</code>).</li>
+</ul>
+<h4 id="2-rolebindings-vs-clusterrolebindings">2. RoleBindings vs. ClusterRoleBindings</h4>
+<ul>
+<li><strong>RoleBinding</strong>: Grants permissions defined in a <code>Role</code> or <code>ClusterRole</code> to subjects <strong>within a specific namespace</strong>.</li>
+<li><strong>ClusterRoleBinding</strong>: Grants permissions across <strong>all namespaces</strong> cluster-wide.</li>
+</ul>
+<blockquote>
+<p><strong>Key Architectural Pattern</strong>: Binding a <code>ClusterRole</code> via a standard <code>RoleBinding</code> grants the specified cluster-wide role templates (e.g., standard <code>view</code> or <code>edit</code> roles) <strong>only</strong> within the target namespace of the <code>RoleBinding</code>.</p>
+</blockquote>
+<h3 id="manifest-examples">Manifest Examples</h3>
+<h4 id="role-namespaced">Role (Namespaced)</h4>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deployment-manager</span>
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"apps"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"deployments"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"statefulsets"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"get"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"list"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"watch"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"create"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"update"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"patch"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"delete"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">""</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"pods"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"get"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"list"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"watch"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h4 id="serviceaccount-rolebinding">ServiceAccount &amp; RoleBinding</h4>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ci-cd-deployer</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RoleBinding</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bind-ci-cd-deployer</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">subjects</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ci-cd-deployer</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">roleRef</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deployment-manager</span>
+<span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
+</code></pre></div>
+<h2 id="113-restricting-network-traffic-using-kubernetes-networkpolicies">11.3 Restricting Network Traffic using Kubernetes NetworkPolicies</h2>
+<p>By default, Kubernetes uses a non-isolated flat network model: <strong>any Pod can send packets to any other Pod across all namespaces</strong>.</p>
+<p>A <code>NetworkPolicy</code> object isolates Pod traffic using standard <code>podSelector</code> and <code>namespaceSelector</code> fields. To enforce NetworkPolicies, the cluster must run a Container Network Interface (CNI) plugin that supports layer 3/4 filtering (such as <strong>Calico</strong>, <strong>Cilium</strong>, <strong>Weave Net</strong>, or <strong>Kube-Router</strong>). Flannel <strong>does not</strong> enforce NetworkPolicies natively.</p>
+<p><img alt="NETWORKPOLICY INGRESS &amp; EGRESS SCOPE" src="assets/images/chapter11/11-3-NETWORKPOLICY-INGRESS-and-EGRESS-SCOPE.png" /></p>
+<h3 id="policy-evaluation-rules">Policy Evaluation Rules</h3>
+<ol>
+<li><strong>Default Allow</strong>: If no <code>NetworkPolicy</code> selects a Pod, all inbound and outbound traffic to/from that Pod is permitted.</li>
+<li><strong>Default Deny / Isolation</strong>: Once a Pod is selected by <em>any</em> <code>NetworkPolicy</code>, it isolates that Pod. Unmatched traffic is blocked (implicit drop).</li>
+<li><strong>Additive Policies</strong>: NetworkPolicies are additive. If multiple policies select the same Pod, the allowed rules from all matching policies are combined (OR logic).</li>
+</ol>
+<h3 id="manifest-ingress-egress-isolation">Manifest: Ingress &amp; Egress Isolation</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkPolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secure-payment-processor</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">finance</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-processor</span>
+<span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Egress</span>
+<span class="w">  </span><span class="nt">ingress</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Allow Ingress traffic from frontend pods in the same namespace on TCP 8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">podSelector</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway</span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">  </span><span class="nt">egress</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Allow Egress traffic to PostgreSQL pods in database namespace on TCP 5432</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespaceSelector</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">kubernetes.io/metadata.name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span>
+<span class="w">          </span><span class="nt">podSelector</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql</span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">          </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+</code></pre></div>
+<h2 id="114-pod-security-standards-pss-and-admission-controllers">11.4 Pod Security Standards (PSS) and Admission Controllers</h2>
+<h3 id="pod-security-standards-pss">Pod Security Standards (PSS)</h3>
+<p>Kubernetes Pod Security Standards replace the deprecated <code>PodSecurityPolicy</code> (PSP). PSS categorizes workload isolation requirements into three distinct profiles:</p>
+<table>
+<thead>
+<tr>
+<th>Profile</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Privileged</strong></td>
+<td>Unrestricted execution. Gives workloads maximum capabilities (allows host namespaces, root execution, and host path mounts). Intended for system-level daemons (e.g., CNI, storage drivers).</td>
+</tr>
+<tr>
+<td><strong>Baseline</strong></td>
+<td>Minimal restrictive policy. Prevents known privilege escalations while allowing default pod configurations. Blocks <code>hostNetwork</code>, <code>hostPID</code>, <code>hostIPC</code>, and privileged escalation options.</td>
+</tr>
+<tr>
+<td><strong>Restricted</strong></td>
+<td>Hardened execution environment following enterprise best practices. Requires pods to run as non-root, drop all capabilities (except <code>NET_BIND_SERVICE</code>), and enforce read-only root filesystems.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="applying-pss-via-namespace-labels">Applying PSS via Namespace Labels</h4>
+<p>The built-in <code>PodSecurity</code> Admission Controller enforces profiles based on namespace labels, evaluated at three distinct modes:</p>
+<ul>
+<li><code>enforce</code>: Rejects pods violating the profile.</li>
+<li><code>audit</code>: Generates audit log events for violations while allowing creation.</li>
+<li><code>warn</code>: Returns a user-facing warning during deployment creation.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespace</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hardened-apps</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pod-security.kubernetes.io/enforce</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restricted</span>
+<span class="w">    </span><span class="nt">pod-security.kubernetes.io/enforce-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
+<span class="w">    </span><span class="nt">pod-security.kubernetes.io/warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restricted</span>
+<span class="w">    </span><span class="nt">pod-security.kubernetes.io/warn-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
+</code></pre></div>
+<h3 id="dynamic-admission-control-webhooks">Dynamic Admission Control Webhooks</h3>
+<p>When an API request passes Authentication and Authorization, it hits the <strong>Admission Control</strong> phase prior to object persistence in <code>etcd</code>.</p>
+<p>Admission controllers run in two sequential stages:</p>
+<ol>
+<li><strong>Mutating Admission Webhooks</strong>: Can intercept, modify, or inject defaults into incoming API payloads (e.g., inject sidecars, add required labels).</li>
+<li><strong>Validating Admission Webhooks</strong>: Evaluate payloads against specific validation logic. Rejects requests with HTTP <code>422 Unprocessable Entity</code> if rules are violated (e.g., blocking <code>latest</code> container image tags).</li>
+</ol>
+<p>Popular policy engines such as <strong>Kyverno</strong> and <strong>OPA / Gatekeeper</strong> run as dynamic validating and mutating admission webhooks.</p>
+<h2 id="115-hands-on-lab-implementing-zero-trust-network-policies-and-granular-rbac">11.5 Hands-On Lab: Implementing Zero-Trust Network Policies and Granular RBAC</h2>
+<h3 id="lab-objective">Lab Objective</h3>
+<p>Build a zero-trust namespace architecture inside a cluster:</p>
+<ol>
+<li>Create isolated namespaces (<code>secure-backend</code> and <code>data-tier</code>).</li>
+<li>Enforce a <strong>Default Deny All</strong> network posture across all namespaces.</li>
+<li>Configure a fine-grained <code>ServiceAccount</code> and <code>Role</code> to permit limited access.</li>
+<li>Verify RBAC rules using <code>kubectl auth can-i</code>.</li>
+</ol>
+<h3 id="step-1-create-namespaces-apply-pod-security-enforcements">Step 1: Create Namespaces &amp; Apply Pod Security Enforcements</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>secure-backend
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>data-tier
+
+<span class="c1"># Label namespaces for Restricted Pod Security Standards</span>
+kubectl<span class="w"> </span>label<span class="w"> </span>namespace<span class="w"> </span>secure-backend<span class="w"> </span>pod-security.kubernetes.io/enforce<span class="o">=</span>restricted
+kubectl<span class="w"> </span>label<span class="w"> </span>namespace<span class="w"> </span>data-tier<span class="w"> </span>pod-security.kubernetes.io/enforce<span class="o">=</span>restricted
+</code></pre></div>
+<h3 id="step-2-enforce-default-deny-all-network-policies">Step 2: Enforce Default Deny All Network Policies</h3>
+<p>Apply a Default-Deny policy to block all ingress and egress traffic in <code>secure-backend</code>.</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: networking.k8s.io/v1</span>
+<span class="s">kind: NetworkPolicy</span>
+<span class="s">metadata:</span>
+<span class="s">  name: default-deny-all</span>
+<span class="s">  namespace: secure-backend</span>
+<span class="s">spec:</span>
+<span class="s">  podSelector: {}</span>
+<span class="s">  policyTypes:</span>
+<span class="s">    - Ingress</span>
+<span class="s">    - Egress</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="step-3-create-granular-rbac-infrastructure">Step 3: Create Granular RBAC Infrastructure</h3>
+<p>Create a dedicated ServiceAccount and assign it permissions to view Pods and manage StatefulSets only inside <code>secure-backend</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Create ServiceAccount</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>serviceaccount<span class="w"> </span>developer-sa<span class="w"> </span>-n<span class="w"> </span>secure-backend
+
+<span class="c1"># 2. Create Namespaced Role</span>
+cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
+<span class="s">kind: Role</span>
+<span class="s">metadata:</span>
+<span class="s">  name: developer-role</span>
+<span class="s">  namespace: secure-backend</span>
+<span class="s">rules:</span>
+<span class="s">  - apiGroups: [""]</span>
+<span class="s">    resources: ["pods", "services"]</span>
+<span class="s">    verbs: ["get", "list", "watch"]</span>
+<span class="s">  - apiGroups: ["apps"]</span>
+<span class="s">    resources: ["statefulsets"]</span>
+<span class="s">    verbs: ["get", "list", "watch", "create", "update", "patch"]</span>
+<span class="s">EOF</span>
+
+<span class="c1"># 3. Bind Role to ServiceAccount</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>rolebinding<span class="w"> </span>developer-rb<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--role<span class="o">=</span>developer-role<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--serviceaccount<span class="o">=</span>secure-backend:developer-sa<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="o">=</span>secure-backend
+</code></pre></div>
+<h3 id="step-4-verify-authorization-matrix-kubectl-auth-can-i">Step 4: Verify Authorization Matrix (<code>kubectl auth can-i</code>)</h3>
+<p>Verify RBAC privileges using <code>kubectl auth can-i</code> with the <code>--as</code> impersonation flag:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Test 1: Check if developer-sa can list pods in secure-backend (Expected: yes)</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>list<span class="w"> </span>pods<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--as<span class="o">=</span>system:serviceaccount:secure-backend:developer-sa<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>secure-backend
+
+<span class="c1"># Test 2: Check if developer-sa can delete pods in secure-backend (Expected: no)</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>delete<span class="w"> </span>pods<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--as<span class="o">=</span>system:serviceaccount:secure-backend:developer-sa<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>secure-backend
+
+<span class="c1"># Test 3: Check if developer-sa can list secrets in secure-backend (Expected: no)</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>list<span class="w"> </span>secrets<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--as<span class="o">=</span>system:serviceaccount:secure-backend:developer-sa<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>secure-backend
+
+<span class="c1"># Test 4: Check if developer-sa can access another namespace (Expected: no)</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>list<span class="w"> </span>pods<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--as<span class="o">=</span>system:serviceaccount:secure-backend:developer-sa<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>data-tier
+</code></pre></div>
+<h2 id="116-self-assessment-exam-practice-questions">11.6 Self-Assessment &amp; Exam Practice Questions</h2>
+<p><strong>Question 1</strong>: An administrator wants to grant a user permission to list secrets across all namespaces in a cluster using a minimum set of bindings. Which approach should be used?</p>
+<p>A) Create a <code>Role</code> with permissions on secrets in the <code>default</code> namespace and bind it with a <code>ClusterRoleBinding</code>.
+B) Create a <code>ClusterRole</code> with permissions on secrets and bind it using a <code>ClusterRoleBinding</code>.
+C) Create a <code>Role</code> in every namespace and bind each one with a separate <code>RoleBinding</code>.
+D) Create a <code>ClusterRole</code> with permissions on secrets and bind it using a <code>RoleBinding</code> in the <code>kube-system</code> namespace.</p>
+<p><strong>Answer</strong>: <strong>B</strong></p>
+<p><em>Explanation</em>: <code>ClusterRole</code> combined with <code>ClusterRoleBinding</code> grants access to resources across all namespaces cluster-wide.</p>
+<p><strong>Question 2</strong>: You create a <code>NetworkPolicy</code> targeting pods with <code>app: frontend</code>. The policy explicitly defines an <code>ingress</code> rule allowing traffic from <code>app: gateway</code>. What happens to traffic from <code>app: monitoring</code> attempting to reach <code>app: frontend</code> on an unlisted port?</p>
+<p>A) Traffic is allowed because default ingress behavior permits all connections unless explicitly blocked with a Deny rule.
+B) Traffic is forwarded to an admission controller for inspection.
+C) Traffic is dropped because targeting <code>app: frontend</code> puts it in an isolated state, blocking all non-matched ingress traffic.
+D) Traffic is accepted, but logged to the API server audit pipeline.</p>
+<p><strong>Answer</strong>: <strong>C</strong></p>
+<p><em>Explanation</em>: NetworkPolicies are default-deny upon selector match. Once a Pod is selected by a policy, any unallowed traffic is implicitly dropped.</p>
+<p><strong>Question 3</strong>: What type of Admission Controller should be used if an organization requires all created pods to automatically have a security label (<code>environment: production</code>) attached upon request creation?</p>
+<p>A) Validating Admission Webhook
+B) Mutating Admission Webhook
+C) RoleBinding Evaluator
+D) Node Restriction Controller</p>
+<p><strong>Answer</strong>: <strong>B</strong></p>
+<p><em>Explanation</em>: Mutating admission webhooks modify incoming object payloads prior to validation and persistence in <code>etcd</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3173 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter14/">
+      
+      
+        <link rel="next" href="../Chapter16/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 15: Advanced Ansible Patterns, Roles, & Automation - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-15-advanced-ansible-patterns-roles-automation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#151-structuring-enterprise-codebases-with-ansible-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1 Structuring Enterprise Codebases with Ansible Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1 Structuring Enterprise Codebases with Ansible Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1511-enterprise-role-architecture-directory-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.1 Enterprise Role Architecture &amp; Directory Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1.1 Enterprise Role Architecture &amp; Directory Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-purpose-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Purpose Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1512-scoping-variables-defaultsmainyml-vs-varsmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.2 Scoping Variables: defaults/main.yml vs. vars/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1513-role-dependencies-and-execution-flow-metamainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.3 Role Dependencies and Execution Flow (meta/main.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1514-installing-and-managing-roles-via-ansible-galaxy-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.4 Installing and Managing Roles via Ansible Galaxy Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1.4 Installing and Managing Roles via Ansible Galaxy Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirementsyml-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        requirements.yml Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-management-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Management Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#152-managing-secrets-with-ansible-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2 Managing Secrets with Ansible Vault
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2 Managing Secrets with Ansible Vault">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1521-file-level-vs-variable-level-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2.1 File-Level vs. Variable-Level Encryption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2.1 File-Level vs. Variable-Level Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-file-level-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. File-Level Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-variable-level-inline-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Variable-Level (Inline) Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1522-multi-vault-id-strategies-and-vault-password-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2.2 Multi-Vault ID Strategies and Vault Password Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2.2 Multi-Vault ID Strategies and Vault Password Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-multiple-vault-passwords" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining Multiple Vault Passwords
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encrypting-with-specific-vault-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypting with Specific Vault IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-playbooks-with-multiple-vault-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Playbooks with Multiple Vault IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-default-vault-configuration-ansiblecfg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Default Vault Configuration (ansible.cfg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#153-dynamic-inventories-for-cloud-and-virtualization-enclaves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3 Dynamic Inventories for Cloud and Virtualization Enclaves
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3 Dynamic Inventories for Cloud and Virtualization Enclaves">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1531-inventory-scripts-vs-modern-inventory-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.1 Inventory Scripts vs. Modern Inventory Plugins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1532-configuring-the-aws-ec2-dynamic-inventory-plugin-aws_ec2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.2 Configuring the AWS EC2 Dynamic Inventory Plugin (aws_ec2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3.2 Configuring the AWS EC2 Dynamic Inventory Plugin (aws_ec2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-inventoryaws_ec2yml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration: inventory/aws_ec2.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1533-configuring-the-vmware-vsphere-dynamic-inventory-plugin-vmware_rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.3 Configuring the VMware vSphere Dynamic Inventory Plugin (vmware_rest)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3.3 Configuring the VMware vSphere Dynamic Inventory Plugin (vmware_rest)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-inventoryvcentervmwareyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration: inventory/vcenter.vmware.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1534-validating-dynamic-inventories-with-ansible-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.4 Validating Dynamic Inventories with ansible-inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#154-asynchronous-execution-poll-options-and-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4 Asynchronous Execution, Poll Options, and Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4 Asynchronous Execution, Poll Options, and Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1541-asynchronous-execution-async-and-poll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4.1 Asynchronous Execution (async and poll)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4.1 Asynchronous Execution (async and poll)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-blocking-asynchronous-task-long-running-task-with-status-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Blocking Asynchronous Task (Long-running task with status polling)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fire-and-forget-asynchronous-task-poll-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fire-and-Forget Asynchronous Task (poll: 0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-polling-asynchronous-tasks-later-in-the-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Polling Asynchronous Tasks Later in the Playbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1542-enterprise-error-handling-block-rescue-always" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4.2 Enterprise Error Handling: block, rescue, always
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1543-error-control-directives-ignore_errors-failed_when-and-changed_when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4.3 Error Control Directives: ignore_errors, failed_when, and changed_when
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4.3 Error Control Directives: ignore_errors, failed_when, and changed_when">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overriding-failure-criteria-failed_when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overriding Failure Criteria (failed_when)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-changed-status-changed_when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining Changed Status (changed_when)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignoring-task-failures-ignore_errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring Task Failures (ignore_errors)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#155-hands-on-lab-implementing-encrypted-ansible-roles-with-automated-dynamic-inventories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.5 Hands-On Lab: Implementing Encrypted Ansible Roles with Automated Dynamic Inventories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.5 Hands-On Lab: Implementing Encrypted Ansible Roles with Automated Dynamic Inventories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab Scenario">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-ansible-role-directory-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Ansible Role Directory Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-define-ansible-role-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Define Ansible Role Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Define Ansible Role Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-1-rolesapp_serverdefaultsmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 1: roles/app_server/defaults/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-2-rolesapp_servervarsmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 2: roles/app_server/vars/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-3-group_varsallvaultyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 3: group_vars/all/vault.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-4-rolesapp_servertemplatesapp_serverconfj2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 4: roles/app_server/templates/app_server.conf.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-5-rolesapp_serverhandlersmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 5: roles/app_server/handlers/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-6-rolesapp_servertasksmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 6: roles/app_server/tasks/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-configure-dynamic-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Configure Dynamic Inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-project-level-settings-ansiblecfg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure Project-Level Settings (ansible.cfg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-execute-and-validate-the-master-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Execute and Validate the Master Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Execute and Validate the Master Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-validate-dynamic-inventory-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Validate Dynamic Inventory Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-perform-syntax-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Perform Syntax Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-perform-a-dry-run-check-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Perform a Dry-Run (Check Mode)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-execute-the-production-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Execute the Production Playbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#151-structuring-enterprise-codebases-with-ansible-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1 Structuring Enterprise Codebases with Ansible Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1 Structuring Enterprise Codebases with Ansible Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1511-enterprise-role-architecture-directory-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.1 Enterprise Role Architecture &amp; Directory Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1.1 Enterprise Role Architecture &amp; Directory Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-purpose-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Purpose Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1512-scoping-variables-defaultsmainyml-vs-varsmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.2 Scoping Variables: defaults/main.yml vs. vars/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1513-role-dependencies-and-execution-flow-metamainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.3 Role Dependencies and Execution Flow (meta/main.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1514-installing-and-managing-roles-via-ansible-galaxy-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1.4 Installing and Managing Roles via Ansible Galaxy Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.1.4 Installing and Managing Roles via Ansible Galaxy Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirementsyml-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        requirements.yml Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-management-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Management Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#152-managing-secrets-with-ansible-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2 Managing Secrets with Ansible Vault
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2 Managing Secrets with Ansible Vault">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1521-file-level-vs-variable-level-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2.1 File-Level vs. Variable-Level Encryption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2.1 File-Level vs. Variable-Level Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-file-level-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. File-Level Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-variable-level-inline-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Variable-Level (Inline) Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1522-multi-vault-id-strategies-and-vault-password-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2.2 Multi-Vault ID Strategies and Vault Password Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.2.2 Multi-Vault ID Strategies and Vault Password Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-multiple-vault-passwords" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining Multiple Vault Passwords
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encrypting-with-specific-vault-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypting with Specific Vault IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-playbooks-with-multiple-vault-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Playbooks with Multiple Vault IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-default-vault-configuration-ansiblecfg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Default Vault Configuration (ansible.cfg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#153-dynamic-inventories-for-cloud-and-virtualization-enclaves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3 Dynamic Inventories for Cloud and Virtualization Enclaves
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3 Dynamic Inventories for Cloud and Virtualization Enclaves">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1531-inventory-scripts-vs-modern-inventory-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.1 Inventory Scripts vs. Modern Inventory Plugins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1532-configuring-the-aws-ec2-dynamic-inventory-plugin-aws_ec2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.2 Configuring the AWS EC2 Dynamic Inventory Plugin (aws_ec2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3.2 Configuring the AWS EC2 Dynamic Inventory Plugin (aws_ec2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-inventoryaws_ec2yml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration: inventory/aws_ec2.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1533-configuring-the-vmware-vsphere-dynamic-inventory-plugin-vmware_rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.3 Configuring the VMware vSphere Dynamic Inventory Plugin (vmware_rest)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.3.3 Configuring the VMware vSphere Dynamic Inventory Plugin (vmware_rest)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-inventoryvcentervmwareyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration: inventory/vcenter.vmware.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1534-validating-dynamic-inventories-with-ansible-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.3.4 Validating Dynamic Inventories with ansible-inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#154-asynchronous-execution-poll-options-and-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4 Asynchronous Execution, Poll Options, and Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4 Asynchronous Execution, Poll Options, and Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1541-asynchronous-execution-async-and-poll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4.1 Asynchronous Execution (async and poll)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4.1 Asynchronous Execution (async and poll)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-blocking-asynchronous-task-long-running-task-with-status-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Blocking Asynchronous Task (Long-running task with status polling)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fire-and-forget-asynchronous-task-poll-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fire-and-Forget Asynchronous Task (poll: 0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-polling-asynchronous-tasks-later-in-the-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Polling Asynchronous Tasks Later in the Playbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1542-enterprise-error-handling-block-rescue-always" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4.2 Enterprise Error Handling: block, rescue, always
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1543-error-control-directives-ignore_errors-failed_when-and-changed_when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.4.3 Error Control Directives: ignore_errors, failed_when, and changed_when
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.4.3 Error Control Directives: ignore_errors, failed_when, and changed_when">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overriding-failure-criteria-failed_when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overriding Failure Criteria (failed_when)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-changed-status-changed_when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining Changed Status (changed_when)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignoring-task-failures-ignore_errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring Task Failures (ignore_errors)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#155-hands-on-lab-implementing-encrypted-ansible-roles-with-automated-dynamic-inventories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.5 Hands-On Lab: Implementing Encrypted Ansible Roles with Automated Dynamic Inventories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15.5 Hands-On Lab: Implementing Encrypted Ansible Roles with Automated Dynamic Inventories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab Scenario">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-ansible-role-directory-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Ansible Role Directory Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-define-ansible-role-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Define Ansible Role Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Define Ansible Role Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-1-rolesapp_serverdefaultsmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 1: roles/app_server/defaults/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-2-rolesapp_servervarsmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 2: roles/app_server/vars/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-3-group_varsallvaultyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 3: group_vars/all/vault.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-4-rolesapp_servertemplatesapp_serverconfj2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 4: roles/app_server/templates/app_server.conf.j2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-5-rolesapp_serverhandlersmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 5: roles/app_server/handlers/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-6-rolesapp_servertasksmainyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File 6: roles/app_server/tasks/main.yml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-configure-dynamic-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Configure Dynamic Inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-project-level-settings-ansiblecfg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure Project-Level Settings (ansible.cfg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-execute-and-validate-the-master-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Execute and Validate the Master Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Execute and Validate the Master Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-validate-dynamic-inventory-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Validate Dynamic Inventory Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-perform-syntax-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Perform Syntax Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-perform-a-dry-run-check-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Perform a Dry-Run (Check Mode)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-execute-the-production-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Execute the Production Playbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-15-advanced-ansible-patterns-roles-automation">Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation</h1>
+<p>This chapter covers enterprise-grade automation patterns using Ansible, aligned comprehensively with the <strong>LPI 701-200 DevOps Tools Engineer Exam Objectives</strong>. It details modular code design with roles, sensitive data encryption via Ansible Vault, dynamic cloud inventory plugins, asynchronous task execution, and structured error-handling techniques.</p>
+<h2 id="151-structuring-enterprise-codebases-with-ansible-roles">15.1 Structuring Enterprise Codebases with Ansible Roles</h2>
+<h3 id="1511-enterprise-role-architecture-directory-standards">15.1.1 Enterprise Role Architecture &amp; Directory Standards</h3>
+<p>Ansible Roles provide a framework for fully independent, reusable, and modular automation components. By decoupling infrastructure code into functional roles, operations teams can standardize service configurations across environments (Development, Staging, Production).</p>
+<p>A standard Ansible Role consists of specific directories. Each directory must contain a <code>main.yml</code> file (or <code>main.yaml</code>) defining its respective component logic:</p>
+<p><img alt="Enterprise Role Architecture &amp; Directory Standards" src="assets/images/chapter15/15-1.-1-Enterprise-Role-Architecture-and-Directory-Standards.png" /></p>
+<h4 id="directory-purpose-reference">Directory Purpose Reference</h4>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Purpose</th>
+<th>Variable Precedence / Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>defaults/</code></td>
+<td>Default variables for the role. Intended to be easily overridden by group_vars or playbook vars.</td>
+<td>Priority Level 2 (Very Low)</td>
+</tr>
+<tr>
+<td><code>vars/</code></td>
+<td>Internal role variables. High precedence; should not be overridden by playbooks unless forced.</td>
+<td>Priority Level 15 (High)</td>
+</tr>
+<tr>
+<td><code>tasks/</code></td>
+<td>Main sequence of tasks executed by the role.</td>
+<td>Task Execution Context</td>
+</tr>
+<tr>
+<td><code>handlers/</code></td>
+<td>Handlers triggered by <code>notify</code> directives within <code>tasks/</code>.</td>
+<td>Execution Context (Run at end of play)</td>
+</tr>
+<tr>
+<td><code>templates/</code></td>
+<td>Jinja2 template files (<code>.j2</code>) processed by the <code>ansible.builtin.template</code> module.</td>
+<td>Source files for tasks</td>
+</tr>
+<tr>
+<td><code>files/</code></td>
+<td>Static files deployed without alteration via <code>ansible.builtin.copy</code>.</td>
+<td>Source files for tasks</td>
+</tr>
+<tr>
+<td><code>meta/</code></td>
+<td>Dependency definitions and Ansible Galaxy metadata.</td>
+<td>Executed before role tasks</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1512-scoping-variables-defaultsmainyml-vs-varsmainyml">15.1.2 Scoping Variables: <code>defaults/main.yml</code> vs. <code>vars/main.yml</code></h3>
+<p>A critical architectural decision when designing roles is choosing where to define variables.</p>
+<ul>
+<li><strong><code>defaults/main.yml</code></strong>: Used for default configuration values that consumers of the role are expected to override.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># roles/enterprise_webserver/defaults/main.yml</span>
+<span class="nt">webserver_http_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="nt">webserver_max_clients</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+<span class="nt">webserver_worker_processes</span><span class="p">:</span><span class="w"> </span><span class="s">"auto"</span>
+</code></pre></div>
+<ul>
+<li><strong><code>vars/main.yml</code></strong>: Used for constants and internal variables strict to the role's implementation details.
+<div class="highlight"><pre><span></span><code><span class="c1"># roles/enterprise_webserver/vars/main.yml</span>
+<span class="nt">webserver_packages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx-module-geoip</span>
+<span class="nt">webserver_service_name</span><span class="p">:</span><span class="w"> </span><span class="s">"nginx"</span>
+<span class="nt">webserver_config_path</span><span class="p">:</span><span class="w"> </span><span class="s">"/etc/nginx/nginx.conf"</span>
+</code></pre></div></li>
+</ul>
+<h3 id="1513-role-dependencies-and-execution-flow-metamainyml">15.1.3 Role Dependencies and Execution Flow (<code>meta/main.yml</code>)</h3>
+<p>Roles can enforce dependencies on other roles. When Ansible executes a role with dependencies defined in <code>meta/main.yml</code>, it resolves and executes all dependent roles <strong>before</strong> executing the main role's tasks.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># roles/enterprise_webserver/meta/main.yml</span>
+<span class="nn">---</span>
+<span class="nt">galaxy_info</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enterprise DevOps Team</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hardened NGINX Webserver Deployment Role</span>
+<span class="w">  </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CyberGate Systems</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+<span class="w">  </span><span class="nt">min_ansible_version</span><span class="p">:</span><span class="w"> </span><span class="s">"2.14"</span>
+<span class="w">  </span><span class="nt">platforms</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EL</span>
+<span class="w">      </span><span class="nt">versions</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ubuntu</span>
+<span class="w">      </span><span class="nt">versions</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"22.04"</span>
+
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">common_base_security</span>
+<span class="w">    </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enable_fips_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tls_certificate_provisioner</span>
+<span class="w">    </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cert_domain</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">ansible_fqdn</span><span class="nv"> </span><span class="s">}}"</span>
+</code></pre></div>
+<h3 id="1514-installing-and-managing-roles-via-ansible-galaxy-requirements">15.1.4 Installing and Managing Roles via Ansible Galaxy Requirements</h3>
+<p>To maintain reproducible automation environments, dependencies should be tracked in a <code>requirements.yml</code> file and installed using <code>ansible-galaxy</code>.</p>
+<h4 id="requirementsyml-specification"><code>requirements.yml</code> Specification</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># requirements.yml</span>
+<span class="nn">---</span>
+<span class="nt">roles</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Download from Ansible Galaxy</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">geerlingguy.nginx</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.4.0</span>
+
+<span class="w">  </span><span class="c1"># Download directly from Enterprise Git Repository via SSH</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git+https://git.enterprise.internal/ansible/roles/security_hardening.git</span>
+<span class="w">    </span><span class="nt">scm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2.1.0</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security_hardening</span>
+
+<span class="nt">collections</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amazon.aws</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6.1.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">community.general</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7.2.0</span>
+</code></pre></div>
+<h4 id="cli-management-commands">CLI Management Commands</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install all roles and collections defined in requirements.yml</span>
+ansible-galaxy<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml<span class="w"> </span>--force
+
+<span class="c1"># Install roles into a specific system or project path</span>
+ansible-galaxy<span class="w"> </span>role<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml<span class="w"> </span>-p<span class="w"> </span>./roles/
+
+<span class="c1"># Initialize a new role with standard directory structure</span>
+ansible-galaxy<span class="w"> </span>role<span class="w"> </span>init<span class="w"> </span>roles/app_service_node
+</code></pre></div>
+<h2 id="152-managing-secrets-with-ansible-vault">15.2 Managing Secrets with Ansible Vault</h2>
+<p>Enterprise environments require protecting sensitive data such as API keys, database credentials, Private Keys, and service account passwords. <code>ansible-vault</code> provides block-level and file-level encryption using AES-256 encryption.</p>
+<p><img alt="Managing Secrets with Ansible Vault" src="assets/images/chapter15/15-2-Managing-Secrets-with-Ansible-Vault.png" /></p>
+<h3 id="1521-file-level-vs-variable-level-encryption">15.2.1 File-Level vs. Variable-Level Encryption</h3>
+<h4 id="1-file-level-encryption">1. File-Level Encryption</h4>
+<p>Encrypts the entire YAML file containing confidential parameters.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create an encrypted secrets file</span>
+ansible-vault<span class="w"> </span>create<span class="w"> </span>group_vars/all/vault.yml
+
+<span class="c1"># Encrypt an existing file</span>
+ansible-vault<span class="w"> </span>encrypt<span class="w"> </span>group_vars/production/db_credentials.yml
+
+<span class="c1"># View an encrypted file content</span>
+ansible-vault<span class="w"> </span>view<span class="w"> </span>group_vars/production/db_credentials.yml
+
+<span class="c1"># Edit an encrypted file in-place</span>
+ansible-vault<span class="w"> </span>edit<span class="w"> </span>group_vars/production/db_credentials.yml
+
+<span class="c1"># Decrypt a file permanently</span>
+ansible-vault<span class="w"> </span>decrypt<span class="w"> </span>group_vars/production/db_credentials.yml
+</code></pre></div>
+<h4 id="2-variable-level-inline-encryption">2. Variable-Level (Inline) Encryption</h4>
+<p>Encrypts individual sensitive values inside an unencrypted variable file, keeping context readable while protecting sensitive data.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Encrypt a single variable string value interactively</span>
+ansible-vault<span class="w"> </span>encrypt_string<span class="w"> </span><span class="s1">'SuperSecretDBPassword2026!'</span><span class="w"> </span>--name<span class="w"> </span><span class="s1">'db_password'</span>
+</code></pre></div>
+<p>Output embedded inside <code>group_vars/all/vars.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># group_vars/all/vars.yml</span>
+<span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">"db.internal.example.com"</span>
+<span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="nt">db_user</span><span class="p">:</span><span class="w"> </span><span class="s">"app_admin"</span>
+<span class="nt">db_password</span><span class="p">:</span><span class="w"> </span><span class="kt">!vault</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">$ANSIBLE_VAULT;1.1;AES256</span>
+<span class="w">          </span><span class="no">366638376534346166343533613038626639353934333633653133373738373336353930323330</span>
+<span class="w">          </span><span class="no">6333333331393838383833303434316135326532383830380a3734373138333930333338353332</span>
+<span class="w">          </span><span class="no">393630653335343831353637373432373031316164343834373238313335373030383131333765</span>
+<span class="w">          </span><span class="no">3532353036323438300a3036326135373838313337336334343236313765353535326138616139</span>
+</code></pre></div>
+<h3 id="1522-multi-vault-id-strategies-and-vault-password-files">15.2.2 Multi-Vault ID Strategies and Vault Password Files</h3>
+<p>Enterprise deployments spanning multiple security zones (Dev, Prod, Security, Network) require separate keys for different environments. Ansible Vault supports multiple Vault IDs.</p>
+<h4 id="defining-multiple-vault-passwords">Defining Multiple Vault Passwords</h4>
+<p>Store Vault password files securely on the Control Node (with permissions set to <code>0600</code> or <code>0400</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s1">'dev_vault_pass_2026'</span><span class="w"> </span>&gt;<span class="w"> </span>~/.vault_pass_dev
+<span class="nb">echo</span><span class="w"> </span><span class="s1">'prod_vault_pass_2026'</span><span class="w"> </span>&gt;<span class="w"> </span>~/.vault_pass_prod
+chmod<span class="w"> </span><span class="m">0600</span><span class="w"> </span>~/.vault_pass_dev<span class="w"> </span>~/.vault_pass_prod
+</code></pre></div>
+<h4 id="encrypting-with-specific-vault-ids">Encrypting with Specific Vault IDs</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Encrypt file using the 'dev' vault label</span>
+ansible-vault<span class="w"> </span>encrypt<span class="w"> </span>--vault-id<span class="w"> </span>dev@~/.vault_pass_dev<span class="w"> </span>group_vars/development/vault.yml
+
+<span class="c1"># Encrypt file using the 'prod' vault label</span>
+ansible-vault<span class="w"> </span>encrypt<span class="w"> </span>--vault-id<span class="w"> </span>prod@~/.vault_pass_prod<span class="w"> </span>group_vars/production/vault.yml
+</code></pre></div>
+<h4 id="running-playbooks-with-multiple-vault-ids">Running Playbooks with Multiple Vault IDs</h4>
+<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/prod<span class="w"> </span>site.yml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--vault-id<span class="w"> </span>dev@~/.vault_pass_dev<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--vault-id<span class="w"> </span>prod@~/.vault_pass_prod
+</code></pre></div>
+<h4 id="setting-default-vault-configuration-ansiblecfg">Setting Default Vault Configuration (<code>ansible.cfg</code>)</h4>
+<p>To eliminate the need for CLI flags in automated CI/CD pipelines:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[defaults]</span>
+<span class="na">vault_identity_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">dev@~/.vault_pass_dev, prod@~/.vault_pass_prod</span>
+</code></pre></div>
+<h2 id="153-dynamic-inventories-for-cloud-and-virtualization-enclaves">15.3 Dynamic Inventories for Cloud and Virtualization Enclaves</h2>
+<p>In cloud environments (AWS, Azure, GCP, OpenStack) and virtualized environments (VMware vSphere), infrastructure nodes are created, scaled, and destroyed dynamically. Static inventory files (<code>hosts.ini</code>) are inadequate for these workloads.</p>
+<p>Ansible utilizes <strong>Dynamic Inventory Plugins</strong> to query infrastructure APIs and automatically construct inventory trees in memory.</p>
+<h3 id="1531-inventory-scripts-vs-modern-inventory-plugins">15.3.1 Inventory Scripts vs. Modern Inventory Plugins</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Legacy Dynamic Inventory Scripts</th>
+<th>Modern Inventory Plugins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File Extension</strong></td>
+<td>Executable scripts (<code>.py</code>, <code>.sh</code>)</td>
+<td>YAML Configuration (<code>.aws_ec2.yml</code>, <code>.vmware.yml</code>)</td>
+</tr>
+<tr>
+<td><strong>Execution</strong></td>
+<td>Output raw JSON via stdout</td>
+<td>Native Caching, Schema Validation, Modular Architecture</td>
+</tr>
+<tr>
+<td><strong>Caching</strong></td>
+<td>Custom file-based caching per script</td>
+<td>Integrated core engine caching (<code>ansible-inventory</code>)</td>
+</tr>
+<tr>
+<td><strong>Maintainability</strong></td>
+<td>Custom scripts requiring ongoing code maintenance</td>
+<td>Maintained within official Ansible Collections</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1532-configuring-the-aws-ec2-dynamic-inventory-plugin-aws_ec2">15.3.2 Configuring the AWS EC2 Dynamic Inventory Plugin (<code>aws_ec2</code>)</h3>
+<p>To query AWS EC2 infrastructure dynamically, ensure the <code>amazon.aws</code> collection is installed and configure an inventory configuration file ending with <code>aws_ec2.yml</code> or <code>aws_ec2.yaml</code>.</p>
+<h4 id="configuration-inventoryaws_ec2yml">Configuration: <code>inventory/aws_ec2.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># inventory/aws_ec2.yml</span>
+<span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amazon.aws.aws_ec2</span>
+<span class="nt">regions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-west-2</span>
+
+<span class="c1"># Filter instances by running state and tags</span>
+<span class="nt">filters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">instance-state-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">running</span>
+<span class="w">  </span><span class="nt">tag:Environment</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Production</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Staging</span>
+
+<span class="c1"># Group instances into inventory groups based on Jinja2 expressions</span>
+<span class="nt">keyed_groups</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags.Role</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">role</span>
+<span class="w">    </span><span class="nt">separator</span><span class="p">:</span><span class="w"> </span><span class="s">"_"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags.Environment</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env</span>
+<span class="w">    </span><span class="nt">separator</span><span class="p">:</span><span class="w"> </span><span class="s">"_"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">placement.availability_zone</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">az</span>
+<span class="w">    </span><span class="nt">separator</span><span class="p">:</span><span class="w"> </span><span class="s">"_"</span>
+
+<span class="c1"># Modify host variable mapping</span>
+<span class="nt">hostnames</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">private-ip-address</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dns-name</span>
+
+<span class="nt">compose</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">private_ip_address</span>
+<span class="w">  </span><span class="nt">ansible_user</span><span class="p">:</span><span class="w"> </span><span class="s">"'ec2-user'"</span>
+</code></pre></div>
+<h3 id="1533-configuring-the-vmware-vsphere-dynamic-inventory-plugin-vmware_rest">15.3.3 Configuring the VMware vSphere Dynamic Inventory Plugin (<code>vmware_rest</code>)</h3>
+<p>To dynamically inspect enterprise VMware vCloud/vSphere infrastructures:</p>
+<h4 id="configuration-inventoryvcentervmwareyml">Configuration: <code>inventory/vcenter.vmware.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># inventory/vcenter.vmware.yml</span>
+<span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">community.vmware.vmware_vm_inventory</span>
+<span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vcenter.enterprise.internal</span>
+<span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">"ansible-service@vsphere.local"</span>
+<span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">lookup('env',</span><span class="nv"> </span><span class="s">'VMWARE_PASSWORD')</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">with_nested_properties</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config.guestId</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">guest.net</span>
+
+<span class="nt">keyed_groups</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config.guestId</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">guest.guestState</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customValues['Department']</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dept</span>
+</code></pre></div>
+<h3 id="1534-validating-dynamic-inventories-with-ansible-inventory">15.3.4 Validating Dynamic Inventories with <code>ansible-inventory</code></h3>
+<p>To test, inspect, and verify the memory structure generated by dynamic plugins, use the <code>ansible-inventory</code> CLI tool:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List all discovered hosts structured in a JSON hierarchy</span>
+ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory/aws_ec2.yml<span class="w"> </span>--list
+
+<span class="c1"># View the full inventory tree structure</span>
+ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory/aws_ec2.yml<span class="w"> </span>--graph
+
+<span class="c1"># Output graph with custom grouping details:</span>
+<span class="c1"># @all:</span>
+<span class="c1">#   |--@env_Production:</span>
+<span class="c1">#   |  |--10.0.1.45</span>
+<span class="c1">#   |  |--10.0.1.46</span>
+<span class="c1">#   |--@role_webserver:</span>
+<span class="c1">#   |  |--10.0.1.45</span>
+<span class="c1">#   |  |--10.0.1.46</span>
+
+<span class="c1"># Inspect specific host variables computed dynamically</span>
+ansible-inventory<span class="w"> </span>-i<span class="w"> </span>inventory/aws_ec2.yml<span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.0.1.45
+</code></pre></div>
+<h2 id="154-asynchronous-execution-poll-options-and-error-handling">15.4 Asynchronous Execution, Poll Options, and Error Handling</h2>
+<p>Enterprise tasks often perform long-running operations—such as compiling software, performing database schema migrations, or rebooting remote nodes. Default synchronous task execution can lead to SSH timeout failures.</p>
+<p>Ansible provides <strong>Asynchronous Execution</strong> alongside advanced control flow structures (<code>block</code>, <code>rescue</code>, <code>always</code>).</p>
+<h3 id="1541-asynchronous-execution-async-and-poll">15.4.1 Asynchronous Execution (<code>async</code> and <code>poll</code>)</h3>
+<ul>
+<li><strong><code>async</code></strong>: Specifies the maximum operational runtime (in seconds) allowed for a task before Ansible terminates it.</li>
+<li><strong><code>poll</code></strong>: Controls how frequently (in seconds) Ansible polls the target node to check if the background process has completed.</li>
+</ul>
+<h4 id="1-blocking-asynchronous-task-long-running-task-with-status-polling">1. Blocking Asynchronous Task (Long-running task with status polling)</h4>
+<p>Ansible stays connected, polling the node every 15 seconds for up to 3600 seconds (1 hour).</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Execute Enterprise Database Migration Script</span>
+<span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/db/scripts/migrate_schema.sh</span>
+<span class="w">  </span><span class="nt">async</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">  </span><span class="nt">poll</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+</code></pre></div>
+<h4 id="2-fire-and-forget-asynchronous-task-poll-0">2. Fire-and-Forget Asynchronous Task (<code>poll: 0</code>)</h4>
+<p>Ansible triggers the task asynchronously and immediately moves to the next task without waiting for completion.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Trigger Long-Running Firmware Flash</span>
+<span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/sbin/flash_firmware_async.sh</span>
+<span class="w">  </span><span class="nt">async</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span>
+<span class="w">  </span><span class="nt">poll</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">firmware_async_result</span>
+</code></pre></div>
+<h4 id="3-polling-asynchronous-tasks-later-in-the-playbook">3. Polling Asynchronous Tasks Later in the Playbook</h4>
+<p>To track fire-and-forget tasks, capture the task's job ID (<code>ansible_job_id</code>) and monitor it later using <code>async_status</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Initiate asynchronous data sync</span>
+<span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rsync -avz /data/ /backup/data/</span>
+<span class="w">  </span><span class="nt">async</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7200</span>
+<span class="w">  </span><span class="nt">poll</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rsync_job</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Perform non-dependent configuration tasks</span>
+<span class="w">  </span><span class="nt">ansible.builtin.package</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">htop</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wait for asynchronous data sync to complete</span>
+<span class="w">  </span><span class="nt">ansible.builtin.async_status</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">jid</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">rsync_job.ansible_job_id</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job_result</span>
+<span class="w">  </span><span class="nt">until</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job_result.finished</span>
+<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">delay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</code></pre></div>
+<h3 id="1542-enterprise-error-handling-block-rescue-always">15.4.2 Enterprise Error Handling: <code>block</code>, <code>rescue</code>, <code>always</code></h3>
+<p>Ansible supports structured error handling similar to <code>try-catch-finally</code> programming paradigms via <code>block</code>, <code>rescue</code>, and <code>always</code>.</p>
+<ul>
+<li><strong><code>block</code></strong>: Contains the primary tasks intended for standard execution.</li>
+<li><strong><code>rescue</code></strong>: Tasks executed <strong>only</strong> if a task within the <code>block</code> fails.</li>
+<li><strong><code>always</code></strong>: Tasks executed unconditionally, regardless of success or failure in <code>block</code> or <code>rescue</code>.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># tasks/deploy_application.yml</span>
+<span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enterprise Stateful Service Deployment Block</span>
+<span class="w">  </span><span class="nt">block</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download Application Release Artifact</span>
+<span class="w">      </span><span class="nt">ansible.builtin.get_url</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://artifacts.enterprise.internal/releases/app-v2.1.tar.gz"</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/app-v2.1.tar.gz"</span>
+<span class="w">        </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stop Primary Database Engine</span>
+<span class="w">      </span><span class="nt">ansible.builtin.systemd</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stopped</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Perform Schema Migration</span>
+<span class="w">      </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/bin/migrate_db.sh</span>
+<span class="w">      </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">  </span><span class="nt">rescue</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log Migration Failure Alert</span>
+<span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">"CRITICAL</span><span class="nv"> </span><span class="s">ALERT:</span><span class="nv"> </span><span class="s">Database</span><span class="nv"> </span><span class="s">migration</span><span class="nv"> </span><span class="s">failed.</span><span class="nv"> </span><span class="s">Executing</span><span class="nv"> </span><span class="s">automatic</span><span class="nv"> </span><span class="s">rollback."</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rollback Database to Previous State</span>
+<span class="w">      </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/local/bin/rollback_db.sh</span>
+<span class="w">      </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Notify Operations Team via PagerDuty / Webhook</span>
+<span class="w">      </span><span class="nt">community.general.pagerduty</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">vault_pagerduty_token</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">triggered</span>
+<span class="w">        </span><span class="nt">desc</span><span class="p">:</span><span class="w"> </span><span class="s">"Deployment</span><span class="nv"> </span><span class="s">failed</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_fqdn</span><span class="nv"> </span><span class="s">}}"</span>
+
+<span class="w">  </span><span class="nt">always</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure Primary Database Engine is Running</span>
+<span class="w">      </span><span class="nt">ansible.builtin.systemd</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cleanup Temporary Installation Artifacts</span>
+<span class="w">      </span><span class="nt">ansible.builtin.file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/app-v2.1.tar.gz"</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+</code></pre></div>
+<h3 id="1543-error-control-directives-ignore_errors-failed_when-and-changed_when">15.4.3 Error Control Directives: <code>ignore_errors</code>, <code>failed_when</code>, and <code>changed_when</code></h3>
+<h4 id="overriding-failure-criteria-failed_when">Overriding Failure Criteria (<code>failed_when</code>)</h4>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check custom system diagnostic command</span>
+<span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/bin/system_check.sh</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check_result</span>
+<span class="w">  </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check_result.rc != 0</span><span class="w"> </span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"'FATAL'</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">check_result.stdout"</span>
+</code></pre></div>
+<h4 id="defining-changed-status-changed_when">Defining Changed Status (<code>changed_when</code>)</h4>
+<p>Prevent command/shell tasks from reporting <code>changed</code> status unconditionally when no system state was modified.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query PostgreSQL Replication Status</span>
+<span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_isready -h localhost</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_status</span>
+<span class="w">  </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Pure read query, never changes node state</span>
+</code></pre></div>
+<h4 id="ignoring-task-failures-ignore_errors">Ignoring Task Failures (<code>ignore_errors</code>)</h4>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Attempt non-critical telemetry reporting</span>
+<span class="w">  </span><span class="nt">ansible.builtin.get_url</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"http://telemetry.internal/ping"</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">"/dev/null"</span>
+<span class="w">  </span><span class="nt">ignore_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h2 id="155-hands-on-lab-implementing-encrypted-ansible-roles-with-automated-dynamic-inventories">15.5 Hands-On Lab: Implementing Encrypted Ansible Roles with Automated Dynamic Inventories</h2>
+<h3 id="lab-scenario">Lab Scenario</h3>
+<p>You are the Lead Systems Automation Engineer at CyberGate Services. Your objective is to automate the installation and configuration of a multi-tier web application across dynamic EC2/Linux infrastructure.</p>
+<h4 id="requirements">Requirements</h4>
+<ol>
+<li>Build a modular Ansible Role (<code>roles/app_server</code>) to configure a secure, enterprise web application server.</li>
+<li>Store database credentials using Ansible Vault inline variable encryption.</li>
+<li>Configure an AWS EC2 Dynamic Inventory Plugin (<code>aws_ec2.yml</code>) to dynamically identify target nodes tagged as <code>env_production</code>.</li>
+<li>Implement asynchronous task handling to perform heavy system updates without connection timeouts.</li>
+<li>Wrap key execution tasks in <code>block / rescue / always</code> blocks to handle operational failures safely.</li>
+</ol>
+<h3 id="step-1-create-ansible-role-directory-architecture">Step 1: Create Ansible Role Directory Architecture</h3>
+<p>Execute the following commands on the Ansible Control Node:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ansible_lab/<span class="o">{</span>roles/app_server/<span class="o">{</span>defaults,vars,tasks,handlers,templates,meta<span class="o">}</span>,inventory,group_vars/all<span class="o">}</span>
+<span class="nb">cd</span><span class="w"> </span>~/ansible_lab
+</code></pre></div>
+<h3 id="step-2-define-ansible-role-files">Step 2: Define Ansible Role Files</h3>
+<h4 id="file-1-rolesapp_serverdefaultsmainyml">File 1: <code>roles/app_server/defaults/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="c1"># Default configurable attributes</span>
+<span class="nt">app_server_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="nt">app_server_user</span><span class="p">:</span><span class="w"> </span><span class="s">"apprunner"</span>
+<span class="nt">app_server_max_memory</span><span class="p">:</span><span class="w"> </span><span class="s">"1024m"</span>
+</code></pre></div>
+<h4 id="file-2-rolesapp_servervarsmainyml">File 2: <code>roles/app_server/vars/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="c1"># Internal constants</span>
+<span class="nt">app_server_packages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python3-pip</span>
+<span class="nt">app_server_service</span><span class="p">:</span><span class="w"> </span><span class="s">"nginx"</span>
+<span class="nt">app_config_destination</span><span class="p">:</span><span class="w"> </span><span class="s">"/etc/nginx/conf.d/app_server.conf"</span>
+</code></pre></div>
+<h4 id="file-3-group_varsallvaultyml">File 3: <code>group_vars/all/vault.yml</code></h4>
+<p>Create an encrypted password file on the control node:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"EnterpriseVaultPass2026"</span><span class="w"> </span>&gt;<span class="w"> </span>~/.vault_pass
+chmod<span class="w"> </span><span class="m">0600</span><span class="w"> </span>~/.vault_pass
+</code></pre></div>
+<p>Create the encrypted vault variable file using inline vault encryption:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># group_vars/all/vault.yml</span>
+<span class="nn">---</span>
+<span class="nt">vault_db_username</span><span class="p">:</span><span class="w"> </span><span class="s">"prod_db_user"</span>
+<span class="nt">vault_db_password</span><span class="p">:</span><span class="w"> </span><span class="kt">!vault</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">$ANSIBLE_VAULT;1.1;AES256</span>
+<span class="w">          </span><span class="no">63326162393339316538323631653434313532393035313636323432323530323337346337396131</span>
+<span class="w">          </span><span class="no">3030313763323030323936306531333461326437343235620a323333333433393931323339363935</span>
+<span class="w">          </span><span class="no">353738393539343332303737383637373438313437333633323536393036363738383838333132</span>
+<span class="w">          </span><span class="no">3936323730303831310a3036326135373838313337336334343236313765353535326138616139</span>
+</code></pre></div>
+<h4 id="file-4-rolesapp_servertemplatesapp_serverconfj2">File 4: <code>roles/app_server/templates/app_server.conf.j2</code></h4>
+<div class="highlight"><pre><span></span><code># Managed by Ansible - Enterprise Configuration Template
+server {
+    listen {{ app_server_port }};
+    server_name {{ ansible_fqdn }};
+
+    location / {
+        proxy_set_header X-DB-User "{{ vault_db_username }}";
+        proxy_set_header X-DB-Pass "{{ vault_db_password }}";
+        proxy_pass http://127.0.0.1:5000;
+    }
+
+    error_page 500 502 503 504 /5x.html;
+    location = /5x.html {
+        root /usr/share/nginx/html;
+    }
+}
+</code></pre></div>
+<h4 id="file-5-rolesapp_serverhandlersmainyml">File 5: <code>roles/app_server/handlers/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Nginx Service</span>
+<span class="w">  </span><span class="nt">ansible.builtin.systemd</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">app_server_service</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
+<span class="w">    </span><span class="nt">daemon_reload</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h4 id="file-6-rolesapp_servertasksmainyml">File 6: <code>roles/app_server/tasks/main.yml</code></h4>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enterprise App Server Task Execution Block</span>
+<span class="w">  </span><span class="nt">block</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Execute Long-Running System Package Upgrade (Asynchronous)</span>
+<span class="w">      </span><span class="nt">ansible.builtin.apt</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">update_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">upgrade</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span>
+<span class="w">      </span><span class="nt">async</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span>
+<span class="w">      </span><span class="nt">poll</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible_os_family == "Debian"</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure Application Dependencies Are Installed</span>
+<span class="w">      </span><span class="nt">ansible.builtin.package</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">app_server_packages</span><span class="nv"> </span><span class="s">}}"</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Templated Application Configuration</span>
+<span class="w">      </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="s">"app_server.conf.j2"</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">app_config_destination</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">        </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">'0644'</span>
+<span class="w">      </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart Nginx Service</span>
+
+<span class="w">  </span><span class="nt">rescue</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Handle Deployment Failure</span>
+<span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">"CRITICAL:</span><span class="nv"> </span><span class="s">App</span><span class="nv"> </span><span class="s">Server</span><span class="nv"> </span><span class="s">Deployment</span><span class="nv"> </span><span class="s">failed</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">ansible_hostname</span><span class="nv"> </span><span class="s">}}.</span><span class="nv"> </span><span class="s">Rolling</span><span class="nv"> </span><span class="s">back</span><span class="nv"> </span><span class="s">configuration."</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove Corrupted Configuration File</span>
+<span class="w">      </span><span class="nt">ansible.builtin.file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">app_config_destination</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+
+<span class="w">  </span><span class="nt">always</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify Service Status</span>
+<span class="w">      </span><span class="nt">ansible.builtin.systemd</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">app_server_service</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
+</code></pre></div>
+<h3 id="step-3-configure-dynamic-inventory">Step 3: Configure Dynamic Inventory</h3>
+<p>Create the dynamic inventory file <code>inventory/aws_ec2.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># inventory/aws_ec2.yml</span>
+<span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amazon.aws.aws_ec2</span>
+<span class="nt">regions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+
+<span class="nt">filters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">instance-state-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">running</span>
+<span class="w">  </span><span class="nt">tag:Environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+
+<span class="nt">keyed_groups</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags.Role</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">role</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags.Environment</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env</span>
+
+<span class="nt">hostnames</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">private-ip-address</span>
+
+<span class="nt">compose</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">private_ip_address</span>
+<span class="w">  </span><span class="nt">ansible_user</span><span class="p">:</span><span class="w"> </span><span class="s">"'ubuntu'"</span>
+</code></pre></div>
+<h3 id="step-4-configure-project-level-settings-ansiblecfg">Step 4: Configure Project-Level Settings (<code>ansible.cfg</code>)</h3>
+<p>Create a local <code>ansible.cfg</code> file inside <code>~/ansible_lab/</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[defaults]</span>
+<span class="na">inventory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">./inventory/aws_ec2.yml</span>
+<span class="na">roles_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">./roles</span>
+<span class="na">vault_password_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">~/.vault_pass</span>
+<span class="na">host_key_checking</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<span class="na">stdout_callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">yaml</span>
+<span class="na">callbacks_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">timer, profile_tasks</span>
+
+<span class="k">[privilege_escalation]</span>
+<span class="na">become</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">become_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sudo</span>
+<span class="na">become_user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">root</span>
+<span class="na">become_ask_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+</code></pre></div>
+<h3 id="step-5-execute-and-validate-the-master-playbook">Step 5: Execute and Validate the Master Playbook</h3>
+<p>Create the master site playbook <code>site.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># site.yml</span>
+<span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Enterprise Application Server Tier</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env_production</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app_server</span>
+</code></pre></div>
+<h4 id="1-validate-dynamic-inventory-discovery">1. Validate Dynamic Inventory Discovery</h4>
+<div class="highlight"><pre><span></span><code>ansible-inventory<span class="w"> </span>--graph
+</code></pre></div>
+<p>Expected Output:</p>
+<div class="highlight"><pre><span></span><code>@all:
+  |--@aws_ec2:
+  |  |--10.0.1.102
+  |  |--10.0.1.103
+  |--@env_production:
+  |  |--10.0.1.102
+  |  |--10.0.1.103
+  |--@role_appserver:
+  |  |--10.0.1.102
+  |  |--10.0.1.103
+</code></pre></div>
+<h4 id="2-perform-syntax-check">2. Perform Syntax Check</h4>
+<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>--syntax-check
+</code></pre></div>
+<h4 id="3-perform-a-dry-run-check-mode">3. Perform a Dry-Run (Check Mode)</h4>
+<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>--check
+</code></pre></div>
+<h4 id="4-execute-the-production-playbook">4. Execute the Production Playbook</h4>
+<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>site.yml
+</code></pre></div>
+<h2 id="self-assessment-exam-practice-questions">Self-Assessment &amp; Exam Practice Questions</h2>
+<p><strong>Question 1</strong>: An administrator needs to define default variable values for an Ansible role that can easily be overridden by playbook variables or <code>group_vars</code>. Which role directory should contain these variables?</p>
+<ul>
+<li>A) <code>vars/main.yml</code></li>
+<li>B) <code>defaults/main.yml</code></li>
+<li>C) <code>meta/main.yml</code></li>
+<li>D) <code>files/main.yml</code></li>
+</ul>
+<p><strong>Answer</strong>: <strong>B</strong></p>
+<p><strong>Explanation</strong>: <code>defaults/main.yml</code> holds role variables with the lowest precedence level (Level 2), making them designed specifically for easy overriding. Variables in <code>vars/main.yml</code> have a much higher precedence (Level 15) and override most inventory/playbook variables.</p>
+<p><strong>Question 2</strong>: Which Ansible Vault command allows an engineer to encrypt a single variable value directly into an unencrypted variable file without encrypting the entire file?</p>
+<ul>
+<li>A) <code>ansible-vault encrypt_string</code></li>
+<li>B) <code>ansible-vault encrypt_inline</code></li>
+<li>C) <code>ansible-vault create_key</code></li>
+<li>D) <code>ansible-vault embed</code></li>
+</ul>
+<p><strong>Answer</strong>: <strong>A</strong></p>
+<p><em>Explanation</em>: <code>ansible-vault encrypt_string</code> encrypts a specific string value and outputs formatted YAML with the <code>!vault</code> tag, allowing inline variable encryption within an unencrypted file.</p>
+<p><strong>Question 3</strong>: In an Ansible playbook, a task is configured with <code>async: 600</code> and <code>poll: 0</code>. How does Ansible execute this task?</p>
+<ul>
+<li>A) Ansible polls the target host every 600 seconds until completion.</li>
+<li>B) Ansible waits up to 600 seconds for completion, checking every second.</li>
+<li>C) Ansible launches the task asynchronously and immediately moves to the next task without waiting.</li>
+<li>D) Ansible cancels the task if it does not complete within 0 seconds.</li>
+</ul>
+<p><strong>Answer</strong>: <strong>C</strong></p>
+<p><em>Explanation</em>: Setting <code>poll: 0</code> instructs Ansible to execute the task in a "fire-and-forget" asynchronous mode, returning control immediately to the playbook without polling.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1852 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter27/">
+      
+      
+        <link rel="next" href="../Chapter4/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 3: Enterprise DevSecOps & Security Compliance - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-3-enterprise-devsecops-security-compliance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#31-shift-left-security-principles-in-cicd-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Shift-Left Security Principles in CI/CD Pipelines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 Shift-Left Security Principles in CI/CD Pipelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-security-gates-and-automated-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Security Gates and Automated Controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-static-application-security-testing-sast-and-dynamic-scanning-dast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementing-sast-with-sonarqube-semgrep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing SAST with SonarQube &amp; Semgrep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-scanning-with-owasp-zap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Scanning with OWASP ZAP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-software-supply-chain-security-dependency-vulnerability-scanning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Software Supply Chain Security &amp; Dependency Vulnerability Scanning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 Software Supply Chain Security &amp; Dependency Vulnerability Scanning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#software-composition-analysis-sca-sbom-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Composition Analysis (SCA) &amp; SBOM Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-image-attestation-with-cosign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Image Attestation with Cosign
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-enterprise-secrets-management-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Enterprise Secrets Management Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 Enterprise Secrets Management Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hashicorp-vault-integration-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HashiCorp Vault Integration Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HashiCorp Vault Integration Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-configure-k8s-auth-method-in-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Configure K8s Auth Method in Vault
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-define-policy-and-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Define Policy and Role
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-hands-on-lab-building-a-complete-sastdast-vulnerability-scanning-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-pre-commit-secret-scanning-configuration-gitleakstoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Pre-commit Secret Scanning Configuration (.gitleaks.toml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-complete-devsecops-pipeline-definition-gitlab-ciyml-github-actions-equivalent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Complete DevSecOps Pipeline Definition (.gitlab-ci.yml / GitHub Actions equivalent)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verification-pipeline-execution-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Verification &amp; Pipeline Execution Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-exam-takeaways-lpi-701-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Exam Takeaways (LPI 701-200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#31-shift-left-security-principles-in-cicd-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Shift-Left Security Principles in CI/CD Pipelines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 Shift-Left Security Principles in CI/CD Pipelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-security-gates-and-automated-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Security Gates and Automated Controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-static-application-security-testing-sast-and-dynamic-scanning-dast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementing-sast-with-sonarqube-semgrep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing SAST with SonarQube &amp; Semgrep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-scanning-with-owasp-zap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Scanning with OWASP ZAP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-software-supply-chain-security-dependency-vulnerability-scanning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Software Supply Chain Security &amp; Dependency Vulnerability Scanning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 Software Supply Chain Security &amp; Dependency Vulnerability Scanning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#software-composition-analysis-sca-sbom-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Composition Analysis (SCA) &amp; SBOM Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-image-attestation-with-cosign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Image Attestation with Cosign
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-enterprise-secrets-management-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Enterprise Secrets Management Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 Enterprise Secrets Management Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hashicorp-vault-integration-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HashiCorp Vault Integration Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HashiCorp Vault Integration Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-configure-k8s-auth-method-in-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Configure K8s Auth Method in Vault
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-define-policy-and-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Define Policy and Role
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-hands-on-lab-building-a-complete-sastdast-vulnerability-scanning-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-pre-commit-secret-scanning-configuration-gitleakstoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Pre-commit Secret Scanning Configuration (.gitleaks.toml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-complete-devsecops-pipeline-definition-gitlab-ciyml-github-actions-equivalent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Complete DevSecOps Pipeline Definition (.gitlab-ci.yml / GitHub Actions equivalent)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verification-pipeline-execution-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Verification &amp; Pipeline Execution Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-exam-takeaways-lpi-701-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Exam Takeaways (LPI 701-200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-3-enterprise-devsecops-security-compliance">Chapter 3: Enterprise DevSecOps &amp; Security Compliance</h1>
+<h2 id="31-shift-left-security-principles-in-cicd-pipelines">3.1 Shift-Left Security Principles in CI/CD Pipelines</h2>
+<p>Shift-left security incorporates security practices, checks, and compliance audits early into the Software Development Life Cycle (SDLC) rather than treating security as an afterthought prior to production release. In enterprise CI/CD workflows, shifting left shifts vulnerability detection from late-stage manual penetration testing to automated pipeline stages.</p>
+<p><img alt="Shift-Left Security Pipeline Integration" src="assets/images/chapter3/3-1-Shift-Left-Security-Pipeline-Integration.png" /></p>
+<h3 id="enterprise-security-gates-and-automated-controls">Enterprise Security Gates and Automated Controls</h3>
+<p>Automated quality gates fail pipeline builds if predefined security baselines are breached. Key components include:</p>
+<ol>
+<li><strong>Pre-commit Hooks:</strong> Prevent sensitive information (API tokens, private keys) from entering git version history.</li>
+<li><strong>Static Analysis Gates:</strong> Enforce static analysis execution; fail builds on <code>CRITICAL</code> or <code>HIGH</code> Severity Vulnerability Findings.</li>
+<li><strong>Software Bill of Materials (SBOM) Attestation:</strong> Generate signed SBOMs during build time to guarantee package integrity.</li>
+<li><strong>Automated Compliance Verification:</strong> Use Infrastructure as Code (IaC) scanners like Checkov or Trivy to evaluate Terraform/Kubernetes manifests against CIS Benchmarks before deployment.</li>
+</ol>
+<h2 id="32-static-application-security-testing-sast-and-dynamic-scanning-dast">3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)</h2>
+<p>Securing modern application pipelines requires combining <strong>Static Application Security Testing (SAST)</strong> and <strong>Dynamic Application Security Testing (DAST)</strong>.</p>
+<p><img alt="SAST and DAST Execution Paradigms" src="assets/images/chapter3/3-2-Shift-Left-Security-Pipeline-Integration.png" /></p>
+<h3 id="implementing-sast-with-sonarqube-semgrep">Implementing SAST with SonarQube &amp; Semgrep</h3>
+<p>Semgrep enables custom security rule enforcement using pattern-matching on abstract syntax trees (ASTs).</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># semgrep-rules/sql-injection.yaml</span>
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom-python-sqli-check</span>
+<span class="w">    </span><span class="nt">patterns</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cursor.execute(...)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pattern-either</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cursor.execute(f"...{$VAR}...")</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cursor.execute("..." + $VAR)</span>
+<span class="w">    </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">"Potential</span><span class="nv"> </span><span class="s">SQL</span><span class="nv"> </span><span class="s">Injection</span><span class="nv"> </span><span class="s">detected.</span><span class="nv"> </span><span class="s">Use</span><span class="nv"> </span><span class="s">parameterized</span><span class="nv"> </span><span class="s">queries</span><span class="nv"> </span><span class="s">instead."</span>
+<span class="w">    </span><span class="nt">languages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">python</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ERROR</span>
+</code></pre></div>
+<h3 id="dynamic-scanning-with-owasp-zap">Dynamic Scanning with OWASP ZAP</h3>
+<p>OWASP ZAP (Zed Attack Proxy) performs dynamic vulnerability scanning against exposed enterprise endpoints. ZAP runs in automation mode via CLI or Docker container during staging verification.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Execute ZAP Baseline Scan against staging target</span>
+docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/zap/wrk/:rw<span class="w"> </span>-t<span class="w"> </span>zaproxy/zap-stable<span class="w"> </span>zap-baseline.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-t<span class="w"> </span>https://staging-api.internal.net<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-g<span class="w"> </span>gen.conf<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-r<span class="w"> </span>zap_report.html<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-x<span class="w"> </span>zap_report.xml
+</code></pre></div>
+<h2 id="33-software-supply-chain-security-dependency-vulnerability-scanning">3.3 Software Supply Chain Security &amp; Dependency Vulnerability Scanning</h2>
+<p>Modern application frameworks rely heavily on third-party dependencies, creating a large attack surface across the software supply chain. Software Supply Chain Security focuses on tracking, validating, and auditing every external library and base container image.</p>
+<p><img alt="Supply Chain Verification and Container Attestation" src="assets/images/chapter3/3-3-Supply-Chain-Verification-and-Container-Attestation.png" /></p>
+<h3 id="software-composition-analysis-sca-sbom-generation">Software Composition Analysis (SCA) &amp; SBOM Generation</h3>
+<p>Generating a Software Bill of Materials (SBOM) provides visibility into nested dependencies and open-source licenses. Syft is widely used to generate industry-standard SPDX and CycloneDX formats.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate CycloneDX SBOM for an application repository</span>
+syft<span class="w"> </span>dir:.<span class="w"> </span>-o<span class="w"> </span>cyclonedx-json<span class="o">=</span>sbom.json
+
+<span class="c1"># Scan container image for OS and application dependencies using Trivy</span>
+trivy<span class="w"> </span>image<span class="w"> </span>--severity<span class="w"> </span>HIGH,CRITICAL<span class="w"> </span>--format<span class="w"> </span>table<span class="w"> </span>app-service:v1.2.0
+</code></pre></div>
+<h3 id="container-image-attestation-with-cosign">Container Image Attestation with Cosign</h3>
+<p>Cosign (part of the Sigstore project) cryptographically signs container images to prevent unauthorized or tampered artifacts from running in production environments.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate keypair for container signing</span>
+cosign<span class="w"> </span>generate-key-pair
+
+<span class="c1"># Sign container image digest in registry</span>
+cosign<span class="w"> </span>sign<span class="w"> </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>registry.internal.net/apps/order-service@sha256:d82e1c98a31...
+
+<span class="c1"># Verify image signature prior to deployment</span>
+cosign<span class="w"> </span>verify<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>registry.internal.net/apps/order-service@sha256:d82e1c98a31...
+</code></pre></div>
+<h2 id="34-enterprise-secrets-management-standards">3.4 Enterprise Secrets Management Standards</h2>
+<p>Hardcoding API keys, passwords, database credentials, or certificates in source code repository commits introduces severe security vulnerabilities. Enterprise secrets management replaces static credentials with dynamic, short-lived secrets stored in dedicated secret management systems (e.g., HashiCorp Vault).</p>
+<p><img alt="HashiCorp Vault Dynamic Secret Injection Topology" src="assets/images/chapter3/3-4-HashiCorp-Vault-Dynamic-Secret-Injection-Topology.png" /></p>
+<h3 id="hashicorp-vault-integration-workflow">HashiCorp Vault Integration Workflow</h3>
+<h4 id="1-configure-k8s-auth-method-in-vault">1. Configure K8s Auth Method in Vault</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Enable K8s authentication backend in HashiCorp Vault</span>
+vault<span class="w"> </span>auth<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>kubernetes
+
+<span class="c1"># Configure Vault to communicate with local Kubernetes cluster API</span>
+vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/config<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">kubernetes_host</span><span class="o">=</span><span class="s2">"https://</span><span class="nv">$KUBERNETES_PORT_443_TCP_ADDR</span><span class="s2">:443"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">kubernetes_ca_cert</span><span class="o">=</span>@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+</code></pre></div>
+<h4 id="2-define-policy-and-role">2. Define Policy and Role</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># policy-app.hcl</span>
+<span class="err">path</span><span class="w"> </span><span class="s2">"secret/data/production/database"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">capabilities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"read"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Register policy and bind to Kubernetes service account</span>
+vault<span class="w"> </span>policy<span class="w"> </span>write<span class="w"> </span>app-policy<span class="w"> </span>policy-app.hcl
+
+vault<span class="w"> </span>write<span class="w"> </span>auth/kubernetes/role/app-role<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">bound_service_account_names</span><span class="o">=</span>payment-api-sa<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">bound_service_account_namespaces</span><span class="o">=</span>production<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">policies</span><span class="o">=</span>app-policy<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">ttl</span><span class="o">=</span>1h
+</code></pre></div>
+<h2 id="35-hands-on-lab-building-a-complete-sastdast-vulnerability-scanning-pipeline">3.5 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline</h2>
+<h3 id="lab-scenario">Lab Scenario</h3>
+<p>You are assigned to build an automated DevSecOps security pipeline for a critical microservice. The pipeline must enforce strict security controls: detect hardcoded secrets using Gitleaks, perform SAST analysis via Semgrep, verify container dependencies with Trivy, sign the built artifact using Cosign, and execute a DAST baseline security scan against the staging application endpoint.</p>
+<p><img alt="Hands-On DevSecOps Pipeline Security Architecture" src="assets/images/chapter3/3-5-Hands-On-DevSecOps-Pipeline-Security-Architecture.png" /></p>
+<h3 id="step-by-step-implementation">Step-by-Step Implementation</h3>
+<h4 id="step-1-pre-commit-secret-scanning-configuration-gitleakstoml">Step 1: Pre-commit Secret Scanning Configuration (<code>.gitleaks.toml</code>)</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitleaks.toml - Custom Secret Detection Rules</span>
+<span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Enterprise Secret Scanner Configuration"</span>
+
+<span class="k">[[rules]]</span>
+<span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"generic-api-key"</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Generic API Key Detection"</span>
+<span class="n">regex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'''(?i)(api_key|apikey|secret|token)\s*[:=]\s*["']([A-Za-z0-9_\-]{16,64})["']'''</span>
+<span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"key"</span><span class="p">,</span><span class="w"> </span><span class="s2">"generic"</span><span class="p">]</span>
+
+<span class="k">[[rules]]</span>
+<span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"private-key"</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Unencrypted Private Key Detection"</span>
+<span class="n">regex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'''-----BEGIN PRIVATE KEY-----'''</span>
+<span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"key"</span><span class="p">,</span><span class="w"> </span><span class="s2">"crypto"</span><span class="p">]</span>
+</code></pre></div>
+<h4 id="step-2-complete-devsecops-pipeline-definition-gitlab-ciyml-github-actions-equivalent">Step 2: Complete DevSecOps Pipeline Definition (<code>.gitlab-ci.yml</code> / GitHub Actions equivalent)</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci.yml</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret-scan</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sast</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build-and-sca</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sign</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dast</span>
+
+<span class="nt">variables</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">IMAGE_NAME</span><span class="p">:</span><span class="w"> </span><span class="s">"registry.internal.net/devsecops/payment-service"</span>
+<span class="w">  </span><span class="nt">IMAGE_TAG</span><span class="p">:</span><span class="w"> </span><span class="s">"$CI_COMMIT_SHA"</span>
+
+<span class="c1"># STAGE 1: Secret Scanning</span>
+<span class="nt">secret_detection</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret-scan</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zricethezav/gitleaks:latest</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitleaks detect --source=. --verbose --config=.gitleaks.toml</span>
+
+<span class="c1"># STAGE 2: Static Application Security Testing</span>
+<span class="nt">sast_semgrep</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sast</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">returntocorp/semgrep:latest</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semgrep scan --config=auto --error --output=semgrep-results.json --json .</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">sast</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semgrep-results.json</span>
+
+<span class="c1"># STAGE 3: Build &amp; Container Vulnerability Scanning</span>
+<span class="nt">container_sca</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build-and-sca</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24.0.5</span>
+<span class="w">  </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24.0.5-dind</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker build -t $IMAGE_NAME:$IMAGE_TAG .</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wget https://github.com/aquasecurity/trivy/releases/download/v0.45.0/trivy_0.45.0_Linux-64bit.tar.gz</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tar -zxvf trivy_0.45.0_Linux-64bit.tar.gz &amp;&amp; mv trivy /usr/local/bin/</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trivy image --exit-code 1 --severity CRITICAL $IMAGE_NAME:$IMAGE_TAG</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push $IMAGE_NAME:$IMAGE_TAG</span>
+
+<span class="c1"># STAGE 4: Image Attestation / Signing</span>
+<span class="nt">cosign_signing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sign</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami/cosign:latest</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "$COSIGN_PRIVATE_KEY" &gt; cosign.key</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosign sign --key cosign.key -y $IMAGE_NAME:$IMAGE_TAG</span>
+
+<span class="c1"># STAGE 5: Dynamic Application Security Testing</span>
+<span class="nt">dast_zap_scan</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dast</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zaproxy/zap-stable:latest</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdir -p /zap/wrk</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zap-baseline.py -t http://staging-payment.internal.net -g gen.conf -r zap_report.html || true</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zap_report.html</span>
+</code></pre></div>
+<h4 id="step-3-verification-pipeline-execution-results">Step 3: Verification &amp; Pipeline Execution Results</h4>
+<ol>
+<li>Trigger pipeline execution by submitting a commit containing a test payload or pull request.</li>
+<li>Monitor stage logs to ensure Gitleaks blocks any committed plain-text credentials.</li>
+<li>Validate that Semgrep parses ASTs to flag insecure code constructs before image compilation.</li>
+<li>Verify that Trivy halts deployment if base OS layers contain unpatched <code>CRITICAL</code> Common Vulnerabilities and Exposures (CVEs).</li>
+<li>Inspect the generated OWASP ZAP HTML report (<code>zap_report.html</code>) for dynamic HTTP security header gaps, missing anti-CSRF tokens, or permissive CORS configurations.</li>
+</ol>
+<h3 id="key-exam-takeaways-lpi-701-200">Key Exam Takeaways (LPI 701-200)</h3>
+<ul>
+<li><strong>Shift-Left Paradigm:</strong> Security checks must be integrated into early stages of development (IDE, pre-commit, pull requests) to lower remediation overhead and limit risk exposure.</li>
+<li><strong>SAST vs. DAST:</strong> SAST analyzes source code without executing it (White-Box, early CI), whereas DAST evaluates running application binaries/endpoints (Black-Box, staging runtime).</li>
+<li><strong>Supply Chain Security:</strong> Requires tracking dependencies with software composition analysis (SCA), enforcing Software Bill of Materials (SBOM) generation, and signing artifacts with tools like Cosign.</li>
+<li><strong>Secrets Management:</strong> Enterprise environments must avoid static file-based secrets, using dynamic injection and lease management via centralized secret engines like HashiCorp Vault.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

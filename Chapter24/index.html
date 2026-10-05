@@ -1,0 +1,2359 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter23/">
+      
+      
+        <link rel="next" href="../Chapter25/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 24: Observability, Tracing, & Incident Management - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-24-observability-tracing-incident-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 24: Observability, Tracing, &amp; Incident Management
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#241-the-three-pillars-of-observability-metrics-logs-and-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.1 The Three Pillars of Observability: Metrics, Logs, and Traces
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.1 The Three Pillars of Observability: Metrics, Logs, and Traces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-metrics-what-is-happening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Metrics (What is happening?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-logs-why-is-it-happening-in-a-specific-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Logs (Why is it happening in a specific process?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-traces-where-is-it-happening-in-the-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Traces (Where is it happening in the system?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#242-distributed-tracing-fundamentals-spans-traces-and-context-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Trace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-span" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Span
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-span-attributes-and-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Span Attributes and Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-trace-view-the-dag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Trace View (The DAG)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#243-opentelemetry-architecture-and-jaeger-collector-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.3 OpenTelemetry Architecture and Jaeger Collector Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.3 OpenTelemetry Architecture and Jaeger Collector Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opentelemetry-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenTelemetry Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jaeger-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jaeger Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#244-incident-response-protocols-post-mortems-and-blameless-culture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#incident-response-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Response Protocols
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-mortems-incident-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Mortems (Incident Reports)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blameless-culture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blameless Culture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#245-hands-on-lab-end-to-end-distributed-tracing-analysis-for-microservice-bottlenecks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.5 Hands-On Lab: End-to-End Distributed Tracing Analysis for Microservice Bottlenecks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.5 Hands-On Lab: End-to-End Distributed Tracing Analysis for Microservice Bottlenecks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-lab-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Lab Environment Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-provision-the-stack-generate-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Provision the Stack &amp; Generate Traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-distributed-tracing-analysis-in-jaeger-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Distributed Tracing Analysis in Jaeger UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verification-of-w3c-context-propagation-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verification of W3C Context Propagation Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-post-mortem-remediation-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Post-Mortem Remediation Simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#241-the-three-pillars-of-observability-metrics-logs-and-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.1 The Three Pillars of Observability: Metrics, Logs, and Traces
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.1 The Three Pillars of Observability: Metrics, Logs, and Traces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-metrics-what-is-happening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Metrics (What is happening?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-logs-why-is-it-happening-in-a-specific-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Logs (Why is it happening in a specific process?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-traces-where-is-it-happening-in-the-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Traces (Where is it happening in the system?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#242-distributed-tracing-fundamentals-spans-traces-and-context-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Trace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-span" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Span
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-span-attributes-and-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Span Attributes and Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-trace-view-the-dag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Trace View (The DAG)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#243-opentelemetry-architecture-and-jaeger-collector-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.3 OpenTelemetry Architecture and Jaeger Collector Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.3 OpenTelemetry Architecture and Jaeger Collector Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opentelemetry-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenTelemetry Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jaeger-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jaeger Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#244-incident-response-protocols-post-mortems-and-blameless-culture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#incident-response-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Response Protocols
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-mortems-incident-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Mortems (Incident Reports)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blameless-culture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blameless Culture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#245-hands-on-lab-end-to-end-distributed-tracing-analysis-for-microservice-bottlenecks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24.5 Hands-On Lab: End-to-End Distributed Tracing Analysis for Microservice Bottlenecks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="24.5 Hands-On Lab: End-to-End Distributed Tracing Analysis for Microservice Bottlenecks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-lab-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Lab Environment Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-provision-the-stack-generate-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Provision the Stack &amp; Generate Traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-distributed-tracing-analysis-in-jaeger-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Distributed Tracing Analysis in Jaeger UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verification-of-w3c-context-propagation-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verification of W3C Context Propagation Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-post-mortem-remediation-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Post-Mortem Remediation Simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-24-observability-tracing-incident-management">Chapter 24: Observability, Tracing, &amp; Incident Management</h1>
+<p>Modern enterprise architectures are increasingly distributed, ephemeral, and complex. Legacy monitoring tools that simply tell you if a server is up or down are no longer sufficient. When a single user request traverses dozens of microservices, service meshes, databases, and third-party APIs, troubleshooting requires deep visibility.</p>
+<p>This chapter shifts from traditional monitoring to the concept of <strong>Observability</strong>, introduces <strong>Distributed Tracing</strong> as the critical component for microservices, explores the <strong>OpenTelemetry</strong> standard and <strong>Jaeger</strong>, and concludes with necessary organizational protocols for <strong>Incident Response</strong> and <strong>Post-Mortems</strong>.</p>
+<h2 id="241-the-three-pillars-of-observability-metrics-logs-and-traces">24.1 The Three Pillars of Observability: Metrics, Logs, and Traces</h2>
+<p>While "monitoring" tells you that a system is broken, "observability" is the measure of how well you can understand a system's internal state from its external outputs. It allows you to ask "Why?" instead of just "What?".</p>
+<p>To achieve observability in an enterprise environment, we rely on three distinct but interconnected data types, known as the "Three Pillars."</p>
+<h3 id="1-metrics-what-is-happening">1. Metrics (What is happening?)</h3>
+<p>Metrics are numeric measurements recorded over time. They are aggregate data points used to assess the overall health, performance, and resource usage of the system.</p>
+<ul>
+<li>
+<p><strong>Characteristics:</strong> Highly compact, efficient to store and query, excellent for dashboarding and alerting.</p>
+</li>
+<li>
+<p><strong>Examples:</strong> CPU usage, memory consumption, HTTP requests per second, error rates, queue depth.</p>
+</li>
+<li>
+<p><strong>Enterprise Tooling:</strong> Prometheus, Grafana, Datadog.</p>
+</li>
+</ul>
+<h3 id="2-logs-why-is-it-happening-in-a-specific-process">2. Logs (Why is it happening in a specific process?)</h3>
+<p>Logs are structured or unstructured text records of discrete events that occurred within an application or the infrastructure.</p>
+<ul>
+<li>
+<p><strong>Characteristics:</strong> Detailed context about a specific execution path, high volume, expensive to index and search, excellent for forensic analysis.</p>
+</li>
+<li>
+<p><strong>Examples:</strong> Application stack traces, kernel panic messages, security access logs, Nginx access logs.</p>
+</li>
+<li>
+<p><strong>Enterprise Tooling:</strong> ELK/EFK Stack (Elasticsearch, Logstash/Fluentd, Kibana), Grafana Loki.</p>
+</li>
+</ul>
+<h3 id="3-traces-where-is-it-happening-in-the-system">3. Traces (Where is it happening in the system?)</h3>
+<p>Traces follow the path of a single request or transaction as it propagates through a multi-service architecture.</p>
+<ul>
+<li>
+<p><strong>Characteristics:</strong> Visualizes dependencies between components, highlights latency bottlenecks, captures context across service boundaries.</p>
+</li>
+<li>
+<p><strong>Examples:</strong> A user request hits a Frontend API Gateway, which calls an Auth Service, which calls a Payment Gateway, which writes to a Postgres Database. The trace connects all these events.</p>
+</li>
+<li>
+<p><strong>Enterprise Tooling:</strong> Jaeger, Tempo, OpenTelemetry.</p>
+</li>
+</ul>
+<h2 id="242-distributed-tracing-fundamentals-spans-traces-and-context-propagation">24.2 Distributed Tracing Fundamentals: Spans, Traces, and Context Propagation</h2>
+<p>Distributed tracing is the specialized capability required to observe microservices. Without it, debugging a latency spike in a complex application is nearly impossible, as each service only logs its local processing time.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<h4 id="1-trace">1. Trace</h4>
+<p>A trace represents the entire lifecycle of a request or workflow as it moves through a system. A trace has a unique ID (e.g., <code>Trace ID: a1b2c3d4e5f6478987654321fedcba09</code>).</p>
+<h4 id="2-span">2. Span</h4>
+<p>A span is the fundamental workflow unit of a trace. It represents a discrete action or operation within a single service, with a start and end time. Spans have their own IDs and reference their Parent Span ID.</p>
+<ul>
+<li><strong>Example Span:</strong> "Processing <code>/api/v1/orders</code>" in the Order Service.</li>
+</ul>
+<h4 id="3-span-attributes-and-events">3. Span Attributes and Events</h4>
+<p>Spans can be enriched with detailed metadata:</p>
+<ul>
+<li>
+<p><strong>Attributes (Tags):</strong> Key-value pairs used to query traces. Examples: <code>http.method="POST"</code>, <code>http.status_code="500"</code>, <code>db.statement="SELECT * FROM users"</code>, <code>customer_id="enterprise_1"</code>.</p>
+</li>
+<li>
+<p><strong>Events (Logs):</strong> Timestamped notes within a span. Examples: "Connecting to database", "Cache miss", "Payment accepted".</p>
+</li>
+</ul>
+<h4 id="4-trace-view-the-dag">4. Trace View (The DAG)</h4>
+<p>When visualized, a trace forms a Directed Acyclic Graph (DAG) or a timeline view, showing the sequence and nesting of spans. This clearly shows which services were involved and how much time was spent in each.</p>
+<h3 id="context-propagation">Context Propagation</h3>
+<p>The most critical aspect of distributed tracing is <strong>Context Propagation</strong>. This is the mechanism by which the Trace ID and Parent Span ID are transferred across network boundaries and process threads.</p>
+<p>When Service A calls Service B via HTTP, Service A must inject the tracing context (Trace ID, Parent Span ID) into the HTTP headers of the outgoing request. Service B must then extract this context and use it to create its own child spans.</p>
+<p><strong>Common Header Formats:</strong></p>
+<ul>
+<li>
+<p><strong>W3C Trace Context (Standard):</strong> Uses headers like <code>traceparent</code> (e.g., <code>00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01</code>).</p>
+</li>
+<li>
+<p><strong>B3 (Zipkin Legacy):</strong> Uses headers like <code>X-B3-TraceId</code>, <code>X-B3-SpanId</code>.</p>
+</li>
+</ul>
+<p>If context propagation fails at any point in the chain, the trace is fragmented, and cross-service visibility is lost.</p>
+<h2 id="243-opentelemetry-architecture-and-jaeger-collector-deployment">24.3 OpenTelemetry Architecture and Jaeger Collector Deployment</h2>
+<p>In the past, tracing required proprietary agent installation. Today, the industry has standardized on <strong>OpenTelemetry (OTel)</strong>, a CNCF vendor-neutral standard that provides a single, unified set of APIs, SDKs, and tooling to collect, process, and export telemetry data (metrics, logs, and traces).</p>
+<h3 id="opentelemetry-architecture">OpenTelemetry Architecture</h3>
+<p>OTel is not a backend store. It is the ingestion and pipeline infrastructure that sits between your application and your observability storage backends (like Jaeger, Prometheus, or Tempo).</p>
+<p><img alt="OpenTelemetry Architecture" src="assets/images/chapter24/24-3-OpenTelemetry-Architecture.png" /></p>
+<ol>
+<li>
+<p><strong>OTel SDK:</strong> Libraries integrated into the application (via code or zero-code auto-instrumentation) to generate spans, metrics, and logs.</p>
+</li>
+<li>
+<p><strong>OTLP Protocol:</strong> OpenTelemetry Line Protocol, a standardized, high-performance protocol (usually running over gRPC or HTTP/protobuf) for transmitting telemetry data.</p>
+</li>
+<li>
+<p><strong>OTel Collector:</strong> A vendor-neutral proxy/agent that receives, processes, filters, transforms, and exports telemetry. This decouples application runtime dependencies from storage backends.</p>
+</li>
+</ol>
+<h3 id="jaeger-architecture">Jaeger Architecture</h3>
+<p>Jaeger is a widely deployed, open-source distributed tracing backend originally developed at Uber.</p>
+<ul>
+<li>
+<p><strong>Jaeger Collector:</strong> Receives traces from OTel Collectors or agents, validates them, and persists them into long-term storage.</p>
+</li>
+<li>
+<p><strong>Jaeger Query:</strong> Fetches traces from persistent storage and serves the REST API for the Jaeger UI.</p>
+</li>
+<li>
+<p><strong>Jaeger UI:</strong> The web interface for trace searching, latency breakdown, and root-cause visualization.</p>
+</li>
+<li>
+<p><strong>Storage Backends:</strong> Production Jaeger deployments rely on persistent databases like <strong>Elasticsearch</strong> or <strong>OpenSearch</strong>. For local development or lightweight testing, in-memory storage is used.</p>
+</li>
+</ul>
+<p><strong>Enterprise Deployment Considerations:</strong></p>
+<ol>
+<li>
+<p><strong>Elasticsearch/OpenSearch Backing:</strong> Essential for production Jaeger deployments to support indexing and rapid search across millions of spans.</p>
+</li>
+<li>
+<p><strong>Sampling Strategies:</strong> Generating and storing 100% of traces in high-throughput enterprise systems creates immense storage and processing overhead. Use OTel Collectors to implement <strong>Head-based Sampling</strong> (sampling at request start) or <strong>Tail-based Sampling</strong> (sampling decisions made after inspecting the full trace,</p>
+</li>
+</ol>
+<p>e.g., keep 100% of errors and latencies &gt; 2s, but only 1% of HTTP 200 requests).</p>
+<h2 id="244-incident-response-protocols-post-mortems-and-blameless-culture">24.4 Incident Response Protocols, Post-Mortems, and Blameless Culture</h2>
+<p>The technical capability to trace a bottleneck must be paired with operational protocols to respond to and learn from production incidents.</p>
+<h3 id="incident-response-protocols">Incident Response Protocols</h3>
+<p>When an automated observability alert triggers, a structured incident response workflow (aligned with SRE and ITIL practices) begins:</p>
+<p><strong>Key Roles:</strong></p>
+<ol>
+<li>
+<p><strong>Incident Commander (IC):</strong> Holds single-point accountability for directing the response. The IC does not troubleshoot code directly; they focus on coordination, task delegation, and overall triage strategy.</p>
+</li>
+<li>
+<p><strong>Communications Lead (Comm Lead):</strong> Responsible for maintaining stakeholder updates, customer status pages, and internal executive communications.</p>
+</li>
+<li>
+<p><strong>Technical Operations / Subject Matter Experts (SMEs):</strong> Engineers actively investigating telemetry, executing playbooks, and performing technical mitigations.</p>
+</li>
+</ol>
+<p><strong>Response Sequence:</strong></p>
+<ul>
+<li>
+<p><strong>Triage &amp; Declaration:</strong> Assess severity (e.g., P1/SEV1 - Total service outage; P2/SEV2 - Core feature degraded). Assign an IC and establish a dedicated incident bridge/channel.</p>
+</li>
+<li>
+<p><strong>Mitigation (First Priority):</strong> The primary objective during an incident is to <strong>restore service health</strong>, not to fix the underlying root cause. Common mitigation tactics include rolling back recent deployments, toggling feature flags, shedding non-critical load, or scaling horizontally.</p>
+</li>
+<li>
+<p><strong>Resolution:</strong> Applied after service stabilization to permanently fix the underlying technical issue.</p>
+</li>
+</ul>
+<h3 id="post-mortems-incident-reports">Post-Mortems (Incident Reports)</h3>
+<p>A Post-Mortem is a formal, retrospective document created after an incident is mitigated. It serves as a structured mechanism for organizational learning.</p>
+<p><strong>Key Sections of an Enterprise Post-Mortem:</strong></p>
+<ul>
+<li>
+<p><strong>Executive Summary:</strong> High-level description of what happened, customer impact, and resolution.</p>
+</li>
+<li>
+<p><strong>Timeline:</strong> Detailed chronological log of events (trigger time, alert detection time, incident declaration, mitigation steps, final resolution).</p>
+</li>
+<li>
+<p><strong>Root Cause Analysis (RCA):</strong> Systematic investigation into the systemic failure (utilizing tools like the "5 Whys" methodology).</p>
+</li>
+<li>
+<p><strong>Action Items (Preventative Remediation):</strong> Concrete, prioritized tasks assigned to engineering owners with strict completion dates to ensure the failure mode cannot recur.</p>
+</li>
+</ul>
+<h3 id="blameless-culture">Blameless Culture</h3>
+<p>The core foundation of modern Site Reliability Engineering (SRE) incident management is a <strong>Blameless Culture</strong>.</p>
+<p>Post-mortems must focus strictly on system flaws rather than human errors. Assigning personal fault causes engineers to hide mistakes, delaying incident detection and inhibiting organizational learning.</p>
+<p><strong>Core Tenets:</strong></p>
+<ol>
+<li>
+<p><strong>Assume Good Intent:</strong> Engineers make decisions based on the best information available to them at the time.</p>
+</li>
+<li>
+<p><strong>Design Resilient Systems:</strong> If a single human mistake (e.g., a typo in a CLI command) causes a production outage, the failure belongs to the system safety design, lack of automated validation guards, or deployment controls—not the engineer.</p>
+</li>
+<li>
+<p><strong>Shift Focus from "Who" to "How" and "Why":</strong> Replace "Who ran the script?" with "Why was the script executed without pre-flight validation?" and "How can our deployment pipelines automatically detect invalid configurations?".</p>
+</li>
+</ol>
+<h2 id="245-hands-on-lab-end-to-end-distributed-tracing-analysis-for-microservice-bottlenecks">24.5 Hands-On Lab: End-to-End Distributed Tracing Analysis for Microservice Bottlenecks</h2>
+<h3 id="lab-overview">Lab Overview</h3>
+<p>In this lab, you will troubleshoot a multi-tier microservice architecture experiencing severe latency issues during user requests.</p>
+<p><strong>Target Architecture:</strong></p>
+<ul>
+<li>
+<p><strong>Frontend Service (Python/Flask):</strong> Exposes public HTTP endpoints.</p>
+</li>
+<li>
+<p><strong>Product Service (Python/Flask):</strong> Returns product catalog details.</p>
+</li>
+<li>
+<p><strong>Inventory Service (Python/Flask):</strong> Checks product stock levels against a backend database.</p>
+</li>
+<li>
+<p><strong>Checkout Service (Python/Flask):</strong> Handles payment processing workflows.</p>
+</li>
+<li>
+<p><strong>OpenTelemetry Auto-Instrumentation:</strong> Injects context headers and extracts span data.</p>
+</li>
+<li>
+<p><strong>Jaeger Server:</strong> Collects OTLP spans and visualizes traces.</p>
+</li>
+</ul>
+<p><img alt="Hands-On Lab" src="assets/images/chapter24/24-5-Hands-On-Lab.png" /></p>
+<h3 id="step-1-lab-environment-setup">Step 1: Lab Environment Setup</h3>
+<ol>
+<li>Create a project workspace directory:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/tracing-lab<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/tracing-lab
+</code></pre></div>
+<ol>
+<li>Create a unified <code>docker-compose.yml</code> defining the observability stack and microservices:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Jaeger Backend with integrated OTLP Receiver</span>
+<span class="w">  </span><span class="nt">jaeger</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jaegertracing/all-in-one:1.50</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jaeger</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"16686:16686"</span><span class="w"> </span><span class="c1"># Jaeger Web UI</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"4317:4317"</span><span class="w">   </span><span class="c1"># OTLP gRPC receiver</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"4318:4318"</span><span class="w">   </span><span class="c1"># OTLP HTTP receiver</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COLLECTOR_OTLP_ENABLED=true</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">obs-net</span>
+
+<span class="w">  </span><span class="c1"># Product Service</span>
+<span class="w">  </span><span class="nt">product-service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.10-slim</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">product-service</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services:/app</span>
+<span class="w">    </span><span class="nt">working_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">sh -c "pip install flask opentelemetry-sdk opentelemetry-api opentelemetry-exporter-otlp opentelemetry-instrumentation-flask requests &amp;&amp;</span>
+<span class="w">             </span><span class="no">opentelemetry-instrument --traces_exporter otlp_proto_grpc --exporter_otlp_endpoint http://jaeger:4317 --service_name product-service python product.py"</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">obs-net</span>
+
+<span class="w">  </span><span class="c1"># Inventory Service (Contains Latency Issue)</span>
+<span class="w">  </span><span class="nt">inventory-service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.10-slim</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inventory-service</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services:/app</span>
+<span class="w">    </span><span class="nt">working_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">sh -c "pip install flask opentelemetry-sdk opentelemetry-api opentelemetry-exporter-otlp opentelemetry-instrumentation-flask requests &amp;&amp;</span>
+<span class="w">             </span><span class="no">opentelemetry-instrument --traces_exporter otlp_proto_grpc --exporter_otlp_endpoint http://jaeger:4317 --service_name inventory-service python inventory.py"</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">obs-net</span>
+
+<span class="w">  </span><span class="c1"># Checkout Service</span>
+<span class="w">  </span><span class="nt">checkout-service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.10-slim</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout-service</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services:/app</span>
+<span class="w">    </span><span class="nt">working_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">sh -c "pip install flask opentelemetry-sdk opentelemetry-api opentelemetry-exporter-otlp opentelemetry-instrumentation-flask opentelemetry-instrumentation-requests requests &amp;&amp;</span>
+<span class="w">             </span><span class="no">opentelemetry-instrument --traces_exporter otlp_proto_grpc --exporter_otlp_endpoint http://jaeger:4317 --service_name checkout-service python checkout.py"</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">obs-net</span>
+
+<span class="w">  </span><span class="c1"># Frontend Service</span>
+<span class="w">  </span><span class="nt">frontend-service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.10-slim</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend-service</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"5000:5000"</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./services:/app</span>
+<span class="w">    </span><span class="nt">working_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/app</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">sh -c "pip install flask opentelemetry-sdk opentelemetry-api opentelemetry-exporter-otlp opentelemetry-instrumentation-flask opentelemetry-instrumentation-requests requests &amp;&amp;</span>
+<span class="w">             </span><span class="no">opentelemetry-instrument --traces_exporter otlp_proto_grpc --exporter_otlp_endpoint http://jaeger:4317 --service_name frontend-service python frontend.py"</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">obs-net</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">obs-net</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+</code></pre></div>
+<ol>
+<li>Create the service code directory:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>services
+</code></pre></div>
+<ol>
+<li>Create <code>services/frontend.py</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">PRODUCT_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"PRODUCT_URL"</span><span class="p">,</span> <span class="s2">"http://product-service:5001"</span><span class="p">)</span>
+<span class="n">CHECKOUT_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CHECKOUT_URL"</span><span class="p">,</span> <span class="s2">"http://checkout-service:5002"</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/api/v1/purchase"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"POST"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">purchase</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">item_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"item_id"</span><span class="p">,</span> <span class="s2">"item_default"</span><span class="p">)</span>
+
+    <span class="c1"># Call Product Service</span>
+    <span class="n">prod_resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">PRODUCT_URL</span><span class="si">}</span><span class="s2">/product/</span><span class="si">{</span><span class="n">item_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Call Checkout Service</span>
+    <span class="n">checkout_resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">CHECKOUT_URL</span><span class="si">}</span><span class="s2">/checkout"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"item_id"</span><span class="p">:</span> <span class="n">item_id</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+        <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"completed"</span><span class="p">,</span>
+        <span class="s2">"product"</span><span class="p">:</span> <span class="n">prod_resp</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span>
+        <span class="s2">"checkout"</span><span class="p">:</span> <span class="n">checkout_resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="p">}),</span> <span class="mi">200</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Create <code>services/product.py</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/product/&lt;item_id&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"GET"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_product</span><span class="p">(</span><span class="n">item_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">"item_id"</span><span class="p">:</span> <span class="n">item_id</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Enterprise Workstation"</span><span class="p">,</span> <span class="s2">"price"</span><span class="p">:</span> <span class="mf">2400.00</span><span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Create <code>services/checkout.py</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">INVENTORY_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"INVENTORY_URL"</span><span class="p">,</span> <span class="s2">"http://inventory-service:5003"</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/checkout"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"POST"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkout</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">item_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"item_id"</span><span class="p">,</span> <span class="s2">"item_default"</span><span class="p">)</span>
+
+    <span class="c1"># Query inventory before completing transaction</span>
+    <span class="n">inv_resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">INVENTORY_URL</span><span class="si">}</span><span class="s2">/inventory/</span><span class="si">{</span><span class="n">item_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+        <span class="s2">"transaction_id"</span><span class="p">:</span> <span class="s2">"tx_998877"</span><span class="p">,</span>
+        <span class="s2">"inventory_status"</span><span class="p">:</span> <span class="n">inv_resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5002</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Create <code>services/inventory.py</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/inventory/&lt;item_id&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"GET"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_inventory</span><span class="p">(</span><span class="n">item_id</span><span class="p">):</span>
+    <span class="c1"># Simulate an unindexed database query delay for specific items</span>
+    <span class="k">if</span> <span class="n">item_id</span> <span class="o">==</span> <span class="s2">"slow_item"</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">2.8</span><span class="p">)</span>  <span class="c1"># Bottleneck injection</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">"item_id"</span><span class="p">:</span> <span class="n">item_id</span><span class="p">,</span> <span class="s2">"in_stock"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"quantity"</span><span class="p">:</span> <span class="mi">42</span><span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5003</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="step-2-provision-the-stack-generate-traffic">Step 2: Provision the Stack &amp; Generate Traffic</h3>
+<ol>
+<li>Launch all containers in detached mode:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<ol>
+<li>Monitor container startup until all services are healthy:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>ps
+</code></pre></div>
+<ol>
+<li>Execute a normal, low-latency API transaction:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:5000/api/v1/purchase<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-d<span class="w"> </span><span class="s1">'{"item_id": "standard_laptop"}'</span>
+</code></pre></div>
+<p><em>Expected Output:</em> Sub-second response time.</p>
+<ol>
+<li>Execute a transaction containing the simulated database bottleneck:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:5000/api/v1/purchase<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-d<span class="w"> </span><span class="s1">'{"item_id": "slow_item"}'</span>
+</code></pre></div>
+<p><em>Expected Output:</em> The HTTP client blocks for ~3 seconds before receiving the HTTP 200 response.</p>
+<h3 id="step-3-distributed-tracing-analysis-in-jaeger-ui">Step 3: Distributed Tracing Analysis in Jaeger UI</h3>
+<ol>
+<li>
+<p>Open your browser and navigate to <code>http://localhost:16686</code>.</p>
+</li>
+<li>
+<p>In the Jaeger UI left panel:</p>
+</li>
+<li>
+<p><strong>Service:</strong> Select <code>frontend-service</code>.</p>
+</li>
+<li>
+<p><strong>Operation:</strong> Select <code>POST /api/v1/purchase</code>.</p>
+</li>
+<li>
+<p>Click <strong>Find Traces</strong>.</p>
+</li>
+<li>
+<p>Locate the two traces displayed in the search results:</p>
+</li>
+<li>
+<p>Trace 1: Duration ~60ms - 100ms.</p>
+</li>
+<li>
+<p>Trace 2: Duration ~2.85s - 3.00s.</p>
+</li>
+<li>
+<p>Click on the slow trace (~3.00s duration) to open the <strong>Timeline Span View</strong>.</p>
+</li>
+<li>
+<p>Inspect the parent-child span hierarchy:</p>
+</li>
+<li>
+<p>Root Span: <code>frontend-service: POST /api/v1/purchase</code> (Duration: 2.89s)</p>
+</li>
+<li>
+<p>Child Span 1: <code>product-service: GET /product/slow_item</code> (Duration: ~12ms)</p>
+</li>
+<li>
+<p>Child Span 2: <code>checkout-service: POST /checkout</code> (Duration: 2.85s)</p>
+</li>
+<li>
+<p>Grandchild Span: <code>inventory-service: GET /inventory/slow_item</code> (Duration: 2.82s)</p>
+</li>
+</ol>
+<p><img alt="inventory-service" src="assets/images/chapter24/lab-inventory-service.png" /></p>
+<ol>
+<li>
+<p>Click directly on the <code>inventory-service</code> span to expand its attributes panel.</p>
+</li>
+<li>
+<p>Observe standard OpenTelemetry HTTP tags automatically populated by instrumentation:</p>
+</li>
+<li>
+<p><code>http.status_code</code>: <code>200</code></p>
+</li>
+<li>
+<p><code>http.target</code>: <code>/inventory/slow_item</code></p>
+</li>
+<li>
+<p><code>http.method</code>: <code>GET</code></p>
+</li>
+<li>
+<p>Notice that while <code>frontend-service</code> and <code>checkout-service</code> completed successfully, the bulk of execution time was consumed within <code>inventory-service</code>.</p>
+</li>
+</ol>
+<h3 id="step-4-verification-of-w3c-context-propagation-headers">Step 4: Verification of W3C Context Propagation Headers</h3>
+<ol>
+<li>Inspect the logs of <code>checkout-service</code> to confirm auto-instrumentation injected and extracted W3C headers across network boundaries:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>logs<span class="w"> </span>checkout-service
+</code></pre></div>
+<ol>
+<li>
+<p>Observe how OpenTelemetry automatically attached the <code>traceparent</code> HTTP header to outgoing requests made via the Python <code>requests</code> library.</p>
+</li>
+<li>
+<p>Identify the structure of a W3C <code>traceparent</code> header during inter-service calls:</p>
+</li>
+</ol>
+<p><img alt="Identify the structure" src="assets/images/chapter24/24-5-4-3-Identify-the-structure.png" /></p>
+<h3 id="step-5-post-mortem-remediation-simulation">Step 5: Post-Mortem Remediation Simulation</h3>
+<p>Having pinpointed <code>inventory-service</code> as the bottleneck via Jaeger, simulate applying an emergency performance optimization:</p>
+<ol>
+<li>Edit <code>services/inventory.py</code> to fix the delay:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/inventory/&lt;item_id&gt;"</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"GET"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_inventory</span><span class="p">(</span><span class="n">item_id</span><span class="p">):</span>
+    <span class="c1"># Database query optimization applied (Index created)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.02</span><span class="p">)</span>  <span class="c1"># Reduced processing latency</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">"item_id"</span><span class="p">:</span> <span class="n">item_id</span><span class="p">,</span> <span class="s2">"in_stock"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"quantity"</span><span class="p">:</span> <span class="mi">42</span><span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5003</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Restart the updated service container:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>restart<span class="w"> </span>inventory-service
+</code></pre></div>
+<ol>
+<li>Re-run the request:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:5000/api/v1/purchase<span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-d<span class="w"> </span><span class="s1">'{"item_id": "slow_item"}'</span>
+</code></pre></div>
+<ol>
+<li>Refresh the Jaeger UI. Verify that the trace duration for <code>/api/v1/purchase</code> with <code>slow_item</code> drops from <strong>~2.89 seconds</strong> down to <strong>~35 milliseconds</strong>.</li>
+<li>Clean up the lab environment:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>down<span class="w"> </span>-v
+</code></pre></div>
+<h3 id="lab-summary">Lab Summary</h3>
+<p>In this lab, you successfully:</p>
+<ol>
+<li>
+<p>Deployed a distributed Python microservice application instrumented with OpenTelemetry.</p>
+</li>
+<li>
+<p>Exported trace spans via OTLP/gRPC to a Jaeger distributed backend.</p>
+</li>
+<li>
+<p>Utilized Jaeger's timeline DAG visualization to isolate a latency bottleneck across service boundaries.</p>
+</li>
+<li>
+<p>Analyzed context propagation headers (<code>traceparent</code>) linking HTTP client/server spans.</p>
+</li>
+<li>Validated performance remediation using observability metrics and trace verification.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

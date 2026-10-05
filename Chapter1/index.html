@@ -1,0 +1,1769 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Appendix-A/">
+      
+      
+        <link rel="next" href="../Chapter10/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 1: Cloud-Native Architecture Patterns - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-1-cloud-native-architecture-patterns" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 1: Cloud-Native Architecture Patterns
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11-monolithic-vs-microservices-vs-serverless-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Monolithic vs. Microservices vs. Serverless Paradigms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.1 Monolithic vs. Microservices vs. Serverless Paradigms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paradigm-comparison-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paradigm Comparison Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-api-first-architectures-restful-apis-grpc-and-graphql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocol-analysis-and-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Analysis and Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Protocol Analysis and Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocol-buffers-interface-definition-user_serviceproto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Buffers Interface Definition (user_service.proto)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-event-driven-architecture-message-queuing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Event-Driven Architecture &amp; Message Queuing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.3 Event-Driven Architecture &amp; Message Queuing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-processing-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Processing Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-enterprise-scalability-fault-tolerance-and-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Enterprise Scalability, Fault Tolerance, and High Availability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Enterprise Scalability, Fault Tolerance, and High Availability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resiliency-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resiliency Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-hands-on-lab-decoupling-a-monolithic-application-into-event-driven-microservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-topology-schematic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Topology Schematic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-orchestration-docker-composeyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Orchestration (docker-compose.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order-ingestion-publisher-order_serviceapppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Order Ingestion Publisher (order_service/app.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-verification-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Verification Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11-monolithic-vs-microservices-vs-serverless-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Monolithic vs. Microservices vs. Serverless Paradigms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.1 Monolithic vs. Microservices vs. Serverless Paradigms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paradigm-comparison-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paradigm Comparison Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-api-first-architectures-restful-apis-grpc-and-graphql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocol-analysis-and-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Analysis and Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Protocol Analysis and Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocol-buffers-interface-definition-user_serviceproto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Buffers Interface Definition (user_service.proto)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-event-driven-architecture-message-queuing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Event-Driven Architecture &amp; Message Queuing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.3 Event-Driven Architecture &amp; Message Queuing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-processing-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Processing Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-enterprise-scalability-fault-tolerance-and-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Enterprise Scalability, Fault Tolerance, and High Availability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Enterprise Scalability, Fault Tolerance, and High Availability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resiliency-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resiliency Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-hands-on-lab-decoupling-a-monolithic-application-into-event-driven-microservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-topology-schematic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Topology Schematic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-orchestration-docker-composeyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Orchestration (docker-compose.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order-ingestion-publisher-order_serviceapppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Order Ingestion Publisher (order_service/app.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-verification-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Verification Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-1-cloud-native-architecture-patterns">Chapter 1: Cloud-Native Architecture Patterns</h1>
+<p>This chapter covers foundational cloud-native architectural patterns for the <strong>DevOps Tools Engineer (LPI 701-200)</strong> certification. It provides enterprise-grade architectural analysis, hands-on configuration examples, protocol comparisons, and reliability patterns.</p>
+<h2 id="11-monolithic-vs-microservices-vs-serverless-paradigms">1.1 Monolithic vs. Microservices vs. Serverless Paradigms</h2>
+<p>Selecting an application architecture requires evaluating operational complexity, deployment velocity, fault isolation, and resource consumption. Enterprise environments often transition from monolithic codebases to microservices or serverless architectures to increase velocity and scalability.</p>
+<p><img alt="Architectural Evolution Paradigms" src="assets/images/chapter1/1-1-Architectural-Evolution-Paradigms.png" /></p>
+<h3 id="paradigm-comparison-matrix">Paradigm Comparison Matrix</h3>
+<p><img alt="Architectural Paradigms Matrix" src="assets/images/chapter1/1-1-Architectural-Paradigms-Matrix.png" /></p>
+<h2 id="12-api-first-architectures-restful-apis-grpc-and-graphql">1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL</h2>
+<p>API-First architecture establishes contract-driven interfaces before implementation begins. This ensures seamless cross-team integration and contract testing.</p>
+<h3 id="protocol-analysis-and-configuration">Protocol Analysis and Configuration</h3>
+<ul>
+<li><strong>REST (OpenAPI/Swagger):</strong> Standardized over HTTP/1.1 or HTTP/2 using JSON payloads and standard HTTP methods (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>).</li>
+<li><strong>gRPC (Protocol Buffers):</strong> High-performance, low-latency framework using HTTP/2 transport and binary protocol buffers for schema definitions and multiplexing.</li>
+<li><strong>GraphQL:</strong> Query language for APIs enabling clients to request exactly the payload fields required, eliminating over-fetching and under-fetching.</li>
+</ul>
+<h4 id="protocol-buffers-interface-definition-user_serviceproto">Protocol Buffers Interface Definition (<code>user_service.proto</code>)</h4>
+<div class="highlight"><pre><span></span><code><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"proto3"</span><span class="p">;</span>
+
+<span class="kn">package</span><span class="w"> </span><span class="nn">enterprise.users.v1</span><span class="p">;</span>
+
+<span class="k">option</span><span class="w"> </span><span class="na">go_package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"github.com/enterprise/pkg/api/v1/userv1"</span><span class="p">;</span>
+
+<span class="c1">// UserManagement service provides user lifecycle operations.</span>
+<span class="kd">service</span><span class="w"> </span><span class="n">UserManagement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">GetUserByID</span><span class="w"> </span><span class="p">(</span><span class="n">GetUserRequest</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">UserResponse</span><span class="p">);</span>
+<span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">StreamUserAuditLogs</span><span class="w"> </span><span class="p">(</span><span class="n">AuditLogRequest</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">stream</span><span class="w"> </span><span class="n">AuditLogResponse</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">message</span><span class="w"> </span><span class="nc">GetUserRequest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span><span class="w"> </span><span class="nc">UserResponse</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">full_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="na">is_active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int64</span><span class="w"> </span><span class="na">created_at_unix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span><span class="w"> </span><span class="nc">AuditLogRequest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">int64</span><span class="w"> </span><span class="na">start_time_unix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span><span class="w"> </span><span class="nc">AuditLogResponse</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">log_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><img alt="API Protocol Interaction Patterns" src="assets/images/chapter1/1-2-API-Protocol-Interaction-Pattern.png" /></p>
+<h2 id="13-event-driven-architecture-message-queuing">1.3 Event-Driven Architecture &amp; Message Queuing</h2>
+<p>Event-Driven Architecture (EDA) decouples producers and consumers using event brokers, providing asynchronous execution, buffering, and message replay capabilities.</p>
+<h3 id="event-processing-patterns">Event Processing Patterns</h3>
+<ul>
+<li><strong>Pub/Sub (Publish/Subscribe):</strong> Events are broadcast to all subscribed consumers (e.g., Kafka Topics, SNS).</li>
+<li><strong>Point-to-Point (Queue):</strong> Messages are consumed by exactly one consumer worker from a shared pool (e.g., SQS, RabbitMQ Queues).</li>
+<li><strong>Event Sourcing:</strong> State changes are logged as an immutable sequence of events, allowing point-in-time reconstruction.</li>
+</ul>
+<p><img alt="Event Routing and DLX Processing Workflow" src="assets/images/chapter1/1-3-Event-Routing-and-DLX-Processing-Workflow.png" /></p>
+<h2 id="14-enterprise-scalability-fault-tolerance-and-high-availability">1.4 Enterprise Scalability, Fault Tolerance, and High Availability</h2>
+<p>Building resilient systems requires engineering for failure at every layer of the enterprise stack.</p>
+<h3 id="resiliency-patterns">Resiliency Patterns</h3>
+<ol>
+<li><strong>Circuit Breaker:</strong> Prevents cascading failures by stopping requests to a struggling service once an error threshold is reached (States: <em>Closed</em>, <em>Open</em>, <em>Half-Open</em>).</li>
+<li><strong>Bulkhead:</strong> Isolates critical resource pools (e.g., separate thread pools per downstream dependency) so that an outage in one pool does not starve others.</li>
+<li><strong>Rate Limiting &amp; Throttling:</strong> Protects services from overload by enforcing upper limits on incoming request rates using algorithms like token bucket or leaky bucket.</li>
+</ol>
+<p><img alt="Circuit Breaker State Machine Topology" src="assets/images/chapter1/1-4-Circuit-Breaker-State-Machine-Topology.png" /></p>
+<h2 id="15-hands-on-lab-decoupling-a-monolithic-application-into-event-driven-microservices">1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices</h2>
+<p>This lab demonstrates decoupling a synchronous monolithic processing path into an asynchronous event-driven workflow using Docker Compose, NGINX, RabbitMQ, Python application services, and Redis.</p>
+<h3 id="lab-topology-schematic">Lab Topology Schematic</h3>
+<p><img alt="Hands-On Decoupled Lab Infrastructur" src="assets/images/chapter1/1-5-Hands-On-Decoupled-Lab-Infrastructure.png" /></p>
+<h3 id="deployment-orchestration-docker-composeyml">Deployment Orchestration (<code>docker-compose.yml</code>)</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cloudnative_net</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.0/16</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gateway</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">haproxy:2.8-alpine</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab_gateway</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"80:80"</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cloudnative_net</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ipv4_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.10</span>
+
+<span class="w">  </span><span class="nt">order_service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./order_service</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab_order_service</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">AMQP_URL</span><span class="p">:</span><span class="w"> </span><span class="s">"amqp://admin:CloudNative2026!@message_broker:5672/"</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">message_broker</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cloudnative_net</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ipv4_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.20</span>
+
+<span class="w">  </span><span class="nt">message_broker</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rabbitmq:3.12-management-alpine</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab_message_broker</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">RABBITMQ_DEFAULT_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+<span class="w">      </span><span class="nt">RABBITMQ_DEFAULT_PASS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudNative2026!</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"5672:5672"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"15672:15672"</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cloudnative_net</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ipv4_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.30</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"rabbitmq-diagnostics"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"check_running"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+
+<span class="w">  </span><span class="nt">payment_worker</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./payment_worker</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab_payment_worker</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">AMQP_URL</span><span class="p">:</span><span class="w"> </span><span class="s">"amqp://admin:CloudNative2026!@message_broker:5672/"</span>
+<span class="w">      </span><span class="nt">REDIS_URL</span><span class="p">:</span><span class="w"> </span><span class="s">"redis://:CacheSecure2026!@state_cache:6379/0"</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">message_broker</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">      </span><span class="nt">state_cache</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cloudnative_net</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ipv4_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.40</span>
+
+<span class="w">  </span><span class="nt">state_cache</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7.2-alpine</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab_state_cache</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis-server --requirepass CacheSecure2026!</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cloudnative_net</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ipv4_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.50</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"redis-cli"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-a"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"CacheSecure2026!"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"ping"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</code></pre></div>
+<h3 id="order-ingestion-publisher-order_serviceapppy">Order Ingestion Publisher (<code>order_service/app.py</code>)</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pika</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">AMQP_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"AMQP_URL"</span><span class="p">,</span> <span class="s2">"amqp://admin:CloudNative2026!@localhost:5672/"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">publish_event</span><span class="p">(</span><span class="n">routing_key</span><span class="p">,</span> <span class="n">payload</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">pika</span><span class="o">.</span><span class="n">URLParameters</span><span class="p">(</span><span class="n">AMQP_URL</span><span class="p">)</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">pika</span><span class="o">.</span><span class="n">BlockingConnection</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">channel</span><span class="p">()</span>
+
+    <span class="c1"># Declare resilient topic exchange</span>
+    <span class="n">channel</span><span class="o">.</span><span class="n">exchange_declare</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s1">'orders_exchange'</span><span class="p">,</span> <span class="n">exchange_type</span><span class="o">=</span><span class="s1">'topic'</span><span class="p">,</span> <span class="n">durable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">channel</span><span class="o">.</span><span class="n">basic_publish</span><span class="p">(</span>
+        <span class="n">exchange</span><span class="o">=</span><span class="s1">'orders_exchange'</span><span class="p">,</span>
+        <span class="n">routing_key</span><span class="o">=</span><span class="n">routing_key</span><span class="p">,</span>
+        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">),</span>
+        <span class="n">properties</span><span class="o">=</span><span class="n">pika</span><span class="o">.</span><span class="n">BasicProperties</span><span class="p">(</span>
+            <span class="n">delivery_mode</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># Persistent message on disk</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s1">'application/json'</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">'/api/v1/orders'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">'POST'</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="ow">or</span> <span class="s1">'order_id'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">"error"</span><span class="p">:</span> <span class="s2">"Invalid order payload"</span><span class="p">}),</span> <span class="mi">400</span>
+
+    <span class="c1"># Publish event asynchronously</span>
+    <span class="n">publish_event</span><span class="p">(</span><span class="s1">'order.created'</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+        <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"Accepted"</span><span class="p">,</span>
+        <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Order queued for processing"</span><span class="p">,</span>
+        <span class="s2">"order_id"</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">'order_id'</span><span class="p">]</span>
+    <span class="p">}),</span> <span class="mi">202</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">'0.0.0.0'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="lab-verification-steps">Lab Verification Steps</h3>
+<ol>
+<li><strong>Spin up the decoupled microservice stack:</strong>
+   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+</code></pre></div></li>
+<li><strong>Verify container health and network connectivity:</strong>
+   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</code></pre></div></li>
+<li><strong>Dispatch a test order via the HAProxy endpoint:</strong>
+   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost/api/v1/orders<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"order_id": "ORD-2026-8891", "user_id": "USR-402", "amount": 249.99}'</span>
+</code></pre></div></li>
+<li><strong>Confirm worker event processing in Redis:</strong>
+   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>lab_state_cache<span class="w"> </span>redis-cli<span class="w"> </span>-a<span class="w"> </span>CacheSecure2026!<span class="w"> </span>GET<span class="w"> </span><span class="s2">"order:ORD-2026-8891:status"</span>
+</code></pre></div></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

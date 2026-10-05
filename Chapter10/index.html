@@ -1,0 +1,2010 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter1/">
+      
+      
+        <link rel="next" href="../Chapter11/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 10: Kubernetes Storage, ConfigMaps, & Secrets - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-10-kubernetes-storage-configmaps-secrets" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#101-persistentvolumes-pv-persistentvolumeclaims-pvc-and-dynamic-provisioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-lifecycle-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Lifecycle Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-reclamation-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Reclamation Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-provisioning-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Provisioning Manifests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-container-storage-interface-csi-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Container Storage Interface (CSI) Drivers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2 Container Storage Interface (CSI) Drivers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#csi-driver-subsystem-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSI Driver Subsystem Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#csi-rpc-methods-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSI RPC Methods Breakdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#103-decoupling-configuration-using-configmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Decoupling Configuration using ConfigMaps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.3 Decoupling Configuration using ConfigMaps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#production-configmap-manifest-with-multi-pattern-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production ConfigMap Manifest with Multi-Pattern Consumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#104-managing-sensitive-data-with-kubernetes-secrets-and-external-secret-store-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-secret-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-In Secret Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-secrets-security-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Secrets Security Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-secrets-operator-eso-vault-integration-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Secrets Operator (ESO) &amp; Vault Integration Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#105-hands-on-lab-provisioning-ceph-csi-persistent-volumes-with-external-hashicorp-vault-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Hands-On Lab: Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.5 Hands-On Lab: Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-configure-namespace-and-storageclass-for-ceph-csi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Configure Namespace and StorageClass for Ceph CSI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-hashicorp-vault-authentication-and-secret-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure HashiCorp Vault Authentication and Secret Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-map-vault-secret-to-native-kubernetes-secret-via-externalsecret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Map Vault Secret to Native Kubernetes Secret via ExternalSecret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-provision-workload-consuming-ceph-pv-and-synchronized-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Provision Workload Consuming Ceph PV and Synchronized Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verification-and-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verification and Inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#106-chapter-review-and-operational-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Chapter Review and Operational Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.6 Chapter Review and Operational Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary-of-generated-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary of Generated Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#101-persistentvolumes-pv-persistentvolumeclaims-pvc-and-dynamic-provisioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-lifecycle-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Lifecycle Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-reclamation-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Reclamation Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-provisioning-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Provisioning Manifests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-container-storage-interface-csi-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Container Storage Interface (CSI) Drivers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2 Container Storage Interface (CSI) Drivers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#csi-driver-subsystem-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSI Driver Subsystem Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#csi-rpc-methods-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSI RPC Methods Breakdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#103-decoupling-configuration-using-configmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Decoupling Configuration using ConfigMaps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.3 Decoupling Configuration using ConfigMaps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#production-configmap-manifest-with-multi-pattern-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production ConfigMap Manifest with Multi-Pattern Consumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#104-managing-sensitive-data-with-kubernetes-secrets-and-external-secret-store-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-secret-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-In Secret Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-secrets-security-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Secrets Security Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-secrets-operator-eso-vault-integration-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Secrets Operator (ESO) &amp; Vault Integration Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#105-hands-on-lab-provisioning-ceph-csi-persistent-volumes-with-external-hashicorp-vault-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Hands-On Lab: Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.5 Hands-On Lab: Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-configure-namespace-and-storageclass-for-ceph-csi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Configure Namespace and StorageClass for Ceph CSI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-hashicorp-vault-authentication-and-secret-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure HashiCorp Vault Authentication and Secret Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-map-vault-secret-to-native-kubernetes-secret-via-externalsecret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Map Vault Secret to Native Kubernetes Secret via ExternalSecret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-provision-workload-consuming-ceph-pv-and-synchronized-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Provision Workload Consuming Ceph PV and Synchronized Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verification-and-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verification and Inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#106-chapter-review-and-operational-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Chapter Review and Operational Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.6 Chapter Review and Operational Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary-of-generated-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary of Generated Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-10-kubernetes-storage-configmaps-secrets">Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets</h1>
+<p>In modern cloud-native architectures, decoupling application logic from persistence and operational state is a core tenant of resilient platform engineering. This chapter covers the implementation, lifecycle management, and security patterns of Kubernetes persistent storage primitives, Container Storage Interface (CSI) drivers, environment configuration management, and secrets management using both native primitives and external secrets stores (such as HashiCorp Vault) as aligned with the LPI 701-200 exam standards.</p>
+<h2 id="101-persistentvolumes-pv-persistentvolumeclaims-pvc-and-dynamic-provisioning">10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning</h2>
+<p>Kubernetes separates storage allocation from infrastructure consumption through two API resources: <code>PersistentVolume</code> (PV) and <code>PersistentVolumeClaim</code> (PVC).</p>
+<h3 id="storage-lifecycle-architecture">Storage Lifecycle Architecture</h3>
+<p><img alt="Kubernetes Storage binding model" src="assets/images/chapter10/10-1-STORAGE-BINDING-AND-LIFECYCLE.png" /></p>
+<h3 id="storage-reclamation-policies">Storage Reclamation Policies</h3>
+<p>When a user deletes a PVC bound to a PV, the reclaim policy defined on the PV tells the cluster how to treat the underlying physical storage asset:</p>
+<p><img alt="Kubernetes PV Reclaim Policies" src="assets/images/chapter10/10-1-STORAGE-RECLAIM-POLICIES.png" /></p>
+<h3 id="access-modes">Access Modes</h3>
+<p>Access modes define how many nodes can concurrently mount a given PV:</p>
+<ol>
+<li><code>ReadWriteOnce</code> (<code>RWO</code>): Volume can be mounted as read-write by a single node.</li>
+<li><code>ReadOnlyMany</code> (<code>ROX</code>): Volume can be mounted as read-only by many nodes concurrently.</li>
+<li><code>ReadWriteMany</code> (<code>RWX</code>): Volume can be mounted as read-write by many nodes concurrently (requires distributed file storage like NFS, CephFS, or Gluster).</li>
+<li><code>ReadWriteOncePod</code> (<code>RWOP</code>): Volume can be mounted as read-write by a single Pod across the entire cluster (CSI-specific).</li>
+</ol>
+<h3 id="dynamic-provisioning-manifests">Dynamic Provisioning Manifests</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enterprise-ssd</span>
+<span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/no-provisioner</span>
+<span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span>
+<span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete</span>
+<span class="nt">allowVolumeExpansion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-state-pvc</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadWriteOnce</span>
+<span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enterprise-ssd</span>
+<span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50Gi</span>
+</code></pre></div>
+<h2 id="102-container-storage-interface-csi-drivers">10.2 Container Storage Interface (CSI) Drivers</h2>
+<p>The Container Storage Interface (CSI) standardizes the out-of-tree interface between storage vendors and container orchestrators.</p>
+<h3 id="csi-driver-subsystem-architecture">CSI Driver Subsystem Architecture</h3>
+<p><img alt="CSI Driver Subsystem Architecture" src="assets/images/chapter10/10-2-CSI-SUBSYSTEM-TOPOLOGY.png" /></p>
+<h3 id="csi-rpc-methods-breakdown">CSI RPC Methods Breakdown</h3>
+<ol>
+<li><strong>CSI Controller Service</strong>:</li>
+<li><code>CreateVolume()</code> / <code>DeleteVolume()</code>: Provisions or deprovisions storage assets on the storage vendor's SAN/NAS API.</li>
+<li>
+<p><code>ControllerPublishVolume()</code> / <code>ControllerUnpublishVolume()</code>: Attaches/detaches block storage to a specific target host machine (e.g., AWS EBS <code>AttachVolume</code>).</p>
+</li>
+<li>
+<p><strong>CSI Node Service</strong>:</p>
+</li>
+<li><code>NodeStageVolume()</code>: Formats the block device with a file system (<code>ext4</code>, <code>xfs</code>) and mounts it to a global staging directory.</li>
+<li><code>NodePublishVolume()</code>: Bind-mounts the staged volume into the container's isolated mount namespace (<code>/var/lib/kubelet/pods/&lt;pod-uid&gt;/volumes/...</code>).</li>
+</ol>
+<h2 id="103-decoupling-configuration-using-configmaps">10.3 Decoupling Configuration using ConfigMaps</h2>
+<p>ConfigMaps store non-confidential configuration data as key-value pairs, decoupling application binaries from platform configuration.</p>
+<p><img alt="Kubernetes PV Reclaim Policies" src="assets/images/chapter10/10-3-CONFIGMAP-CONSUMPTION-PATTERNS.png" /></p>
+<h3 id="production-configmap-manifest-with-multi-pattern-consumption">Production ConfigMap Manifest with Multi-Pattern Consumption</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway-config</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">"info"</span>
+<span class="w">  </span><span class="nt">MAX_CONNECTIONS</span><span class="p">:</span><span class="w"> </span><span class="s">"10000"</span>
+<span class="w">  </span><span class="nt">app-spec.yaml</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">server:</span>
+<span class="w">      </span><span class="no">port: 8080</span>
+<span class="w">      </span><span class="no">timeout: 30s</span>
+<span class="w">    </span><span class="no">database:</span>
+<span class="w">      </span><span class="no">pool_size: 20</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.enterprise.internal/apps/gateway:v1.4.0</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SYSTEM_LOG_LEVEL</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">configMapKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway-config</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_LEVEL</span>
+<span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config-volume</span>
+<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/gateway/config</span>
+<span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config-volume</span>
+<span class="w">        </span><span class="nt">configMap</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-gateway-config</span>
+<span class="w">          </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-spec.yaml</span>
+<span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-spec.yaml</span>
+</code></pre></div>
+<h2 id="104-managing-sensitive-data-with-kubernetes-secrets-and-external-secret-store-integration">10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration</h2>
+<p>Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS certificates.</p>
+<h3 id="built-in-secret-types">Built-In Secret Types</h3>
+<p><img alt="Kubernetes Built-In Secret Types" src="assets/images/chapter10/10-4-BUILT-IN-SECRET-TYPES.png" /></p>
+<h3 id="native-secrets-security-limitations">Native Secrets Security Limitations</h3>
+<ol>
+<li><strong>Base64 Encoding</strong>: Native Secret objects are only base64-encoded, <strong>not encrypted</strong>, when stored or queried unless Encryption at Rest is explicitly configured on the API server.</li>
+<li><strong>etcd Exposure</strong>: Plaintext secrets exist in the etcd datastore unless encrypted using <code>EncryptionConfiguration</code> with a provider key (<code>kms</code>, <code>aescbc</code>, <code>secretbox</code>).</li>
+</ol>
+<h3 id="external-secrets-operator-eso-vault-integration-architecture">External Secrets Operator (ESO) &amp; Vault Integration Architecture</h3>
+<p><img alt="External Secrets Operator" src="assets/images/chapter10/10-4-EXTERNAL-SECRETS-INTEGRATION-FLOW.png" /></p>
+<h2 id="105-hands-on-lab-provisioning-ceph-csi-persistent-volumes-with-external-hashicorp-vault-secrets">10.5 Hands-On Lab: Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets</h2>
+<h3 id="objective">Objective</h3>
+<p>Deploy an enterprise-grade setup consisting of a Ceph CSI StorageClass for dynamic storage provisioning, along with the External Secrets Operator (ESO) syncing sensitive credentials from HashiCorp Vault into native Kubernetes Secrets.</p>
+<p><img alt="Hands-on lab architecture diagram" src="assets/images/chapter10/10-5-LAB-ARCHITECTURE-TARGET.png" /></p>
+<h3 id="step-1-configure-namespace-and-storageclass-for-ceph-csi">Step 1: Configure Namespace and StorageClass for Ceph CSI</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>lab-storage-sec
+
+cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: storage.k8s.io/v1</span>
+<span class="s">kind: StorageClass</span>
+<span class="s">metadata:</span>
+<span class="s">  name: ceph-rbd-sc</span>
+<span class="s">  namespace: lab-storage-sec</span>
+<span class="s">provisioner: rbd.csi.ceph.com</span>
+<span class="s">fstype: ext4</span>
+<span class="s">parameters:</span>
+<span class="s">  clusterID: 4b1715f4-210e-46b7-8025-a129d2b2c45f</span>
+<span class="s">  pool: rbd-k8s-pool</span>
+<span class="s">  imageFormat: "2"</span>
+<span class="s">  imageFeatures: layering</span>
+<span class="s">  csi.storage.k8s.io/provisioner-secret-name: csi-ceph-secret</span>
+<span class="s">  csi.storage.k8s.io/provisioner-secret-namespace: lab-storage-sec</span>
+<span class="s">  csi.storage.k8s.io/node-stage-secret-name: csi-ceph-secret</span>
+<span class="s">  csi.storage.k8s.io/node-stage-secret-namespace: lab-storage-sec</span>
+<span class="s">reclaimPolicy: Delete</span>
+<span class="s">allowVolumeExpansion: true</span>
+<span class="s">volumeBindingMode: Immediate</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="step-2-configure-hashicorp-vault-authentication-and-secret-store">Step 2: Configure HashiCorp Vault Authentication and Secret Store</h3>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: external-secrets.io/v1beta1</span>
+<span class="s">kind: SecretStore</span>
+<span class="s">metadata:</span>
+<span class="s">  name: vault-backend</span>
+<span class="s">  namespace: lab-storage-sec</span>
+<span class="s">spec:</span>
+<span class="s">  provider:</span>
+<span class="s">    vault:</span>
+<span class="s">      server: "https://vault.enterprise.internal:8200"</span>
+<span class="s">      path: "secret"</span>
+<span class="s">      version: "v2"</span>
+<span class="s">      auth:</span>
+<span class="s">        kubernetes:</span>
+<span class="s">          mountPath: "kubernetes"</span>
+<span class="s">          role: "lab-storage-role"</span>
+<span class="s">          secretRef:</span>
+<span class="s">            name: vault-auth-token</span>
+<span class="s">            key: token</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="step-3-map-vault-secret-to-native-kubernetes-secret-via-externalsecret">Step 3: Map Vault Secret to Native Kubernetes Secret via ExternalSecret</h3>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: external-secrets.io/v1beta1</span>
+<span class="s">kind: ExternalSecret</span>
+<span class="s">metadata:</span>
+<span class="s">  name: db-credentials-es</span>
+<span class="s">  namespace: lab-storage-sec</span>
+<span class="s">spec:</span>
+<span class="s">  refreshInterval: "1h"</span>
+<span class="s">  secretStoreRef:</span>
+<span class="s">    name: vault-backend</span>
+<span class="s">    kind: SecretStore</span>
+<span class="s">  target:</span>
+<span class="s">    name: db-credentials</span>
+<span class="s">    creationPolicy: Owner</span>
+<span class="s">  data:</span>
+<span class="s">  - secretKey: DB_PASSWORD</span>
+<span class="s">    remoteRef:</span>
+<span class="s">      key: production/database</span>
+<span class="s">      property: password</span>
+<span class="s">  - secretKey: DB_USER</span>
+<span class="s">    remoteRef:</span>
+<span class="s">      key: production/database</span>
+<span class="s">      property: username</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="step-4-provision-workload-consuming-ceph-pv-and-synchronized-secret">Step 4: Provision Workload Consuming Ceph PV and Synchronized Secret</h3>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: PersistentVolumeClaim</span>
+<span class="s">metadata:</span>
+<span class="s">  name: db-data-pvc</span>
+<span class="s">  namespace: lab-storage-sec</span>
+<span class="s">spec:</span>
+<span class="s">  accessModes:</span>
+<span class="s">    - ReadWriteOnce</span>
+<span class="s">  storageClassName: ceph-rbd-sc</span>
+<span class="s">  resources:</span>
+<span class="s">    requests:</span>
+<span class="s">      storage: 20Gi</span>
+
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Pod</span>
+<span class="s">metadata:</span>
+<span class="s">  name: stateful-db-0</span>
+<span class="s">  namespace: lab-storage-sec</span>
+<span class="s">spec:</span>
+<span class="s">  containers:</span>
+<span class="s">  - name: postgres</span>
+<span class="s">    image: postgres:15-alpine</span>
+<span class="s">    env:</span>
+<span class="s">    - name: POSTGRES_USER</span>
+<span class="s">      valueFrom:</span>
+<span class="s">        secretKeyRef:</span>
+<span class="s">          name: db-credentials</span>
+<span class="s">          key: DB_USER</span>
+<span class="s">    - name: POSTGRES_PASSWORD</span>
+<span class="s">      valueFrom:</span>
+<span class="s">        secretKeyRef:</span>
+<span class="s">          name: db-credentials</span>
+<span class="s">          key: DB_PASSWORD</span>
+<span class="s">    volumeMounts:</span>
+<span class="s">    - name: storage-volume</span>
+<span class="s">      mountPath: /var/lib/postgresql/data</span>
+<span class="s">  volumes:</span>
+<span class="s">  - name: storage-volume</span>
+<span class="s">    persistentVolumeClaim:</span>
+<span class="s">      claimName: db-data-pvc</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="step-5-verification-and-inspection">Step 5: Verification and Inspection</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Verify ExternalSecret synchronization status with Vault</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret<span class="w"> </span>db-credentials-es<span class="w"> </span>-n<span class="w"> </span>lab-storage-sec
+
+<span class="c1"># 2. Inspect generated native Kubernetes Secret key data</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>db-credentials<span class="w"> </span>-n<span class="w"> </span>lab-storage-sec<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.data}'</span>
+
+<span class="c1"># 3. Verify PVC status and binding to dynamically provisioned Ceph PV</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>db-data-pvc<span class="w"> </span>-n<span class="w"> </span>lab-storage-sec
+
+<span class="c1"># 4. Confirm volume mount status inside active Pod namespace</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>stateful-db-0<span class="w"> </span>-n<span class="w"> </span>lab-storage-sec<span class="w"> </span>--<span class="w"> </span>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/postgresql/data
+</code></pre></div>
+<h2 id="106-chapter-review-and-operational-checklist">10.6 Chapter Review and Operational Checklist</h2>
+<p>Before moving forward, ensure proficiency in the following key domain concepts:</p>
+<div class="highlight"><pre><span></span><code>* [ ] Understanding PV access modes (`RWO`, `ROX`, `RWX`, `RWOP`) and reclaim policies (`Retain`, `Delete`).
+* [ ] Differentiating between in-tree volume plugins and out-of-tree CSI driver RPC operations (`CreateVolume`, `NodeStageVolume`, `NodePublishVolume`).
+* [ ] Utilizing ConfigMaps via Environment Variables, `envFrom`, and volume mounts.
+* [ ] Managing Kubernetes Secrets security constraints, base64 encoding mechanics, and etcd encryption at rest.
+* [ ] Integrating external secrets stores using operators (e.g., External Secrets Operator with HashiCorp Vault).
+</code></pre></div>
+<h3 id="summary-of-generated-files">Summary of Generated Files</h3>
+<ul>
+<li><strong><code>Chapter10.md</code></strong>: Enterprise-grade guide covering persistent storage, CSI driver architecture, ConfigMaps, Secrets, External Secrets Operator (ESO), HashiCorp Vault integration, and a production lab environment with Ceph CSI.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

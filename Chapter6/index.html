@@ -1,0 +1,1875 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter5/">
+      
+      
+        <link rel="next" href="../Chapter7/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 6: Advanced Container Storage & Overlay Networking - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-6-advanced-container-storage-overlay-networking" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 6: Advanced Container Storage &amp; Overlay Networking
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#61-docker-storage-drivers-overlay2-btrfs-zfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-storage-driver-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Dive: Storage Driver Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deep Dive: Storage Driver Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-overlay2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. overlay2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-btrfs-and-zfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. btrfs and zfs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-persistent-volumes-bind-mounts-and-tmpfs-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-implementation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Implementation Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Implementation Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-docker-volumes-managed-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Docker Volumes (Managed Storage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-bind-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Bind Mounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-tmpfs-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Tmpfs Mounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-docker-networking-drivers-bridge-host-macvlan-and-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#driver-technical-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Driver Technical Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-enterprise-multi-host-networking-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Enterprise Multi-Host Networking Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 Enterprise Multi-Host Networking Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vxlan-mechanics-control-plane-synchronization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VXLAN Mechanics &amp; Control Plane Synchronization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-hands-on-lab-configuring-cross-node-container-overlay-networks-with-custom-subnets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Hands-On Lab: Configuring Cross-Node Container Overlay Networks with Custom Subnets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5 Hands-On Lab: Configuring Cross-Node Container Overlay Networks with Custom Subnets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initialize-swarm-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initialize Swarm Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-custom-encrypted-overlay-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Custom Encrypted Overlay Network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-deploy-workloads-across-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Deploy Workloads Across Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-cross-host-network-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify Cross-Host Network Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-capture-and-inspect-encapsulated-vxlan-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Capture and Inspect Encapsulated VXLAN Traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-exam-takeaways-lpi-701-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Exam Takeaways (LPI 701-200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#61-docker-storage-drivers-overlay2-btrfs-zfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-storage-driver-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Dive: Storage Driver Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deep Dive: Storage Driver Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-overlay2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. overlay2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-btrfs-and-zfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. btrfs and zfs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-persistent-volumes-bind-mounts-and-tmpfs-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-implementation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Implementation Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Implementation Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-docker-volumes-managed-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Docker Volumes (Managed Storage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-bind-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Bind Mounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-tmpfs-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Tmpfs Mounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-docker-networking-drivers-bridge-host-macvlan-and-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#driver-technical-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Driver Technical Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-enterprise-multi-host-networking-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Enterprise Multi-Host Networking Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 Enterprise Multi-Host Networking Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vxlan-mechanics-control-plane-synchronization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VXLAN Mechanics &amp; Control Plane Synchronization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-hands-on-lab-configuring-cross-node-container-overlay-networks-with-custom-subnets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Hands-On Lab: Configuring Cross-Node Container Overlay Networks with Custom Subnets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5 Hands-On Lab: Configuring Cross-Node Container Overlay Networks with Custom Subnets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initialize-swarm-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initialize Swarm Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-custom-encrypted-overlay-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Custom Encrypted Overlay Network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-deploy-workloads-across-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Deploy Workloads Across Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-cross-host-network-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify Cross-Host Network Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-capture-and-inspect-encapsulated-vxlan-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Capture and Inspect Encapsulated VXLAN Traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-exam-takeaways-lpi-701-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Exam Takeaways (LPI 701-200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-6-advanced-container-storage-overlay-networking">Chapter 6: Advanced Container Storage &amp; Overlay Networking</h1>
+<p>When deploying containerized workloads at enterprise scale, state management and network connectivity present the most critical operational challenges. While stateless microservices are easy to deploy, real-world architectures require durable data persistence, high-performance storage backends, and secure, cross-host network communication. To pass the LPI 701-200 exam and manage production environments effectively, system engineers must understand the low-level Linux kernel abstractions—such as Copy-on-Write (CoW) filesystems, network namespaces, virtual Ethernet pairs, and VXLAN tunnels—that make modern container storage and networking possible.</p>
+<h2 id="61-docker-storage-drivers-overlay2-btrfs-zfs">6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)</h2>
+<p>Docker uses storage drivers to manage the image layers and the writable container layer. Understanding how these drivers handle storage allocation, layer stacking, and Copy-on-Write (CoW) operations is essential for tuning high-throughput enterprise systems.</p>
+<p><img alt="Docker Storage Driver Architecture &amp; Layer Stacking" src="assets/images/chapter6/6-1-Docker-Storage-Driver-Architecture-and-Layer-Stacking.png" /></p>
+<h3 id="deep-dive-storage-driver-mechanics">Deep Dive: Storage Driver Mechanics</h3>
+<h4 id="1-overlay2">1. <code>overlay2</code></h4>
+<p><code>overlay2</code> is the recommended default storage driver for Docker on modern Linux distributions. It operates at the directory level rather than the block level, union-mounting multiple directories into a single unified view.</p>
+<ul>
+<li><strong>Lowerdir:</strong> Read-only image layers stacked on top of one another.</li>
+<li><strong>Upperdir:</strong> Read-write container layer where runtime modifications are written.</li>
+<li><strong>Merged:</strong> The unified view accessible inside the container filesystem.</li>
+<li><strong>Workdir:</strong> Internal directory used by Linux kernel OverlayFS to prepare atomic file operations.</li>
+</ul>
+<blockquote>
+<p><strong>Enterprise Note:</strong> Ensure underlying <code>xfs</code> filesystems are formatted with <code>ftype=1</code>. Without d_type support, <code>overlay2</code> will fail to process rename and copy operations correctly.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify xfs d_type support on host filesystem</span>
+xfs_info<span class="w"> </span>/var/lib/docker<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ftype
+</code></pre></div>
+<h4 id="2-btrfs-and-zfs">2. <code>btrfs</code> and <code>zfs</code></h4>
+<p>For storage systems requiring native snapshotting, enterprise backup integration, or multi-disk pooling:</p>
+<ul>
+<li><strong><code>btrfs</code>:</strong> Works at the subvolume level. When a container is modified, <code>btrfs</code> performs block-level Copy-on-Write, making layer creation and snapshotting fast, though heavy write workloads can cause allocation fragmentation over time.</li>
+<li><strong><code>zfs</code>:</strong> Uses ZFS storage pools (<code>zpool</code>). It offers robust features like data deduplication, checksumming, and memory caching via the Adaptive Replacement Cache (ARC). However, ARC can conflict with host memory if limits are not explicitly set in <code>/etc/modprobe.d/zfs.conf</code>.</li>
+</ul>
+<h2 id="62-persistent-volumes-bind-mounts-and-tmpfs-mounts">6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts</h2>
+<p>Container filesystems are ephemeral by design; when a container is destroyed, its writable layer is deleted along with it. Enterprise workloads require persistent, high-performance storage abstractions that bypass the container's storage driver.</p>
+<p><img alt="Docker Storage Mount Types &amp; Host Binding Isolation" src="assets/images/chapter6/6-2-Docker-Storage-Mount-Types-and-Host-Binding-Isolation.png" /></p>
+<h3 id="storage-implementation-strategies">Storage Implementation Strategies</h3>
+<h4 id="1-docker-volumes-managed-storage">1. Docker Volumes (Managed Storage)</h4>
+<p>Docker Volumes are stored in host storage managed by the Docker daemon (<code>/var/lib/docker/volumes/</code>). They bypass the storage driver, offering native performance equal to host I/O.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create a managed volume with custom storage driver options (NFS example)</span>
+docker<span class="w"> </span>volume<span class="w"> </span>create<span class="w"> </span>--driver<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--opt<span class="w"> </span><span class="nv">type</span><span class="o">=</span>nfs<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--opt<span class="w"> </span><span class="nv">o</span><span class="o">=</span><span class="nv">addr</span><span class="o">=</span><span class="m">10</span>.100.0.50,rw,nfsvers<span class="o">=</span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--opt<span class="w"> </span><span class="nv">device</span><span class="o">=</span>:<span class="w"> </span>/exports/appdata<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>enterprise_nfs_vol
+</code></pre></div>
+<h4 id="2-bind-mounts">2. Bind Mounts</h4>
+<p>Bind mounts map an arbitrary file or directory from the host system directly into the container.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Attach host configuration file using read-only bind mount</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>production_web<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>bind,source<span class="o">=</span>/etc/nginx/nginx.conf,target<span class="o">=</span>/etc/nginx/nginx.conf,readonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>nginx:alpine
+</code></pre></div>
+<h4 id="3-tmpfs-mounts">3. Tmpfs Mounts</h4>
+<p>Tmpfs mounts store data exclusively in host memory (RAM), ensuring sensitive information like keys or credentials never hit non-volatile disk storage.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Mount 512MB volatile memory buffer into container runtime</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>secure_service<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mount<span class="w"> </span><span class="nv">type</span><span class="o">=</span>tmpfs,target<span class="o">=</span>/tmp/secrets,tmpfs-size<span class="o">=</span><span class="m">536870912</span>,tmpfs-mode<span class="o">=</span><span class="m">1770</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>enterprise_app:v2
+</code></pre></div>
+<h2 id="63-docker-networking-drivers-bridge-host-macvlan-and-overlay">6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay</h2>
+<p>Docker abstracts Linux network namespaces, virtual interfaces, and firewall rules into modular networking drivers.</p>
+<p><img alt="Docker Network Driver Topologies" src="assets/images/chapter6/6-3-Docker-Network-Driver-Topologies.png" /></p>
+<h3 id="driver-technical-mechanics">Driver Technical Mechanics</h3>
+<ol>
+<li><strong>Bridge:</strong> The default network driver. Creates a virtual bridge (e.g., <code>docker0</code>) on the host. Containers connect via virtual Ethernet (<code>veth</code>) pairs, using NAT (Network Address Translation) and <code>iptables</code> rules to communicate externally.</li>
+<li><strong>Host:</strong> Removes network isolation between the container and the host. The container binds directly to host ports, eliminating NAT performance overhead at the expense of port collision safety.</li>
+<li><strong>Macvlan:</strong> Allows containers to appear as physical devices on the enterprise network. Each container gets a unique MAC address assigned from the underlying host physical interface (<code>eth0</code>).</li>
+<li><strong>Overlay:</strong> Enables multi-host networking by creating a distributed overlay network on top of host-level physical networks using VXLAN (Virtual Extensible LAN) encapsulation.</li>
+</ol>
+<h2 id="64-enterprise-multi-host-networking-configuration">6.4 Enterprise Multi-Host Networking Configuration</h2>
+<p>In multi-host production deployments, containers across different physical or virtual nodes must communicate securely without requiring complex host port-mapping or NAT configurations.</p>
+<p><img alt="Enterprise Multi-Host VXLAN Overlay Architecture" src="assets/images/chapter6/6-4-Enterprise-Multi-Host-VXLAN-Overlay-Architecture.png" /></p>
+<h3 id="vxlan-mechanics-control-plane-synchronization">VXLAN Mechanics &amp; Control Plane Synchronization</h3>
+<ol>
+<li><strong>Virtual Extensible LAN (VXLAN):</strong> Encapsulates Layer-2 Ethernet frames inside standard Layer-3 IPv4/UDP packets (destination port <code>4789</code>). This creates an isolated virtual network spanning multiple physical host subnets.</li>
+<li><strong>VXLAN Network Identifier (VNI):</strong> A 24-bit integer providing up to 16 million isolated overlay segments, preventing cross-tenant packet leakage.</li>
+<li><strong>Control Plane Operations:</strong> Managed via Docker Swarm or external key-value stores (e.g., <code>etcd</code>, <code>Consul</code>). It tracks container locations, IP assignments, and MAC addresses across hosts, updating host ARP and FDB (Forwarding Database) tables automatically.</li>
+</ol>
+<h2 id="65-hands-on-lab-configuring-cross-node-container-overlay-networks-with-custom-subnets">6.5 Hands-On Lab: Configuring Cross-Node Container Overlay Networks with Custom Subnets</h2>
+<h3 id="lab-scenario">Lab Scenario</h3>
+<p>You need to build a multi-host overlay network spanning two nodes (<code>node-01</code> and <code>node-02</code>). You will set up an encrypted custom overlay network, deploy container workloads across both nodes, verify cross-host IP connectivity, and inspect the underlying VXLAN tunnel traffic.</p>
+<p><img alt="Hands-On Cross-Node Overlay Lab Configuration" src="assets/images/chapter6/6-5-Hands-On-Cross-Node-Overlay-Lab-Configuration.png" /></p>
+<h3 id="step-by-step-implementation">Step-by-Step Implementation</h3>
+<h4 id="step-1-initialize-swarm-cluster">Step 1: Initialize Swarm Cluster</h4>
+<p>On <code>node-01</code> (Manager):
+<div class="highlight"><pre><span></span><code><span class="c1"># Initialize Swarm cluster management plane</span>
+docker<span class="w"> </span>swarm<span class="w"> </span>init<span class="w"> </span>--advertise-addr<span class="w"> </span><span class="m">10</span>.10.0.11
+</code></pre></div>
+<em>Copy the generated join token and execute it on <code>node-02</code> (Worker):</em>
+<div class="highlight"><pre><span></span><code><span class="c1"># Join worker node to cluster</span>
+docker<span class="w"> </span>swarm<span class="w"> </span>join<span class="w"> </span>--token<span class="w"> </span>SWMTKN-1-356abc...<span class="w"> </span><span class="m">10</span>.10.0.11:2377
+</code></pre></div></p>
+<h4 id="step-2-create-custom-encrypted-overlay-network">Step 2: Create Custom Encrypted Overlay Network</h4>
+<p>On <code>node-01</code> (Manager):
+<div class="highlight"><pre><span></span><code><span class="c1"># Create custom multi-host overlay network with IPSEC encryption</span>
+docker<span class="w"> </span>network<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--driver<span class="w"> </span>overlay<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--subnet<span class="w"> </span><span class="m">10</span>.200.0.0/16<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--gateway<span class="w"> </span><span class="m">10</span>.200.0.1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--opt<span class="w"> </span>encrypted<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--attachable<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>prod_secure_overlay
+</code></pre></div></p>
+<h4 id="step-3-deploy-workloads-across-nodes">Step 3: Deploy Workloads Across Nodes</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Deploy isolated container on node-01</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>web_service_node1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--network<span class="w"> </span>prod_secure_overlay<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>alpine<span class="w"> </span>sleep<span class="w"> </span><span class="m">3600</span>
+
+<span class="c1"># Deploy second isolated container targeting node-02</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>web_service_node2<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--network<span class="w"> </span>prod_secure_overlay<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>alpine<span class="w"> </span>sleep<span class="w"> </span><span class="m">3600</span>
+</code></pre></div>
+<h4 id="step-4-verify-cross-host-network-connectivity">Step 4: Verify Cross-Host Network Connectivity</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Retrieve internal overlay IP assigned to web_service_node2</span>
+<span class="nv">NODE2_IP</span><span class="o">=</span><span class="k">$(</span>docker<span class="w"> </span>inspect<span class="w"> </span>-f<span class="w"> </span><span class="s1">'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'</span><span class="w"> </span>web_service_node2<span class="k">)</span>
+
+<span class="c1"># Ping web_service_node2 directly from inside web_service_node1 across the VXLAN tunnel</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>web_service_node1<span class="w"> </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="nv">$NODE2_IP</span>
+</code></pre></div>
+<h4 id="step-5-capture-and-inspect-encapsulated-vxlan-traffic">Step 5: Capture and Inspect Encapsulated VXLAN Traffic</h4>
+<p>Run <code>tcpdump</code> on the host interface of <code>node-01</code> to capture encrypted UDP port 4789 packets moving between nodes:
+<div class="highlight"><pre><span></span><code><span class="c1"># Capture raw host-level VXLAN encapsulated frame flow</span>
+sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">4789</span><span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>
+</code></pre></div></p>
+<h3 id="key-exam-takeaways-lpi-701-200">Key Exam Takeaways (LPI 701-200)</h3>
+<ul>
+<li><strong>Storage Driver vs. Volumes:</strong> Storage drivers use Copy-on-Write (<code>overlay2</code>, <code>btrfs</code>, <code>zfs</code>) to manage immutable container layers, adding performance overhead. <strong>Volumes</strong> bypass storage drivers completely, providing raw disk I/O performance.</li>
+<li><strong>Network Isolation:</strong> The <code>bridge</code> driver provides single-host NAT isolation. The <code>host</code> driver bypasses container network namespaces. The <code>macvlan</code> driver assigns layer-2 MAC addresses to containers directly on host networks.</li>
+<li><strong>Overlay Tunneling:</strong> Docker overlay networks use <strong>VXLAN</strong> encapsulation running over <strong>UDP port 4789</strong>. Control planes synchronize state using Swarm Raft or distributed key-value databases.</li>
+<li><strong>Tmpfs Mounts:</strong> Tmpfs mounts store sensitive runtime data purely in <strong>host system memory</strong>, ensuring sensitive keys or tokens are never saved to non-volatile disk storage.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

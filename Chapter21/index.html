@@ -1,0 +1,2362 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter20/">
+      
+      
+        <link rel="next" href="../Chapter22/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 21: Prometheus Monitoring & Metrics Engineering - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-21-prometheus-monitoring-metrics-engineering" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#211-prometheus-pull-based-metrics-architecture-tsdb-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.1 Prometheus Pull-Based Metrics Architecture &amp; TSDB Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.1 Prometheus Pull-Based Metrics Architecture &amp; TSDB Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-pull-based-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pull-Based Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsdb-storage-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSDB Storage Fundamentals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#212-core-metric-types-counters-gauges-histograms-and-summaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.2 Core Metric Types: Counters, Gauges, Histograms, and Summaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.2 Core Metric Types: Counters, Gauges, Histograms, and Summaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-counter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Counter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-gauge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Gauge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-histogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Histogram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#213-promql-prometheus-query-language-masterclass-aggregations-rates-and-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.3 PromQL (Prometheus Query Language) Masterclass: Aggregations, Rates, and Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.3 PromQL (Prometheus Query Language) Masterclass: Aggregations, Rates, and Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-selection-and-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Selection and Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#range-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Range Vectors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-functions-and-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functions and Operators
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Functions and Operators">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rate()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#irate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        irate()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sum()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-by-and-without" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation by and without
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic Operators
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-aggregations-and-top-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Aggregations and Top K
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Aggregations and Top K">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#histogram_quantile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        histogram_quantile()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topk-and-bottomk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        topk() and bottomk()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#214-node-exporters-application-instrumentation-and-pushgateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.4 Node Exporters, Application Instrumentation, and Pushgateway
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.4 Node Exporters, Application Instrumentation, and Pushgateway">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-exporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Exporter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-instrumentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Instrumentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushgateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pushgateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#215-hands-on-lab-instrumenting-custom-microservice-metrics-and-writing-advanced-promql-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.5 Hands-On Lab: Instrumenting Custom Microservice Metrics and Writing Advanced PromQL Queries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.5 Hands-On Lab: Instrumenting Custom Microservice Metrics and Writing Advanced PromQL Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set Up the Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-write-and-instrument-the-microservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Write and Instrument the Microservice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-integrate-microservice-and-prometheus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Integrate Microservice and Prometheus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-traffic-and-verify-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate Traffic and Verify Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-advanced-promql-masterclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Advanced PromQL Masterclass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-conclusion-and-key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Conclusion and Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#211-prometheus-pull-based-metrics-architecture-tsdb-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.1 Prometheus Pull-Based Metrics Architecture &amp; TSDB Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.1 Prometheus Pull-Based Metrics Architecture &amp; TSDB Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-pull-based-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pull-Based Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsdb-storage-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TSDB Storage Fundamentals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#212-core-metric-types-counters-gauges-histograms-and-summaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.2 Core Metric Types: Counters, Gauges, Histograms, and Summaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.2 Core Metric Types: Counters, Gauges, Histograms, and Summaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-counter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Counter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-gauge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Gauge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-histogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Histogram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#213-promql-prometheus-query-language-masterclass-aggregations-rates-and-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.3 PromQL (Prometheus Query Language) Masterclass: Aggregations, Rates, and Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.3 PromQL (Prometheus Query Language) Masterclass: Aggregations, Rates, and Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-selection-and-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Selection and Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#range-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Range Vectors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-functions-and-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functions and Operators
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Functions and Operators">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rate()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#irate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        irate()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sum()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-by-and-without" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation by and without
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic Operators
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-aggregations-and-top-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Aggregations and Top K
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Aggregations and Top K">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#histogram_quantile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        histogram_quantile()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topk-and-bottomk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        topk() and bottomk()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#214-node-exporters-application-instrumentation-and-pushgateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.4 Node Exporters, Application Instrumentation, and Pushgateway
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.4 Node Exporters, Application Instrumentation, and Pushgateway">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-exporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Exporter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-instrumentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Instrumentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pushgateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pushgateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#215-hands-on-lab-instrumenting-custom-microservice-metrics-and-writing-advanced-promql-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21.5 Hands-On Lab: Instrumenting Custom Microservice Metrics and Writing Advanced PromQL Queries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="21.5 Hands-On Lab: Instrumenting Custom Microservice Metrics and Writing Advanced PromQL Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set Up the Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-write-and-instrument-the-microservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Write and Instrument the Microservice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-integrate-microservice-and-prometheus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Integrate Microservice and Prometheus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-traffic-and-verify-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Generate Traffic and Verify Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-advanced-promql-masterclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Advanced PromQL Masterclass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-conclusion-and-key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Conclusion and Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-21-prometheus-monitoring-metrics-engineering">Chapter 21: Prometheus Monitoring &amp; Metrics Engineering</h1>
+<p>Effective monitoring is the backbone of modern DevOps and Site Reliability Engineering (SRE). In cloud-native, distributed systems, traditional up/down checking is insufficient. We need deep observability into internal application state and infrastructure performance. Prometheus has emerged as the CNCF standard for metrics-based monitoring due to its dimensional data model, powerful query language, and scalable architecture.</p>
+<p>This chapter provides a comprehensive, enterprise-focused, hands-on guide to mastering Prometheus, aligned with the LPI 701-200 DevOps Tools Engineer objectives.</p>
+<h2 id="211-prometheus-pull-based-metrics-architecture-tsdb-storage">21.1 Prometheus Pull-Based Metrics Architecture &amp; TSDB Storage</h2>
+<p>Understanding the core architecture of Prometheus is crucial for designing a robust monitoring solution. Unlike many traditional systems that use an agent on hosts to "push" metrics to a central server, Prometheus primarily uses a "pull" mechanism.</p>
+<h3 id="the-pull-based-architecture">The Pull-Based Architecture</h3>
+<p>Prometheus scrapes metrics from monitored targets over HTTP.</p>
+<ol>
+<li><strong>Retrieval (Scraper):</strong> The Prometheus server is configured with a list of jobs and targets. At defined intervals (the <code>scrape_interval</code>), it sends HTTP requests to the <code>/metrics</code> endpoint of these targets.</li>
+<li><strong>Targets:</strong> A target can be an application, a host (via Node Exporter), or an intermediary like Pushgateway. The target must expose metrics in a text-based format that Prometheus understands.</li>
+<li><strong>Service Discovery:</strong> In dynamic enterprise environments (like Kubernetes or AWS), hardcoding targets is impossible. Prometheus integrates with service discovery mechanisms (DNS, Consul, EC2, Kubernetes API) to automatically discover and scrape new instances as they come online.</li>
+<li><strong>Storage (TSDB):</strong> Scraped data is compressed and stored locally on disk in a custom Time Series Database (TSDB).</li>
+</ol>
+<p><strong>Why Pull?</strong></p>
+<ul>
+<li><strong>Decoupling:</strong> Targets don't need to know where the central monitoring server is.</li>
+<li><strong>Centralized Control:</strong> The monitoring server dictates <em>how often</em> and <em>what</em> to scrape. If a target is down, Prometheus knows immediately because the pull fails. If a push-based agent dies, the server just sees a lack of data, which could mean the network is down, the server is slow, or the agent is dead.</li>
+<li><strong>Simplicity:</strong> No complex agents required for standard metrics; simply expose an HTTP endpoint.</li>
+</ul>
+<h3 id="tsdb-storage-fundamentals">TSDB Storage Fundamentals</h3>
+<p>Prometheus stores data as time series: streams of timestamped values belonging to the same metric and the same set of labeled dimensions.</p>
+<p><strong>The Data Model:</strong>
+<code>metric_name{label_name=label_value, ...} value timestamp</code></p>
+<p>Example:
+<code>http_requests_total{method="post", handler="/api/login", status="200"} 1452 1696412345</code></p>
+<ul>
+<li><strong>Metric Name:</strong> Specifies the general feature being measured (e.g., <code>http_requests_total</code>).</li>
+<li><strong>Labels (Dimensions):</strong> Key-value pairs that qualify the metric name. This allows for powerful filtering and aggregation (e.g., give me total requests <em>where</em> method is "post").</li>
+<li><strong>Sample:</strong> The actual value (a float64) and the timestamp (millisecond resolution).</li>
+</ul>
+<p><strong>Storage on Disk:</strong>
+The TSDB organizes data into blocks. Each block holds data for a specific time range (default 2 hours). A block consists of:</p>
+<ul>
+<li><strong>Chunks:</strong> The actual compressed sample data.</li>
+<li><strong>Index:</strong> Indexes metric names and labels to chunks for fast querying.</li>
+<li><strong>WAL (Write-Ahead Log):</strong> Incoming data is first written to the WAL to prevent data loss in case of a crash before it's persisted to a block.</li>
+</ul>
+<p><strong>Enterprise Consideration: Long-Term Storage:</strong>
+By default, Prometheus is designed for short-term, high-resolution operational data (retention defaults to 15 days). For long-term storage, trending, and capacity planning, enterprises often integrate Prometheus with remote storage backends like Thanos, Cortex, or VictoriaMetrics using the <code>remote_write</code> API.</p>
+<h2 id="212-core-metric-types-counters-gauges-histograms-and-summaries">21.2 Core Metric Types: Counters, Gauges, Histograms, and Summaries</h2>
+<p>Prometheus defines four core metric types in its client libraries. Choosing the right type for the specific behavior you are measuring is critical for accurate monitoring and querying.</p>
+<h3 id="1-counter">1. Counter</h3>
+<p>A counter is a cumulative metric that represents a single monotonically increasing counter whose value can only increase or be reset to zero on restart. You do <strong>not</strong> use a counter to expose a value that can decrease.</p>
+<ul>
+<li><strong>Use Cases:</strong> Number of requests served, errors encountered, tasks completed.</li>
+<li><strong>PromQL:</strong> Almost always used with the <code>rate()</code> or <code>irate()</code> function to calculate requests per second, error rate, etc.</li>
+</ul>
+<p><em>Enterprise Example:</em> Monitoring the API Gateway error rate. If <code>api_errors_total</code> spikes, an alert triggers.</p>
+<h3 id="2-gauge">2. Gauge</h3>
+<p>A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.</p>
+<ul>
+<li><strong>Use Cases:</strong> Memory usage, CPU temperature, number of concurrent requests, disk usage.</li>
+<li><strong>PromQL:</strong> Used directly to see the current state or with functions like <code>delta()</code> or <code>predict_linear()</code>.</li>
+</ul>
+<p><em>Enterprise Example:</em> Monitoring available memory on critical database servers. Alerting if free memory drops below 10%.</p>
+<h3 id="3-histogram">3. Histogram</h3>
+<p>A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets. It also provides a sum of all observed values.</p>
+<ul>
+<li><strong>Structure:</strong></li>
+<li><code>&lt;basename&gt;_bucket{le="&lt;upper_inclusive_bound&gt;"}</code>: Counter of observations with value less than or equal to the bound.</li>
+<li><code>&lt;basename&gt;_sum</code>: Total sum of all observed values.</li>
+<li>
+<p><code>&lt;basename&gt;_count</code>: Total number of observations (identical to <code>le="+Inf"</code> bucket).</p>
+</li>
+<li>
+<p><strong>Use Cases:</strong> Request latency (SLA/SLI monitoring), response sizes.</p>
+</li>
+<li><strong>PromQL:</strong> Used with the <code>histogram_quantile()</code> function to calculate quantiles (e.g., 95th percentile latency).</li>
+</ul>
+<p><em>Enterprise Example:</em> Ensuring API response time SLA. Calculate the p99 latency using <code>histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))</code>. If p99 &gt; 500ms, alert.</p>
+<h3 id="4-summary">4. Summary</h3>
+<p>Similar to a histogram, a summary samples observations (e.g., request durations). While it also provides a total count and sum of observations, it calculates configurable quantiles over a sliding time window on the <em>client side</em>, rather than the server side like Histograms.</p>
+<ul>
+<li><strong>Structure:</strong></li>
+<li><code>{quantile="&lt;quantile_value&gt;"}</code>: The calculated quantile value.</li>
+<li><code>&lt;basename&gt;_sum</code></li>
+<li>
+<p><code>&lt;basename&gt;_count</code></p>
+</li>
+<li>
+<p><strong>Use Cases:</strong> Quick insight into latencies when bucket configuration for histograms is unknown or when server-side aggregation across instances is not required.</p>
+</li>
+<li><strong>Pros:</strong> Easy to set up, precise quantiles on a per-instance basis.</li>
+<li><strong>Cons:</strong> <strong>Cannot</strong> be aggregated across multiple instances. If you have 10 instances of a microservice, you cannot calculate the p95 latency for the entire service using Summaries.</li>
+</ul>
+<p><em>Enterprise Consensus:</em> For almost all enterprise use cases requiring aggregation (which is most), <strong>Histograms are preferred over Summaries</strong>.</p>
+<h2 id="213-promql-prometheus-query-language-masterclass-aggregations-rates-and-functions">21.3 PromQL (Prometheus Query Language) Masterclass: Aggregations, Rates, and Functions</h2>
+<p>PromQL is the powerful functional query language designed specifically for the Prometheus dimensional data model. It allows you to select, aggregate, and transform time series data in real-time. Masterclass understanding is required for complex alerting and meaningful dashboards.</p>
+<h3 id="basic-selection-and-filtering">Basic Selection and Filtering</h3>
+<ul>
+<li>Select all time series with metric name <code>http_requests_total</code>:
+<code>http_requests_total</code></li>
+<li>Select series where <code>method</code> is "GET" and <code>handler</code> is "/api/v1/users":
+<code>http_requests_total{method="GET", handler="/api/v1/users"}</code></li>
+<li>Select series where <code>status</code> <em>does not</em> start with 2 (regex mismatch):
+<code>http_requests_total{status!~"2.."}</code></li>
+</ul>
+<h3 id="range-vectors">Range Vectors</h3>
+<p>Range vectors select a range of data over time for each series. They are denoted by <code>[time]</code>. These <strong>cannot</strong> be graphed directly; they must be passed to a function that results in an instant vector.</p>
+<ul>
+<li>Select the last 5 minutes of data for <code>node_cpu_seconds_total</code>:
+<code>node_cpu_seconds_total[5m]</code></li>
+</ul>
+<h3 id="core-functions-and-operators">Core Functions and Operators</h3>
+<h4 id="rate"><code>rate()</code></h4>
+<p>Calculates the per-second average rate of increase of the time series in the range vector. It should <em>only</em> be used with Counters. It handles counter resets automatically.</p>
+<ul>
+<li>Calculate the average HTTP requests per second over the last 5 minutes:
+<code>rate(http_requests_total[5m])</code></li>
+</ul>
+<h4 id="irate"><code>irate()</code></h4>
+<p>Calculates the instant rate of increase, looking only at the last two samples in the range vector. Useful for zoomable, high-resolution graphing but should <strong>not</strong> be used for alerting, as it's too volatile.</p>
+<h4 id="sum"><code>sum()</code></h4>
+<p>Aggregates the values of all selected time series into a single value.</p>
+<ul>
+<li>Calculate total memory usage across all nodes:
+<code>sum(node_memory_Active_bytes)</code></li>
+</ul>
+<h4 id="aggregation-by-and-without">Aggregation <code>by</code> and <code>without</code></h4>
+<p>Allows aggregating while preserving specific dimensions.</p>
+<ul>
+<li>Calculate average HTTP request rate per handler:
+<code>sum(rate(http_requests_total[5m])) by (handler)</code></li>
+</ul>
+<h4 id="arithmetic-operators">Arithmetic Operators</h4>
+<p>Standard operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, <code>^</code>) work between two instant vectors or an instant vector and a scalar.</p>
+<ul>
+<li>Calculate CPU usage percentage (1 - idle percentage):
+<code>(1 - sum(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance) / sum(rate(node_cpu_seconds_total[5m])) by (instance)) * 100</code></li>
+</ul>
+<h3 id="advanced-aggregations-and-top-k">Advanced Aggregations and Top K</h3>
+<h4 id="histogram_quantile"><code>histogram_quantile()</code></h4>
+<p>Calculates a specific quantile from a Histogram metric. This is essential for latency SLIs.</p>
+<ul>
+<li>Calculate the 95th percentile request duration for the 'frontend' job:
+<code>histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="frontend"}[5m])) by (le))</code></li>
+</ul>
+<h4 id="topk-and-bottomk"><code>topk()</code> and <code>bottomk()</code></h4>
+<p>Returns the K time series with the highest or lowest values.</p>
+<ul>
+<li>Show the top 5 CPU consuming instances:
+<code>topk(5, rate(node_cpu_seconds_total{mode="user"}[5m]))</code></li>
+</ul>
+<h2 id="214-node-exporters-application-instrumentation-and-pushgateway">21.4 Node Exporters, Application Instrumentation, and Pushgateway</h2>
+<p>Getting data <em>into</em> Prometheus requires either instrumenting the application code directly or using an exporter.</p>
+<h3 id="node-exporter">Node Exporter</h3>
+<p>The Node Exporter is an official Prometheus exporter for machine metrics. It is designed to be run as a daemon on the host operating system (Linux, WMI Exporter for Windows).</p>
+<ul>
+<li><strong>Metrics Exposed:</strong> CPU, memory, disk I/O, network usage, filesystem fullness, load average.</li>
+<li><strong>Enterprise Use:</strong> Standard component on all infrastructure VMs or bare metal servers. In Kubernetes, it runs as a DaemonSet on every node.</li>
+</ul>
+<h3 id="application-instrumentation">Application Instrumentation</h3>
+<p>This is the process of adding Prometheus client library calls directly into your application code to expose internal metrics. Libraries exist for virtually all major languages (Go, Java, Python, Ruby, Node.js, .NET).</p>
+<ul>
+<li><strong>Approach:</strong></li>
+<li>Define metrics (Counters, Gauges, etc.) globally in the code.</li>
+<li>Increment Counters when events happen (e.g., <code>requests_total.inc()</code>).</li>
+<li>Set Gauges to reflect state (e.g., <code>queue_size.set(q.length)</code>).</li>
+<li>Observe Histograms (e.g., <code>timer.observe(duration)</code>).</li>
+<li>Expose the <code>/metrics</code> endpoint via an HTTP handler.</li>
+</ul>
+<p><strong>Example (Python):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">prometheus_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">start_http_server</span><span class="p">,</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Summary</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="c1"># Define metrics</span>
+<span class="n">REQUESTS</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s1">'hello_worlds_total'</span><span class="p">,</span> <span class="s1">'Total Hello Worlds served.'</span><span class="p">)</span>
+<span class="n">LATENCY</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="s1">'hello_world_latency_seconds'</span><span class="p">,</span> <span class="s1">'Time spent processing request'</span><span class="p">)</span>
+
+<span class="c1"># Decorate function with metric.</span>
+<span class="nd">@LATENCY</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_request</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A dummy function that takes some time."""</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">REQUESTS</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="c1"># Start up the server to expose the metrics.</span>
+    <span class="n">start_http_server</span><span class="p">(</span><span class="mi">8000</span><span class="p">)</span>
+    <span class="c1"># Generate some requests.</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">process_request</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="pushgateway">Pushgateway</h3>
+<p>While Prometheus is pull-based, some jobs cannot be scraped. These are typically short-lived batch jobs or ephemeral processes that finish before Prometheus can pull their metrics.</p>
+<p>The Pushgateway acts as an intermediary. Short-lived jobs push their metrics to the Pushgateway via HTTP. Prometheus then scrapes the Pushgateway at its usual interval.</p>
+<ul>
+<li><strong>Enterprise Warning:</strong> <strong>The Pushgateway is often misused.</strong> It should <em>only</em> be used for ephemeral batch jobs.</li>
+<li><strong>Drawbacks:</strong></li>
+<li>Single point of failure for batch monitoring.</li>
+<li>No automatic "up" metric from the source job; Prometheus sees Pushgateway is up, but doesn't know if the source job crashed <em>unless</em> that job specifically pushes complex health state.</li>
+<li>Data persists in Pushgateway until manually deleted; if a batch job stops running, the last metrics pushed will be scraped forever.</li>
+</ul>
+<h2 id="215-hands-on-lab-instrumenting-custom-microservice-metrics-and-writing-advanced-promql-queries">21.5 Hands-On Lab: Instrumenting Custom Microservice Metrics and Writing Advanced PromQL Queries</h2>
+<h3 id="lab-overview">Lab Overview</h3>
+<p>In this lab, you will act as a DevOps Engineer tasked with improving the observability of a critical internal microservice, the <code>OrderService</code>. Currently, only infrastructure metrics are available. You will instrument the Python-based <code>OrderService</code> with custom metrics using the official Prometheus client library. Then, you will run the service, have Prometheus scrape it, and write advanced PromQL queries to gain insights.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>A Linux environment (VM or container).</li>
+<li>Docker and Docker Compose installed.</li>
+<li>Basic knowledge of Python.</li>
+</ul>
+<h3 id="step-1-set-up-the-environment">Step 1: Set Up the Environment</h3>
+<ol>
+<li>Create a directory for the lab:
+<code>mkdir prom-lab &amp;&amp; cd prom-lab</code></li>
+<li>Create a Docker Compose file (<code>docker-compose.yml</code>) to run Prometheus:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prom/prometheus:latest</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9090:9090"</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'--config.file=/etc/prometheus/prometheus.yml'</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab-net</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lab-net</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+</code></pre></div>
+<ol>
+<li>Create a basic Prometheus configuration file (<code>prometheus.yml</code>) to scrape itself:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">'prometheus'</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'localhost:9090'</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<ol>
+<li>Start Prometheus:
+<code>docker-compose up -d</code></li>
+<li>Verify Prometheus is running by accessing <code>http://localhost:9090</code> in your browser.</li>
+</ol>
+<h3 id="step-2-write-and-instrument-the-microservice">Step 2: Write and Instrument the Microservice</h3>
+<ol>
+<li>Install the Python client library:
+<code>pip install prometheus_client flask</code></li>
+<li>Create the <code>OrderService</code> (<code>app.py</code>):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prometheus_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">start_http_server</span><span class="p">,</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Gauge</span><span class="p">,</span> <span class="n">Histogram</span><span class="p">,</span> <span class="n">make_wsgi_app</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">werkzeug.middleware.dispatcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">DispatcherMiddleware</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># --- Metrics Definition ---</span>
+<span class="c1"># 1. Counter for total orders processed</span>
+<span class="n">ORDERS_TOTAL</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s1">'order_service_orders_total'</span><span class="p">,</span> <span class="s1">'Total number of orders processed.'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'status'</span><span class="p">])</span>
+
+<span class="c1"># 2. Gauge for active orders in flight</span>
+<span class="n">ACTIVE_ORDERS</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span><span class="s1">'order_service_active_orders'</span><span class="p">,</span> <span class="s1">'Number of orders currently being processed.'</span><span class="p">)</span>
+
+<span class="c1"># 3. Histogram for order processing latency (buckets in seconds)</span>
+<span class="n">PROCESSING_LATENCY</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span><span class="s1">'order_service_processing_latency_seconds'</span><span class="p">,</span>
+                                <span class="s1">'Time taken to process an order.'</span><span class="p">,</span>
+                                <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">])</span>
+
+<span class="c1"># Simulate order processing logic</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">do_process_order</span><span class="p">():</span>
+    <span class="n">ACTIVE_ORDERS</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span> <span class="c1"># Increment Gauge</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="c1"># Simulate variable latency</span>
+    <span class="n">latency</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">expovariate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># Average of 1 second</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">latency</span><span class="p">)</span>
+
+    <span class="c1"># Simulate success/failure</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">"success"</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.1</span> <span class="k">else</span> <span class="s2">"failure"</span> <span class="c1"># 10% failure rate</span>
+    <span class="n">ORDERS_TOTAL</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span> <span class="c1"># Increment Counter with labels</span>
+
+    <span class="n">PROCESSING_LATENCY</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="c1"># Observe Histogram</span>
+    <span class="n">ACTIVE_ORDERS</span><span class="o">.</span><span class="n">dec</span><span class="p">()</span> <span class="c1"># Decrement Gauge</span>
+    <span class="k">return</span> <span class="n">status</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">'/order'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">'POST'</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">():</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">do_process_order</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">"order_status"</span><span class="p">:</span> <span class="n">status</span><span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="c1"># Add prometheus wsgi middleware to route /metrics requests</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span> <span class="o">=</span> <span class="n">DispatcherMiddleware</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">wsgi_app</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">'/metrics'</span><span class="p">:</span> <span class="n">make_wsgi_app</span><span class="p">()</span>
+    <span class="p">})</span>
+    <span class="c1"># Run the Flask app on port 5000</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">'0.0.0.0'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="step-3-integrate-microservice-and-prometheus">Step 3: Integrate Microservice and Prometheus</h3>
+<ol>
+<li>Run the OrderService in a separate terminal:
+<code>python app.py</code></li>
+<li>Update <code>prometheus.yml</code> to scrape the <code>OrderService</code>. <em>Important:</em> Since Prometheus is in a container, it cannot use <code>localhost:5000</code>. We need to use the host's IP address. Find your host's IP (e.g., using <code>ip addr show</code> on the bridge interface). Let's assume it's <code>172.17.0.1</code>.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span><span class="w"> </span><span class="c1"># Faster scraping for the lab</span>
+
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">'prometheus'</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'localhost:9090'</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">'order_service'</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'172.17.0.1:5000'</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Replace with your host IP</span>
+</code></pre></div>
+<ol>
+<li>Restart the Prometheus container:
+<code>docker-compose restart prometheus</code></li>
+<li>Verify the target is up: Go to <code>http://localhost:9090/targets</code>. The <code>order_service</code> job should show as <code>UP</code>.</li>
+</ol>
+<h3 id="step-4-generate-traffic-and-verify-metrics">Step 4: Generate Traffic and Verify Metrics</h3>
+<ol>
+<li>Generate some order traffic using <code>curl</code> in a loop (run this in a separate terminal):
+<code>while true; do curl -X POST http://localhost:5000/order; sleep 1; done</code></li>
+<li>Access the raw metrics: Open <code>http://localhost:5000/metrics</code>. You should see lines like:
+<div class="highlight"><pre><span></span><code># HELP order_service_orders_total Total number of orders processed.
+# TYPE order_service_orders_total counter
+order_service_orders_total{status="failure"} 2.0
+order_service_orders_total{status="success"} 23.0
+...
+# HELP order_service_processing_latency_seconds Time taken to process an order.
+# TYPE order_service_processing_latency_seconds histogram
+order_service_processing_latency_seconds_bucket{le="0.1"} 1.0
+order_service_processing_latency_seconds_bucket{le="0.5"} 12.0
+...
+</code></pre></div></li>
+</ol>
+<h3 id="step-5-advanced-promql-masterclass">Step 5: Advanced PromQL Masterclass</h3>
+<p>Now, use the Prometheus Expression Browser (<code>http://localhost:9090</code>) to execute the following queries. These represent real-world SRE scenarios.</p>
+<p><strong>Scenario A: Infrastructure Health</strong></p>
+<ul>
+<li><strong>Goal:</strong> Calculate current available memory on all nodes (we don't have Node Exporter here, so let's use a Prometheus internal metric as a proxy).</li>
+<li><strong>Query:</strong> Total samples currently stored in the TSDB.
+<code>prometheus_tsdb_head_series</code></li>
+</ul>
+<p><strong>Scenario B: Red-Line Alerting (Enterprise Use Case)</strong></p>
+<ul>
+<li><strong>Goal:</strong> Alert if the order error rate exceeds 5% over the last 2 minutes. This is a critical business metric.</li>
+<li><strong>Query Analysis:</strong></li>
+<li>Get rate of failures: <code>rate(order_service_orders_total{status="failure"}[2m])</code></li>
+<li>Get rate of total orders: <code>sum(rate(order_service_orders_total[2m]))</code></li>
+<li>
+<p>Calculate percentage: <code>(rate(...) / sum(rate(...))) * 100</code></p>
+</li>
+<li>
+<p><strong>Final PromQL:</strong>
+<code>(sum(rate(order_service_orders_total{status="failure"}[2m])) / sum(rate(order_service_orders_total[2m]))) * 100</code></p>
+</li>
+</ul>
+<p><strong>Scenario C: Latency SLI/SLO (Enterprise Use Case)</strong></p>
+<ul>
+<li><strong>Goal:</strong> Calculate the 99th percentile order processing latency over the last 5 minutes. This measures the worst-case user experience.</li>
+<li><strong>Query Analysis:</strong></li>
+<li>Use <code>histogram_quantile(0.99, ...)</code></li>
+<li>
+<p>Aggregate rates of buckets: <code>sum(rate(order_service_processing_latency_seconds_bucket[5m])) by (le)</code></p>
+</li>
+<li>
+<p><strong>Final PromQL:</strong>
+<code>histogram_quantile(0.99, sum(rate(order_service_processing_latency_seconds_bucket[5m])) by (le))</code></p>
+</li>
+</ul>
+<p><strong>Scenario D: Resource Planning and Anomaly Detection</strong></p>
+<ul>
+<li><strong>Goal:</strong> Use a gauge to find the top 3 instances by number of active orders in flight.</li>
+<li><strong>Query:</strong>
+<code>topk(3, order_service_active_orders)</code></li>
+</ul>
+<h3 id="lab-conclusion-and-key-takeaways">Lab Conclusion and Key Takeaways</h3>
+<p>By completing this lab, you have:</p>
+<ol>
+<li>Handled the complete lifecycle of application observability: from defining requirements to implementation, integration, and analysis.</li>
+<li>Gained invaluable hands-on experience instrumenting code with standard Prometheus metric types (Counter, Gauge, Histogram).</li>
+<li>Mastered the configuration of Prometheus for scraping dynamic application targets.</li>
+<li>Constructed complex, enterprise-grade PromQL queries for critical alerting (error rates) and SLI monitoring (quantiles), bridging the gap between raw data and actionable SRE insights.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

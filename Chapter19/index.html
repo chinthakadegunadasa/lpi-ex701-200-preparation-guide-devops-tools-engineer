@@ -1,0 +1,1945 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter18/">
+      
+      
+        <link rel="next" href="../Chapter2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 19: Enterprise CI/CD Pipeline Automation - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-19-enterprise-cicd-pipeline-automation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 19: Enterprise CI/CD Pipeline Automation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#191-declarative-pipelines-in-jenkins-gitlab-ci-and-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1911-jenkins-jenkinsfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1.1 Jenkins (Jenkinsfile)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1912-gitlab-ci-gitlab-ciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1.2 GitLab CI (.gitlab-ci.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1913-github-actions-githubworkflowsciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1.3 GitHub Actions (.github/workflows/ci.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#192-pipeline-runners-agents-and-scalable-execution-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.2 Pipeline Runners, Agents, and Scalable Execution Environments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.2 Pipeline Runners, Agents, and Scalable Execution Environments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1921-scalable-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.2.1 Scalable Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#193-multi-stage-pipelines-build-test-security-scan-and-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1931-defining-the-standard-multi-stage-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.3.1 Defining the Standard Multi-Stage Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1932-stage-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.3.2 Stage Breakdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#194-pipeline-caching-parameterization-and-trigger-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.4 Pipeline Caching, Parameterization, and Trigger Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.4 Pipeline Caching, Parameterization, and Trigger Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1941-dependency-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.4.1 Dependency Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1942-parameterization-and-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.4.2 Parameterization and Triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#195-hands-on-lab-writing-a-production-grade-multi-stage-pipeline-in-gitlab-ci-jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.5 Hands-On Lab: Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.5 Hands-On Lab: Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-pre-requisites-and-infrastructure-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Pre-requisites and Infrastructure Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-implement-the-java-multi-stage-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Implement the Java Multi-Stage Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-formatting-validation-and-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Formatting, Validation, and Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#191-declarative-pipelines-in-jenkins-gitlab-ci-and-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1911-jenkins-jenkinsfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1.1 Jenkins (Jenkinsfile)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1912-gitlab-ci-gitlab-ciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1.2 GitLab CI (.gitlab-ci.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1913-github-actions-githubworkflowsciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.1.3 GitHub Actions (.github/workflows/ci.yml)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#192-pipeline-runners-agents-and-scalable-execution-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.2 Pipeline Runners, Agents, and Scalable Execution Environments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.2 Pipeline Runners, Agents, and Scalable Execution Environments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1921-scalable-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.2.1 Scalable Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#193-multi-stage-pipelines-build-test-security-scan-and-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1931-defining-the-standard-multi-stage-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.3.1 Defining the Standard Multi-Stage Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1932-stage-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.3.2 Stage Breakdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#194-pipeline-caching-parameterization-and-trigger-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.4 Pipeline Caching, Parameterization, and Trigger Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.4 Pipeline Caching, Parameterization, and Trigger Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1941-dependency-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.4.1 Dependency Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1942-parameterization-and-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.4.2 Parameterization and Triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#195-hands-on-lab-writing-a-production-grade-multi-stage-pipeline-in-gitlab-ci-jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19.5 Hands-On Lab: Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="19.5 Hands-On Lab: Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-pre-requisites-and-infrastructure-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Pre-requisites and Infrastructure Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-implement-the-java-multi-stage-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Implement the Java Multi-Stage Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-formatting-validation-and-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Formatting, Validation, and Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-19-enterprise-cicd-pipeline-automation">Chapter 19: Enterprise CI/CD Pipeline Automation</h1>
+<p>This chapter covers the creation, scaling, and security of end-to-end continuous integration and delivery pipelines, focusing on declarative syntaxes, robust artifact handling, security integration, and optimizing build performance.</p>
+<h2 id="191-declarative-pipelines-in-jenkins-gitlab-ci-and-github-actions">19.1 Declarative Pipelines in Jenkins, GitLab CI, and GitHub Actions</h2>
+<p>Modern DevOps practices lean heavily toward <strong>Declarative Pipelines</strong>, which are configuration files stored alongside the source code in version control. This approach defines the expected final state of the pipeline, and the automation engine manages the steps to achieve it. This contrasts with Scripted Pipelines, which can lead to maintainability challenges.</p>
+<p>Declarative pipelines offer:</p>
+<ul>
+<li><strong>Pipeline-as-Code (PaC):</strong> Storing pipeline definitions in git, allowing for code review, versioning, and rollback.</li>
+<li><strong>Predictability:</strong> Each run uses the exact configuration defined in the file.</li>
+<li><strong>Maintainability:</strong> Easier to read and update than complex imperative scripts.</li>
+</ul>
+<h3 id="1911-jenkins-jenkinsfile">19.1.1 Jenkins (Jenkinsfile)</h3>
+<p>Jenkins has fully embraced Declarative syntax. A <code>Jenkinsfile</code> provides a structured, predictable layout.</p>
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="c1">// Define where the pipeline should run</span>
+
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="c1">// Define global environment variables</span>
+<span class="w">        </span><span class="n">REGISTRY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"registry.local:5000"</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Build'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s1">'Building application binary...'</span>
+<span class="w">                </span><span class="c1">// Implementation...</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'Test'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s1">'Running unit tests...'</span>
+<span class="w">                </span><span class="c1">// Implementation...</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="1912-gitlab-ci-gitlab-ciyml">19.1.2 GitLab CI (<code>.gitlab-ci.yml</code>)</h3>
+<p>GitLab CI defines the entire lifecycle in a single YAML file, integrating seamlessly with the GitLab workflow.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">publish</span>
+
+<span class="nt">variables</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Use defined environment variables</span>
+<span class="w">  </span><span class="nt">CONTAINER_REGISTRY</span><span class="p">:</span><span class="w"> </span><span class="s">"registry.local:5000"</span>
+
+<span class="nt">build_job</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Building the application binary..."</span>
+<span class="w">    </span><span class="c1"># Implementation...</span>
+
+<span class="nt">test_job</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Running all automated unit tests..."</span>
+<span class="w">    </span><span class="c1"># Implementation...</span>
+</code></pre></div>
+<h3 id="1913-github-actions-githubworkflowsciyml">19.1.3 GitHub Actions (<code>.github/workflows/ci.yml</code>)</h3>
+<p>GitHub Actions uses YAML files to define "workflows," which are triggered by events and contain jobs and steps.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Production CI</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">main</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Trigger on pushes to the main branch</span>
+
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Define global environment variables</span>
+<span class="w">  </span><span class="nt">AWS_REGION</span><span class="p">:</span><span class="w"> </span><span class="s">"us-east-1"</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build_and_test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span><span class="w"> </span><span class="c1"># Specify the runner environment</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span><span class="w"> </span><span class="c1"># Standard action to check out code</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Building application binary..."</span>
+<span class="w">        </span><span class="c1"># Implementation...</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Running unit tests..."</span>
+<span class="w">        </span><span class="c1"># Implementation...</span>
+</code></pre></div>
+<hr />
+<h2 id="192-pipeline-runners-agents-and-scalable-execution-environments">19.2 Pipeline Runners, Agents, and Scalable Execution Environments</h2>
+<p>Running a large enterprise CI/CD environment requires robust infrastructure. The code compilation and testing don't happen on the Jenkins master; they occur on dedicated <strong>Agents</strong> or <strong>Runners</strong>.</p>
+<ul>
+<li><strong>Agents/Nodes (Jenkins):</strong> Machines that connect to the master to execute builds. They must contain all necessary build dependencies (e.g., JDK, Docker).</li>
+<li><strong>Runners (GitLab/GitHub):</strong> Processes (often containers) that pick up and run CI/CD jobs.</li>
+</ul>
+<h3 id="1921-scalable-strategies">19.2.1 Scalable Strategies</h3>
+<p>Enterprise DevOps teams must move beyond static agents toward dynamic scaling.</p>
+<ol>
+<li><strong>Static Agents:</strong> Cost-inefficient, prone to "snowflakes" (unique, manual configurations).</li>
+<li><strong>VM Scale Sets:</strong> Auto-scaling VMs based on demand (e.g., Azure Scale Sets, AWS EC2 Auto Scaling), which clean up after the job.</li>
+<li><strong>Containerized Execution (Kubernetes):</strong> This is the <strong>most modern approach</strong>. Runners or agents are spun up dynamically as temporary pods on a Kubernetes cluster. When the job finishes, the pod is destroyed.</li>
+</ol>
+<hr />
+<h2 id="193-multi-stage-pipelines-build-test-security-scan-and-package">19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package</h2>
+<p>A linear "Build and Test" pipeline is rarely enough for enterprise needs. Modern pipelines are modular, with clearly defined stages that act as quality gates.</p>
+<h3 id="1931-defining-the-standard-multi-stage-pipeline">19.3.1 Defining the Standard Multi-Stage Pipeline</h3>
+<p>A robust enterprise pipeline follows a specific logical flow:</p>
+<p><img alt="MULTI-STAGE PIPELINE LOGIC" src="assets/images/chapter19/19-1-MULTI-STAGE-PIPELINE-LOGIC.png" /></p>
+<h3 id="1932-stage-breakdown">19.3.2 Stage Breakdown</h3>
+<ul>
+<li><strong>Build:</strong> The first stage. Compiles the source code into a binary artifact (e.g., a <code>.jar</code>, <code>.tar.gz</code>, or executable). Dependencies are resolved here.</li>
+<li><strong>Test:</strong> Executes automated test suites. This includes fast unit tests and slower integration tests. <strong>Test results must be published</strong> for visibility (e.g., JUnit XML results).</li>
+<li><strong>Security Scan:</strong> This is the critical <strong>"Shift Left"</strong> component.</li>
+<li><strong>SAST (Static Application Security Testing):</strong> Analyzing the source code itself for common anti-patterns or hardcoded secrets (e.g., SonarQube).</li>
+<li>
+<p><strong>Dependency/Composition Analysis:</strong> Scanning the included open-source libraries for known Common Vulnerabilities and Exposures (CVEs) (e.g., Snyk or Trivy).</p>
+</li>
+<li>
+<p><strong>Package:</strong> The final stage of CI. The compiled, tested binary is packaged—most modernly as an immutable OCI-compliant container image—and pushed to an enterprise registry (like Harbor or Artifactory).</p>
+</li>
+</ul>
+<hr />
+<h2 id="194-pipeline-caching-parameterization-and-trigger-mechanics">19.4 Pipeline Caching, Parameterization, and Trigger Mechanics</h2>
+<p>Optimizing the pipeline for speed and flexibility is essential for enterprise DevOps tools engineers.</p>
+<h3 id="1941-dependency-caching">19.4.1 Dependency Caching</h3>
+<p>Enterprise builds download hundreds of megabytes of dependencies (Java Maven, Node modules, Python pip). We must <strong>cache these</strong> between pipeline runs. Caching is different from artifacts:</p>
+<ul>
+<li><strong>Artifacts:</strong> Formally produced files (e.g., a <code>.tar.gz</code> executable) passed from stage to stage.</li>
+<li><strong>Cache:</strong> Temporary storage of downloaded dependencies (e.g., <code>~/.m2</code>, <code>node_modules</code>).</li>
+</ul>
+<p><strong>Example: Caching in GitLab CI</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci.yml</span>
+<span class="nt">cache</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">key</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requirements.txt</span><span class="w"> </span><span class="c1"># Use the lockfile's hash as the cache key</span>
+<span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.cache/pip/</span><span class="w"> </span><span class="c1"># Path to the cache directory</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">venv/</span>
+</code></pre></div>
+<h3 id="1942-parameterization-and-triggers">19.4.2 Parameterization and Triggers</h3>
+<p>Enterprise pipelines must handle variation. <strong>Parameterization</strong> allows the pipeline configuration to be tweaked at runtime without altering the source code (e.g., <code>TARGET_ENV=production</code>).</p>
+<p><strong>Trigger Mechanics</strong> are the rules deciding <strong>when</strong> a pipeline runs:</p>
+<ul>
+<li><strong>Merge Requests:</strong> Run the pipeline when a developer requests to merge into <code>main</code>.</li>
+<li><strong>Commit Triggers:</strong> Run on every push to specific branches.</li>
+<li><strong>Tag Triggers:</strong> Run the full "publish and release" workflow only when a semantic version tag (e.g., <code>v1.2.0</code>) is pushed.</li>
+</ul>
+<hr />
+<h2 id="195-hands-on-lab-writing-a-production-grade-multi-stage-pipeline-in-gitlab-ci-jenkins">19.5 Hands-On Lab: Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins</h2>
+<h3 id="lab-scenario">Lab Scenario</h3>
+<p>As a DevOps engineer, you must create a fully automated, production-grade CI/CD pipeline for a new application. The pipeline must be declarative, multi-stage, secure, optimized with caching, and designed to generate an immutable Docker image.</p>
+<h3 id="objectives">Objectives</h3>
+<ul>
+<li>Define a four-stage pipeline.</li>
+<li>Implement caching for Maven dependencies.</li>
+<li>Integrate a code linter and a dependency security scanner.</li>
+<li>Package the binary into a Docker image and push it to a registry.</li>
+</ul>
+<hr />
+<h3 id="step-1-pre-requisites-and-infrastructure-setup">Step 1: Pre-requisites and Infrastructure Setup</h3>
+<p>For this lab, you will use GitLab CI.</p>
+<ol>
+<li>Access to a GitLab instance and project.</li>
+<li>A functional <strong>GitLab Runner</strong> with the <strong>Docker executor</strong> configured.</li>
+<li>An <strong>Enterprise Container Registry</strong> (e.g., <code>registry.local:5000</code>) available for push operations.</li>
+</ol>
+<hr />
+<h3 id="step-2-implement-the-java-multi-stage-pipeline">Step 2: Implement the Java Multi-Stage Pipeline</h3>
+<p>Create a file named <code>.gitlab-ci.yml</code> in the root of your Java project repository.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Define the strict sequence of operational quality gates</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">package</span>
+
+<span class="c1"># Define global variables</span>
+<span class="nt">variables</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">MAVEN_OPTS</span><span class="p">:</span><span class="w"> </span><span class="s">"-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"</span><span class="w"> </span><span class="c1"># Specify the local Maven repository path</span>
+<span class="w">  </span><span class="nt">DOCKER_REGISTRY</span><span class="p">:</span><span class="w"> </span><span class="s">"registry.local:5000"</span>
+<span class="w">  </span><span class="nt">IMAGE_NAME</span><span class="p">:</span><span class="w"> </span><span class="s">"$DOCKER_REGISTRY/cyber/my-app"</span>
+<span class="w">  </span><span class="nt">JAVA_IMAGE</span><span class="p">:</span><span class="w"> </span><span class="s">"maven:3.9.6-eclipse-temurin-17"</span>
+<span class="w">  </span><span class="nt">TRIVY_IMAGE</span><span class="p">:</span><span class="w"> </span><span class="s">"aquasec/trivy:0.48.0"</span>
+
+<span class="c1"># GLOBAL CACHE: Accelerate builds by reusing downloaded Java Maven dependencies</span>
+<span class="nt">cache</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"$CI_COMMIT_REF_SLUG"</span><span class="w"> </span><span class="c1"># Unique key for each branch/ref</span>
+<span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.m2/repository/</span><span class="w"> </span><span class="c1"># Direct GitLab CI to cache the Maven repository path</span>
+
+<span class="c1"># 1. BUILD STAGE: Compile source code, resolve dependencies, and create the immutable binary</span>
+<span class="nt">compile_and_package</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$JAVA_IMAGE</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Building Java application..."</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mvn clean package -DskipTests</span><span class="w"> </span><span class="c1"># Compile source code and create the binary</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">target/my-app.jar</span><span class="w"> </span><span class="c1"># Define the artifact to pass to subsequent stages</span>
+<span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 hours</span>
+
+<span class="c1"># 2. TEST STAGE: Run comprehensive unit and integration automated test suites</span>
+<span class="nt">run_automated_tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$JAVA_IMAGE</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Running all unit and integration automated test suites..."</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mvn test</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span><span class="w"> </span><span class="c1"># Always publish results, even on test failure</span>
+<span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">junit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">target/surefire-reports/TEST-*.xml</span><span class="w"> </span><span class="c1"># Direct GitLab to parse JUnit results for visibility</span>
+
+<span class="c1"># 3. SECURITY STAGE (SHIFT LEFT): Block pushes containing CVEs or coding anti-patterns</span>
+<span class="nt">vulnerability_dependency_scan</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$TRIVY_IMAGE</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Scanning application dependencies for known CVEs..."</span>
+<span class="w">    </span><span class="c1"># Scan the project filesystem, blocking critical CVEs with exit code 1</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trivy fs --exit-code 1 --severity CRITICAL .</span>
+
+<span class="c1"># 4. PACKAGE STAGE: Containerize the application binary into an immutable image</span>
+<span class="nt">publish_docker_image</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">package</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24.0.5</span><span class="w"> </span><span class="c1"># Use a Docker-in-Docker capable image</span>
+<span class="w">  </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24.0.5-dind</span><span class="w"> </span><span class="c1"># Direct GitLab CI to provide a sidecar Docker daemon</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Containerizing the application binary and pushing immutable image..."</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" $DOCKER_REGISTRY</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker build -t "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA" .</span><span class="w"> </span><span class="c1"># Tag with the unique commit SHA</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push "$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"</span>
+<span class="w">  </span><span class="c1"># Optional: Apply specific triggers (branch rules)</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">'$CI_COMMIT_BRANCH</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">"main"'</span><span class="w"> </span><span class="c1"># Only run packaging on the main branch</span>
+</code></pre></div>
+<hr />
+<h3 id="step-3-formatting-validation-and-execution">Step 3: Formatting, Validation, and Execution</h3>
+<p>The pipeline automation engineer must validate their work before committing.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Format the file using a YAML linter (best practice)</span>
+yamllint<span class="w"> </span>.gitlab-ci.yml
+
+<span class="c1"># 2. Use the GitLab CI Lint API (if available via CLI)</span>
+<span class="c1"># glab ci lint # Assuming glab CLI is installed</span>
+
+<span class="c1"># 3. Commit and push the verified configuration to trigger execution</span>
+git<span class="w"> </span>add<span class="w"> </span>.gitlab-ci.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"CHORE-101: Define Java multi-stage enterprise CI pipeline with security gates"</span>
+git<span class="w"> </span>push
+</code></pre></div>
+<hr />
+<h3 id="step-4-verification">Step 4: Verification</h3>
+<p>Go to the GitLab project sidebar -&gt; <strong>CI/CD</strong> -&gt; <strong>Pipelines</strong> and examine the execution graph. Ensure:</p>
+<ol>
+<li>The <code>security</code> stage successfully executed and blocked critical dependencies.</li>
+<li>The <code>package</code> stage executed and pushed an image (check your registry).</li>
+<li>The intermediate artifact (<code>target/my-app.jar</code>) was available for packaging.</li>
+</ol>
+<hr />
+<h2 id="self-assessment-exam-practice-questions">Self-Assessment &amp; Exam Practice Questions</h2>
+<p><strong>Question 1:</strong> An enterprise pipeline is taking 25 minutes to complete because it downloads 400MB of Maven Java dependencies on every run. Which component of the CI configuration must be utilized to accelerate subsequent pipeline execution?</p>
+<p>A) Artifacts
+B) Cache
+C) Scripted Pipeline syntax
+D) Static runners</p>
+<p><strong>Answer:</strong> <strong>B</strong>
+<em>Explanation:</em> <strong>Cache</strong> is used specifically to store downloaded external dependencies (like Maven repositories or <code>node_modules</code>) between pipeline runs, accelerating execution by avoiding duplicate downloads.</p>
+<p><strong>Question 2:</strong> When migrating from a scripted Jenkins pipeline to a declarative Jenkinsfile, which block becomes the primary container for all major functional phases (such as Build, Test, and Package)?</p>
+<p>A) <code>pipeline</code>
+B) <code>agent</code>
+C) <code>stages</code>
+D) <code>steps</code></p>
+<p><strong>Answer:</strong> <strong>C</strong>
+<em>Explanation:</em> The <strong><code>stages</code></strong> block defines the sequential and parallel functional phases (or quality gates) of the declarative pipeline, separating logic like building, testing, security, and packaging.</p>
+<p><strong>Question 3:</strong> Which specific trigger mechanic is a best practice for a CD workflow, ensuring that full artifact publication and deployment to production only occur when a stable semantic version tag is pushed?</p>
+<p>A) Commit Triggers
+B) Scheduled Triggers
+C) Parameterization
+D) Tag Triggers</p>
+<p><strong>Answer:</strong> <strong>D</strong>
+<em>Explanation:</em> <strong>Tag Triggers</strong> allow the CD logic to be decoupled from every commit, ensuring that full release automation is only initiated upon explicit semantic version tagging (e.g., <code>v1.2.0</code>).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

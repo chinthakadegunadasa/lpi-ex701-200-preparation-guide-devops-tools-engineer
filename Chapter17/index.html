@@ -1,0 +1,2776 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter16/">
+      
+      
+        <link rel="next" href="../Chapter18/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 17: Enterprise Git Workflows & Internal Internals - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-17-enterprise-git-workflows-internal-internals" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#171-git-architecture-object-database-blobs-trees-commits-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-git-directory-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The .git Directory Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-core-git-object-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four Core Git Object Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Four Core Git Object Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-blob-binary-large-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Blob (Binary Large Object)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tree-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Tree Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-commit-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Commit Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-tag-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tag Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-level-plumbing-commands-for-object-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low-Level Plumbing Commands for Object Inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#172-branching-models-gitflow-trunk-based-development-and-feature-branching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comparative-architectural-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparative Architectural Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branching-model-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branching Model Architectures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Branching Model Architectures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-gitflow-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. GitFlow Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-trunk-based-development-tbd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Trunk-Based Development (TBD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#173-advanced-git-cli-operations-interactive-rebase-cherry-pick-bisect-and-stash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interactive-rebase-git-rebase-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Rebase (git rebase -i)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Rebase (git rebase -i)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modified-rebase-script-squashing-and-dropping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modified Rebase Script (Squashing and Dropping)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cherry-picking-git-cherry-pick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cherry-Picking (git cherry-pick)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-binary-search-regression-isolator-git-bisect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Binary Search Regression Isolator (git bisect)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automated Binary Search Regression Isolator (git bisect)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fully-automated-bisect-with-test-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fully Automated Bisect with Test Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-stashing-options-git-stash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Stashing Options (git stash)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#174-client-side-and-server-side-git-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.4 Client-Side and Server-Side Git Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.4 Client-Side and Server-Side Git Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hook-categories-and-execution-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Categories and Execution Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hook Categories and Execution Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hook-execution-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Execution Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcing-pre-commit-standards-client-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcing Pre-Commit Standards (Client-Side)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enforcing Pre-Commit Standards (Client-Side)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githookscommit-msg-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .git/hooks/commit-msg Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#server-side-push-guardrails-pre-receive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Push Guardrails (pre-receive)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server-Side Push Guardrails (pre-receive)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#server-side-hook-script-rejection-of-aws-hardcoded-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Hook Script: Rejection of AWS Hardcoded Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#175-hands-on-lab-resolving-complex-merge-conflicts-and-automating-code-hardening-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.5 Hands-On Lab: Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.5 Hands-On Lab: Resolving Complex Merge Conflicts and Automating Code Hardening Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initialize-workspace-base-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initialize Workspace &amp; Base Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-conflicting-concurrent-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Conflicting Concurrent Branches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Create Conflicting Concurrent Branches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-branch-featuredatabase-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Branch feature/database-pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-branch-featuresecurity-hardening-off-base-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Branch feature/security-hardening (Off Base Commit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-trigger-and-resolve-the-conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Trigger and Resolve the Conflict
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Trigger and Resolve the Conflict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-terminal-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Terminal Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspect-conflict-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspect Conflict Markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve-conflict-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve Conflict Manually
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalize-the-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finalize the Merge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-build-automated-pre-commit-security-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Build Automated Pre-Commit Security Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-and-validate-the-pre-commit-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test and Validate the Pre-Commit Hook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Test and Validate the Pre-Commit Hook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-test-failure-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Test Failure Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-terminal-output_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Terminal Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-clean-up-and-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Clean Up and Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-terminal-output_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Terminal Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#171-git-architecture-object-database-blobs-trees-commits-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-git-directory-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The .git Directory Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-core-git-object-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four Core Git Object Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Four Core Git Object Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-blob-binary-large-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Blob (Binary Large Object)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tree-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Tree Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-commit-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Commit Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-tag-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tag Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-level-plumbing-commands-for-object-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low-Level Plumbing Commands for Object Inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#172-branching-models-gitflow-trunk-based-development-and-feature-branching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comparative-architectural-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparative Architectural Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branching-model-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branching Model Architectures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Branching Model Architectures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-gitflow-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. GitFlow Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-trunk-based-development-tbd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Trunk-Based Development (TBD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#173-advanced-git-cli-operations-interactive-rebase-cherry-pick-bisect-and-stash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interactive-rebase-git-rebase-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Rebase (git rebase -i)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Rebase (git rebase -i)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modified-rebase-script-squashing-and-dropping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modified Rebase Script (Squashing and Dropping)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cherry-picking-git-cherry-pick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cherry-Picking (git cherry-pick)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-binary-search-regression-isolator-git-bisect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Binary Search Regression Isolator (git bisect)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automated Binary Search Regression Isolator (git bisect)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fully-automated-bisect-with-test-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fully Automated Bisect with Test Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-stashing-options-git-stash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Stashing Options (git stash)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#174-client-side-and-server-side-git-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.4 Client-Side and Server-Side Git Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.4 Client-Side and Server-Side Git Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hook-categories-and-execution-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Categories and Execution Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hook Categories and Execution Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hook-execution-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hook Execution Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcing-pre-commit-standards-client-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcing Pre-Commit Standards (Client-Side)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enforcing Pre-Commit Standards (Client-Side)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githookscommit-msg-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .git/hooks/commit-msg Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#server-side-push-guardrails-pre-receive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Push Guardrails (pre-receive)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server-Side Push Guardrails (pre-receive)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#server-side-hook-script-rejection-of-aws-hardcoded-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-Side Hook Script: Rejection of AWS Hardcoded Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#175-hands-on-lab-resolving-complex-merge-conflicts-and-automating-code-hardening-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17.5 Hands-On Lab: Resolving Complex Merge Conflicts and Automating Code Hardening Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17.5 Hands-On Lab: Resolving Complex Merge Conflicts and Automating Code Hardening Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initialize-workspace-base-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initialize Workspace &amp; Base Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-conflicting-concurrent-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Conflicting Concurrent Branches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Create Conflicting Concurrent Branches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-branch-featuredatabase-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Branch feature/database-pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-branch-featuresecurity-hardening-off-base-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Branch feature/security-hardening (Off Base Commit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-trigger-and-resolve-the-conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Trigger and Resolve the Conflict
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Trigger and Resolve the Conflict">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-terminal-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Terminal Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspect-conflict-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspect Conflict Markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve-conflict-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve Conflict Manually
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalize-the-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finalize the Merge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-build-automated-pre-commit-security-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Build Automated Pre-Commit Security Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-and-validate-the-pre-commit-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test and Validate the Pre-Commit Hook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Test and Validate the Pre-Commit Hook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-test-failure-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Test Failure Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-terminal-output_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Terminal Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-clean-up-and-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Clean Up and Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-terminal-output_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Terminal Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-assessment-exam-practice-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Assessment &amp; Exam Practice Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-17-enterprise-git-workflows-internal-internals">Chapter 17: Enterprise Git Workflows &amp; Internal Internals</h1>
+<p>This chapter covers the low-level internals, object models, advanced branch management techniques, and automation hooks within Git. It aligns directly with the <strong>LPI 701-200 DevOps Tools Engineer Exam Objectives</strong> under Subject Area 701 (Software Configuration Management and Architecture).</p>
+<h2 id="171-git-architecture-object-database-blobs-trees-commits-tags">17.1 Git Architecture: Object Database (Blobs, Trees, Commits, Tags)</h2>
+<p>At its core, Git is a content-addressable filesystem topped by a Version Control System (VCS) interface. Every object stored within Git—whether a file, directory structure, commit history, or tag—is indexed using a 160-bit SHA-1 hash (or 256-bit SHA-256 hash in modern configurations) computed from its contents and headers.</p>
+<h3 id="the-git-directory-hierarchy">The <code>.git</code> Directory Hierarchy</h3>
+<p>Understanding the internal structure of the <code>.git</code> directory is crucial for low-level troubleshooting and recovery:</p>
+<p><img alt="The .git Directory Hierarchy" src="assets/images/chapter17/17-1-The-.gitt-Directory-Hierarchy.png" /></p>
+<h3 id="the-four-core-git-object-types">The Four Core Git Object Types</h3>
+<p><img alt="GIT OBJECT DATABASE" src="assets/images/chapter17/17-1-GIT-OBJECT-DATABASE.png" /></p>
+<h4 id="1-blob-binary-large-object">1. Blob (Binary Large Object)</h4>
+<p>A <strong>blob</strong> stores raw file content without associated file metadata such as filenames, directory locations, or permissions.</p>
+<ul>
+<li>If two files in different directories contain identical content, Git stores a single blob object for both.</li>
+</ul>
+<h4 id="2-tree-object">2. Tree Object</h4>
+<p>A <strong>tree</strong> represents a directory state. It maps filenames, file permissions (POSIX modes), and object types to their corresponding SHA-1 hash references (pointing to blobs or nested trees).</p>
+<h4 id="3-commit-object">3. Commit Object</h4>
+<p>A <strong>commit</strong> links a root tree object to a historical timeline. It contains:</p>
+<ul>
+<li>The SHA-1 hash of the root tree.</li>
+<li>Parent commit hash(es) (zero for initial commit, one for standard commit, two or more for merges).</li>
+<li>Author metadata (name, email, timestamp).</li>
+<li>Committer metadata (name, email, timestamp).</li>
+<li>Commit message string and optional GPG signature.</li>
+</ul>
+<h4 id="4-tag-object">4. Tag Object</h4>
+<p>An <strong>annotated tag</strong> creates an explicit reference to a specific commit object. It contains the target commit SHA-1, tag name, tagger details, timestamp, message, and optional cryptographic signature. (Note: <em>Lightweight tags</em> are simple pointers stored under <code>.git/refs/tags/</code> without creating a dedicated object in <code>.git/objects/</code>).</p>
+<h3 id="low-level-plumbing-commands-for-object-inspection">Low-Level Plumbing Commands for Object Inspection</h3>
+<p>Git commands fall into two categories: <strong>Porcelain</strong> (high-level user commands like <code>git add</code>, <code>git commit</code>) and <strong>Plumbing</strong> (low-level structural commands like <code>git cat-file</code>, <code>git hash-object</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Calculate SHA-1 object hash for a file without writing to database</span>
+git<span class="w"> </span>hash-object<span class="w"> </span>path/to/file.py
+
+<span class="c1"># 2. Calculate hash AND write blob object to .git/objects/</span>
+git<span class="w"> </span>hash-object<span class="w"> </span>-w<span class="w"> </span>path/to/file.py
+
+<span class="c1"># 3. Inspect the TYPE of an object by its SHA-1 hash</span>
+git<span class="w"> </span>cat-file<span class="w"> </span>-t<span class="w"> </span>8f3a2c4b...
+
+<span class="c1"># 4. Inspect the SIZE of an object in bytes</span>
+git<span class="w"> </span>cat-file<span class="w"> </span>-s<span class="w"> </span>8f3a2c4b...
+
+<span class="c1"># 5. Display the formatted CONTENTS of an object</span>
+git<span class="w"> </span>cat-file<span class="w"> </span>-p<span class="w"> </span>8f3a2c4b...
+</code></pre></div>
+<h2 id="172-branching-models-gitflow-trunk-based-development-and-feature-branching">17.2 Branching Models: GitFlow, Trunk-Based Development, and Feature Branching</h2>
+<p>Choosing an appropriate branching strategy directly influences CI/CD release frequency, merge conflict probability, and team collaboration speed.</p>
+<h3 id="comparative-architectural-analysis">Comparative Architectural Analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>GitFlow</th>
+<th>Trunk-Based Development</th>
+<th>Feature Branching</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary Branches</strong></td>
+<td><code>main</code>, <code>develop</code></td>
+<td><code>main</code> (trunk)</td>
+<td><code>main</code></td>
+</tr>
+<tr>
+<td><strong>Supporting Branches</strong></td>
+<td><code>feature/*</code>, <code>release/*</code>, <code>hotfix/*</code></td>
+<td>Short-lived <code>feature/*</code> (&lt; 24 hours)</td>
+<td>Long-lived <code>feature/*</code></td>
+</tr>
+<tr>
+<td><strong>Integration Frequency</strong></td>
+<td>Low (at end of release cycle)</td>
+<td>High (multiple times per day)</td>
+<td>Medium (upon feature completion)</td>
+</tr>
+<tr>
+<td><strong>Deployment Target</strong></td>
+<td>Scheduled enterprise releases</td>
+<td>Continuous Deployment (CD)</td>
+<td>Continuous Integration (CI)</td>
+</tr>
+<tr>
+<td><strong>Complexity / Overhead</strong></td>
+<td>High branch maintenance overhead</td>
+<td>Low overhead; requires feature flags</td>
+<td>Moderate overhead</td>
+</tr>
+</tbody>
+</table>
+<h3 id="branching-model-architectures">Branching Model Architectures</h3>
+<h4 id="1-gitflow-model">1. GitFlow Model</h4>
+<p>GitFlow utilizes strict separation of roles across multiple long-running branches.</p>
+<p><img alt="GitFlow Model" src="assets/images/chapter17/17-2-1-GitFlow-Model.png" /></p>
+<ul>
+<li><strong><code>main</code></strong>: Stores official production history. Every commit is tagged with a release version.</li>
+<li><strong><code>develop</code></strong>: Serves as the integration branch for features.</li>
+<li><strong><code>feature/*</code></strong>: Cloned off <code>develop</code>; merged back into <code>develop</code> via Pull Request.</li>
+<li><strong><code>release/*</code></strong>: Forked off <code>develop</code> when a release scope is met; only bug fixes and documentation are committed here before merging to both <code>main</code> and <code>develop</code>.</li>
+<li><strong><code>hotfix/*</code></strong>: Forked directly off <code>main</code> to address critical production issues; merged back to both <code>main</code> and <code>develop</code>.</li>
+</ul>
+<h4 id="2-trunk-based-development-tbd">2. Trunk-Based Development (TBD)</h4>
+<p>Trunk-Based Development enforces a single active branch (<code>main</code>/<code>trunk</code>). Engineers push micro-commits directly to <code>main</code> or via short-lived feature branches (&lt;24-hour lifetime).</p>
+<p><img alt="Trunk-Based Development" src="assets/images/chapter17/17-2-2-Trunk-Based-Development.png" /></p>
+<ul>
+<li>Eliminates long-lived branch drift and large merge conflicts.</li>
+<li>Relies heavily on <strong>Feature Flags</strong> (Feature Toggles) in source code to decouple code deployment from feature release.</li>
+<li>Demands automated unit and integration tests executing within robust CI pipelines.</li>
+</ul>
+<h2 id="173-advanced-git-cli-operations-interactive-rebase-cherry-pick-bisect-and-stash">17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash</h2>
+<p>When managing enterprise codebases, developers must manipulate commit histories, isolate regressions, and relocate specific patches without introducing redundant commits.</p>
+<h3 id="interactive-rebase-git-rebase-i">Interactive Rebase (<code>git rebase -i</code>)</h3>
+<p>Interactive rebasing allows rewriting, combining, reordering, or dropping commits before merging features upstream.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Initiate interactive rebase for the last 5 commits</span>
+git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>HEAD~5
+</code></pre></div>
+<p>This launches an editor displaying commit directives:</p>
+<div class="highlight"><pre><span></span><code>pick 1a2b3c4 feat(api): add initial authentication endpoints
+pick 5d6e7f8 fix(api): resolve typo in authorization header
+pick 9a8b7c6 docs(api): update OpenAPI specifications
+pick 3e4f5a6 test(api): add integration test cases for auth
+pick 7b8c9d0 chore: clean up debug print statements
+
+# Commands:
+# p, pick &lt;commit&gt; = use commit
+# r, reword &lt;commit&gt; = use commit, but edit the commit message
+# e, edit &lt;commit&gt; = use commit, but stop for amending
+# s, squash &lt;commit&gt; = use commit, but meld into previous commit
+# f, fixup &lt;commit&gt; = like "squash", but discard this commit's log message
+# d, drop &lt;commit&gt; = remove commit
+</code></pre></div>
+<h4 id="modified-rebase-script-squashing-and-dropping">Modified Rebase Script (Squashing and Dropping)</h4>
+<div class="highlight"><pre><span></span><code>pick 1a2b3c4 feat(api): add initial authentication endpoints
+fixup 5d6e7f8 fix(api): resolve typo in authorization header
+pick 9a8b7c6 docs(api): update OpenAPI specifications
+pick 3e4f5a6 test(api): add integration test cases for auth
+drop 7b8c9d0 chore: clean up debug print statements
+</code></pre></div>
+<h3 id="cherry-picking-git-cherry-pick">Cherry-Picking (<code>git cherry-pick</code>)</h3>
+<p><code>cherry-pick</code> applies the exact patch introduced by an existing commit from another branch onto the current working branch.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Switch to hotfix target branch</span>
+git<span class="w"> </span>checkout<span class="w"> </span>release/v2.1
+
+<span class="c1"># Apply a specific bugfix commit from develop branch</span>
+git<span class="w"> </span>cherry-pick<span class="w"> </span>e4f2a1b
+
+<span class="c1"># Apply commit without automatically committing (leaves changes staged)</span>
+git<span class="w"> </span>cherry-pick<span class="w"> </span>-n<span class="w"> </span>9c8b7a6
+</code></pre></div>
+<h3 id="automated-binary-search-regression-isolator-git-bisect">Automated Binary Search Regression Isolator (<code>git bisect</code>)</h3>
+<p><code>git bisect</code> uses a binary search algorithm through historical commits to locate the exact commit that introduced a bug or regression.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Start bisect session</span>
+git<span class="w"> </span>bisect<span class="w"> </span>start
+
+<span class="c1"># 2. Mark current state as broken (bad)</span>
+git<span class="w"> </span>bisect<span class="w"> </span>bad
+
+<span class="c1"># 3. Mark a known historical commit or tag as working (good)</span>
+git<span class="w"> </span>bisect<span class="w"> </span>good<span class="w"> </span>v2.0.0
+
+<span class="c1"># Git checks out intermediate commits automatically...</span>
+<span class="c1"># Test the build, then issue either:</span>
+git<span class="w"> </span>bisect<span class="w"> </span>good<span class="w">   </span><span class="c1"># If test passes</span>
+<span class="c1"># OR</span>
+git<span class="w"> </span>bisect<span class="w"> </span>bad<span class="w">    </span><span class="c1"># If test fails</span>
+
+<span class="c1"># 4. Once identified, terminate bisect session and return to original HEAD</span>
+git<span class="w"> </span>bisect<span class="w"> </span>reset
+</code></pre></div>
+<h4 id="fully-automated-bisect-with-test-script">Fully Automated Bisect with Test Script</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Execute automated binary search using a exit-code driven test script</span>
+git<span class="w"> </span>bisect<span class="w"> </span>start<span class="w"> </span>HEAD<span class="w"> </span>v2.0.0
+git<span class="w"> </span>bisect<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/test_payment_gateway.py
+</code></pre></div>
+<h3 id="advanced-stashing-options-git-stash">Advanced Stashing Options (<code>git stash</code>)</h3>
+<p><code>git stash</code> shelves uncommitted changes (staged and unstaged) for later retrieval.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Stash including untracked files</span>
+git<span class="w"> </span>stash<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>-m<span class="w"> </span><span class="s2">"WIP: auth-module implementation"</span>
+
+<span class="c1"># List stashed states</span>
+git<span class="w"> </span>stash<span class="w"> </span>list
+
+<span class="c1"># Inspect contents of a specific stash</span>
+git<span class="w"> </span>stash<span class="w"> </span>show<span class="w"> </span>-p<span class="w"> </span>stash@<span class="o">{</span><span class="m">0</span><span class="o">}</span>
+
+<span class="c1"># Apply most recent stash and remove it from stack</span>
+git<span class="w"> </span>stash<span class="w"> </span>pop
+
+<span class="c1"># Apply specific stash without removing it from stack</span>
+git<span class="w"> </span>stash<span class="w"> </span>apply<span class="w"> </span>stash@<span class="o">{</span><span class="m">1</span><span class="o">}</span>
+</code></pre></div>
+<h2 id="174-client-side-and-server-side-git-hooks">17.4 Client-Side and Server-Side Git Hooks</h2>
+<p>Git hooks are custom scripts triggered automatically when key events occur during Git lifecycle operations.</p>
+<h3 id="hook-categories-and-execution-context">Hook Categories and Execution Context</h3>
+<div class="highlight"><pre><span></span><code>CLIENT-SIDE HOOKS (Control Node / Developer Workstation):
+[ git commit ] ──► pre-commit ──► prepare-commit-msg ──► commit-msg ──► post-commit
+[ git push ]   ──► pre-push
+
+SERVER-SIDE HOOKS (Remote Repository / Git Server):
+[ Receiving Push ] ──► pre-receive ──► update ──► (Objects Written) ──► post-receive
+</code></pre></div>
+<h4 id="hook-execution-matrix">Hook Execution Matrix</h4>
+<p><img alt="Hook Execution Matrix" src="assets/images/chapter17/17-4-Hook-Execution-Matrix.png" /></p>
+<h3 id="enforcing-pre-commit-standards-client-side">Enforcing Pre-Commit Standards (Client-Side)</h3>
+<p>Client hooks reside under <code>.git/hooks/</code>. Files must be executable (<code>chmod +x</code>).</p>
+<h4 id="githookscommit-msg-example"><code>.git/hooks/commit-msg</code> Example</h4>
+<p>Enforces Jira ticket references in commit messages (e.g., <code>PROJ-1234: Add user login feature</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+
+<span class="nv">COMMIT_MSG_FILE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+<span class="nv">COMMIT_MSG</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span><span class="s2">"</span><span class="nv">$COMMIT_MSG_FILE</span><span class="s2">"</span><span class="k">)</span>
+
+<span class="c1"># Regex pattern enforcing JIRA ticket format</span>
+<span class="nv">JIRA_PATTERN</span><span class="o">=</span><span class="s2">"^(PROJ-[0-9]+|HOTFIX-[0-9]+): .+"</span>
+
+<span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$COMMIT_MSG</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="nv">$JIRA_PATTERN</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"================================================================="</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"ERROR: Invalid Commit Message Structure!"</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Message must match format: 'PROJ-1234: Detailed description'"</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Your message was: '</span><span class="nv">$COMMIT_MSG</span><span class="s2">'"</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"================================================================="</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+</code></pre></div>
+<h3 id="server-side-push-guardrails-pre-receive">Server-Side Push Guardrails (<code>pre-receive</code>)</h3>
+<p>Server-side <code>pre-receive</code> hooks evaluate the entire push transaction. If the script exits with non-zero status (<code>exit 1</code>), the entire push is rejected by the server.</p>
+<h4 id="server-side-hook-script-rejection-of-aws-hardcoded-secrets">Server-Side Hook Script: Rejection of AWS Hardcoded Secrets</h4>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+
+<span class="c1"># Read zero or more ref updates passed via standard input</span>
+<span class="c1"># Format: &lt;old-value&gt; &lt;new-value&gt; &lt;ref-name&gt;</span>
+<span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>oldrev<span class="w"> </span>newrev<span class="w"> </span>refname<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># Ignore branch deletion operations</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$newrev</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0000000000000000000000000000000000000000"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="k">continue</span>
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span><span class="c1"># Scan incoming diffs for potential AWS Secret Access Keys</span>
+<span class="w">    </span><span class="nv">SECRETS_FOUND</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>diff<span class="w"> </span><span class="s2">"</span><span class="nv">$oldrev</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$newrev</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'AKIA[0-9A-Z]{16}'</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span><span class="k">)</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="nv">$SECRETS_FOUND</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"================================================================="</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PUSH REJECTED BY SERVER SECURITY HOOK!"</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Hardcoded AWS Access Keys detected in commit payload:"</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$SECRETS_FOUND</span><span class="s2">"</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Remove sensitive data using git rebase/filter-repo before pushing."</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"================================================================="</span>
+<span class="w">        </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<h2 id="175-hands-on-lab-resolving-complex-merge-conflicts-and-automating-code-hardening-hooks">17.5 Hands-On Lab: Resolving Complex Merge Conflicts and Automating Code Hardening Hooks</h2>
+<h3 id="objective">Objective</h3>
+<p>In this lab, you will simulate a enterprise scenario:</p>
+<ol>
+<li>Initialize a local repository and simulate concurrent conflicting edits across two branches.</li>
+<li>Resolve complex structural merge conflicts using low-level Git diagnostic utilities.</li>
+<li>Construct and deploy a client-side <code>pre-commit</code> hook that scans for accidentally committed private keys and hardcoded passwords before commits are finalized.</li>
+</ol>
+<h3 id="step-1-initialize-workspace-base-repository">Step 1: Initialize Workspace &amp; Base Repository</h3>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/git-enterprise-lab
+<span class="nb">cd</span><span class="w"> </span>~/git-enterprise-lab
+
+<span class="c1"># Initialize new Git repository</span>
+git<span class="w"> </span>init<span class="w"> </span>.
+
+<span class="c1"># Configure local repository identity</span>
+git<span class="w"> </span>config<span class="w"> </span>user.name<span class="w"> </span><span class="s2">"DevOps Engineer"</span>
+git<span class="w"> </span>config<span class="w"> </span>user.email<span class="w"> </span><span class="s2">"devops@enterprise.internal"</span>
+
+<span class="c1"># Create initial baseline configuration file</span>
+cat<span class="w"> </span><span class="s">&lt;&lt;'EOF' &gt; app_config.py</span>
+<span class="s">DATABASE_HOST = "localhost"</span>
+<span class="s">DATABASE_PORT = 5432</span>
+<span class="s">MAX_CONNECTIONS = 20</span>
+<span class="s">ENABLE_LOGGING = True</span>
+<span class="s">EOF</span>
+
+git<span class="w"> </span>add<span class="w"> </span>app_config.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"PROJ-100: Initial application configuration"</span>
+</code></pre></div>
+<h3 id="step-2-create-conflicting-concurrent-branches">Step 2: Create Conflicting Concurrent Branches</h3>
+<h4 id="create-branch-featuredatabase-pool">Create Branch <code>feature/database-pool</code></h4>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/database-pool
+
+cat<span class="w"> </span><span class="s">&lt;&lt;'EOF' &gt; app_config.py</span>
+<span class="s">DATABASE_HOST = "db.production.internal"</span>
+<span class="s">DATABASE_PORT = 5432</span>
+<span class="s">MAX_CONNECTIONS = 100</span>
+<span class="s">POOL_TIMEOUT = 30</span>
+<span class="s">ENABLE_LOGGING = True</span>
+<span class="s">EOF</span>
+
+git<span class="w"> </span>add<span class="w"> </span>app_config.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"PROJ-101: Expand database connection pooling"</span>
+</code></pre></div>
+<h4 id="create-branch-featuresecurity-hardening-off-base-commit">Create Branch <code>feature/security-hardening</code> (Off Base Commit)</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Return to original baseline commit</span>
+git<span class="w"> </span>checkout<span class="w"> </span>main
+
+<span class="c1"># Create parallel security branch</span>
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/security-hardening
+
+cat<span class="w"> </span><span class="s">&lt;&lt;'EOF' &gt; app_config.py</span>
+<span class="s">DATABASE_HOST = "localhost"</span>
+<span class="s">DATABASE_PORT = 5432</span>
+<span class="s">MAX_CONNECTIONS = 20</span>
+<span class="s">ENABLE_LOGGING = False</span>
+<span class="s">SSL_MODE = "verify-full"</span>
+<span class="s">EOF</span>
+
+git<span class="w"> </span>add<span class="w"> </span>app_config.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"PROJ-102: Enforce SSL and disable verbose logging"</span>
+</code></pre></div>
+<h3 id="step-3-trigger-and-resolve-the-conflict">Step 3: Trigger and Resolve the Conflict</h3>
+<p>Merge <code>feature/database-pool</code> into <code>feature/security-hardening</code>:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>merge<span class="w"> </span>feature/database-pool
+</code></pre></div>
+<h4 id="expected-terminal-output">Expected Terminal Output</h4>
+<div class="highlight"><pre><span></span><code>Auto-merging app_config.py
+CONFLICT (content): Merge conflict in app_config.py
+Automatic merge failed; fix conflicts and then commit the result.
+</code></pre></div>
+<h4 id="inspect-conflict-markers">Inspect Conflict Markers</h4>
+<p>Examine the state of <code>app_config.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> <span class="n">HEAD</span>
+<span class="n">DATABASE_HOST</span> <span class="o">=</span> <span class="s2">"localhost"</span>
+<span class="n">DATABASE_PORT</span> <span class="o">=</span> <span class="mi">5432</span>
+<span class="n">MAX_CONNECTIONS</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">ENABLE_LOGGING</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SSL_MODE</span> <span class="o">=</span> <span class="s2">"verify-full"</span>
+<span class="o">=======</span>
+<span class="n">DATABASE_HOST</span> <span class="o">=</span> <span class="s2">"db.production.internal"</span>
+<span class="n">DATABASE_PORT</span> <span class="o">=</span> <span class="mi">5432</span>
+<span class="n">MAX_CONNECTIONS</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">POOL_TIMEOUT</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">ENABLE_LOGGING</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> <span class="n">feature</span><span class="o">/</span><span class="n">database</span><span class="o">-</span><span class="n">pool</span>
+</code></pre></div>
+<h4 id="resolve-conflict-manually">Resolve Conflict Manually</h4>
+<p>Edit <code>app_config.py</code> to combine both feature updates correctly:</p>
+<div class="highlight"><pre><span></span><code><span class="n">DATABASE_HOST</span> <span class="o">=</span> <span class="s2">"db.production.internal"</span>
+<span class="n">DATABASE_PORT</span> <span class="o">=</span> <span class="mi">5432</span>
+<span class="n">MAX_CONNECTIONS</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">POOL_TIMEOUT</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">ENABLE_LOGGING</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SSL_MODE</span> <span class="o">=</span> <span class="s2">"verify-full"</span>
+</code></pre></div>
+<h4 id="finalize-the-merge">Finalize the Merge</h4>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>app_config.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"PROJ-103: Merge feature/database-pool into feature/security-hardening with resolved config"</span>
+</code></pre></div>
+<h3 id="step-4-build-automated-pre-commit-security-hook">Step 4: Build Automated Pre-Commit Security Hook</h3>
+<p>Create a custom executable <code>pre-commit</code> hook to scan staged files for private keys or AWS credentials before allowing a commit:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;'EOF' &gt; .git/hooks/pre-commit</span>
+<span class="s">#!/usr/bin/env bash</span>
+<span class="s">set -euo pipefail</span>
+
+<span class="s">echo "==&gt; Running Enterprise Security Scan on Staged Files..."</span>
+
+<span class="s"># 1. Check for RSA / ED25519 Private Keys</span>
+<span class="s">KEY_CHECK=$(git diff --cached | grep -E '-----BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY-----' || true)</span>
+
+<span class="s"># 2. Check for AWS Secret Access Keys</span>
+<span class="s">AWS_CHECK=$(git diff --cached | grep -E 'AKIA[0-9A-Z]{16}' || true)</span>
+
+<span class="s">if [ -n "$KEY_CHECK" ] || [ -n "$AWS_CHECK" ]; then</span>
+<span class="s">    echo "================================================================="</span>
+<span class="s">    echo "COMMIT REJECTED BY PRE-COMMIT SECURITY SCAN!"</span>
+<span class="s">    echo "Staged changes contain confidential credentials or private keys."</span>
+<span class="s">    echo "Review diffs using 'git diff --cached' before retrying."</span>
+<span class="s">    echo "================================================================="</span>
+<span class="s">    exit 1</span>
+<span class="s">fi</span>
+
+<span class="s">echo "==&gt; Security Scan Passed. Proceeding with commit."</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Grant execution permissions to hook</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>.git/hooks/pre-commit
+</code></pre></div>
+<h3 id="step-5-test-and-validate-the-pre-commit-hook">Step 5: Test and Validate the Pre-Commit Hook</h3>
+<h4 id="1-test-failure-trigger">1. Test Failure Trigger</h4>
+<p>Attempt to stage and commit an SSH Private Key:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;'EOF' &gt; deploy_key.pem</span>
+<span class="s">-----BEGIN OPENSSH PRIVATE KEY-----</span>
+<span class="s">b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZTAAAAAE</span>
+<span class="s">-----END OPENSSH PRIVATE KEY-----</span>
+<span class="s">EOF</span>
+
+git<span class="w"> </span>add<span class="w"> </span>deploy_key.pem
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"PROJ-104: Add deployment key"</span>
+</code></pre></div>
+<h4 id="expected-terminal-output_1">Expected Terminal Output</h4>
+<div class="highlight"><pre><span></span><code>==&gt; Running Enterprise Security Scan on Staged Files...
+=================================================================
+COMMIT REJECTED BY PRE-COMMIT SECURITY SCAN!
+Staged changes contain confidential credentials or private keys.
+Review diffs using 'git diff --cached' before retrying.
+=================================================================
+</code></pre></div>
+<h4 id="2-clean-up-and-verify">2. Clean Up and Verify</h4>
+<p>Unstage and remove the invalid key file:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>deploy_key.pem
+</code></pre></div>
+<p>Commit a valid change to confirm the hook allows compliant commits:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"# Verified enterprise app config"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>README.md
+git<span class="w"> </span>add<span class="w"> </span>README.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"PROJ-105: Add documentation verifying app configuration"</span>
+</code></pre></div>
+<h4 id="expected-terminal-output_2">Expected Terminal Output</h4>
+<div class="highlight"><pre><span></span><code>==&gt; Running Enterprise Security Scan on Staged Files...
+==&gt; Security Scan Passed. Proceeding with commit.
+[feature/security-hardening a1b2c3d] PROJ-105: Add documentation verifying app configuration
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.md
+</code></pre></div>
+<h2 id="self-assessment-exam-practice-questions">Self-Assessment &amp; Exam Practice Questions</h2>
+<p><strong>Question 1</strong>: Which low-level Git object stores directory paths, POSIX file permissions, and maps relative filenames to their respective SHA-1 object references?</p>
+<p>A) Commit object
+B) Blob object
+C) Tree object
+D) Tag object</p>
+<p><strong>Answer</strong>: <strong>C</strong></p>
+<p><em>Explanation</em>: A <strong>Tree object</strong> represents a directory listing. It maps file names, permissions, and modes to child blob objects or nested tree objects.</p>
+<p><strong>Question 2</strong>: An operations team needs to enforce a policy where pushes containing invalid commit message formats are rejected at the remote repository level before objects are written. Which Git hook must be deployed on the central Git server?</p>
+<p>A) <code>pre-commit</code>
+B) <code>pre-receive</code>
+C) <code>post-commit</code>
+D) <code>pre-push</code></p>
+<p><strong>Answer</strong>: <strong>B</strong></p>
+<p><em>Explanation</em>: The <code>pre-receive</code> hook executes on the remote Git server when handling incoming pushes. If the script exits with a non-zero code, the push transaction is aborted completely.</p>
+<p><strong>Question 3</strong>: An engineer wants to isolate a regression in a codebase containing 500 commits between release <code>v1.0</code> and <code>v2.0</code>. Which Git command uses binary search to identify the exact commit that introduced the bug automatically?</p>
+<p>A) <code>git rebase -i</code>
+B) <code>git cherry-pick</code>
+C) <code>git bisect</code>
+D) <code>git reflog</code></p>
+<p><strong>Answer</strong>: <strong>C</strong></p>
+<p><em>Explanation</em>: <code>git bisect</code> performs a binary search through commit history to isolate the specific commit responsible for introducing a bug or test failure.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

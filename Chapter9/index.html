@@ -1,0 +1,2412 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Chapter8/">
+      
+      
+        <link rel="next" href="../TOC/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Chapter 9: Kubernetes Workload Management - LPI 701-200 Preparation Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-9-kubernetes-workload-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-header__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LPI 701-200 Preparation Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 9: Kubernetes Workload Management
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LPI 701-200 Preparation Guide" class="md-nav__button md-logo" aria-label="LPI 701-200 Preparation Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LPI 701-200 Preparation Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Appendix-A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exam Objective and Chapter Mapping Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 1: Cloud-Native Architecture Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 10: Kubernetes Storage, ConfigMaps, &amp; Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 11: Kubernetes Security &amp; RBAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 12: IaC Architecture &amp; State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 13: Declarative Infrastructure Provisioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 14: Ansible Architecture &amp; Core Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 15: Advanced Ansible Patterns, Roles, &amp; Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 16: Automated Immutable Image Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 17: Enterprise Git Workflows &amp; Internal Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 18: Continuous Integration Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 19: Enterprise CI/CD Pipeline Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 2: Enterprise Cloud-Native Architecture &amp; Microservices Implementation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter20
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 21: Prometheus Monitoring &amp; Metrics Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 22: Enterprise Log Management Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 23: Enterprise Dashboards &amp; Alert Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 24: Observability, Tracing, &amp; Incident Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 25: Multi-Cloud Architectures &amp; Service Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 26: Continuous Testing Frameworks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 27: Enterprise Chaos Engineering &amp; Fault Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 3: Enterprise DevSecOps &amp; Security Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 4: Enterprise Middleware &amp; Application Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 5: Docker Containerization Architecture &amp; Core Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 6: Advanced Container Storage &amp; Overlay Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 7: Service Discovery &amp; Dynamic Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chapter8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 8: Enterprise Kubernetes Architecture &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 9: Kubernetes Workload Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#91-pod-lifecycle-phase-transitions-and-health-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Pod Lifecycle, Phase Transitions, and Health Probes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1 Pod Lifecycle, Phase Transitions, and Health Probes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pod-lifecycle-phases-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Lifecycle Phases &amp; State Machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#init-containers-vs-app-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Init Containers vs. App Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pod-restart-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Restart Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-health-probes-liveness-readiness-and-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Health Probes: Liveness, Readiness, and Startup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container Health Probes: Liveness, Readiness, and Startup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probe-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probe Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-production-ready-manifest-with-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Production-Ready Manifest with Probes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-deployments-rollouts-and-rollback-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Deployments, Rollouts, and Rollback Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2 Deployments, Rollouts, and Rollback Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-architecture-controller-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Architecture &amp; Controller Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-strategies-rollingupdate-vs-recreate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Strategies: RollingUpdate vs. Recreate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Update Strategies: RollingUpdate vs. Recreate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-recreate-strategy-specstrategytype-recreate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Recreate Strategy (spec.strategy.type: Recreate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rollingupdate-strategy-specstrategytype-rollingupdate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. RollingUpdate Strategy (spec.strategy.type: RollingUpdate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollout-lifecycle-commands-and-revision-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout Lifecycle Commands and Revision Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-statefulsets-ordered-provisioning-and-persistent-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 StatefulSets: Ordered Provisioning and Persistent Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 StatefulSets: Ordered Provisioning and Persistent Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-features-of-statefulsets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features of StatefulSets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-statefulset-manifest-with-headless-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production StatefulSet Manifest with Headless Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-daemonsets-jobs-and-cronjobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 DaemonSets, Jobs, and CronJobs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.4 DaemonSets, Jobs, and CronJobs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-daemonsets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. DaemonSets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cronjobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CronJobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-kubernetes-services-and-ingress-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Kubernetes Services and Ingress Controllers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.5 Kubernetes Services and Ingress Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#service-types-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Types Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-traffic-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Traffic Flow Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#headless-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Headless Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingress-ingress-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress &amp; Ingress Controllers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#96-hands-on-lab-deploying-a-high-availability-stateful-workload-with-ingress-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 Hands-On Lab: Deploying a High-Availability Stateful Workload with Ingress Routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.6 Hands-On Lab: Deploying a High-Availability Stateful Workload with Ingress Routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-1-create-namespace-and-storage-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 1: Create Namespace and Storage Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-2-deploy-headless-service-and-statefulset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 2: Deploy Headless Service and StatefulSet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-3-expose-workload-via-standard-clusterip-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 3: Expose Workload via Standard ClusterIP Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-4-configure-layer-7-ingress-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 4: Configure Layer 7 Ingress Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-5-verification-and-functional-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 5: Verification and Functional Inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#97-chapter-review-and-operational-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.7 Chapter Review and Operational Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TOC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TOC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#91-pod-lifecycle-phase-transitions-and-health-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Pod Lifecycle, Phase Transitions, and Health Probes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1 Pod Lifecycle, Phase Transitions, and Health Probes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pod-lifecycle-phases-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Lifecycle Phases &amp; State Machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#init-containers-vs-app-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Init Containers vs. App Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pod-restart-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Restart Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-health-probes-liveness-readiness-and-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Health Probes: Liveness, Readiness, and Startup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Container Health Probes: Liveness, Readiness, and Startup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probe-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probe Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-production-ready-manifest-with-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Production-Ready Manifest with Probes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-deployments-rollouts-and-rollback-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Deployments, Rollouts, and Rollback Mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2 Deployments, Rollouts, and Rollback Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-architecture-controller-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Architecture &amp; Controller Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-strategies-rollingupdate-vs-recreate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Strategies: RollingUpdate vs. Recreate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Update Strategies: RollingUpdate vs. Recreate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-recreate-strategy-specstrategytype-recreate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Recreate Strategy (spec.strategy.type: Recreate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rollingupdate-strategy-specstrategytype-rollingupdate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. RollingUpdate Strategy (spec.strategy.type: RollingUpdate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollout-lifecycle-commands-and-revision-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout Lifecycle Commands and Revision Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-statefulsets-ordered-provisioning-and-persistent-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 StatefulSets: Ordered Provisioning and Persistent Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 StatefulSets: Ordered Provisioning and Persistent Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-features-of-statefulsets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features of StatefulSets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-statefulset-manifest-with-headless-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production StatefulSet Manifest with Headless Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-daemonsets-jobs-and-cronjobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 DaemonSets, Jobs, and CronJobs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.4 DaemonSets, Jobs, and CronJobs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-daemonsets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. DaemonSets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cronjobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CronJobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-kubernetes-services-and-ingress-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Kubernetes Services and Ingress Controllers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.5 Kubernetes Services and Ingress Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#service-types-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Types Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-traffic-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Traffic Flow Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#headless-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Headless Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingress-ingress-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress &amp; Ingress Controllers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#96-hands-on-lab-deploying-a-high-availability-stateful-workload-with-ingress-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 Hands-On Lab: Deploying a High-Availability Stateful Workload with Ingress Routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.6 Hands-On Lab: Deploying a High-Availability Stateful Workload with Ingress Routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-1-create-namespace-and-storage-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 1: Create Namespace and Storage Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-2-deploy-headless-service-and-statefulset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 2: Deploy Headless Service and StatefulSet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-3-expose-workload-via-standard-clusterip-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 3: Expose Workload via Standard ClusterIP Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-4-configure-layer-7-ingress-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 4: Configure Layer 7 Ingress Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-step-5-verification-and-functional-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Step 5: Verification and Functional Inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#97-chapter-review-and-operational-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.7 Chapter Review and Operational Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-9-kubernetes-workload-management">Chapter 9: Kubernetes Workload Management</h1>
+<p>In enterprise production environments, managing applications on Kubernetes demands a deep understanding of workload primitives, stateful versus stateless abstractions, declarative deployment strategies, and traffic routing mechanisms. This chapter delivers an operational guide designed for platform engineers and operators preparing for the LPI 701-200 DevOps Tools Engineer exam objectives.</p>
+<h2 id="91-pod-lifecycle-phase-transitions-and-health-probes">9.1 Pod Lifecycle, Phase Transitions, and Health Probes</h2>
+<p>A Pod is the smallest deployable atomic unit in Kubernetes. Understanding its lifecycle phases, container state transitions, and health monitoring hooks is essential for ensuring application availability and self-healing.</p>
+<h3 id="pod-lifecycle-phases-state-machine">Pod Lifecycle Phases &amp; State Machine</h3>
+<p>A Pod passes through distinct phases during its lifetime:</p>
+<p><img alt="Kubernetes Pod Lifecycle" src="assets/images/chapter9/9-1-Pod-Lifecycle.png" /></p>
+<ol>
+<li><strong>Pending</strong>: The API server has accepted the Pod manifest, but one or more containers have not been scheduled or created. This includes time spent downloading container images over the network.</li>
+<li><strong>Running</strong>: The Pod has been bound to a worker node, and all containers have been created. At least one container is currently running, or is in the process of starting or restarting.</li>
+<li><strong>Succeeded</strong>: All containers in the Pod have terminated successfully (exit code <code>0</code>) and will not be restarted (typical for <code>Job</code> workloads).</li>
+<li><strong>Failed</strong>: All containers in the Pod have terminated, and at least one container has terminated in failure (non-zero exit code).</li>
+<li><strong>Unknown</strong>: The state of the Pod cannot be obtained, typically due to a communication failure between the control plane (<code>kube-apiserver</code>) and the node (<code>kubelet</code>).</li>
+</ol>
+<h3 id="init-containers-vs-app-containers">Init Containers vs. App Containers</h3>
+<ul>
+<li><strong>Init Containers</strong>: Run sequentially to completion before any primary application containers start. If an init container fails, the <code>kubelet</code> restarts it according to the Pod's <code>restartPolicy</code>. They are ideal for pre-flight tasks such as database schema migrations, dynamic configuration rendering, or waiting for dependent network services to become reachable.</li>
+<li><strong>App Containers</strong>: Run in parallel after all init containers complete successfully.</li>
+</ul>
+<h3 id="pod-restart-policies">Pod Restart Policies</h3>
+<p>Defined via <code>spec.restartPolicy</code>:
+* <code>Always</code> (Default): Restarts the container automatically if it exits, regardless of exit code. Used for long-running services (Deployments, StatefulSets).
+* <code>OnFailure</code>: Restarts the container only if it exits with a non-zero exit code. Used for batch jobs.
+* <code>Never</code>: Does not restart the container under any circumstance.</p>
+<h3 id="container-health-probes-liveness-readiness-and-startup">Container Health Probes: Liveness, Readiness, and Startup</h3>
+<p>The <code>kubelet</code> uses three types of health probes to monitor container health and manage runtime behavior:</p>
+<p><img alt="Container Health Probes" src="assets/images/chapter9/9-1-Container-Health-Probes.png" /></p>
+<h4 id="probe-mechanisms">Probe Mechanisms</h4>
+<ol>
+<li><code>httpGet</code>: Performs an HTTP <code>GET</code> request against the container's IP on a specified port and path. Status codes $\ge 200$ and $&lt; 400$ indicate success.</li>
+<li><code>tcpSocket</code>: Attempts to establish a TCP connection to the specified port. If open, the probe succeeds.</li>
+<li><code>exec</code>: Runs a specific command inside the container. Exit code <code>0</code> indicates success.</li>
+<li><code>grpc</code>: Checks the health status using the gRPC Health Checking Protocol.</li>
+</ol>
+<h4 id="production-production-ready-manifest-with-probes">Production Production-Ready Manifest with Probes</h4>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enterprise-app</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enterprise-app</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/tier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span>
+<span class="w">  </span><span class="nt">initContainers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init-db-check</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">busybox:1.36</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'sh'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'-c'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'until</span><span class="nv"> </span><span class="s">nc</span><span class="nv"> </span><span class="s">-z</span><span class="nv"> </span><span class="s">-w</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">postgres-db.production.svc.cluster.local</span><span class="nv"> </span><span class="s">5432;</span><span class="nv"> </span><span class="s">do</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">waiting</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">db;</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">2;</span><span class="nv"> </span><span class="s">done;'</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary-api</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.enterprise.internal/apps/api:v2.1.0</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="nt">startupProbe</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/healthz/startup</span>
+<span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"> </span><span class="c1"># Allows up to 150 seconds for initial startup</span>
+<span class="w">    </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/healthz/liveness</span>
+<span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">    </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/healthz/readiness</span>
+<span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">timeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">successThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">failureThreshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+</code></pre></div>
+<h2 id="92-deployments-rollouts-and-rollback-mechanics">9.2 Deployments, Rollouts, and Rollback Mechanics</h2>
+<p>A <code>Deployment</code> controller manages declarative updates for stateless applications by orchestrating underlying <code>ReplicaSets</code>.</p>
+<h3 id="deployment-architecture-controller-hierarchy">Deployment Architecture &amp; Controller Hierarchy</h3>
+<p><img alt="Kubernetes Deployment" src="assets/images/chapter9/9-2-Deployments.png" /></p>
+<h3 id="update-strategies-rollingupdate-vs-recreate">Update Strategies: RollingUpdate vs. Recreate</h3>
+<h4 id="1-recreate-strategy-specstrategytype-recreate">1. Recreate Strategy (<code>spec.strategy.type: Recreate</code>)</h4>
+<p>Kills all existing Pods simultaneously before creating new Pods. Causes application downtime, but prevents multi-version concurrency issues during database updates.</p>
+<h4 id="2-rollingupdate-strategy-specstrategytype-rollingupdate">2. RollingUpdate Strategy (<code>spec.strategy.type: RollingUpdate</code>)</h4>
+<p>Gradually replaces old Pods with new ones without downtime. Behavior is governed by two parameters:
+* <code>maxSurge</code>: The maximum number of Pods that can be created above the desired number of Pods during an update. Can be an absolute number (e.g., <code>2</code>) or a percentage (e.g., <code>25%</code>).
+* <code>maxUnavailable</code>: The maximum number of Pods that can be unavailable during the update process. Can be an absolute number or a percentage.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
+<span class="w">    </span><span class="nt">rollingUpdate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25%</span><span class="w">        </span><span class="c1"># Up to 13 Pods total during rollout</span>
+<span class="w">      </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10%</span><span class="w">  </span><span class="c1"># At least 9 Pods must remain active</span>
+</code></pre></div>
+<h3 id="rollout-lifecycle-commands-and-revision-management">Rollout Lifecycle Commands and Revision Management</h3>
+<p>Execute deployments and monitor revision histories using native <code>kubectl</code> commands:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Trigger a rolling update by updating the container image</span>
+kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>image<span class="w"> </span>deployment/payment-api<span class="w"> </span>payment-api<span class="o">=</span>registry.enterprise.internal/apps/payment:v2.2.0<span class="w"> </span>-n<span class="w"> </span>production
+
+<span class="c1"># Monitor rollout status in real-time</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/payment-api<span class="w"> </span>-n<span class="w"> </span>production
+
+<span class="c1"># View deployment revision history</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span><span class="nb">history</span><span class="w"> </span>deployment/payment-api<span class="w"> </span>-n<span class="w"> </span>production
+
+<span class="c1"># Inspect detailed information of a specific revision</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span><span class="nb">history</span><span class="w"> </span>deployment/payment-api<span class="w"> </span>--revision<span class="o">=</span><span class="m">3</span><span class="w"> </span>-n<span class="w"> </span>production
+
+<span class="c1"># Pause rollout (useful for canary testing)</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>pause<span class="w"> </span>deployment/payment-api<span class="w"> </span>-n<span class="w"> </span>production
+
+<span class="c1"># Resume paused rollout</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>resume<span class="w"> </span>deployment/payment-api<span class="w"> </span>-n<span class="w"> </span>production
+
+<span class="c1"># Rollback to the immediate previous revision</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/payment-api<span class="w"> </span>-n<span class="w"> </span>production
+
+<span class="c1"># Rollback to a specific target revision</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/payment-api<span class="w"> </span>--to-revision<span class="o">=</span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span>production
+</code></pre></div>
+<h2 id="93-statefulsets-ordered-provisioning-and-persistent-identity">9.3 StatefulSets: Ordered Provisioning and Persistent Identity</h2>
+<p><code>StatefulSet</code> is the workload API object used to manage stateful applications, such as distributed databases (e.g., PostgreSQL, Cassandra) or message queues (e.g., Apache Kafka).</p>
+<h3 id="key-features-of-statefulsets">Key Features of StatefulSets</h3>
+<ol>
+<li><strong>Unique Network Identifier</strong>: Pods receive a deterministic, sticky ordinal index ($0, 1, 2, \dots$) and stable DNS names formatted as <code>&lt;pod-name&gt;.&lt;service-name&gt;.&lt;namespace&gt;.svc.cluster.local</code>.</li>
+<li><strong>Stable Storage</strong>: Storage is provisioned via <code>volumeClaimTemplates</code>. Each Pod gets its own <code>PersistentVolumeClaim</code> (PVC) that persists across Pod reschedules or deletions.</li>
+<li><strong>Ordered Deployment and Scaling</strong>: By default, Pods are created sequentially from $0$ to $N-1$, and terminated in reverse order ($N-1$ down to $0$).</li>
+</ol>
+<p><img alt="Kubernetes StatefulSet" src="assets/images/chapter9/9-3-Kubernetes-Statefulsets.png" /></p>
+<h3 id="production-statefulset-manifest-with-headless-service">Production StatefulSet Manifest with Headless Service</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis-hs</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">clusterIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span><span class="w"> </span><span class="c1"># Defines this as a Headless Service</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6379</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StatefulSet</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">serviceName</span><span class="p">:</span><span class="w"> </span><span class="s">"redis-hs"</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">podManagementPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OrderedReady</span><span class="w"> </span><span class="c1"># Options: OrderedReady or Parallel</span>
+<span class="w">  </span><span class="nt">updateStrategy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7.2-alpine</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6379</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+<span class="w">        </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis-data</span>
+<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data</span>
+<span class="w">  </span><span class="nt">volumeClaimTemplates</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis-data</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">"ReadWriteOnce"</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="s">"managed-csi-premium"</span>
+<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
+</code></pre></div>
+<h2 id="94-daemonsets-jobs-and-cronjobs">9.4 DaemonSets, Jobs, and CronJobs</h2>
+<p>Specialized workload controllers address infrastructure-level management and scheduled or batch operations.</p>
+<p><img alt="Kubernetes DaemonSet" src="assets/images/chapter9/9-4-Kubernetes-DaemonSet.png" /></p>
+<h3 id="1-daemonsets">1. DaemonSets</h3>
+<p>Ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are automatically added to them. Common uses include log collectors (<code>fluentbit</code>), CNI plugins (<code>calico</code>), and monitoring agents (<code>node-exporter</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DaemonSet</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node-exporter</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node-exporter</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node-exporter</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">tolerations</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Exists</span><span class="w"> </span><span class="c1"># Ensures deployment onto control-plane nodes as well</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node-exporter</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prom/node-exporter:v1.7.0</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9100</span>
+<span class="w">          </span><span class="nt">hostPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9100</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+</code></pre></div>
+<h3 id="2-jobs">2. Jobs</h3>
+<p>Creates one or more Pods and ensures that a specified number of them successfully terminate.
+* <code>completions</code>: Total number of successful Pod completions required.
+* <code>parallelism</code>: Maximum number of Pods running concurrently.
+* <code>backoffLimit</code>: Specifies the number of retries before marking the Job as failed.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Job</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB-batch-migration</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">completions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">backoffLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnFailure</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">migrator</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.enterprise.internal/tools/db-migrator:v1.0</span>
+<span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"/bin/sh"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-c"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"python</span><span class="nv"> </span><span class="s">manage.py</span><span class="nv"> </span><span class="s">db</span><span class="nv"> </span><span class="s">upgrade"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h3 id="3-cronjobs">3. CronJobs</h3>
+<p>Runs Jobs on a time-based schedule using standard Cron format syntax (<code>minute hour day-of-month month day-of-week</code>).
+* <code>concurrencyPolicy</code>: Controls how execution overlaps (<code>Allow</code>, <code>Forbid</code>, <code>Replace</code>).
+* <code>successfulJobsHistoryLimit</code>: Number of finished successful jobs to retain for audit.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CronJob</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">night-backup</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">"0</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*"</span><span class="w"> </span><span class="c1"># Daily at 02:00 AM UTC</span>
+<span class="w">  </span><span class="nt">concurrencyPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Forbid</span>
+<span class="w">  </span><span class="nt">successfulJobsHistoryLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">failedJobsHistoryLimit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">jobTemplate</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnFailure</span>
+<span class="w">          </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backup-agent</span>
+<span class="w">            </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.enterprise.internal/tools/backup-agent:v1.0</span>
+<span class="w">            </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"/bin/sh"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-c"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"backup-tool</span><span class="nv"> </span><span class="s">--target</span><span class="nv"> </span><span class="s">s3://db-backups"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h2 id="95-kubernetes-services-and-ingress-controllers">9.5 Kubernetes Services and Ingress Controllers</h2>
+<p>Kubernetes Services expose applications running on a set of Pods as a network service. Ingress manages external access to services, typically via HTTP/HTTPS.</p>
+<h3 id="service-types-overview">Service Types Overview</h3>
+<p><img alt="Kubernetes Service Types" src="assets/images/chapter9/9-5-Kubernetes-Service-Types.png" /></p>
+<h3 id="service-traffic-flow-architecture">Service Traffic Flow Architecture</h3>
+<p><img alt="External Client" src="assets/images/chapter9/9-5-External-Client.png" /></p>
+<h3 id="headless-services">Headless Services</h3>
+<p>When <code>spec.clusterIP: None</code> is set, Kubernetes does not allocate a virtual cluster IP. Instead, the cluster DNS returns individual Pod IP addresses directly in response to A/AAAA record queries. This is used for peer discovery in stateful, clustered applications.</p>
+<h3 id="ingress-ingress-controllers">Ingress &amp; Ingress Controllers</h3>
+<p>An <code>Ingress</code> resource defines Layer 7 HTTP/HTTPS routing rules. An <code>Ingress Controller</code> (e.g., ingress-nginx, HAProxy, Envoy) processes these rules and proxy-routes traffic accordingly.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enterprise-ingress</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/backend-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">"HTTP"</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.enterprise.com</span>
+<span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enterprise-tls-cert</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.enterprise.com</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/v1</span>
+<span class="w">        </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">        </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-service</span>
+<span class="w">            </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+</code></pre></div>
+<h2 id="96-hands-on-lab-deploying-a-high-availability-stateful-workload-with-ingress-routing">9.6 Hands-On Lab: Deploying a High-Availability Stateful Workload with Ingress Routing</h2>
+<h3 id="objective">Objective</h3>
+<p>Deploy a complete production setup containing a scaled StatefulSet backed by storage, exposed via a ClusterIP service, and routed externally through an Ingress resource with path rules.</p>
+<h3 id="lab-step-1-create-namespace-and-storage-class">Lab Step 1: Create Namespace and Storage Class</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>lab-production
+
+cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: storage.k8s.io/v1</span>
+<span class="s">kind: StorageClass</span>
+<span class="s">metadata:</span>
+<span class="s">  name: lab-local-storage</span>
+<span class="s">provisioner: kubernetes.io/no-provisioner</span>
+<span class="s">volumeBindingMode: WaitForFirstConsumer</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="lab-step-2-deploy-headless-service-and-statefulset">Lab Step 2: Deploy Headless Service and StatefulSet</h3>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Service</span>
+<span class="s">metadata:</span>
+<span class="s">  name: web-db-hs</span>
+<span class="s">  namespace: lab-production</span>
+<span class="s">spec:</span>
+<span class="s">  clusterIP: None</span>
+<span class="s">  ports:</span>
+<span class="s">  - port: 80</span>
+<span class="s">    name: http</span>
+<span class="s">  selector:</span>
+<span class="s">    app: web-db</span>
+<span class="s">---</span>
+<span class="s">apiVersion: apps/v1</span>
+<span class="s">kind: StatefulSet</span>
+<span class="s">metadata:</span>
+<span class="s">  name: web-db</span>
+<span class="s">  namespace: lab-production</span>
+<span class="s">spec:</span>
+<span class="s">  serviceName: "web-db-hs"</span>
+<span class="s">  replicas: 2</span>
+<span class="s">  selector:</span>
+<span class="s">    matchLabels:</span>
+<span class="s">      app: web-db</span>
+<span class="s">  template:</span>
+<span class="s">    metadata:</span>
+<span class="s">      labels:</span>
+<span class="s">        app: web-db</span>
+<span class="s">    spec:</span>
+<span class="s">      containers:</span>
+<span class="s">      - name: nginx</span>
+<span class="s">        image: nginx:1.25-alpine</span>
+<span class="s">        ports:</span>
+<span class="s">        - containerPort: 80</span>
+<span class="s">          name: http</span>
+<span class="s">        volumeMounts:</span>
+<span class="s">        - name: web-content</span>
+<span class="s">          mountPath: /usr/share/nginx/html</span>
+<span class="s">  volumeClaimTemplates:</span>
+<span class="s">  - metadata:</span>
+<span class="s">      name: web-content</span>
+<span class="s">    spec:</span>
+<span class="s">      accessModes: [ "ReadWriteOnce" ]</span>
+<span class="s">      resources:</span>
+<span class="s">        requests:</span>
+<span class="s">          storage: 1Gi</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="lab-step-3-expose-workload-via-standard-clusterip-service">Lab Step 3: Expose Workload via Standard ClusterIP Service</h3>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Service</span>
+<span class="s">metadata:</span>
+<span class="s">  name: web-db-frontend</span>
+<span class="s">  namespace: lab-production</span>
+<span class="s">spec:</span>
+<span class="s">  type: ClusterIP</span>
+<span class="s">  ports:</span>
+<span class="s">  - port: 80</span>
+<span class="s">    targetPort: 80</span>
+<span class="s">    name: http</span>
+<span class="s">  selector:</span>
+<span class="s">    app: web-db</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="lab-step-4-configure-layer-7-ingress-routing">Lab Step 4: Configure Layer 7 Ingress Routing</h3>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
+<span class="s">apiVersion: networking.k8s.io/v1</span>
+<span class="s">kind: Ingress</span>
+<span class="s">metadata:</span>
+<span class="s">  name: web-db-ingress</span>
+<span class="s">  namespace: lab-production</span>
+<span class="s">  annotations:</span>
+<span class="s">    nginx.ingress.kubernetes.io/rewrite-target: /</span>
+<span class="s">spec:</span>
+<span class="s">  ingressClassName: nginx</span>
+<span class="s">  rules:</span>
+<span class="s">  - host: app.lab.local</span>
+<span class="s">    http:</span>
+<span class="s">      paths:</span>
+<span class="s">      - path: /</span>
+<span class="s">        pathType: Prefix</span>
+<span class="s">        backend:</span>
+<span class="s">          service:</span>
+<span class="s">            name: web-db-frontend</span>
+<span class="s">            port:</span>
+<span class="s">              number: 80</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="lab-step-5-verification-and-functional-inspection">Lab Step 5: Verification and Functional Inspection</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Verify Pod state and ordinal sequence creation</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>lab-production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>web-db<span class="w"> </span>-o<span class="w"> </span>wide
+
+<span class="c1"># 2. Verify creation of persistent volume claims attached to stateful instances</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>lab-production
+
+<span class="c1"># 3. Test internal DNS resolution for ordinal Pod instances</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span>--tty<span class="w"> </span>dns-test<span class="w"> </span>--image<span class="o">=</span>busybox:1.36<span class="w"> </span>--namespace<span class="o">=</span>lab-production<span class="w"> </span>--<span class="w"> </span><span class="nv">restart</span><span class="o">=</span>Never<span class="w"> </span>--<span class="w"> </span>nslookup<span class="w"> </span>web-db-0.web-db-hs.lab-production.svc.cluster.local
+
+<span class="c1"># 4. Verify Ingress rules and endpoints mapping</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>web-db-ingress<span class="w"> </span>-n<span class="w"> </span>lab-production
+kubectl<span class="w"> </span>get<span class="w"> </span>endpoints<span class="w"> </span>web-db-frontend<span class="w"> </span>-n<span class="w"> </span>lab-production
+</code></pre></div>
+<h2 id="97-chapter-review-and-operational-checklist">9.7 Chapter Review and Operational Checklist</h2>
+<p>Before proceeding to the next chapter, verify your understanding of the following key concepts:</p>
+<ul>
+<li>[ ] Ability to identify Pod lifecycle states (<code>Pending</code>, <code>Running</code>, <code>Succeeded</code>, <code>Failed</code>, <code>Unknown</code>).</li>
+<li>[ ] Precise configuration of <code>livenessProbe</code>, <code>readinessProbe</code>, and <code>startupProbe</code>.</li>
+<li>[ ] Executing rolling deployments, paused rollouts, and multi-revision rollbacks using <code>kubectl rollout</code>.</li>
+<li>[ ] Key architectural differences between <code>Deployments</code> and <code>StatefulSets</code> (Identity, DNS, PVC mapping).</li>
+<li>[ ] Operational constraints and target execution models for <code>DaemonSets</code>, <code>Jobs</code>, and <code>CronJobs</code>.</li>
+<li>[ ] Network layer differences between <code>ClusterIP</code>, <code>NodePort</code>, <code>LoadBalancer</code>, and <code>Ingress Controllers</code>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
