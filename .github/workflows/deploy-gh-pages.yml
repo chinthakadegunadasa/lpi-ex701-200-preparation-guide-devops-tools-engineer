@@ -35,7 +35,7 @@ jobs:
                       mkdocs-material \
                       pymdown-extensions
 
-      - name: Prepare Content Directory & Enforce Natural Sorting
+      - name: Prepare Staging Directory & Build mkdocs.yml
         run: |
           python3 -c "
           import os
@@ -45,27 +45,28 @@ jobs:
           def natural_sort_key(s):
               return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
-          # Prepare clean staging docs folder
-          if os.path.exists('docs_build'):
-              shutil.rmtree('docs_build')
-          os.makedirs('docs_build')
+          # Clean and re-create docs_build folder
+          staging_dir = 'docs_build'
+          if os.path.exists(staging_dir):
+              shutil.rmtree(staging_dir)
+          os.makedirs(staging_dir)
 
-          # 1. Copy all non-markdown assets (images, assets)
+          # 1. Copy non-markdown static assets (images, css, code)
           for root, dirs, files in os.walk('.'):
-              if any(ignored in root for ignored in ['_site', '.github', '.git', 'docs_build']):
+              if any(ignored in root for ignored in ['_site', '.github', '.git', staging_dir]):
                   continue
               for f in files:
                   if not f.endswith('.md'):
                       src = os.path.join(root, f)
                       rel = os.path.relpath(src, '.')
-                      dst = os.path.join('docs_build', rel)
+                      dst = os.path.join(staging_dir, rel)
                       os.makedirs(os.path.dirname(dst), exist_ok=True)
                       shutil.copy2(src, dst)
 
-          # 2. Process and collect Markdown files
+          # 2. Collect and sort all markdown files naturally
           md_files = []
           for root, dirs, files in os.walk('.'):
-              if any(ignored in root for ignored in ['_site', '.github', '.git', 'docs_build']):
+              if any(ignored in root for ignored in ['_site', '.github', '.git', staging_dir]):
                   continue
               for f in files:
                   if f.endswith('.md') and f.lower() not in ['toc.md', 'readme.md']:
@@ -74,18 +75,18 @@ jobs:
 
           md_files.sort(key=natural_sort_key)
 
-          # 3. Copy Markdown files to docs_build
+          # 3. Copy markdown files to staging
           if os.path.exists('TOC.md'):
-              shutil.copy2('TOC.md', 'docs_build/index.md')
+              shutil.copy2('TOC.md', os.path.join(staging_dir, 'index.md'))
           elif os.path.exists('README.md'):
-              shutil.copy2('README.md', 'docs_build/index.md')
+              shutil.copy2('README.md', os.path.join(staging_dir, 'index.md'))
 
           for f in md_files:
-              dst = os.path.join('docs_build', f)
+              dst = os.path.join(staging_dir, f)
               os.makedirs(os.path.dirname(dst), exist_ok=True)
               shutil.copy2(f, dst)
 
-          # 4. Generate Nav config with natural numerical order
+          # 4. Generate explicit navigation mapping
           nav_entries = ['  - \"Table of Contents\": \"index.md\"']
           for f in md_files:
               clean_name = os.path.splitext(os.path.basename(f))[0]
@@ -94,56 +95,53 @@ jobs:
 
           nav_yaml = '\n'.join(nav_entries)
 
-          config_content = f\"\"\"site_name: LPI 701-200 DevOps Tools Engineer Handbook
-  site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200
-  site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa
-  site_url: https://chinthakadegunadasa.github.io/lpi-ex701-200-preparation-guide-devops-tools-engineer/
-
-  docs_dir: 'docs_build'
-  use_directory_urls: false
-
-  theme:
-    name: material
-    palette:
-      - media: \"(prefers-color-scheme: light)\"
-        scheme: default
-        primary: indigo
-        accent: indigo
-        toggle:
-          icon: material/brightness-7
-          name: Switch to dark mode
-      - media: \"(prefers-color-scheme: dark)\"
-        scheme: slate
-        primary: indigo
-        accent: lime
-        toggle:
-          icon: material/brightness-4
-          name: Switch to light mode
-    features:
-      - navigation.instant
-      - navigation.tracking
-      - navigation.top
-      - navigation.tabs
-      - search.suggest
-      - search.highlight
-      - content.code.copy
-
-  markdown_extensions:
-    - admonition
-    - pymdownx.superfences
-    - pymdownx.highlight:
-        anchor_linenums: true
-    - pymdownx.inlinehilite
-    - pymdownx.snippets
-    - pymdownx.tabbed:
-        alternate_style: true
-    - tables
-    - attr_list
-    - md_in_html
-
-  nav:
-  {nav_yaml}
-  \"\"\"
+          # Construct configuration without f-string brackets collision
+          config_content = (
+              'site_name: LPI 701-200 DevOps Tools Engineer Handbook\n'
+              'site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200\n'
+              'site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa\n'
+              'site_url: https://chinthakadegunadasa.github.io/lpi-ex701-200-preparation-guide-devops-tools-engineer/\n\n'
+              'docs_dir: \"docs_build\"\n'
+              'use_directory_urls: false\n\n'
+              'theme:\n'
+              '  name: material\n'
+              '  palette:\n'
+              '    - media: \"(prefers-color-scheme: light)\"\n'
+              '      scheme: default\n'
+              '      primary: indigo\n'
+              '      accent: indigo\n'
+              '      toggle:\n'
+              '        icon: material/brightness-7\n'
+              '        name: Switch to dark mode\n'
+              '    - media: \"(prefers-color-scheme: dark)\"\n'
+              '      scheme: slate\n'
+              '      primary: indigo\n'
+              '      accent: lime\n'
+              '      toggle:\n'
+              '        icon: material/brightness-4\n'
+              '        name: Switch to light mode\n'
+              '  features:\n'
+              '    - navigation.instant\n'
+              '    - navigation.tracking\n'
+              '    - navigation.top\n'
+              '    - navigation.tabs\n'
+              '    - search.suggest\n'
+              '    - search.highlight\n'
+              '    - content.code.copy\n\n'
+              'markdown_extensions:\n'
+              '  - admonition\n'
+              '  - pymdownx.superfences\n'
+              '  - pymdownx.highlight:\n'
+              '      anchor_linenums: true\n'
+              '  - pymdownx.inlinehilite\n'
+              '  - pymdownx.snippets\n'
+              '  - pymdownx.tabbed:\n'
+              '      alternate_style: true\n'
+              '  - tables\n'
+              '  - attr_list\n'
+              '  - md_in_html\n\n'
+              'nav:\n' + nav_yaml + '\n'
+          )
 
           with open('mkdocs.yml', 'w', encoding='utf-8') as f:
               f.write(config_content)
