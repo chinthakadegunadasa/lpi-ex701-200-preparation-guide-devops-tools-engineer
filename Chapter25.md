@@ -143,21 +143,7 @@ To control cost growth in object storage, lifecycle rules automate data transiti
 
 **FinOps** (Cloud Financial Operations) is an operational framework that brings financial accountability to the variable spend model of cloud computing. It combines engineering, finance, and technology practices to optimize infrastructure costs without sacrificing system agility or scale.
 
-```
-                    +------------------------+
-                    |        INFORM          |
-                    | Visibility, Allocation,|
-                    |  Benchmarking, KPI     |
-                    +-----------+------------+
-                                |
-                                v
-+------------------------+  +---+--------------------+
-|        OPERATE         |  |        OPTIMIZE        |
-| Continuous Monitoring, |<--| Rate Optimization,    |
-| Governance, Automation |  | Right-Sizing, Waste    |
-+------------------------+  +------------------------+
-
-```
+![Cloud Financial Operations](assets/images/chapter25/25-4-Cloud-Financial-Operations.png)
 
 ### Core FinOps Phases
 
