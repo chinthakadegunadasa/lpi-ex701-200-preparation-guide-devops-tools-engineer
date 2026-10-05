@@ -181,25 +181,7 @@ Continuously track CPU utilization, memory consumption, disk IOPS, and network I
 
 In this lab, you will orchestrate a multi-provider infrastructure scenario using **Terraform/OpenTofu** alongside **MinIO** (simulating an on-premises enterprise object storage server) and **AWS S3** (representing public cloud storage). You will deploy unified, cross-cloud infrastructure components, configure automated cross-provider object replication, and apply tag-based FinOps governance.
 
-```
-+-----------------------------------------------------------------------------------+
-|                               Local Host Terminal                                 |
-|                                        |                                          |
-|                         [ Terraform / OpenTofu Plan ]                             |
-|                                        |                                          |
-|              +-------------------------+-------------------------+                |
-|              |                                                   |                |
-v              v                                                   v                v
-+------------------------------------+               +------------------------------+
-|     On-Premises / Local Layer      |               |     Public Cloud (AWS S3)    |
-|  +------------------------------+  |               |  +------------------------+  |
-|  | MinIO Storage Server         |  | S3 API Sync   |  | Production Cloud       |  |
-|  | (Port 9000 / 9001)           |==|==============>|  | Offsite Backup Bucket  |  |
-|  | Bucket: local-datacenter-data|  | (Cross-Cloud) |  | Bucket: cloud-backup-..|  |
-|  +------------------------------+  |               |  +------------------------+  |
-+------------------------------------+               +------------------------------+
-
-```
+![Hands-On Lab](assets/images/chapter25/25-5-Hands-On-Lab.png)
 
 ### Step 1: Environment Setup & Local MinIO Deployment
 
@@ -334,14 +316,11 @@ terraform init
 terraform plan
 ```
 
-
 3. Apply the configuration to provision the multi-cloud storage infrastructure:
 
 ```bash
 terraform apply -auto-approve
 ```
-
-
 *Expected Output Snippet:*
 
 ```text
@@ -356,7 +335,6 @@ Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 # Set alias for local MinIO on-premises cluster
 docker exec -it minio-onprem mc alias set onprem http://localhost:9000 enterprise_admin EnterpriseSecurePassword123!
 ```
-
 
 2. Create a dummy sample payload representing enterprise log files:
 
@@ -398,7 +376,6 @@ docker exec -it minio-onprem mc ls onprem/enterprise-offsite-archive-bucket/logs
 terraform show | grep -A 8 "tags"
 ```
 
-
 2. Verify that all public cloud resources have required metadata tags (`Environment`, `CostCenter`, `Owner`) assigned to ensure cost attribution:
 
 ```text
@@ -423,6 +400,9 @@ rm -rf /tmp/hybrid-data ~/multicloud-lab
 In this lab, you successfully:
 
 1. Deployed an on-premises S3-compatible storage cluster using MinIO alongside public cloud abstractions via Terraform.
+
 2. Configured cross-provider Infrastructure-as-Code definitions isolating local ingest buckets from public cloud archive buckets.
+
 3. Enforced FinOps governance by applying cost-allocation tagging and lifecycle rules for automated storage tiering.
+
 4. Executed cross-cloud data replication protocols simulating a hybrid cloud disaster recovery and archiving topology.
