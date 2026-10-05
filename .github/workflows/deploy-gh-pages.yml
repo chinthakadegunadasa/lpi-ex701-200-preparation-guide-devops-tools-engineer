@@ -95,7 +95,7 @@ jobs:
 
           nav_yaml = '\n'.join(nav_entries)
 
-          # Construct configuration without f-string brackets collision
+          # Construct configuration with left navigation pane enabled
           config_content = (
               'site_name: LPI 701-200 DevOps Tools Engineer Handbook\n'
               'site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200\n'
@@ -124,7 +124,6 @@ jobs:
               '    - navigation.instant\n'
               '    - navigation.tracking\n'
               '    - navigation.top\n'
-              '    - navigation.tabs\n'
               '    - search.suggest\n'
               '    - search.highlight\n'
               '    - content.code.copy\n\n'
