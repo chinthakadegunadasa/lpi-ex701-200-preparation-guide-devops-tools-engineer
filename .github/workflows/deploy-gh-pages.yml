@@ -1,61 +1,83 @@
-name: Publish Book to GitHub Pages
+name: Deploy Markdown Book to GitHub Pages
 
 on:
   push:
     branches:
-      - main
-      - master
+      - main  # or 'master'
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Source Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install Pandoc & Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc rsync
+
+      - name: Build HTML Site from Markdown
+        run: |
+          mkdir -p _site
+
+          REPO_NAME="${{ github.event.repository.name }}"
+          BASE_URL="/${REPO_NAME}/"
+
+          # 1. Copy all static assets (images, assets, media) first
+          rsync -av --exclude='.git' --exclude='.github' --exclude='_site' ./ _site/
+
+          # 2. Convert TOC.md into index.html
+          if [ -f "TOC.md" ]; then
+            pandoc TOC.md -s \
+              --metadata title="LPI 701-200 Preparation Guide" \
+              -A <(echo "<script>
+                // Convert remaining .md links in client-side DOM to .html
+                document.querySelectorAll('a[href$=\"\"]').forEach(a => {
+                  if (a.getAttribute('href').endsWith('.md')) {
+                    a.setAttribute('href', a.getAttribute('href').replace(/\.md$/, '.html'));
+                  }
+                });
+              </script>") \
+              -o _site/index.html
+          fi
+
+          # 3. Convert all Markdown (.md) files to HTML and fix internal markdown links
+          find . -name "*.md" ! -path "./_site/*" ! -path "./.github/*" | while read -r md_file; do
+            rel_path="${md_file#./}"
+            html_path="_site/${rel_path%.md}.html"
+            mkdir -p "$(dirname "$html_path")"
+            
+            # Convert markdown to html using pandoc
+            pandoc "$md_file" -s \
+              --metadata title="LPI 701-200 Preparation Guide" \
+              -o "$html_path"
+
+            # Post-process generated HTML: convert links pointing to .md files to .html
+            sed -i -E 's/href="([^"]+)\.md"/href="\1.html"/g' "$html_path"
+            sed -i -E 's/href="([^"]+)\.md#([^"]+)"/href="\1.html#\2"/g' "$html_path"
+          done
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          python-version: '3.x'
-
-      - name: Install MkDocs & Extensions
-        run: |
-          pip install mkdocs mkdocs-material mkdocs-awesome-pages-plugin
-
-      - name: Prepare Documentation Structure
-        run: |
-          mkdir -p docs
-          cp *.md docs/ 2>/dev/null || true
-          if [ -d "chapters" ]; then cp -r chapters/* docs/ 2>/dev/null || true; fi
-          if [ -f "docs/TOC.md" ]; then cp docs/TOC.md docs/index.md; fi
-
-      - name: Generate MkDocs Configuration
-        run: |
-          cat << 'EOF' > mkdocs.yml
-          site_name: LPI 701-200 Preparation Guide
-          docs_dir: docs
-          theme:
-            name: material
-            palette:
-              scheme: slate
-              primary: indigo
-            features:
-              - navigation.top
-              - search.suggest
-              - search.highlight
-              - content.code.copy
-          plugins:
-            - search
-            - awesome-pages
-          markdown_extensions:
-            - pymdownx.highlight
-            - pymdownx.superfences
-            - tables
-          EOF
+          path: '_site'
 
       - name: Deploy to GitHub Pages
-        run: |
-          mkdocs gh-deploy --force
+        id: deployment
+        uses: actions/deploy-pages@v4
