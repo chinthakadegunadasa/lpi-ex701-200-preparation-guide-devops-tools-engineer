@@ -42,38 +42,42 @@ jobs:
           import re
 
           def natural_sort_key(s):
+              # Splits string into integers and non-digits for natural numerical sorting
               return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
-          # Collect all markdown files excluding build and pipeline folders
+          # Collect all chapter markdown files
           md_files = []
           for root, _, files in os.walk('.'):
-              if '_site' in root or '.github' in root:
+              # Exclude site output, github actions, and temporary directories
+              if any(ignored in root for ignored in ['_site', '.github', '.git', 'site']):
                   continue
               for f in files:
                   if f.endswith('.md') and f.lower() not in ['toc.md', 'readme.md']:
                       rel_path = os.path.relpath(os.path.join(root, f), '.').replace('\\\\', '/')
                       md_files.append(rel_path)
 
-          # Natural ascending numerical sort (Chapter 1, Chapter 2 ... Chapter 10, Chapter 25)
+          # Force natural numerical sort on file paths
           md_files.sort(key=natural_sort_key)
 
-          # Build navigation list
-          nav_lines = []
+          # Construct navigation tree for MkDocs
+          nav_entries = []
           if os.path.exists('TOC.md'):
-              nav_lines.append('  - \"Table of Contents\": \"TOC.md\"')
+              nav_entries.append('  - \"Table of Contents\": \"TOC.md\"')
 
           for f in md_files:
-              clean_name = os.path.splitext(os.path.basename(f))[0]
-              clean_title = re.sub(r'([a-zA-Z]+)(\d+)', r'\1 \2', clean_name).replace('_', ' ').replace('-', ' ').title()
-              nav_lines.append(f'  - \"{clean_title}\": \"{f}\"')
+              filename = os.path.splitext(os.path.basename(f))[0]
+              # Format clean title (e.g. Chapter25 -> Chapter 25)
+              clean_title = re.sub(r'([a-zA-Z]+)(\d+)', r'\1 \2', filename).replace('_', ' ').replace('-', ' ').title()
+              nav_entries.append(f'  - \"{clean_title}\": \"{f}\"')
 
-          nav_yaml = '\n'.join(nav_lines)
+          nav_yaml = '\n'.join(nav_entries)
 
           config_content = f\"\"\"site_name: LPI 701-200 DevOps Tools Engineer Handbook
   site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200
   site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa
   site_url: https://chinthakadegunadasa.github.io/lpi-ex701-200-preparation-guide-devops-tools-engineer/
 
+  docs_dir: '.'
   use_directory_urls: false
 
   theme:
@@ -127,6 +131,21 @@ jobs:
       - name: Build Site with MkDocs
         run: |
           mkdocs build --site-dir _site
+
+      - name: Sync Static Assets and Images into Site Root
+        run: |
+          # Copy all non-markdown media assets (png, jpg, svg, gif) into the output directory
+          rsync -av --include='*/' \
+                    --include='*.png' \
+                    --include='*.jpg' \
+                    --include='*.jpeg' \
+                    --include='*.svg' \
+                    --include='*.gif' \
+                    --exclude='*' \
+                    --exclude='.git' \
+                    --exclude='.github' \
+                    --exclude='_site' \
+                    ./ _site/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
