@@ -24,82 +24,105 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Pandoc & Tools
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install MkDocs Material & Extensions
         run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc rsync python3
+          pip install mkdocs \
+                      mkdocs-material \
+                      pymdown-extensions
 
-      - name: Build HTML Site with Ascending Chapter Order
+      - name: Generate mkdocs.yml and Process Natural Chapter Order
         run: |
-          mkdir -p _site
-
-          # 1. Copy all non-markdown static assets (images, CSS, code snippets)
-          rsync -av --exclude='.git' --exclude='.github' --exclude='_site' ./ _site/
-
-          # 2. Re-order TOC.md into natural ascending numerical order using Python
           python3 -c "
+          import os
           import re
 
-          def natural_sort_key(text):
-              # Splits string into integers and non-integer chunks for natural numerical sorting
-              return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', text)]
+          def natural_sort_key(s):
+              return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
-          try:
-              with open('TOC.md', 'r', encoding='utf-8') as f:
-                  content = f.read()
+          # Gather all markdown files excluding hidden and infrastructure docs
+          md_files = []
+          for root, _, files in os.walk('.'):
+              if '_site' in root or '.github' in root:
+                  continue
+              for f in files:
+                  if f.endswith('.md') and f != 'TOC.md' and f != 'README.md':
+                      rel_path = os.path.relpath(os.path.join(root, f), '.').replace('\\\\', '/')
+                      md_files.append(rel_path)
 
-              lines = content.splitlines()
-              header_lines = []
-              chapter_lines = []
+          md_files.sort(key=natural_sort_key)
 
-              for line in lines:
-                  # Detect list items or links referencing chapter files
-                  if re.search(r'\[.*\]\(.*\.md\)', line) or line.strip().startswith(('-', '*', '1.')):
-                      chapter_lines.append(line)
-                  else:
-                      header_lines.append(line)
+          # Build MkDocs Navigation structure
+          nav_lines = []
+          if os.path.exists('TOC.md'):
+              nav_lines.append('  - \"Table of Contents\": \"TOC.md\"')
 
-              # Sort chapter links using natural numerical sorting
-              chapter_lines.sort(key=natural_sort_key)
+          for f in md_files:
+              # Format clean title from filename (e.g., Chapter25.md -> Chapter 25)
+              clean_name = os.path.splitext(os.path.basename(f))[0]
+              clean_title = re.sub(r'([a-zA-Z]+)(\d+)', r'\1 \2', clean_name).replace('_', ' ').replace('-', ' ').title()
+              nav_lines.append(f'  - \"{clean_title}\": \"{f}\"')
 
-              # Write back sorted TOC.md
-              with open('TOC.md', 'w', encoding='utf-8') as f:
-                  f.write('\n'.join(header_lines) + '\n\n' + '\n'.join(chapter_lines) + '\n')
-          except Exception as e:
-              print(f'TOC processing note: {e}')
+          nav_yaml = '\n'.join(nav_lines)
+
+          config_content = f\"\"\"site_name: LPI 701-200 DevOps Tools Engineer Handbook
+  site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200
+  site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa
+
+  theme:
+    name: material
+    palette:
+      - media: \"(prefers-color-scheme: light)\"
+        scheme: default
+        primary: indigo
+        accent: indigo
+        toggle:
+          icon: material/brightness-7
+          name: Switch to dark mode
+      - media: \"(prefers-color-scheme: dark)\"
+        scheme: slate
+        primary: indigo
+        accent: lime
+        toggle:
+          icon: material/brightness-4
+          name: Switch to light mode
+    features:
+      - navigation.instant
+      - navigation.tracking
+      - navigation.top
+      - navigation.tabs
+      - navigation.sections
+      - search.suggest
+      - search.highlight
+      - content.code.copy
+
+  markdown_extensions:
+    - admonition
+    - pymdownx.superfences
+    - pymdownx.highlight:
+        anchor_linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.tabbed:
+        alternate_style: true
+    - tables
+    - attr_list
+
+  nav:
+  {nav_yaml}
+  \"\"\"
+
+          with open('mkdocs.yml', 'w', encoding='utf-8') as f:
+              f.write(config_content)
           "
 
-          # 3. Convert sorted TOC.md to index.html
-          if [ -f "TOC.md" ]; then
-            pandoc TOC.md -s \
-              --metadata title="LPI 701-200 Preparation Guide" \
-              -A <(echo "<script>
-                document.addEventListener('DOMContentLoaded', () => {
-                  document.querySelectorAll('a[href$=\"\"]').forEach(a => {
-                    if (a.getAttribute('href').endsWith('.md')) {
-                      a.setAttribute('href', a.getAttribute('href').replace(/\.md$/, '.html'));
-                    }
-                  });
-                });
-              </script>") \
-              -o _site/index.html
-          fi
-
-          # 4. Convert all Markdown files in natural numerical order (`sort -V`)
-          find . -name "*.md" ! -path "./_site/*" ! -path "./.github/*" | sort -V | while read -r md_file; do
-            rel_path="${md_file#./}"
-            html_path="_site/${rel_path%.md}.html"
-            mkdir -p "$(dirname "$html_path")"
-            
-            # Convert markdown file to standalone HTML page
-            pandoc "$md_file" -s \
-              --metadata title="LPI 701-200 Preparation Guide" \
-              -o "$html_path"
-
-            # Post-process generated HTML: update internal markdown links to HTML
-            sed -i -E 's/href="([^"]+)\.md"/href="\1.html"/g' "$html_path"
-            sed -i -E 's/href="([^"]+)\.md#([^"]+)"/href="\1.html#\2"/g' "$html_path"
-          done
+      - name: Build Site with MkDocs
+        run: |
+          mkdocs build --site-dir _site
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
