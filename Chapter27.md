@@ -10,18 +10,8 @@ This chapter covers the foundational principles of chaos engineering, infrastruc
 
 Chaos Engineering is not random destruction; it is a structured, scientific methodology for uncovering systemic vulnerabilities before they trigger customer-impacting incidents.
 
-```
+![Principles of Chaos Engineering](assets/images/chapter27/27-1-Principles-of-Chaos-Engineering.png)
 
-+------------------+     +-------------------+     +---------------------+     +--------------------+
-|  Define Steady   | --> | Formulate Chaos   | --> | Inject Controlled   | --> | Compare Telemetry  |
-|  State Metrics   |     | Hypothesis        |     | Fault / Failure     |     | to Steady State    |
-+------------------+     +-------------------+     +---------------------+     +--------------------+
-|                          |
-v                          v
-[ Blast Radius Control ]    [ Uncovered Defect? ]
-[ Automated Abort Rules]    [ Refactor & Harden ]
-
-```
 
 ### The Core Principles
 
