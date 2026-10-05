@@ -57,26 +57,20 @@ E2E tests simulate authentic user interactions across the entire system layer—
 
 Deploying build artifacts to target environments without rapid verification risks breaking live staging or production services. Smoke tests and acceptance tests act as deployment firewalls.
 
-```
-+------------------+     +-------------------+     +---------------------+     +--------------------+
-| Artifact Build   | --> | Deploy to Staging | --> | Run Smoke Suite     | --> | Run Acceptance     |
-| & Unit Passing   |     | Target            |     | (Pass: Health Check)|     | Regression Suite   |
-+------------------+     +-------------------+     +---------------------+     +--------------------+
-| (Fail)                    | (Fail)
-v                           v
-+------------------------------------------------+
-| Automated Pipeline Abort & Instant Rollback    |
-+------------------------------------------------+
-```
+![Automated Acceptance and Smoke Testing in Pipelines](assets/images/chapter26/26-2-Automated-Acceptance-and-Smoke-Testing-in-Pipelines.png)
 
 ### Smoke Testing Mechanics
+
 Smoke tests ("Sanity Checks") consist of a small set of fast, non-destructive tests designed to verify that the core functionality of a newly deployed environment is stable before executing deeper regression suites.
 
 *   **Objective:** Confirm that services respond over network interfaces, basic routes exist, databases are reachable, and primary API endpoints return HTTP 200/201 series status codes.
+
 *   **Execution Duration:** < 30 seconds.
+
 *   **Action on Failure:** Immediate, automated pipeline termination and deployment rollback.
 
 #### Example: Shell-based Pipeline Smoke Test (`smoke_test.sh`)
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -113,7 +107,9 @@ Evaluating system response times, throughput (RPS), and failure boundaries under
 ### Performance Testing Concepts
 
 * **Load Testing:** Assessing system performance under expected peak operational loads.
+
 * **Stress Testing:** Pushing the system beyond normal load thresholds to determine maximum limits and observe how gracefully system recovery occurs.
+
 * **Spike Testing:** Injecting sudden, extreme increases in traffic to evaluate autoscaling latency and circuit breaker behavior.
 
 ### k6 Framework (Developer-Centric & Modern Scripting)
@@ -176,16 +172,7 @@ class EnterpriseUserBehavior(HttpUser):
 
 ## 26.4 Test-Driven Development (TDD) & Behavior-Driven Development (BDD) Paradigms
 
-```
-+-----------------------------------------------------------------------------------+
-|                        Development Paradigm Workflows                             |
-+-----------------------------------------------------------------------------------+
-| TDD Cycle:  [ Write Failing Test ] -> [ Write Minimal Code ] -> [ Refactor ]       |
-|                                                                                   |
-| BDD Cycle:  [ Define Feature File] -> [ Implement Step Defs] -> [ Run Pipeline ]  |
-|             (Gherkin Syntax)          (Glue Code)               (Automated UAT)   |
-+-----------------------------------------------------------------------------------+
-```
+![Development Paradigm Workflows](assets/images/chapter26/26-4-Development-Paradigm-Workflows.png)
 
 ### Test-Driven Development (TDD)
 
@@ -194,7 +181,9 @@ TDD is an iterative engineering process centered on writing test cases before wr
 #### The Red-Green-Refactor Loop:
 
 1. **RED:** Write a precise unit test for a desired feature. Execute the test and verify that it **fails** (since feature code does not exist yet).
+
 2. **GREEN:** Write the minimal necessary production code to make the test pass.
+
 3. **REFACTOR:** Clean up and optimize the implementation code while ensuring all unit tests remain green.
 
 ### Behavior-Driven Development (BDD)
