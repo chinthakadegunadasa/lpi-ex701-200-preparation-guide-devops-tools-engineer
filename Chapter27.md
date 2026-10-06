@@ -36,21 +36,7 @@ Chaos experiments must be controlled to prevent catastrophic outages.
 
 Executing realistic failure scenarios requires manipulating Linux kernel-level interfaces, networking protocols, and system resources.
 
-```
-
-+-----------------------------------------------------------------------------------+
-|                        Linux Kernel & Chaos Interfaces                            |
-+------------------------------------+----------------------------------------------+
-| Fault Type                         | Underlying Kernel / System Mechanism         |
-+------------------------------------+----------------------------------------------+
-| Network Latency / Packet Loss      | `tc` (Traffic Control) & `netem` (Network    |
-|                                    | Emulation) via eBPF or cgroups               |
-| Disk I/O & Storage Exhaustion      | `dd`, `fio`, or kernel I/O fault injection   |
-| Memory Exhaustion                  | Cgroup memory limits, cgroup OOM triggers    |
-| Process Termination / Node Failure | `kill -9`, SIGKILL, cgroup freezes, EC2 API  |
-+------------------------------------+----------------------------------------------+
-
-```
+![Linux Kernel & Chaos Interfaces](assets/images/chapter27/27-2-Linux-Kernel-and-Chaos-Interfaces.png)
 
 ### 1. Network Fault Emulation with `tc` and `netem`
 
