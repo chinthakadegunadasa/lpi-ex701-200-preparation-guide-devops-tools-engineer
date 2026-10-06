@@ -1,4 +1,4 @@
-# Chapter 3: Enterprise DevSecOps & Security Compliance
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/3da1142e-83ce-44e4-a8e4-75b0c8ecad43" /># Chapter 3: Enterprise DevSecOps & Security Compliance
 
 ## 3.1 Shift-Left Security Principles in CI/CD Pipelines
 
