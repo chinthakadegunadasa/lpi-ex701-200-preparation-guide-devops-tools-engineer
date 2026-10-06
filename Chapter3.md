@@ -128,7 +128,6 @@ vault write auth/kubernetes/role/app-role \
 You are assigned to build an automated DevSecOps security pipeline for a critical microservice. The pipeline must enforce strict security controls: detect hardcoded secrets using Gitleaks, perform SAST analysis via Semgrep, verify container dependencies with Trivy, sign the built artifact using Cosign, and execute a DAST baseline security scan against the staging application endpoint.
 
 ![Hands-On DevSecOps Pipeline Security Architecture](assets/images/chapter3/3-5-Hands-On-DevSecOps-Pipeline-Security-Architecture.png)
-
 ### Step-by-Step Implementation
 
 #### Step 1: Pre-commit Secret Scanning Configuration (`.gitleaks.toml`)
