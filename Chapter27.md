@@ -158,22 +158,7 @@ spec:
 
 Quantifying system resiliency requires tracking recovery timelines and service availability metrics during and after fault injection experiments.
 
-```
-Service
-Performance
-   |
-   | Steady-State Baseline
----|===================\                           /===================== (Recovered)
-   |                    \                         /
-   |                     \ Failure Introduced    /
-   |                      \                     /
-   |                       \-------------------/ 
-   |                            Degraded State
-   +----------------------------------------------------------------------> Time
-                         |<---->|             |<---->|
-                          MTTD                  MTTR
-
-```
+![Service Performance Timeline](assets/images/chapter27/27-4-Service-Performance-Timeline.png)
 
 ### Key Metrics for Resiliency Analysis
 
