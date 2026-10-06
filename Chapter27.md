@@ -81,28 +81,7 @@ Modern cloud-native systems rely on specialized chaos orchestration frameworks t
 
 **Chaos Mesh** is an open-source, Cloud Native Computing Foundation (CNCF) hosted Kubernetes-native chaos engineering platform. It uses Custom Resource Definitions (CRDs) to orchestrate complex failure modes across pods, network interfaces, filesystems, and Linux kernels.
 
-```
-+-----------------------------------------------------------------------------------+
-|                            Chaos Mesh Architecture                                |
-|                                                                                   |
-|    +-------------------------------------------------------------------------+    |
-|    | Chaos Dashboard / CRDs (PodChaos, NetworkChaos, StressChaos)          |    |
-|    +------------------------------------v------------------------------------+    |
-|                                         |                                         |
-|    +------------------------------------v------------------------------------+    |
-|    | Chaos Controller Manager (Reconciles CRDs & Schedules Faults)           |    |
-|    +------------------------------------v------------------------------------+    |
-|                                         |                                         |
-|                   +---------------------+---------------------+                   |
-|                   |                                           |                   |
-|                   v                                           v                   |
-|    +-----------------------------+             +-----------------------------+    |
-|    | Chaos Daemon (DaemonSet)    |             | Chaos Daemon (DaemonSet)    |    |
-|    | Node A (Applies tc / ptrace)|             | Node B (Applies tc / ptrace)|    |
-|    +-----------------------------+             +-----------------------------+    |
-+-----------------------------------------------------------------------------------+
-
-```
+![](assets/images/chapter27/27-3-Chaos-Mesh-Architecture.png)
 
 #### Key Architecture Components:
 
