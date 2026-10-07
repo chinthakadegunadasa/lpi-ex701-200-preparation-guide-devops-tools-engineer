@@ -6,39 +6,12 @@ In monolithic architectures, service communication relies on static hostnames, f
 
 ### Client-Side Discovery vs. Server-Side Discovery
 
-```
-+-----------------------------------------------------------------------------------+
-|                              CLIENT-SIDE DISCOVERY                                |
-|                                                                                   |
-|  +--------+   1. Query Instances   +-------------------+                          |
-|  | Client | ---------------------> | Service Registry  |                          |
-|  |        | <--------------------- | (Consul/Etcd/etc) |                          |
-|  +--------+   2. IP List Returned  +-------------------+                          |
-|      |                                                                            |
-|      | 3. Direct Request to Selected Instance (Client-side Load Balancing)        |
-|      v                                                                            |
-|  +-----------------+                                                              |
-|  | Service Instance|                                                              |
-|  +-----------------+                                                              |
-+-----------------------------------------------------------------------------------+
+![Client-Side Discovery](assets/images/chapter7/7-1-Client-Side-Discovery.png)
 
-+-----------------------------------------------------------------------------------+
-|                              SERVER-SIDE DISCOVERY                                |
-|                                                                                   |
-|  +--------+   1. Request    +-------------------+   2. Query   +----------------+ |
-|  | Client | --------------> | Load Balancer /   | -----------> | Service        | |
-|  |        |                 | Router (Traefik)  | <----------- | Registry       | |
-|  +--------+                 +-------------------+   3. IP List +----------------+ |
-|                                       |                                           |
-|                                       | 4. Proxy Traffic                          |
-|                                       v                                           |
-|                             +-------------------+                                 |
-|                             | Service Instance  |                                 |
-|                             +-------------------+                                 |
-+-----------------------------------------------------------------------------------+
-```
+![Server-Side Discovery](assets/images/chapter7/7-1-Server-Side-Discovery.png)
 
 #### Client-Side Discovery
+
 In client-side discovery, the client application queries the Service Registry directly to discover available service instances. The client executes its own load-balancing algorithm (e.g., Round-Robin, Least Connections, Random) and sends traffic straight to the target instance.
 
 *   **Advantages**:
@@ -58,31 +31,13 @@ In server-side discovery, the client issues a standard network request to a rout
     *   Introduces an additional network hop, slightly increasing request latency.
     *   Requires managing high-availability clusters for the load balancers/routers.
 
----
-
 ### Service Registry Architecture & Consensus Algorithms
 
 The Service Registry acts as the central source of truth for the location, status, and metadata of microservices across an infrastructure. Because a compromised or stale registry causes widespread cascading system outages, registries must be distributed, highly available, and strongly consistent.
 
 Modern registries use consensus algorithms—primarily **Raft**—to maintain consistency across cluster nodes.
 
-```
-       +-------------------------------------------------------------+
-       |                   RAFT CONSENSUS CLUSTER                    |
-       |                                                             |
-       |                   +-------------------+                     |
-       |                   |    LEADER NODE    |                     |
-       |                   | (Handles Writes)  |                     |
-       |                   +-------------------+                     |
-       |                     /               \                       |
-       |         Heartbeat  /                 \  Heartbeat           |
-       |         & Replicate                   & Replicate           |
-       |                   v                   v                     |
-       |         +-----------+               +-----------+           |
-       |         | FOLLOWER  |  <---LAN--->  | FOLLOWER  |           |
-       |         +-----------+  Gossip (Serf) +-----------+           |
-       +-------------------------------------------------------------+
-```
+![ RAFT CONSENSUS CLUSTER](assets/images/chapter7/7-1-RAFT-CONSENSUS-CLUSTER.png)
 
 #### Raft Protocol Essentials
 *   **Leader-Based System**: A cluster consists of a single **Leader** and multiple **Followers**. All state modifications (such as registering services or updating health statuses) must pass through the Leader node.
