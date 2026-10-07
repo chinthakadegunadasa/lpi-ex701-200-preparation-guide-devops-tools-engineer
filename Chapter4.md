@@ -120,6 +120,127 @@ Direct application database connections can deplete database connection limits u
 
 ![Database Connection Pooling and Read/Write Splitting Topology](assets/images/chapter4/4-4-Database-Connection-Pooling-and-Read-Write-Splitting-Topology.png)
 
+**Database Connection Pooling and Read/Write Splitting Topology**
+
+### Encrypted Traffic
+
+* `GET /api/v1/orders`
+
+### Application Service Nodes (K8s pods)
+
+#### Thread Pool
+
+*Dashed Border Container*
+
+* **Thread 01: [fn_process]**
+* `fn_process:`
+* `if process: (id: 101`
+* `telemetry, cpu: 75%`
+
+
+* **Thread 02: [listen 80:80]**
+* `fn_process:`
+* `order: ft retry > 3 { value: DLQ`
+
+
+* **Thread N: [redis-cli SET ... ]**
+* `fn_process:`
+* `if retery set'SET SET`
+
+### Connection Management and Caching
+
+---
+
+#### Telemetry
+
+* `polyglot:`
+* `state:`
+* `pgsql`
+
+#### SAST Reports
+
+* `[telemetry, violations]`
+
+#### PgBouncer Connection Pools
+
+* **Primary_Pool**
+* `max_client_conn: 100`
+* `pool_mode: session`
+* `server_connect_timeout: 10s`
+
+* **pgbouncer.ini:**
+* `[primary] user=primary, host= ...`
+* `[replice] user=replice, host= ...`
+
+* **Replica_Pool**
+* `max_client_conn: 200`
+* `pool_mode: transaction`
+* `query_timeout: 5s`
+
+#### Inter-Node Logic
+
+* `Teleansages as in /57.png`
+* `Telemetry logic as: <IMAGE 0>`
+
+### Database Infrastructure
+
+#### Database Nodes
+
+* `polyglot database: redis`
+* `order_db: pgsql`
+* `Database`
+* `Dashboard Database`
+
+#### Primary PostgreSQL Database
+
+* `listen 5432:5432`
+* `role: primary, state: ACTIVE`
+* `shared_buffers: 4GB`
+* `wal_level: logical`
+* `max_connections: 50`
+
+#### Replication
+
+* **PostgreSQL Streaming Replication**
+* `wal_log_pos: 1024, deltas`
+* `log_offset, adapted`
+
+#### PostgreSQL Read Replicas
+
+* **replica_01:5432**
+* `role: replica, state: ACTIVE`
+* `shared_buffers: 8GB`
+* `hot_standby: on`
+
+* **replica_02:5432**
+* `role: replica, state: ACTIVE`
+* `shared_buffers: 8GB`
+* `hot_standby: on`
+
+
+* **replica_03:5432**
+* `role: replica, state: ACTIVE`
+* `shared_buffers: 8GB`
+* `hot_standby: on`
+
+### Logic and Operations
+
+#### SQL Commands
+
+* **INSERT/UPDATE**
+* `SQL INSERT/UPDATE [queries]`
+* `SQL WRITE/UPDATE INSERT INTO orders ... UPDATE users SET ...`
+
+* **SELECT**
+* `SQL SELECT [queries]`
+* `SQL SELECT SELECT * FROM orders ... SELECT user_id FROM tokens ...`
+
+#### Operational Logic
+
+* `Logic <IMAGE>`
+* `Distributed Data`
+* `Active failover path: sentinel`
+* `Telemetry logic`
 ### PgBouncer Transaction Pooling Configuration
 
 PgBouncer manages client connections efficiently, reducing overhead on PostgreSQL database instances.
@@ -149,6 +270,7 @@ reserve_pool_timeout = 5
 ## 4.5 Hands-On Lab: Provisioning an HAProxy, Redis, and RabbitMQ Application Stack
 
 ### Lab Scenario
+
 You are tasked with building a resilient enterprise middleware tier. The application stack requires HAProxy to act as an edge load balancer, routing incoming traffic to an ingestion service. This service publishes order events to a RabbitMQ message broker, which worker instances consume and cache in a high-availability Redis instance.
 
 ![Hands-On Decoupled Lab Infrastructure](assets/images/chapter4/4-5-Hands-On-Decoupled-Lab-Infrastructure.png)
