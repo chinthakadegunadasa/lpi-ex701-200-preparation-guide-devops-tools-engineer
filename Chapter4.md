@@ -92,6 +92,123 @@ In-memory data stores drastically decrease database read pressure and reduce end
 
 ![Enterprise Caching Strategies and Redis Cluster Topology](assets/images/chapter4/4-3-Enterprise-Caching-Strategies-and-Redis-Cluster-Topology.png)
 
+# Database Connection Pooling and Read/Write Splitting Topology
+
+## Overview
+
+This diagram illustrates an advanced database infrastructure topology focusing on **connection pooling** (using PgBouncer) and **read/write splitting**. It separates application nodes from backend data services to optimize performance, manage resource contention, and improve availability within a Kubernetes (`K8s`) environment.
+
+## High-Level View of Architecture Layers
+
+The topology is divided into two primary logical layers:
+
+1.  **Application Service Nodes (K8s pods)**: This top layer represents the compute layer where application code executes.
+2.  **Database Infrastructure**: This bottom layer represents the stateful data layer, containing the actual databases, connection pools, and supporting services.
+
+## Part 1: Application Service Nodes (K8s pods)
+
+This section shows how application instances running in Kubernetes pods are organized.
+
+### Key Components:
+
+-   **Application Service Nodes (K8s pods)**: The overall container for the process layer.
+-   **Threads (Thread Boxes)**: Individual threads of execution within an application pod, showing different workloads.
+
+### Data Flow within Application Layer:
+
+1.  **Incoming Request**:
+    -   **Encrypted Traffic**: Reaches a thread, labeled as an HTTP `GET` request: `GET /api/v1/orders`.
+2.  **Thread 01: [fn_process]**:
+    -   Represents a processing function.
+    -   An internal arrow indicates internal application logic: `if process: (id: 101)`.
+    -   Another internal arrow represents telemetry data or resource monitoring, pointing to a server rack icon with the label: `telemetry, cpu: 75%`. This suggests performance monitoring is integral to the logic.
+3.  **Thread 02: [listen 80:80]**:
+    -   Represents a thread listening on a network port, likely for a polyglot database connection.
+    -   An arrow points from application logic (`order: if retry > 3`) to a server rack icon labeled: `polyglot state: pgsql`. This shows the decision logic before connecting to the database pool.
+    -   Another internal flow (`value: DLQ`) probably stands for Dead Letter Queue, a messaging concept, showing the thread's comprehensive function.
+4.  **Thread N: [redis-cli SET...]**:
+    -   Represents a thread utilizing a Redis client to set values, implying a caching or state management role in addition to database interaction.
+    -   An arrow points from application logic (`if retry set SET SET`) to a cache icon (server rack-like icon), showing the path of the SET command. This illustrates the complex nature of a modern application node interacting with multiple types of data stores.
+
+---
+
+## Part 2: Database Infrastructure (Bottom Layer)
+
+This section details the stateful components of the data layer.
+
+### Core Database Configuration
+
+-   **Primary PostgreSQL Database**:
+    -   Labeled `Primary PostgreSQL Database`.
+    -   **Listen Port**: `listen 5432:5432`.
+    -   **Role**: `primary`, **State**: `ACTIVE`. This is the single source for all write operations.
+    -   **Configuration Details**: `shared_buffers: 4GB`, `wal_level: logical`, `max_connections: 50`.
+
+-   **PostgreSQL Read Replicas**:
+    -   Labeled `PostgreSQL Read Replicas`.
+    -   A cluster of three read-only nodes for performance scaling: `replica_01:5432`, `replica_02:5432`, `replica_03:5432`.
+    -   A single label block summarizes their configuration: **Role**: `replica`, **State**: `ACTIVE`, `shared_buffers: 8GB`, `hot_standby: on`. Note: Read replicas often have larger shared buffers than primaries.
+
+### Key Data Movement Mechanisms
+
+-   **SQL Write/Update**:
+    -   Explicit arrows show the path for write traffic (`SQL INSERT/UPDATE [queries]`), directing them **only** to the Primary Database.
+    -   Labels give examples: `SQL WRITE/UPDATE`, `INSERT INTO orders...`, `UPDATE users SET...`.
+
+-   **SQL Read (SELECT)**:
+    -   Explicit arrows show the path for read traffic (`SQL SELECT [queries]`), directing them to the Read Replica cluster. This is the cornerstone of read/write splitting.
+    -   Labels give examples: `SQL SELECT`, `SELECT * FROM orders...`, `SELECT user_id FROM tokens...`.
+
+-   **PostgreSQL Streaming Replication**:
+    -   A key mechanism to propagate data changes from Primary to Replicas.
+    -   Labeled `PostgreSQL Streaming Replication`, pointing from Primary to Replicas.
+    -   Configuration detail: `wal_log_pos: 1024, deltas`, `log_offset, adapted`. This ensures data consistency across the cluster, despite being asynchronously.
+
+---
+
+## Part 3: Middle-Tier / Connection Pooling (PgBouncer Connection Pools)
+
+The central element of this entire topology, shown within the Database Infrastructure layer. It acts as a middleware layer to efficiently manage database connections.
+
+### Components:
+
+-   **PgBouncer Connection Pools**: The container box.
+-   **Primary_Pool**:
+    -   A dedicated pool for traffic directed to the Primary Database.
+    -   An arrow from `Thread 01` explicitly points to `Primary_Pool`, indicating it handles write operations.
+    -   Arrow details: `TLS Connection` (labeled `<IMAGE 1>` and pointing back to thread with an arrow and a gear icon indicating status or version) indicates secure connections.
+    -   Internal Configuration: `max_client_conn: 100`, `pool_mode: session`, `server_connect_timeout: 10s`. Note the difference with Replica_Pool.
+-   **Replica_Pool**:
+    -   A dedicated pool for traffic directed to the Read Replica cluster.
+    -   An arrow from `Thread 02` explicitly points to `Replica_Pool`, indicating it handles read operations.
+    -   Arrow details: `TLS Connection` (labeled `<IMAGE 3>` and pointing back to thread with an arrow and a gear icon indicating status or version) indicates secure connections.
+    -   Internal Configuration: `max_client_conn: 200`, `pool_mode: transaction`, `query_timeout: 5s`. Transaction pooling is ideal for read workloads.
+
+### Data Flow from Application through Middle-Tier:
+
+1.  **Read Workload Path**: Application thread `Thread 02` initiates a secure `TLS Connection` `<IMAGE 3>` (likely using a Postgres driver) to `Replica_Pool`. `Replica_Pool` manages the open, reusable connections (labeled `polyglot state: pgsql`) to the `PostgreSQL Read Replicas` for `SQL SELECT` queries.
+2.  **Write Workload Path**: Application thread `Thread 01` initiates a secure `TLS Connection` `<IMAGE 1>` to `Primary_Pool`. `Primary_Pool` manages the open connections (labeled `Telemetry logic as: <IMAGE 0>`, indicating its monitoring purpose is linked) to the single `Primary PostgreSQL Database` for `SQL INSERT/UPDATE` queries.
+
+This illustrates the complete separation of data flows and the critical role of connection pooling.
+
+---
+
+## Supporting and Ancillary Services
+
+-   **polyglot database: redis**:
+    -   A server rack-like cache icon labeled `polyglot database: redis`.
+    -   Connects via `Logic <IMAGE>` from the application nodes (thread N), confirming its role in caching or distributed data management, distinct from the primary relational database.
+-   **Distributed Data**:
+    -   A box labeled `Distributed Data`, with an arrow showing logic flow `Logic <IMAGE>` from application layer to it, suggesting a potential future data destination or source (e.g., event data, log data).
+-   **Active failover path: sentinel**:
+    -   An arrow points from a server rack icon labeled `Database` to a box labeled `Active failover path: sentinel`. This represents an automated high availability (HA) mechanism (likely generic, like Postgres-Sentinel or Patronie) to handle primary failure by promoting a replica, distinct from application logic.
+-   **Telemetry logic**:
+    -   Multiple connections between different components indicate a holistic telemetry strategy. For example, telemetry data (`Telemetry logic`) flows from the Primary DB pool to the main `Teleansages` data stream and then to an actual database icon (`order_db: pgsql`) for storage, labeled as `/57.png`. Another telemetry link `<IMAGE 0>` goes between the PgBouncer pool and the master DB. This highlights the importance of observability in a complex system.
+-   **Dashboard Database**:
+    -   A database icon (`dashboard db: pgsql`) receives data through a `Dashboard` logic connection from other databases or telemetry, implying it is the source for a performance monitoring dashboard.
+-   **SAST Reports [telemetry, violations]**:
+    -   A component box (`SAST Reports [telemetry, violations]`) with arrows `<IMAGE 0>` linking to database logic, suggesting it can capture performance and security violations from the database layer, completing the telemetry loop. This shows a very comprehensive monitoring strategy.
+
 ### Enterprise Redis Sentinel Configuration
 
 Redis Sentinel ensures high availability through automated monitoring, notifications, and master-replica failover.
@@ -216,7 +333,6 @@ Direct application database connections can deplete database connection limits u
 * `role: replica, state: ACTIVE`
 * `shared_buffers: 8GB`
 * `hot_standby: on`
-
 
 * **replica_03:5432**
 * `role: replica, state: ACTIVE`
