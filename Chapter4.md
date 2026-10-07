@@ -153,6 +153,124 @@ You are tasked with building a resilient enterprise middleware tier. The applica
 
 ![Hands-On Decoupled Lab Infrastructure](assets/images/chapter4/4-5-Hands-On-Decoupled-Lab-Infrastructure.png)
 
+# Hands-On Decoupled Lab Infrastructure
+
+## Overview
+
+This diagram illustrates the infrastructure and request flow for a decoupled, high-performance web application lab environment. It features separate read/write paths, connection pooling, database replication, and a comprehensive telemetry/reporting stack.
+
+## High-Level Request Flow
+
+The following describes the end-to-end journey of user requests through the system.
+
+### 1. Ingest
+
+* **Encrypted Traffic** enters the system via an HTTPS GET request: `GET /api/v1/orders`.
+
+### 2. Processing (Application Service Nodes - K8s Pods)
+
+The traffic is processed by application logic running in multiple threads.
+
+* **Thread Clusters** (A collection of three distinct processing flows):
+* **Thread 01: [fn_process]** (Primary write-heavy logic)
+* Contains internal service icons.
+* Action: `fn_process: if process: (id: 101) telemetry, cpu: 75%`.
+
+* **Thread 02: [listen 80:80]** (Service endpoint/listener)
+* Contains internal service icons.
+* Action: `fn_process: order: if retry > 3 { value: DLQ }`. (If retry count for an order is greater than 3, move request to a Dead Letter Queue.)
+* Connected to: `polyglot: state: pgsql`.
+
+* **Thread N: [redis-cli SET ...]** (Interaction with cache)
+* Contains internal service icons.
+* Action: `fn_process: if retery set’SET SET;`.
+* A dashed box surrounds all three Thread Clusters.
+* The entire processing layer interacts with a backend monitoring system.
+* A blue arrow leads from Thread 01 to the monitoring dashboard icon (top-right).
+* **Monitoring System Dashboard** (Top-right): Features map/location/geospatial icons, indicating geographic telemetry.
+
+### 3. Connection Pooling (PgBouncer)
+
+To efficiently manage database connections, requests pass through a **PgBouncer** layer.
+
+* Communication is secured via a `TLS Connection` (indicated by lock icons) between the thread layer and the pooling layer.
+* **PgBouncer Connection Pools**:
+* This is a large, central orange box.
+* It contains the central config, `pgbouncer.ini`, which defines the backend databases: `[primary] user=primary, host=...` and `[replice] user=replice, host=...`.
+* Two distinct pools exist:
+* **Primary_Pool** (Gold box): Configured for `max_client_conn: 100` and `pool_mode: session`, with a `server_connect_timeout: 10s`.
+* **Replica_Pool** (Orange box): Configured for `max_client_conn: 200` and `pool_mode: transaction`, with a `query_timeout: 5s`.
+
+### 4. Database Infrastructure (Read/Write Splitting)
+
+This is the core storage layer. Requests are routed to either the primary or replica databases based on the operation.
+
+* **Traffic Split** (Indicated by blue arrows):
+* Write/Update traffic flows from the `Primary_Pool` to the `Primary PostgreSQL Database`.
+* Read traffic flows from the `Replica_Pool` to the `PostgreSQL Read Replicas`.
+
+#### Write Path
+
+* **Queries** (Text): `SQL INSERT/UPDATE [queries]`.
+* **SQL WRITE/UPDATE [queries]** (Text): Contains example commands: `INSERT INTO orders ...` and `UPDATE users SET ...`.
+* **Primary PostgreSQL Database** (Large gold box):
+* Configuration details: `listen 5432:5432`, `role: primary, state: ACTIVE`.
+* Parameters: `shared_buffers: 4GB`, `wal_level: logical`, `max_connections: 50`.
+
+#### Read Path
+
+* **Queries** (Text): `SQL SELECT [queries]`.
+* **SQL SELECT [queries]** (Text): Contains example commands: `SELECT * FROM orders ...` and `SELECT user_id FROM tokens ...`.
+* **PostgreSQL Read Replicas** (Large blue box):
+* This box contains three individual replica nodes.
+* `replica_01:5432`
+* `replica_02:5432`
+* `replica_03:5432`
+
+* Each replica node shares identical configuration details: `role: replica, state: ACTIVE`, `shared_buffers: 8GB`, `hot_standby: on`.
+
+## Infrastructure Management & Telemetry
+
+Beyond the basic request flow, the lab includes robust management and data collection components.
+
+### 1. Database Replication
+
+Data consistency between the Primary and Replicas is maintained via streaming.
+
+* **PostgreSQL Streaming Replication** (Gold horizontal arrow): Communicates data from the Primary to the Read Replicas.
+* Technical details: `wal_log_pos: 1024, deltas log_offset, adapted`.
+
+### 2. Polyglot Persistence & Distributed Data
+
+The lab showcases polyglot persistence, using different database types for specialized needs.
+
+* **Distributed Data** (Small gold box): Represents a highly-distributed datastore (e.g., Apache Cassandra, DynamoDB).
+* **polyglot database: redis** (Text): Associated with the stack of server icons (bottom-left).
+* A `Logic <IMAGE>` tag connects to the `Distributed Data` box.
+
+### 3. Failover and Telemetry Logic
+
+The diagram provides insight into system monitoring and resilience.
+
+* **Active failover path: sentinel** (Text): Connected to a purple component (bottom-right), indicating use of Redis Sentinel or a similar technology for high availability and failover management.
+* **Telemetry logic** (Text): Flows from the central `PgBouncer Connection Pools` (via a green arrow) down to the series of database icons and failover logic at the bottom.
+* **Dashboard Database** (Bottom-right, purple): A specialized database to support the geometric telemetry dashboard shown at the top-right.
+
+### 4. SAST Reporting
+
+The infrastructure includes a security component.
+
+* **SAST Reports [telemetry, violations]** (Top-right gray box): Collects security telemetry and lists code violations. Connected to `order_db: pgsql`.
+
+### 5. Supplemental Content Tags
+
+Throughout the diagram, text placeholders indicate links to supplemental, image-specific learning materials for lab students.
+
+* `<IMAGE 0>` is referenced twice: Once in the DAST/Monitoring section (top-right) and once as `Telemetry logic as: <IMAGE 0>` in the central PgBouncer block.
+* `<IMAGE 1>` and `<IMAGE 3>` are both referenced to supplemental `TLS Connection` tags between the Thread Clusters and PgBouncer.
+* `Logic <IMAGE>` is referenced next to Distributed Data (bottom-left).
+* A reference to `Teleansages as in /57.png` is placed next to the `PgBouncer` block.
+
 ### Step-by-Step Implementation
 
 #### Step 1: Define Stack via Docker Compose (`docker-compose.yml`)
@@ -258,6 +376,9 @@ backend app_back
 ### Key Exam Takeaways (LPI 701-200)
 
 * **Reverse Proxies vs. Load Balancers:** Reverse proxies like NGINX manage HTTP headers, TLS termination, and request routing, while dedicated load balancers like HAProxy excel at high-performance traffic distribution across layers 4 and 7.
-* **Message Decoupling:** RabbitMQ provides complex routing through AMQP bindings and queues, whereas Apache Kafka acts as a high-throughput, log-based event streaming platform.
+
+* * **Message Decoupling:** RabbitMQ provides complex routing through AMQP bindings and queues, whereas Apache Kafka acts as a high-throughput, log-based event streaming platform.
+
 * **Caching Eviction Policies:** Redis supports robust eviction policies (`allkeys-lru`, `volatile-lru`) to maintain performance when memory limits are reached.
+
 * **Connection Pooling:** PgBouncer prevents database resource exhaustion by re-using connection pools and managing transaction states efficiently.
