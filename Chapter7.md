@@ -52,8 +52,6 @@ When network partitions divide a 5-node cluster into two groups—3 nodes on Sid
 *   **Side A (3 nodes)**: Meets quorum ($\lfloor 5/2 \rfloor + 1 = 3$), accepts read/write transactions, and elects/maintains a Leader.
 *   **Side B (2 nodes)**: Fails to establish quorum ($2 < 3$). Writes are rejected, preventing state divergence (**Split-Brain**).
 
----
-
 ### Key-Value Stores for Configuration Management
 
 Service discovery solutions frequently incorporate key-value (KV) stores. These distributed KV engines store runtime parameters, secrets, feature flags, and dynamic routing configurations.
@@ -62,37 +60,13 @@ Service discovery solutions frequently incorporate key-value (KV) stores. These 
 *   **Hierarchical Namespace**: Keys are stored using Unix-like directory structures (e.g., `config/production/db_connection_string`).
 *   **Atomic Transactions**: Multi-key operations succeed or fail in a single step, preserving data integrity across configuration changes.
 
----
-
 ## 7.2 HashiCorp Consul Cluster Deployment and Service Registration
 
 HashiCorp Consul is a widely adopted enterprise solution for service discovery, key-value configuration, and service mesh architecture.
 
 ### Consul Architecture & Components
 
-```
-+---------------------------------------------------------------------------------------+
-|                                CONSUL DATACENTER                                      |
-|                                                                                       |
-|   +-------------------------------------------------------------------------------+   |
-|   |                           CONSUL SERVER CLUSTER                               |   |
-|   |                                                                               |   |
-|   |   +------------------+     Serf LAN Gossip    +------------------+            |   |
-|   |   | Consul Server 1  | <--------------------> | Consul Server 2  |            |   |
-|   |   | (Raft Leader)    |                        | (Raft Follower)  |            |   |
-|   |   +------------------+                        +------------------+            |   |
-|   |            ^                                           ^                      |   |
-|   +------------|-------------------------------------------|----------------------+   |
-|                | RPC Requests                              | RPC Requests             |
-|                v                                           v                          |
-|   +-----------------------------+             +-----------------------------+         |
-|   |  Node A: Consul Agent Client|             |  Node B: Consul Agent Client|         |
-|   |  +-----------------------+  |             |  +-----------------------+  |         |
-|   |  |   Local App Service   |  |             |  |   Local App Service   |  |         |
-|   |  +-----------------------+  |             |  +-----------------------+  |         |
-|   +-----------------------------+             +-----------------------------+         |
-+---------------------------------------------------------------------------------------+
-```
+![CONSUL DATACENTER](assets/images/chapter7/7-2-CONSUL-DATACENTER.png)
 
 *   **Consul Server**: Manages the Raft consensus, maintains the cluster state, processes RPC queries, and backs up key-value data.
 *   **Consul Client**: A lightweight, stateless agent that runs on every physical host or virtual machine. It forwards RPC queries to Servers and performs localized health checks.
@@ -100,8 +74,6 @@ HashiCorp Consul is a widely adopted enterprise solution for service discovery, 
 *   **Gossip Protocols (Serf)**:
     *   **LAN Gossip**: Uses memberlist libraries over UDP/TCP to manage local node membership and failure detection.
     *   **WAN Gossip**: Connects distinct Consul Server clusters across geographically separated datacenters.
-
----
 
 ### Deploying a Production-Grade 3-Node Consul Cluster
 
@@ -185,6 +157,7 @@ service {
 ```
 
 Apply this configuration by executing:
+
 ```bash
 consul reload
 ```
@@ -210,9 +183,6 @@ curl --request PUT \
     }
   }'
 ```
-
----
-
 ### Consul KV Operations and CLI Command Usage
 
 Consul offers an enterprise key-value store accessible via both CLI and RESTful API endpoints.
@@ -246,48 +216,21 @@ curl -s http://127.0.0.1:8500/v1/kv/config/database/host | jq .
 curl -s http://127.0.0.1:8500/v1/kv/config/database/host | jq -r '.[0].Value' | base64 --decode
 ```
 
----
-
 ## 7.3 Dynamic Reverse Proxying with Traefik and NGINX
 
 Dynamic reverse proxies sit at the edge or ingress boundary of an enterprise network, automatically tracking changes in service infrastructure to route external requests without manual intervention or service restarts.
-
----
 
 ### Traefik: Edge Router Architecture
 
 Unlike traditional proxies, Traefik natively discovers backend services by integrating directly with orchestrators and service registries (e.g., Docker, Kubernetes, Consul, etcd).
 
-```
- +-------------------------------------------------------------------------------+
- |                              TRAEFIK ARCHITECTURE                             |
- |                                                                               |
- | [ Client Requests ]                                                           |
- |        |                                                                      |
- |        v                                                                      |
- |  +-----------+     Matches Rules     +------------+     Executes     +------+ |
- |  | EntryPoint| --------------------> |   Routers  | ----------------> | Middle|
- |  | (:80/:443)|                       +------------+    Transformations| wares| |
- |  +-----------+                             |                         +------+ |
- |                                            v                            |     |
- |                                      +------------+                     |     |
- |                                      |  Services  | <-------------------+     |
- |                                      +------------+                           |
- |                                            |                                  |
- |                                            v Directs Traffic                  |
- |                                  +-------------------+                        |
- |                                  | Backend Pods/VMs  |                        |
- |                                  +-------------------+                        |
- +-------------------------------------------------------------------------------+
-```
+![TRAEFIK ARCHITECTURE](assets/images/chapter7/7-3-TRAEFIK-ARCHITECTURE.png)
 
 #### Key Components
 1.  **EntryPoints**: Network listeners bound to specific ports (e.g., port `80`, `443`).
 2.  **Routers**: Analyzes incoming requests against defined criteria (e.g., Host, Path, Headers) to select the correct target service.
 3.  **Middlewares**: Modifies requests or responses before they reach the backend service (e.g., path rewriting, rate limiting, header injection, authentication).
 4.  **Services**: Configures target backend instances and manages load-balancing algorithms and health checks.
-
----
 
 ### Deploying Traefik with Consul Catalog Integration
 
@@ -357,27 +300,7 @@ service {
 
 NGINX lacks native support for querying Consul directly. To achieve dynamic reverse proxying with NGINX, deploy **Consul Template**—a lightweight daemon that monitors Consul, renders updated NGINX configuration templates, and signals NGINX to reload gracefully when changes occur.
 
-```
-+-------------------------------------------------------------------------------+
-|                      NGINX + CONSUL TEMPLATE ARCHITECTURE                     |
-|                                                                               |
-| +---------------+   Watch for Changes   +-----------------+                   |
-| | Consul Server | --------------------> | Consul Template |                   |
-| +---------------+                       +-----------------+                   |
-|                                                  |                            |
-|                                                  | 1. Renders Template File   |
-|                                                  v                            |
-|                                      +-----------------------+                |
-|                                      | nginx.conf (Generated)|                |
-|                                      +-----------------------+                |
-|                                                  |                            |
-|                                                  | 2. Triggers Reload         |
-|                                                  v                            |
-|                                      +-----------------------+                |
-|                                      | NGINX Master Process  |                |
-|                                      +-----------------------+                |
-+-------------------------------------------------------------------------------+
-```
+![NGINX + CONSUL TEMPLATE ARCHITECTURE](assets/images/chapter7/7-4-NGINX-CONSUL-TEMPLATE-ARCHITECTURE.png)
 
 #### Consul Template Configuration File (`/etc/consul-template/config.hcl`)
 
@@ -432,8 +355,6 @@ consul-template -config=/etc/consul-template/config.hcl
 
 Automated health checks ensure that traffic is sent only to healthy service instances. When an instance fails, the service registry updates its status and signals edge proxies to reroute incoming traffic.
 
----
-
 ### Health Check Mechanisms in Consul
 
 Consul supports several health check types:
@@ -476,34 +397,11 @@ service {
 }
 ```
 
----
-
 ### Automated Failover and Circuit Breaking
 
 Circuit breaking prevents cascading system failures by failing fast when downstream dependencies degrade or become unavailable.
 
-```
-                 +-----------------------------------+
-                 |        CIRCUIT BREAKER STATES     |
-                 |                                   |
-                 |             +-------+             |
-                 |   +-------> | CLOSED| <-------+   |
-                 |   |         +-------+         |   |
-                 | Success      |       | Threshold  |
-                 | Threshold    |       | Exceeded   |
-                 | Reached      v       v            |
-                 |     +-------------------+         |
-                 |     |     HALF-OPEN     |         |
-                 |     +-------------------+         |
-                 |              ^       ^            |
-                 |   Timeout    |       | Consecutive|
-                 |   Expires    |       | Failures   |
-                 |              |       v            |
-                 |             +---------+           |
-                 |             |   OPEN  |           |
-                 |             +---------+           |
-                 +-----------------------------------+
-```
+![IRCUIT BREAKER STATES](assets/images/chapter7/7-4-CIRCUIT-BREAKER-STATES.png)
 
 #### Traefik Circuit Breaker Configuration
 In Traefik, circuit breakers are declared using middleware tags registered alongside Consul services:
@@ -526,8 +424,11 @@ service {
 ```
 
 When triggered:
+
 1.  **Closed State**: Normal operation. All traffic is routed to backend instances.
+
 2.  **Open State**: When error conditions are met, Traefik trips the breaker and rejects requests immediately with `HTTP 503 Service Unavailable`, protecting downstream services from cascading overload.
+
 3.  **Half-Open State**: After a configurable cooldown period, Traefik passes a limited number of test requests to verify recovery. If successful, the breaker resets to Closed; otherwise, it returns to Open.
 
 ---
@@ -535,6 +436,7 @@ When triggered:
 ## 7.5 Hands-On Lab: Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing
 
 ### Scenario Overview
+
 An enterprise web platform requires dynamic routing for a microservices infrastructure using Traefik and Consul running within a Docker environment:
 
 *   **Consul Server**: Operates as the central service registry on port `8500`.
@@ -542,11 +444,10 @@ An enterprise web platform requires dynamic routing for a microservices infrastr
 *   **Microservice - Web API (Version 1)**: Scaling dynamically across multiple container instances.
 *   **Microservice - Web API (Version 2)**: Scaled alongside V1 using dynamic routing tags to allow canary testing.
 
----
-
 ### Step 1: Create the Project Structure and Docker Compose Environment
 
 Create an isolated directory for the deployment files:
+
 ```bash
 mkdir -p ~/consul-traefik-lab/{consul-config,traefik-config}
 cd ~/consul-traefik-lab
@@ -662,25 +563,24 @@ services:
       }' && nginx -g 'daemon off;'"
 ```
 
----
-
 ### Step 2: Deploy the Infrastructure Stack
 
 Launch all services in detached mode:
+
 ```bash
 docker compose up -d
 ```
 
 Verify that all containers are up and healthy:
+
 ```bash
 docker compose ps
 ```
 
----
-
 ### Step 3: Validate Consul Registration and Traefik Routing Configuration
 
 #### 1. Validate Consul Node and Service Registration
+
 Verify that the `web-app` service and its two instances are registered in Consul:
 
 ```bash
@@ -688,6 +588,7 @@ curl -s http://127.0.0.1:8500/v1/catalog/service/web-app | jq .
 ```
 
 Expected Output Excerpt:
+
 ```json
 [
   {
@@ -716,6 +617,7 @@ Expected Output Excerpt:
 ```
 
 #### 2. Query Traefik API Routing State
+
 Inspect Traefik's dynamic catalog configuration directly via its REST API:
 
 ```bash
@@ -723,8 +625,6 @@ curl -s http://127.0.0.1:8080/api/http/routers | jq .
 ```
 
 Confirm that `webapp@consulcatalog` is listed with status `enabled`.
-
----
 
 ### Step 4: Verify Dynamic Load Balancing across Backend Endpoints
 
@@ -737,6 +637,7 @@ done
 ```
 
 Sample Output:
+
 ```text
 <p>Server Name: web-service-v1</p>
 <p>Server Name: web-service-v2</p>
@@ -746,9 +647,7 @@ Sample Output:
 <p>Server Name: web-service-v2</p>
 ```
 
----
-
-### Step 5: Test Automated Failover via Simulated Health Check Failure
+0### Step 5: Test Automated Failover via Simulated Health Check Failure
 
 Simulate a failure in `web-service-v1` by stopping its container:
 
@@ -757,6 +656,7 @@ docker stop web-service-v1
 ```
 
 #### 1. Observe Consul Health Check Updates
+
 Query Consul for critical health checks:
 
 ```bash
@@ -773,6 +673,7 @@ done
 ```
 
 Expected Output:
+
 ```text
 <p>Server Name: web-service-v2</p>
 <p>Server Name: web-service-v2</p>
@@ -794,8 +695,6 @@ done
 
 Traffic automatically redistributes across both healthy backends.
 
----
-
 ### Step 6: Environment Clean Up
 
 Tear down the lab containers and associated networks:
@@ -803,8 +702,6 @@ Tear down the lab containers and associated networks:
 ```bash
 docker compose down -v
 ```
-
----
 
 ## Quick-Reference Summary & Verification Flashcards
 
