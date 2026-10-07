@@ -17,16 +17,19 @@ In client-side discovery, the client application queries the Service Registry di
 *   **Advantages**:
     *   Eliminates extra network hops by bypassing an intermediate API gateway or dedicated load balancer.
     *   Eliminates a single point of failure in the traffic path.
+
 *   **Disadvantages**:
     *   Tightly couples the client application to the Service Registry API.
     *   Requires implementing discovery and load-balancing logic across every programming language and framework used across teams.
 
 #### Server-Side Discovery
+
 In server-side discovery, the client issues a standard network request to a router or load balancer (e.g., Traefik, NGINX, HAProxy). This intermediate component queries the Service Registry, selects a healthy endpoint, and proxies the client's request accordingly.
 
 *   **Advantages**:
     *   Decouples discovery implementation details completely from client applications.
     *   Simplifies client code since services make calls to predictable, static logical endpoints.
+
 *   **Disadvantages**:
     *   Introduces an additional network hop, slightly increasing request latency.
     *   Requires managing high-availability clusters for the load balancers/routers.
@@ -40,6 +43,7 @@ Modern registries use consensus algorithms—primarily **Raft**—to maintain co
 ![ RAFT CONSENSUS CLUSTER](assets/images/chapter7/7-1-RAFT-CONSENSUS-CLUSTER.png)
 
 #### Raft Protocol Essentials
+
 *   **Leader-Based System**: A cluster consists of a single **Leader** and multiple **Followers**. All state modifications (such as registering services or updating health statuses) must pass through the Leader node.
 *   **Log Replication**: When a write occurs, the Leader appends it to its log and replicates the entry to all Follower nodes.
 *   **Quorum**: A write is committed only after a majority (Quorum) of cluster nodes acknowledge the log entry:
@@ -48,7 +52,9 @@ Modern registries use consensus algorithms—primarily **Raft**—to maintain co
 *   **Leader Elections**: If Followers stop receiving periodic heartbeats from the Leader within a randomized timeout window, a Follower converts to a **Candidate** state and initiates an election.
 
 #### Failure Modes and Split-Brain Prevention
+
 When network partitions divide a 5-node cluster into two groups—3 nodes on Side A and 2 nodes on Side B:
+
 *   **Side A (3 nodes)**: Meets quorum ($\lfloor 5/2 \rfloor + 1 = 3$), accepts read/write transactions, and elects/maintains a Leader.
 *   **Side B (2 nodes)**: Fails to establish quorum ($2 < 3$). Writes are rejected, preventing state divergence (**Split-Brain**).
 
@@ -119,8 +125,6 @@ connect {
 ```
 
 To configure Nodes 2 and 3, adjust `node_name` and `bind_addr` accordingly (`10.0.10.12` and `10.0.10.13`).
-
----
 
 ### Service Registration Methods
 
@@ -293,8 +297,6 @@ service {
   }
 }
 ```
-
----
 
 ### NGINX Integration with Consul Template
 
