@@ -68,7 +68,7 @@ The controller manager executes continuous control loops that observe the curren
 
 Worker nodes execute application workloads (Pods) and report status back to the control plane.
 
-![Worker Node Architecture](assets/images/chapter8/8-2-Kubernetes-Worker-Node-Architecture.png)
+![Worker Node Architecture](assets/images/chapter8/8-2-Worker-Node-Architecture.png)
 
 ### 1. `kubelet`
 The primary agent running on every node. It receives `PodSpecs` from `kube-apiserver` (or local file manifests) and verifies that the defined containers are running and healthy.
