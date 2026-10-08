@@ -34,7 +34,7 @@ Defined via `spec.restartPolicy`:
 
 The `kubelet` uses three types of health probes to monitor container health and manage runtime behavior:
  
-![Container Health Probes](assets/images/chapter9/9-1-Container-Health-Probes.png)
+![Container Health Probes](assets/images/chapter9/9-1-KUBERNETES-HEALTH-PROBES.png)
 
 #### Probe Mechanisms
 
