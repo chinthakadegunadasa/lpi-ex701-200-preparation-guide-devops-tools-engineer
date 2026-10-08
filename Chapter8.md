@@ -336,6 +336,7 @@ sudo kubeadm init --config=kubeadm-config.yaml
 ```
 
 *Expected Output Snippet*:
+
 ```text
 Your Kubernetes control-plane has initialized successfully!
 
@@ -421,4 +422,13 @@ kubectl run curl-test --image=curlimages/curl --restart=Never -it -- rm -- \
 
 ### Kubernetes Control Plane vs. Worker Components Reference
 
-![Kubernetes Component Roles and Specifications](assets/images/chapter8/8-6-Reference-Tables.png)
+| Component Name | Primary Host Location | Key Functions | Crucial Configuration Files / Flags |
+| :--- | :--- | :--- | :--- |
+| **`kube-apiserver`** | Control Plane | REST API gateway, RBAC validation, Admission Control, state proxy. | `/etc/kubernetes/manifests/kube-apiserver.yaml` |
+| **`etcd`** | Control Plane / External | Persistent KV store, cluster metadata, Raft consensus core. | `/etc/kubernetes/manifests/etcd.yaml` |
+| **`kube-scheduler`** | Control Plane | Filters and scores nodes to bind pending Pods. | `/etc/kubernetes/manifests/kube-scheduler.yaml` |
+| **`kube-controller-manager`**| Control Plane | Executes control loops (Node, ReplicaSet, Deployment). | `/etc/kubernetes/manifests/kube-controller-manager.yaml` |
+| **`kubelet`** | Worker & Control Plane | Communicates with CRI runtime, manages Pod lifecycle, probes. | `/etc/kubernetes/kubelet.conf`, `/var/lib/kubelet/config.yaml` |
+| **`kube-proxy`** | Worker & Control Plane | IP Routing, IPTables/IPVS rule maintenance for Virtual IPs. | ConfigMap: `kube-proxy` in namespace `kube-system` |
+| **`containerd`** | Worker & Control Plane | OCI image extraction, container execution, process management. | `/etc/containerd/config.toml` |
+
