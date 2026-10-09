@@ -52,7 +52,7 @@ Multiple authorization modes can be configured sequentially using the `--authori
 
 Kubernetes RBAC controls authorization using four primary API objects under the `rbac.authorization.k8s.io/v1` API group.
 
-![KUBERNETES RBAC RESOURCE MODEL](assets/images/chapter11/11-1-KUBERNETES-RBAC-RESOURCE-MODEL.png)
+![KUBERNETES RBAC RESOURCE MODE](assets/images/chapter11/11-1-RBAC-RESOURCE-MAPPING-MODEL.png)
 
 ### RBAC Scope Breakdown
 
