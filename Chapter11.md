@@ -6,7 +6,7 @@ This chapter covers the complete security model of Kubernetes, structured direct
 
 Every operation in a Kubernetes cluster flows through the `kube-apiserver` via RESTful HTTP calls. To protect state transitions in `etcd`, the API server subjects incoming requests to a three-stage validation pipeline: **Authentication (AuthN)**, **Authorization (AuthZ)**, and **Admission Control**.
 
-![KUBERNETES API REQUEST PIPELINE](assets/images/chapter11/11-1-KUBERNETES-API-REQUEST-PIPELINE.png)
+![KUBERNETES API REQUEST PIPELINE](assets/images/chapter11/assets/images/chapter11/11-1-1KUBERNETES-API-REQUEST-PIPELINE.png)
 
 ### Authentication (AuthN)
 
