@@ -39,6 +39,8 @@ Once identity is verified, authorization modules evaluate whether the user or se
 
 Multiple authorization modes can be configured sequentially using the `--authorization-mode` API server flag. Authorization evaluation stops as soon as a module explicitly **allows** or **denies** the request; if a module is indecisive, evaluation falls back to the next module in the chain.
 
+![AUTHENTICATION MECHANISMS](assets/images/chapter11/11-1-AUTHENTICATION-MECHANISMS.png)
+
 | Authorization Mode | Evaluation Model | Best Use Case |
 | --- | --- | --- |
 | **RBAC** | Evaluates roles and role bindings stored in Kubernetes. | Standard enterprise production deployments. |
