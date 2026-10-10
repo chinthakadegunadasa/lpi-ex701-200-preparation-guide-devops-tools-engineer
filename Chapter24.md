@@ -454,7 +454,7 @@ curl -X POST http://localhost:5000/api/v1/purchase \
 
 * Grandchild Span: `inventory-service: GET /inventory/slow_item` (Duration: 2.82s)
 
-![inventory-service](assets/images/chapter24/lab-inventory-service.png)
+![inventory-service](assets/images/chapter24/4-5-lab-inventory-service.png)
 
 6. Click directly on the `inventory-service` span to expand its attributes panel.
 
