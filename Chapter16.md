@@ -483,10 +483,10 @@ cat manifest.json
 
 **Question 1**: An administrator needs to build identical machine images for both AWS and VMware vSphere using HashiCorp Packer. Which block in the Packer template defines the target platform mechanisms used to spin up instances and produce snapshots?
 
-* A) `provisioner`
-* B) `source`
-* C) `post-processor`
-* D) `variables`
+A) `provisioner`
+B) `source`
+C) `post-processor`
+D) `variables`
 
 **Answer**: **B**
 
@@ -494,10 +494,10 @@ cat manifest.json
 
 **Question 2**: Which utility is primarily responsible for performing first-boot machine customization (e.g., expanding root volumes, writing network configs, injecting public keys) on cloud instances deployed from an immutable Golden Image?
 
-* A) Cloud-init
-* B) Kickstart
-* C) Subiquity
-* D) Preseed
+A) Cloud-init
+B) Kickstart
+C) Subiquity
+D) Preseed
 
 **Answer**: **A**
 
@@ -505,10 +505,10 @@ cat manifest.json
 
 **Question 3**: In a CI/CD pipeline running automated Packer builds, what is the best practice for passing cloud vendor secret access keys to the build template?
 
-* A) Embed credentials directly in `default` values inside the `variables.tf` file.
-* B) Store plaintext credentials inside the `http_directory` answer file.
-* C) Pass credentials via environment variables (`PKR_VAR_...`) or retrieve them dynamically from a secrets engine.
-* D) Hardcode credentials in the `post-processor` block.
+A) Embed credentials directly in `default` values inside the `variables.tf` file.
+B) Store plaintext credentials inside the `http_directory` answer file.
+C) Pass credentials via environment variables (`PKR_VAR_...`) or retrieve them dynamically from a secrets engine.
+D) Hardcode credentials in the `post-processor` block.
 
 **Answer**: **C**
 
