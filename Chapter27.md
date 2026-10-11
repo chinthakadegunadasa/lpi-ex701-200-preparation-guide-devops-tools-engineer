@@ -184,26 +184,7 @@ $$\text{Resiliency Score (\%)} = \left( \frac{\text{Transactions Succeeded Durin
 
 In this hands-on lab, you will deploy a microservice application into a local Kubernetes cluster, establish steady-state telemetry monitoring, deploy **Chaos Mesh**, execute a hypothesis-driven network delay experiment, observe real-time degradation and recovery, and enforce an automated circuit breaker halt.
 
-```
-+-----------------------------------------------------------------------------------+
-|                                  Lab Architecture                                 |
-|                                                                                   |
-|  +-----------------------------------------------------------------------------+  |
-|  | Kubernetes Cluster                                                          |  |
-|  |                                                                             |  |
-|  |  +---------------------------+              +----------------------------+  |  |
-|  |  | App: checkout-service     | ===HTTP===>  | App: payment-api           |  |  |
-|  |  | (Client Target)           |              | (Injected Target)          |  |  |
-|  |  +---------------------------+              +----------------------------+  |  |
-|  |                ^                                         ^                  |  |
-|  |                |                                         |                  |  |
-|  |  +-------------+-----------------------------------------+---------------+  |  |
-|  |  | Chaos Mesh Controller Daemon (Injects 500ms Network Latency via `tc`)   |  |  |
-|  |  +-----------------------------------------------------------------------+  |  |
-|  +-----------------------------------------------------------------------------+  |
-+-----------------------------------------------------------------------------------+
-
-```
+![Lab Architecture](assets/images/chapter27/27-5-Lab-Architecture.png)
 
 ### Step 1: Prepare Local Kubernetes Cluster & Microservice Deployment
 
