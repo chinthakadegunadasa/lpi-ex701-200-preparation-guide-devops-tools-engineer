@@ -4,7 +4,7 @@ Welcome! Standard certification blueprints can feel dry and disconnected from re
 
 Whether you are preparing for the **LPI 701-200 DevOps Tools Engineer** exam, building internal training programs, or structuring a modern infrastructure stack, this resource is designed to help you connect theory directly to implementation.
 
----
+![LPI 701-200 Certification Matrix](assets/images/introduction/lpi-ex701-200-objectives-and-chapter-mapping.png)
 
 ## How to Use the Matrix
 
@@ -14,8 +14,6 @@ The matrix organizes the entire LPI 701-200 ecosystem into six core modules, bre
 2. **Review Exam Weightings:** Pay attention to the objective weightings (`Topic Weight`). Higher weights (such as Kubernetes Orchestration or CI/CD Automation) signal areas that require deeper practical study.
 3. **Map Tools to Concepts:** Use the **Primary Tooling Stack** column to match theoretical principles with industry-standard technology—such as associating *Infrastructure as Code* directly with Terraform or *Metrics Engineering* with Prometheus and PromQL.
 4. **Follow the Chapter Structure:** Use the handbook chapter references as a sequential roadmap to build well-rounded, real-world skills.
-
----
 
 ## Suggested Next Steps
 
