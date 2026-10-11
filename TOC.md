@@ -1,12 +1,12 @@
-Table of Contents 
+# Table of Contents 
 
-# Introduction
-## Exam Objective and Chapter Mapping Matrix
+## Introduction
+### Exam Objective and Chapter Mapping Matrix
 
 
-# Module 1: Software Engineering, Architecture, & Security (Topic 701)
+## Module 1: Software Engineering, Architecture, & Security (Topic 701)
 
-## Chapter 1: Cloud-Native Architecture Patterns
+### Chapter 1: Cloud-Native Architecture Patterns
 1.1. Monolithic vs. Microservices vs. Serverless Paradigms
 1.2. API-First Architectures: RESTful APIs, gRPC, and GraphQL
 1.3. Event-Driven Architecture & Message Queuing
