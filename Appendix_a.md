@@ -2,8 +2,6 @@
 
 This appendix provides production-ready, hands-on instructions for deploying, configuring, and maintaining an enterprise DevOps workstation on **Debian 13 (Trixie)**. Designed to meet and exceed the core operational standards of the **LPI DevOps Tools Engineer (701-200)** certification, this guide covers automated infrastructure bootstrapping, secure repository management, GPG key lifecycle handling, dependency locking, and container engine configuration.
 
----
-
 ## A.1. Automated Provisioning Script for Local Debian Workstations using Debian 13 Live image
 
 In modern enterprise environments, manual workstation configuration introduces drift, security misconfigurations, and non-reproducible software stacks. Below is an enterprise-grade automated provisioning script (`provision-station.sh`) engineered to be executed from a clean Debian 13 Live image deployment. It bootstraps the complete 701-200 toolchain—including **Git**, **Docker CE**, **Podman**, **Kubectl**, **Helm**, and **Prometheus node exporters**—with strict error handling, idempotency checks, and structured logging.
@@ -136,8 +134,6 @@ git --version
 
 log_info "Enterprise workstation provisioning completed successfully!"
 ```
-
----
 
 ## A.2. Package Repositories, Keys, and Dependency Management
 
