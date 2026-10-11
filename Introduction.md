@@ -1,4 +1,6 @@
-# Navigating the LPI 701-200 Certification Matrix
+# Introduction
+
+## Navigating the LPI 701-200 Certification Matrix
 
 Welcome! Standard certification blueprints can feel dry and disconnected from real-world engineering. To fix that, this guide and accompanying matrix bridge the gap between abstract exam objectives and practical, hands-on enterprise tools.
 
