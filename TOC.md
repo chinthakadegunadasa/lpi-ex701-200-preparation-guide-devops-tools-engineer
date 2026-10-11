@@ -3,81 +3,79 @@
 ## Introduction
 ### Exam Objective and Chapter Mapping Matrix
 
-
 ## Module 1: Software Engineering, Architecture, & Security (Topic 701)
 
 ### Chapter 1: Cloud-Native Architecture Patterns
-1.1. Monolithic vs. Microservices vs. Serverless Paradigms
-1.2. API-First Architectures: RESTful APIs, gRPC, and GraphQL
-1.3. Event-Driven Architecture & Message Queuing
-1.4. Enterprise Scalability, Fault Tolerance, and High Availability
-1.5. **Hands-On Lab:** Decoupling a Monolithic Application into Event-Driven Microservices
+#### 1.1. Monolithic vs. Microservices vs. Serverless Paradigms
+#### 1.2. API-First Architectures: RESTful APIs, gRPC, and GraphQL
+#### 1.3. Event-Driven Architecture & Message Queuing
+#### 1.4. Enterprise Scalability, Fault Tolerance, and High Availability
+#### 1.5. **Hands-On Lab:** Decoupling a Monolithic Application into Event-Driven Microservices
 
-## Chapter 2: Agile, DevOps, & SRE Methodology
-- 2.1 Agile Software Development Frameworks (Scrum, Kanban)
-- 2.2 The DevOps Cultural Transformation & CALMS Framework
-- 2.3 Site Reliability Engineering (SRE) Core Principles
-- 2.4 Service Level Indicators (SLIs), Service Level Objectives (SLOs), and Error Budgets
-- 2.5 **Hands-On Lab:** Implementing SLO-Driven Error Budget Tracking Pipelines
+### Chapter 2: Agile, DevOps, & SRE Methodology
+#### 2.1. Agile Software Development Frameworks (Scrum, Kanban)
+#### 2.2. The DevOps Cultural Transformation & CALMS Framework
+#### 2.3. Site Reliability Engineering (SRE) Core Principles
+#### 2.4. Service Level Indicators (SLIs), Service Level Objectives (SLOs), and Error Budgets
+#### 2.5. **Hands-On Lab:** Implementing SLO-Driven Error Budget Tracking Pipelines
 
-## Chapter 3: Enterprise DevSecOps & Security Compliance
-- 3.1 Shift-Left Security Principles in CI/CD Pipelines
-- 3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)
-- 3.3 Software Supply Chain Security & Dependency Vulnerability Scanning
-- 3.4 Enterprise Secrets Management Standards
-- 3.5 **Hands-On Lab:** Building a Complete SAST/DAST Vulnerability Scanning Pipeline
+### Chapter 3: Enterprise DevSecOps & Security Compliance
+#### 3.1. Shift-Left Security Principles in CI/CD Pipelines
+#### 3.2. Static Application Security Testing (SAST) and Dynamic Scanning (DAST)
+#### 3.3. Software Supply Chain Security & Dependency Vulnerability Scanning
+#### 3.4. Enterprise Secrets Management Standards
+#### 3.5. **Hands-On Lab:** Building a Complete SAST/DAST Vulnerability Scanning Pipeline
 
-## Chapter 4: Enterprise Middleware & Application Services
-- 4.1 Reverse Proxies and Web Application Firewalls (NGINX, HAProxy)
-- 4.2 Enterprise Messaging Brokers (RabbitMQ, Apache Kafka)
-- 4.3 In-Memory Caching Strategies (Redis, Memcached)
-- 4.4 Database Connection Pooling and Read/Write Splitting
-- 4.5 **Hands-On Lab:** Provisioning an HA proxy, Redis, and RabbitMQ Application Stack
+### Chapter 4: Enterprise Middleware & Application Services
+#### 4.1. Reverse Proxies and Web Application Firewalls (NGINX, HAProxy)
+#### 4.2. Enterprise Messaging Brokers (RabbitMQ, Apache Kafka)
+#### 4.3. In-Memory Caching Strategies (Redis, Memcached)
+#### 4.4. Database Connection Pooling and Read/Write Splitting
+#### 4.5. **Hands-On Lab:** Provisioning an HA proxy, Redis, and RabbitMQ Application Stack
 
-# Module 2: Container Management & Orchestration (Topic 702)
+## Module 2: Container Management & Orchestration (Topic 702)
 
-## Chapter 5: Docker Containerization Architecture & Core Operations
-- 5.1 Container Internals: Namespaces, cgroups, and OverlayFS
-- 5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc
-- 5.3 Writing Enterprise Dockerfiles & Multi-Stage Builds
-- 5.4 Image Optimization, Layer Caching, and Security Hardening
-- 5.5 **Hands-On Lab:** Constructing Minimalistic, Hardened Multi-Stage Container Images
+### Chapter 5: Docker Containerization Architecture & Core Operations
+#### 5.1. Container Internals: Namespaces, cgroups, and OverlayFS
+#### 5.2. Docker Engine Architecture: Docker Daemon, containerd, and runc
+#### 5.3. Writing Enterprise Dockerfiles & Multi-Stage Builds
+#### 5.4. Image Optimization, Layer Caching, and Security Hardening
+#### 5.5. **Hands-On Lab:** Constructing Minimalistic, Hardened Multi-Stage Container Images
 
-## Chapter 6: Advanced Container Storage & Overlay Networking
-- 6.1 Docker Storage Drivers (Overlay2, btrfs, zfs)
-- 6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts
-- 6.3 Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay
-- 6.4 Enterprise Multi-Host Networking Configuration
-- 6.5 **Hands-On Lab:** Configuring Cross-Node Container Overlay Networks with Custom Subnets
+### Chapter 6: Advanced Container Storage & Overlay Networking
+#### 6.1. Docker Storage Drivers (Overlay2, btrfs, zfs)
+#### 6.2. Persistent Volumes, Bind Mounts, and Tmpfs Mounts
+#### 6.3. Docker Networking Drivers: Bridge, Host, Macvlan, and Overlay
+#### 6.4. Enterprise Multi-Host Networking Configuration
+#### 6.5.**Hands-On Lab:** Configuring Cross-Node Container Overlay Networks with Custom Subnets
 
 ## Chapter 7: Service Discovery & Dynamic Routing
-- 7.1 Principles of Service Discovery in Distributed Systems
-- 7.2 HashiCorp Consul Cluster Deployment and Service Registration
-- 7.3 Dynamic Reverse Proxying with Traefik and NGINX
-- 7.4 Health Checking and Automated Traffic Rerouting
-- 7.5 **Hands-On Lab:** Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing
+#### 7.1. Principles of Service Discovery in Distributed Systems
+#### 7.2. HashiCorp Consul Cluster Deployment and Service Registration
+#### 7.3. Dynamic Reverse Proxying with Traefik and NGINX
+#### 7.4. Health Checking and A ating HashiCorp Consul with Traefik for Automatic Dynamic Routing
 
-## Chapter 8: Enterprise Kubernetes Architecture & Operations
-- 8.1 Kubernetes Control Plane Components (kube-apiserver, etcd, kube-scheduler, kube-controller-manager)
-- 8.2 Worker Node Architecture (kubelet, kube-proxy, Container Runtime)
-- 8.3 `kubectl` CLI Configuration and API Interactivity
-- 8.4 Production Cluster Bootstrapping Standards (`kubeadm`)
-- 8.5 **Hands-On Lab:** Bootstrapping a Multi-Node Kubernetes Control Plane via Kubeadm
+### Chapter 8: Enterprise Kubernetes Architecture & Operations
+#### 8.1. Kubernetes Control Plane Components (kube-apiserver, etcd, kube-scheduler, kube-controller-manager)
+#### 8.2. Worker Node Architecture (kubelet, kube-proxy, Container Runtime)
+#### 8.3. `kubectl` CLI Configuration and API Interactivity
+#### 8.4. Production Cluster Bootstrapping Standards (`kubeadm`)
+#### 8.5. **Hands-On Lab:** Bootstrapping a Multi-Node Kubernetes Control Plane via Kubeadm
 
-## Chapter 9: Kubernetes Workload Management
-- 9.1 Pod Lifecycle, Phase Transitions, and Health Probes (Liveness, Readiness, Startup)
-- 9.2 Deployments, Rollouts, and Rollback Mechanics
-- 9.3 StatefulSets: Ordered Provisioning and Persistent Identity
-- 9.4 DaemonSets, Jobs, and CronJobs
-- 9.5 Kubernetes Services (ClusterIP, NodePort, LoadBalancer) and Ingress Controllers
-- 9.6 **Hands-On Lab:** Deploying a High-Availability Stateful Workload with Ingress Routing
+### Chapter 9: Kubernetes Workload Management
+#### 9.1. Pod Lifecycle, Phase Transitions, and Health Probes (Liveness, Readiness, Startup)
+#### 9.2. Deployments, Rollouts, and Rollback Mechanics
+#### 9.3. StatefulSets: Ordered Provisioning and Persistent Identity
+#### 9.4. DaemonSets, Jobs, and CronJobs
+#### 9.5. Kubernetes Services (ClusterIP, NodePort, LoadBalancer) and Ingress Controllers
+#### 9.6. **Hands-On Lab:** Deploying a High-Availability Stateful Workload with Ingress Routing
 
 ## Chapter 10: Kubernetes Storage, ConfigMaps, & Secrets
-- 10.1 PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning
-- 10.2 Container Storage Interface (CSI) Drivers
-- 10.3 Decoupling Configuration using ConfigMaps
-- 10.4 Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
-- 10.5 **Hands-On Lab:** Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
+#### 10.1. PersistentVolumes (PV), PersistentVolumeClaims (PVC), and Dynamic Provisioning
+#### 10.2. Container Storage Interface (CSI) Drivers
+#### 10.3. Decoupling Configuration using ConfigMaps
+#### 10.4. Managing Sensitive Data with Kubernetes Secrets and External Secret Store Integration
+#### 10.5. **Hands-On Lab:** Provisioning Ceph CSI Persistent Volumes with External HashiCorp Vault Secrets
 
 ## Chapter 11: Kubernetes Security & RBAC
 - 11.1 Kubernetes Authentication & Authorization Engine
