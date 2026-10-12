@@ -136,6 +136,7 @@ Executing playbooks in production requires strict verbosity control, dry runs, a
   ```bash
   ansible-vault view inventories/production/group_vars/vault.yml --vault-password-file ~/.vault_pass.txt
   ```
+  
 * **Rekey an encrypted file with a new password key:**
 
   ```bash
