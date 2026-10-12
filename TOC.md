@@ -1,4 +1,4 @@
-# Table of Contents (`TOC.md`)
+# Table of Contents
 
 * **Introduction & Certification Matrix** – Page i[cite: 225]
 * **Suggested Next Steps & Matrix Usage** – Page ii[cite: 226]
