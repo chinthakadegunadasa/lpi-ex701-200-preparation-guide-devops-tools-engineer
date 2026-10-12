@@ -3,10 +3,6 @@
 
 ## Table of Contents
 
----
-
-## Table of Contents
-
 ## Introduction
 ### Exam Objective and Chapter Mapping Matrix
 
