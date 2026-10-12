@@ -1,3 +1,12 @@
+# DevOps Tools Engineer's Handbook
+## Workplace Hands-On Companion & LPI DevOps Tools Engineer (Exam 701-200) Preparation Guide
+
+## Table of Contents
+
+---
+
+## Table of Contents
+
 ## Introduction
 ### Exam Objective and Chapter Mapping Matrix
 
@@ -201,6 +210,7 @@
 #### 27.3. Chaos Mesh and Gremlin Engine Deployment in Kubernetes Environments
 #### 27.4. Measuring System Resiliency and Steady-State Recovery
 #### 27.5. **Hands-On Lab:** Running Automated Fault-Injection Experiments on Production Workloads
+---
 
 ## Part IV: Appendices
 
