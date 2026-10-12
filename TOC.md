@@ -1,32 +1,32 @@
 # Table of Contents (`TOC.md`)
 
-* Introduction & Certification Matrix ....................................................... i
-* Suggested Next Steps & Matrix Usage ....................................................... ii
+* Introduction & Certification Matrix ....................................................  i
+* Suggested Next Steps & Matrix Usage .................................................... ii
 
-* Chapter 1: Cloud-Native Architecture Patterns ............................................. 1
-  * 1.1 Monolithic vs. Microservices vs. Serverless Paradigms ............................... 1
-  * 1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL ............................ 2
-  * 1.3 Event-Driven Architecture & Message Queuing ......................................... 4
-  * 1.4 Enterprise Scalability, Fault Tolerance, and High Availability ...................... 5
-  * 1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices ... 6
+* Chapter 1: Cloud-Native Architecture Patterns .................................         1
+  * 1.1 Monolithic vs. Microservices vs. Serverless Paradigms ................................ 1
+  * 1.2 API-First Architectures: RESTful APIs, gRPC, and GraphQL ............................. 2
+  * 1.3 Event-Driven Architecture & Message Queuing .................................         4
+  * 1.4 Enterprise Scalability, Fault Tolerance, and High Availability .................      5
+  * 1.5 Hands-On Lab: Decoupling a Monolithic Application into Event-Driven Microservices .... 6
 
-* Chapter 2: Enterprise Cloud-Native Architecture & Microservices Implementation ............ 12
-  * 2.1 Architectural Paradigms & System Deconstruction ..................................... 12
-  * 2.2 Enterprise Inter-Service Communication .............................................. 13
-  * 2.3 Event-Driven Messaging Infrastructure ............................................... 14
-  * 2.4 Resiliency Architecture Patterns .................................................... 14
-  * 2.5 Enterprise Implementation Lab: Decoupled Order System ............................... 15
-  * 2.6 Shift-Left Security Principles in CI/CD Pipelines ....................................18
-  * 2.7 Static Application Security Testing (SAST) and Dynamic Scanning (DAST) .............. 19
-  * 2.8 Software Supply Chain Security & Dependency Vulnerability Scanning .................. 21
-  * 2.9 Enterprise Secrets Management Standards ............................................. 22
-  * 2.10 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline ........ 23
+* Chapter 2: Enterprise Cloud-Native Architecture & Microservices Implementation ......... 12
+  * 2.1 Architectural Paradigms & System Deconstruction .................................   12
+  * 2.2 Enterprise Inter-Service Communication ............................................... 13
+  * 2.3 Event-Driven Messaging Infrastructure .................................               14
+  * 2.4 Resiliency Architecture Patterns .................................................    14
+  * 2.5 Enterprise Implementation Lab: Decoupled Order System ................................ 15
+  * 2.6 Shift-Left Security Principles in CI/CD Pipelines .................................   18
+  * 2.7 Static Application Security Testing (SAST) and Dynamic Scanning (DAST) ................ 19
+  * 2.8 Software Supply Chain Security & Dependency Vulnerability Scanning ................... 21
+  * 2.9 Enterprise Secrets Management Standards .................................             22
+  * 2.10 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline .......... 23
 
 * Chapter 3: Enterprise Application Integration & API Gateways ........................... 26
   * 3.1 Enterprise Service Bus vs. Modern API Gateways .................................     26
   * 3.2 Kong and APISIX API Gateway Architecture ..........................................  27
   * 3.3 Rate Limiting, Throttling, and Authentication Plugins .............................. 27
-  * 3.4 API Versioning and Lifecycle Management ............................................ 28
+  * 3.4 API Versioning and Lifecycle Management .................................           28
   * 3.5 Hands-On Lab: Deploying Kong API Gateway with Custom Rate Limiting ................. 28
 
 * Chapter 4: Enterprise Middleware & Application Services ................................ 28
@@ -40,7 +40,7 @@
   * 5.1 Container Internals: Namespaces, cgroups, and OverlayFS .................             36
   * 5.2 Docker Engine Architecture: Docker Daemon, containerd, and runc .................     38
   * 5.3 Writing Enterprise Dockerfiles & Multi-Stage Builds .................                 39
-  * 5.4 Image Optimization, Layer Caching, and Security Hardening ............................ 42
+  * 5.4 Image Optimization, Layer Caching, and Security Hardening .................           42
   * 5.5 Hands-On Lab: Constructing Minimalistic, Hardened Multi-Stage Container Images ....... 43
 
 * Chapter 6: Advanced Container Storage & Overlay Networking .................            47
@@ -135,7 +135,7 @@
   * 18.4 Distributed Tracing with OpenTelemetry and Jaeger .................................   241
   * 18.5 Hands-On Lab: Deploying a Full Observability Stack with Prometheus, Grafana, and OpenTelemetry 244
 
-* Chapter 19: Centralized Logging & Log Analytics .....................................        252
+* Chapter 19: Centralized Logging & Log Analytics .................................        252
   * 19.1 Enterprise Log Aggregation Paradigms .................................                252
   * 19.2 Fluentbit and Fluentd Architecture for Lightweight Log Collection .................   254
   * 19.3 Grafana Loki: Cost-Effective Log Indexing and LogQL .................                 257
