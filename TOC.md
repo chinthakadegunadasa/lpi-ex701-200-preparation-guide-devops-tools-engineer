@@ -2,10 +2,11 @@
 ## Workplace Hands-On Companion & LPI DevOps Tools Engineer (Exam 701-200) Preparation Guide
 **A Comprehensive Enterprise Guide DevOps Tool Engineers**
 
----
-## Table of Contents
+
+# Table of Contents
 
 ## Introduction
+
 ### Exam Objective and Chapter Mapping Matrix
 
 ## Module 1: Software Engineering, Architecture, & Security (Topic 701)
