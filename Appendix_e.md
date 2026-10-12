@@ -1,8 +1,6 @@
 # Appendix E: Local Lab Infrastructure Specifications
 
-This appendix provides a rigorous, enterprise-oriented, and fully hands-on blueprint for deploying the complete local lab topology required for advanced cloud-native infrastructure engineering, high-availability virtualization, and distributed storage workflows aligned with enterprise standards. 
-
----
+This appendix provides a rigorous, enterprise-oriented, and fully hands-on blueprint for deploying the complete local lab topology required for advanced cloud-native infrastructure engineering, high-availability virtualization, and distributed storage workflows aligned with enterprise standards. \
 
 ## E.1. Workspace Node Baseline: Debian 13 Workstation with KVM Nested Virtualization
 
@@ -26,12 +24,14 @@ sudo usermod -aG kvm,libvirt $USER
 Because the lab environment runs Proxmox VE nodes inside virtual machines, nested virtualization must be explicitly enabled on the Debian 13 host.
 
 1. Verify hardware virtualization support:
+
    ```bash
    kvm-ok
    ```
    *Expected output:* `INFO: /dev/kvm exists. KVM acceleration can be used`
 
-2. Enable nested virtualization for Intel CPUs:
+3. Enable nested virtualization for Intel CPUs:
+
    ```bash
    sudo modprobe -r kvm_intel
    sudo modprobe kvm_intel nested=1
@@ -39,7 +39,8 @@ Because the lab environment runs Proxmox VE nodes inside virtual machines, neste
    ```
    *Expected output:* `Y` or `1`
 
-3. Make the configuration persistent across reboots:
+5. Make the configuration persistent across reboots:
+
    ```bash
    echo "options kvm-intel nested=1" | sudo tee /etc/modprobe.d/kvm_intel.conf
    ```
@@ -69,8 +70,6 @@ Apply the network configuration:
 sudo systemctl restart networking
 ```
 
----
-
 ## E.2. Hyper-Converged Infrastructure (HCI) Setup
 
 The core infrastructure consists of a production-grade Hyper-Converged Infrastructure (HCI) cluster using **Proxmox VE (PVE 8.x/9.x)** and distributed block storage via **Ceph**.
@@ -88,10 +87,13 @@ Deploy three nested virtual machines (`pve-node1`, `pve-node2`, `pve-node3`), ea
 
 #### Initializing the PVE Cluster
 1. On `pve-node1`, initialize the cluster:
+
    ```bash
    pvecm create enterprise-cluster
    ```
-2. Retrieve the join command/fingerprint from `pve-node1` and join `pve-node2` and `pve-node3`:
+   
+3. Retrieve the join command/fingerprint from `pve-node1` and join `pve-node2` and `pve-node3`:
+
    ```bash
    pvecm join 192.168.10.11 --fingerprint <SHA256_FINGERPRINT>
    ```
@@ -103,6 +105,7 @@ Deploy three nested virtual machines (`pve-node1`, `pve-node2`, `pve-node3`), ea
    $$\text{PG\_count} = \frac{\text{OSD\_count} \times 100}{\text{size}}$$
    For 9 OSDs with a replica size of 3, set $\text{pg\_num} = 128$.
 4. Create OSDs utilizing BlueStore on `/dev/sdb`, `/dev/sdc`, and `/dev/sdd` via the GUI or CLI:
+
    ```bash
    pveceph osd create /dev/sdb
    pveceph osd create /dev/sdc
@@ -115,18 +118,19 @@ To validate high availability and dynamic cluster expansion, scale the cluster h
 1. Provision and join `pve-node4` and `pve-node5` to `enterprise-cluster`.
 2. Attach two 100GB OSD drives (`/dev/sdb`, `/dev/sdc`) to each new node.
 3. Expand the Ceph CRUSH map failure domain to rack level (simulated via host weights):
+
    ```bash
    ceph osd crush add-bucket rack1 rack
    ceph osd crush move pve-node1 root=default rack=rack1
    ceph osd crush move pve-node2 root=default rack=rack1
    ```
-4. Verify cluster health and rebalancing progress:
+   
+5. Verify cluster health and rebalancing progress:
+
    ```bash
    ceph -s
    ```
    *Expected status:* `HEALTH_OK`, with all placement groups active and clean (`active+clean`).
-
----
 
 ## E.3. Enterprise Cluster Management: Proxmox Datacenter Manager (PDM) Integration
 
@@ -135,6 +139,7 @@ Managing multi-cluster edge and core environments requires centralized control p
 ### E.3.1. PDM Installation and Setup
 1. Deploy a Debian 13 VM/LCT container for PDM.
 2. Add the Proxmox enterprise/no-subscription repository and install PDM:
+
    ```bash
    echo "deb http://download.proxmox.com/debian/pdm trix-no-subscription main" > /etc/apt/sources.list.d/pdm.list
    wget https://enterprise.proxmox.com/debian/proxmox-release-trixie.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-trixie.gpg
@@ -147,8 +152,6 @@ Managing multi-cluster edge and core environments requires centralized control p
 3. Navigate to **Remotes -> Add Remote Cluster**, input the API endpoint, cluster fingerprint, and administrative credentials.
 4. Verify unified multi-cluster views, cross-cluster guest migration readiness, and global metrics aggregation.
 
----
-
 ## E.4. Enterprise Backup Architecture: Dedicated Proxmox Backup Server (PBS) Target & Datastore Engine Configuration
 
 To achieve data protection, immutability, and efficient deduplication, a dedicated **Proxmox Backup Server (PBS)** instance is integrated into the lab topology.
@@ -156,28 +159,31 @@ To achieve data protection, immutability, and efficient deduplication, a dedicat
 ### E.4.1. PBS Installation & Storage Pool Architecture
 1. Deploy a dedicated VM (`pbs-server01`) running PBS 3.x/4.x.
 2. Configure a ZFS pool (`tank`) across a dedicated 200GB virtual NVMe disk with compression enabled:
+
    ```bash
    zpool create -f tank mirror /dev/sdb /dev/sdc
    zfs set compression=zstd-3 tank
    ```
-3. Create a dedicated datastore named `enterprise-store` targeting `/tank/store`.
+   
+4. Create a dedicated datastore named `enterprise-store` targeting `/tank/store`.
 
 ### E.4.2. Encryption & Namespace Configuration
 1. Initialize client-side encryption keys on PBS to ensure zero-knowledge architecture:
+
    ```bash
    proxmox-backup-client key create /root/pbs-enc-key.json --kdf pbkdf2
    ```
-2. Configure namespaces within the datastore to segment backups by environment (`/production`, `/staging`, `/development`).
-3. Add the PBS storage target inside the PVE cluster (`Datacenter -> Storage -> Add -> Proxmox Backup Server`), inputting the fingerprint, datastore name, and encryption key.
-4. Schedule automated nightly snapshot backup jobs with retention policies (Prune Schedule: `keep-daily=7, keep-weekly=4, keep-monthly=12`).
-
----
+   
+3. Configure namespaces within the datastore to segment backups by environment (`/production`, `/staging`, `/development`).
+4. Add the PBS storage target inside the PVE cluster (`Datacenter -> Storage -> Add -> Proxmox Backup Server`), inputting the fingerprint, datastore name, and encryption key.
+5. Schedule automated nightly snapshot backup jobs with retention policies (Prune Schedule: `keep-daily=7, keep-weekly=4, keep-monthly=12`).
 
 ## E.5. Ansible Deployment Playbooks: Automated Bootstrap of the Complete Lab Topology
 
 To eliminate manual configuration drift and provision the entire lab in minutes, use the following production-grade Ansible playbook structure.
 
 ### E.5.1. Directory Structure
+
 ```text
 playbooks/
 ├── inventory/
@@ -191,6 +197,7 @@ playbooks/
 ```
 
 ### E.5.2. Master Orchestration Playbook (`site.yml`)
+
 ```yaml
 ---
 - name: Bootstrap Complete Enterprise Lab Topology
@@ -229,6 +236,7 @@ playbooks/
 ```
 
 ### E.5.3. Role: Proxmox Cluster Initialization (`roles/pve_cluster/tasks/main.yml`)
+
 ```yaml
 ---
 - name: Configure Proxmox VE repository lists
@@ -256,8 +264,6 @@ playbooks/
   register: corosync_conf
   when: inventory_hostname == 'pve-node1'
 ```
-
----
 
 ## E.6. Verification Checklist & Lab Sign-Off
 
