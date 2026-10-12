@@ -10,8 +10,6 @@ This full-length practice examination simulates the structure, scope, and techni
 * **Objective Coverage:** Topics 701.1 through 706.3
 * **Exam Strategy:** Each question presents a realistic enterprise operational scenario testing CLI commands, syntax, configuration schemas, architecture patterns, and troubleshooting techniques.
 
----
-
 ## D.2. Exam Simulation: 60 Scenario-Based Questions
 
 ### Domain 1: Modern Software Development & DevOps Principles (701.1–701.3)
@@ -111,8 +109,6 @@ B. DaemonSet
 C. StatefulSet  
 D. ReplicaSet  
 
----
-
 ### Domain 3: Infrastructure as Code & Configuration Management (703.1–703.4)
 
 #### Question 14 (Objective 703.1)
@@ -171,8 +167,6 @@ B. It performs a dry run without applying changes to remote hosts, printing stru
 C. It checks the syntax of the inventory file and exits immediately.  
 D. It encrypts all plain-text files using Ansible Vault.  
 
----
-
 ### Domain 4: Version Control & CI/CD Pipelines (704.1–704.4)
 
 #### Question 22 (Objective 704.1)
@@ -224,8 +218,6 @@ B. `pipeline { agent any; stages { } }`
 C. `script { }`  
 D. `buildStep { }`  
 
----
-
 ### Domain 5: Observability, Logging & Monitoring (705.1–705.3)
 
 #### Question 29 (Objective 705.1)
@@ -270,8 +262,6 @@ B. `select * from logs where app='auth-service' and level='CRITICAL'`
 C. `rate({app="auth-service"}[5m]) > 0`  
 D. `{namespace="production"} + "CRITICAL"`  
 
----
-
 ### Domain 6: Security, Compliance & System Hardening (706.1–706.3)
 
 #### Question 35 (Objective 706.1)
@@ -315,8 +305,6 @@ A. Configure pre-commit hooks using secret detection tools like `gitleaks` or `t
 B. Compress repository files using zip encryption.  
 C. Never use branches other than `main`.  
 D. Use `git commit --no-verify`.  
-
----
 
 ### Additional Comprehensive Scenario Questions (Questions 41–60)
 
@@ -475,8 +463,6 @@ D. To compress state files automatically.
 | **Domain 5: Observability, Logging & Monitoring** | 10% | 6 Questions |
 | **Domain 6: Security, Compliance & System Hardening** | 10% | 6 Questions |
 | **Total** | **100%** | **60 Questions** |
-
----
 
 ### Answer Key & Explanations
 
