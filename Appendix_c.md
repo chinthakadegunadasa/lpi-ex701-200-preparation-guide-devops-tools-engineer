@@ -2,8 +2,6 @@
 
 This appendix provides production-grade, battle-tested configuration schemas across the core domains of the **LPI DevOps Tools Engineer (701-200)** certification. These templates adhere to enterprise security baselines, OCI standards, least-privilege principles, and high-availability design patterns.
 
----
-
 ## C.1. Enterprise Dockerfile Templates (Multi-stage, Non-root)
 
 In enterprise containerization pipelines, security and minimal image size are paramount. The following multi-stage Dockerfile builds a compiled backend application (using Go as an exemplary compiled runtime) while ensuring that the final execution artifact runs as an unprivileged user within a minimal distroless/scratch runtime environment, completely stripping out build-time dependencies, package managers, and shell utilities to minimize the CVE attack surface.
@@ -52,8 +50,6 @@ USER 65532:65532
 # Define entrypoint
 ENTRYPOINT ["/usr/local/bin/enterprise-service"]
 ```
-
----
 
 ## C.2. Kubernetes Production Manifests (Deployment, StatefulSet, Ingress, NetworkPolicy)
 
@@ -265,13 +261,12 @@ spec:
       port: 53
 ```
 
----
-
 ## C.3. Terraform Reusable Module Schema Template
 
 Enterprise infrastructure-as-code follows strict modular design patterns with enforced version constraints, input validation, standardized tagging, and segregated output contracts.
 
 ### 1. Module Root Structure Layout
+
 ```
 modules/
 └── enterprise_vpc/
@@ -283,6 +278,7 @@ modules/
 ```
 
 ### 2. `versions.tf`
+
 ```hcl
 terraform {
   required_version = ">= 1.7.0"
@@ -296,6 +292,7 @@ terraform {
 ```
 
 ### 3. `variables.tf` (With Enterprise Validation)
+
 ```hcl
 variable "environment" {
   type        = string
@@ -320,6 +317,7 @@ variable "availability_zones" {
 ```
 
 ### 4. `main.tf`
+
 ```hcl
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
@@ -350,6 +348,7 @@ resource "aws_subnet" "public" {
 ```
 
 ### 5. `outputs.tf`
+
 ```hcl
 output "vpc_id" {
   value       = aws_vpc.main.id
@@ -362,13 +361,12 @@ output "public_subnet_ids" {
 }
 ```
 
----
-
 ## C.4. Ansible Production Directory Layout and Playbook Schema
 
 Enterprise configuration management requires robust role-based directory organization, encrypted credential storage via Ansible Vault, and defensive error handling.
 
 ### 1. Enterprise Directory Tree Structure
+
 ```
 ansible/
 ├── ansible.cfg
@@ -387,6 +385,7 @@ ansible/
 ```
 
 ### 2. Configuration (`ansible.cfg`)
+
 ```ini
 [defaults]
 inventory = inventories/production/hosts.ini
@@ -405,6 +404,7 @@ become_ask_pass = False
 ```
 
 ### 3. Production Playbook with Error Handling (`site.yml`)
+
 ```yaml
 ---
 - name: Enterprise Server Provisioning and Hardening
@@ -448,13 +448,12 @@ become_ask_pass = False
             mode: '0600'
 ```
 
----
-
 ## C.5. Prometheus & Alertmanager Enterprise YAML Configurations
 
 Observability infrastructure must aggregate metrics reliably while routing high-severity alerts to operational responders through deduplication and grouping rules.
 
 ### 1. Prometheus Scrape Configuration (`prometheus.yml`)
+
 ```yaml
 global:
   scrape_interval: 15s
@@ -488,6 +487,7 @@ scrape_configs:
 ```
 
 ### 2. Prometheus Alerting Rules (`app.rules.yml`)
+
 ```yaml
 groups:
   - name: CoreAppAlerts
@@ -511,6 +511,7 @@ groups:
 ```
 
 ### 3. Alertmanager Routing Configuration (`alertmanager.yml`)
+
 ```yaml
 global:
   resolve_timeout: 5m
@@ -539,13 +540,12 @@ receivers:
         text: "Alert: {{ .CommonAnnotations.summary }}\nDescription: {{ .CommonAnnotations.description }}"
 ```
 
----
-
 ## C.6. Multi-Stage CI/CD Pipeline Manifests (GitLab CI, GitHub Actions, Jenkinsfile)
 
 Enterprise CI/CD pipelines enforce automated linting, security scanning (SAST and container vulnerability checks), container building, and deployment orchestration.
 
 ### 1. GitLab CI/CD Pipeline (`.gitlab-ci.yml`)
+
 ```yaml
 stages:
   - lint
@@ -599,6 +599,7 @@ deploy-production:
 ```
 
 ### 2. GitHub Actions Workflow (`.github/workflows/pipeline.yml`)
+
 ```yaml
 name: Enterprise CI/CD Pipeline
 
@@ -650,6 +651,7 @@ jobs:
 ```
 
 ### 3. Declarative Jenkinsfile (`Jenkinsfile`)
+
 ```groovy
 pipeline {
     agent {
