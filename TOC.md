@@ -1,4 +1,5 @@
-```html
+# Table of Contents (`TOC.md`)
+
 <table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
   <colgroup>
     <col style="width: 88%;">
@@ -317,4 +318,3 @@
     </tr>
   </tbody>
 </table>
-```
