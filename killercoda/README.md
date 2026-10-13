@@ -1,4 +1,4 @@
-# Appendix F: Building an Interactive Hands-On Lab Environment with Killercoda
+# Building an Interactive Hands-On Lab Environment with Killercoda
 
 To truly master the **LPI 701-200 DevOps Tools Engineer** syllabus, theoretical knowledge must be paired with immediate, reproducible hands-on execution. [Killercoda](https://killercoda.com) provides an ideal browser-based platform for running interactive, multi-node Linux and Kubernetes environments without requiring local resource provisioning.
 
