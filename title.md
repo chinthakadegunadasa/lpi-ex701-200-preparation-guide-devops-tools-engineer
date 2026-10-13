@@ -1,5 +1,4 @@
 ---
-
 title: "The Ultimate DevOps Practitioner's Handbook"
 subtitle: "The Ultimate Enterprise Handbook, Workplace Companion & LPI DevOps Tools Engineer (701-200) Exam Guide"
 author: "Chinthaka Deshapriya Gunadasa"
@@ -12,11 +11,11 @@ date: "2026 October"
 ### The Ultimate Enterprise Handbook, Workplace Companion & LPI DevOps Tools Engineer (701-200) Exam Guide
 
 
-**Published by:**  
-**CYBERGATE**  
-Cybergate Services Private Limited  
-[www.cybergate.one](https://www.cybergate.one)  
+**Published by:**
+**CYBERGATE**
+Cybergate Services Private Limited
+[www.cybergate.one](https://www.cybergate.one)
 
 
-*First Edition — 2026n October*  
-*All rights reserved. Designed for enterprise production environments and LPI 701-200 certification mastery.*
+*First Edition — 2026n October*
+*All rights reserved. Designed for enterprise production environments and LPI 701-200 certification mastery.
