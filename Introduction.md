@@ -59,7 +59,7 @@ An open-source evangelist at heart, his broader research and professional intere
 
 This video is relevant because it features the author sharing his extensive expertise and early advocacy for adopting open-source Linux systems.
 
-## About the Publisher: Cybergate
+## About the Publisher: CYBERGATE.ONE
 
 Cybergate Services Private Limited is a premium technology agency dedicated to a customer-centric approach, delivering innovative, tailor-made solutions designed to meet the unique needs of every client. By bridging advanced technical engineering with robust enterprise operations, Cybergate provides a comprehensive ecosystem of products and services spanning multiple high-tech domains:
 
