@@ -1,7 +1,7 @@
 ---
 title: "Ultimate DevOps Practitioner's Handbook"
 subtitle: "The Ultimate Enterprise Handbook, Workplace Companion & LPI DevOps Tools Engineer (701-200) Exam Guide"
-author: "Madduma Kattadilage Chinthaka Deshapriya Gunadasa"
+author: "Chinthaka Deshapriya Gunadasa"
 publisher: "CYBERGATE (Cybergate Services Private Limited)"
 date: "2026"
 ---
