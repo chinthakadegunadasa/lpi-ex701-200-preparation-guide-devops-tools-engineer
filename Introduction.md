@@ -61,7 +61,7 @@ This video is relevant because it features the author sharing his extensive expe
 
 ## About the Publisher: CYBERGATE.ONE
 
-Cybergate Services Private Limited is a premium technology agency dedicated to a customer-centric approach, delivering innovative, tailor-made solutions designed to meet the unique needs of every client. By bridging advanced technical engineering with robust enterprise operations, Cybergate provides a comprehensive ecosystem of products and services spanning multiple high-tech domains:
+![Cybergate Services Private Limited](https://www.cybergate.one/) is a premium technology agency dedicated to a customer-centric approach, delivering innovative, tailor-made solutions designed to meet the unique needs of every client. By bridging advanced technical engineering with robust enterprise operations, Cybergate provides a comprehensive ecosystem of products and services spanning multiple high-tech domains:
 
 * **IT Infrastructure & Linux Expertise:** Designing and maintaining robust organizational backbones through professional Linux server management, application installation, troubleshooting, and public/private cloud implementations.
 * **Professional Training & Certification:** Operating as an official partner for both Red Hat and the Linux Foundation in Sri Lanka, delivering comprehensive training programs for key certifications including RHCSA, RHCE, OpenShift, Ansible, and RHEL performance tuning.
