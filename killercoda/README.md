@@ -24,12 +24,11 @@ A standard Killercoda scenario is version-controlled via Git and consists of a d
 └── background.sh       # Silent background initialization script
 ```
 
----
 
 ## F.2 Scenario Blueprint: LPI 701-200 Environment Configurations
 
 Depending on the module being tested, choose the appropriate base environment in `index.json`:
-
+```
 | Module | Base Environment (`backend.imageid`) | Target Tooling Stack |
 | :--- | :--- | :--- |
 | **Module 1 & 4** | `ubuntu:2204` | NGINX, Git, Docker Compose, Jenkins/Runner |
@@ -37,8 +36,7 @@ Depending on the module being tested, choose the appropriate base environment in
 | **Module 3** | `ubuntu:2204` | Terraform / OpenTofu, Ansible, Packer |
 | **Module 5** | `ubuntu:2204` / `kubernetes-kubeadm-1node` | Prometheus, Grafana, Loki, OpenTelemetry |
 | **Module 6** | `kubernetes-kubeadm-2nodes` | Chaos Mesh, Continuous Testing Suites |
-
----
+```
 
 ## F.3 Sample Production Configuration Files
 
