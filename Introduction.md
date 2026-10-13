@@ -46,3 +46,15 @@ The matrix organizes the entire LPI 701-200 ecosystem into six core modules, bre
 - **Self-Assessment:** Identify 2–3 sub-topics where you feel least experienced and start your review there.
 - **Hands-On Labs:** Pair each tooling stack entry with a local sandbox environment (e.g., setting up a local `minikube` cluster for Module 2 or writing playbooks for Module 3).
 - **Study Track Creation:** Group chapters into weekly milestones based on topic weight and complexity.
+
+## About the Author
+
+**Chinthaka Deshapriya Gunadasa** serves as the Chief Technology Officer (CTO) and Chief Strategic Innovator (CSI) at Cybergate Services Private Limited. As a veteran Linux Operating System Engineer with over 25 years of hands-on industry expertise, he specializes in Red Hat Enterprise Linux (RHEL), Debian, and enterprise-grade open-source infrastructure.
+
+Holding the prestigious Red Hat Certified Architect (RHCA) credential, he is widely regarded as a pioneer and the foundational figure of RHCA certification in Sri Lanka, having driven open-source adoption and technical education across the regional tech ecosystem. He earned his B.Sc. in Special Mathematics from the University of Sri Jayewardenepura (USJP), applying a disciplined, analytical mindset to modern systems architecture, high-efficiency engineering, and automated DevOps workflows.
+
+An open-source evangelist at heart, his broader research and professional interests encompass data sovereignty, thermal systems engineering, and bridging historical engineering paradigms with modern software engineering. Through this handbook, he shares decades of battle-tested operational wisdom to help engineers master resilient cloud-native deployment strategies.
+
+[Drop Windows - Go Linux Presentation](https://www.youtube.com/watch?v=IjYZZ_AI_0Y)
+
+This video is relevant because it features the author sharing his extensive expertise and early advocacy for adopting open-source Linux systems.
