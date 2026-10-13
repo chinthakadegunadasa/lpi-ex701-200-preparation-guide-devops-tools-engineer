@@ -58,3 +58,16 @@ An open-source evangelist at heart, his broader research and professional intere
 [Drop Windows - Go Linux Presentation](https://www.youtube.com/watch?v=IjYZZ_AI_0Y)
 
 This video is relevant because it features the author sharing his extensive expertise and early advocacy for adopting open-source Linux systems.
+
+## About the Publisher: Cybergate
+
+Cybergate Services Private Limited is a premium technology agency dedicated to a customer-centric approach, delivering innovative, tailor-made solutions designed to meet the unique needs of every client. By bridging advanced technical engineering with robust enterprise operations, Cybergate provides a comprehensive ecosystem of products and services spanning multiple high-tech domains:
+
+* **IT Infrastructure & Linux Expertise:** Designing and maintaining robust organizational backbones through professional Linux server management, application installation, troubleshooting, and public/private cloud implementations.
+* **Professional Training & Certification:** Operating as an official partner for both Red Hat and the Linux Foundation in Sri Lanka, delivering comprehensive training programs for key certifications including RHCSA, RHCE, OpenShift, Ansible, and RHEL performance tuning.
+* **Business Process Automation (BPA):** Streamlining operations and enhancing workplace productivity via customized ERP, CRM, and HRIS platforms, workflow automation, and document management systems.
+* **Cybersecurity Solutions:** Protecting critical digital assets through advanced server security, penetration testing, vulnerability mitigation, and comprehensive security audits.
+* **Telecommunications & IoT Integration:** Providing seamless connectivity through Cloud, Hardware, and Mobile PBX platforms alongside custom Internet of Things (IoT) applications and industrial smart solutions.
+* **Sustainable Energy & Specialized Technologies:** Driving environmental sustainability with solar power implementations, energy efficiency consulting, and advanced precision agriculture tech solutions.
+
+As the publisher of this handbook, Cybergate leverages its deep industry knowledge, open-source advocacy, and dedication to digital transformation to empower engineers with enterprise-ready insights and battle-tested operational guidance.
