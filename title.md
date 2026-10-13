@@ -11,11 +11,11 @@ date: "2026 October"
 ### The Ultimate Enterprise Handbook, Workplace Companion & LPI DevOps Tools Engineer (701-200) Exam Guide
 
 <br>
-----
+---
 **Chinthaka Deshapriya Gunadasa**  
 *Chief Technology Officer (CTO) & Chief Strategic Innovator (CSI)*  
 *Red Hat Certified Architect (RHCA) & Veteran Linux System Engineer*
-----
+---
 
 <br>
 <br>
