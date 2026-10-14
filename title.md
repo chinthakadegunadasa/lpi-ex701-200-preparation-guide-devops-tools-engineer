@@ -28,6 +28,6 @@ Cybergate Services Private Limited
 
 
 
-*First Edition — 2026n October*
+*First Edition — 2026, October*
 
 *All rights reserved.*  Designed for enterprise production environments and LPI 701-200 certification mastery.
