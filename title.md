@@ -8,7 +8,7 @@ date: "2026 October"
 
 # The Ultimate DevOps Practitioner's Handbook
 
-### The Ultimate Enterprise Handbook, Workplace Companion & LPI DevOps Tools Engineer (701-200) Exam Guide
+## The Ultimate Enterprise Handbook, Workplace Companion & LPI DevOps Tools Engineer (701-200) Exam Guide
 
 
 **Published by:** **CYBERGATE**
