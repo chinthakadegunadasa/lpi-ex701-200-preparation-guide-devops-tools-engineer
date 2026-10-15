@@ -101,8 +101,6 @@ jobs:
 
 ```
 
----
-
 ## 19.2 Pipeline Runners, Agents, and Scalable Execution Environments
 
 Running a large enterprise CI/CD environment requires robust infrastructure. The code compilation and testing don't happen on the Jenkins master; they occur on dedicated **Agents** or **Runners**.
@@ -141,8 +139,6 @@ A robust enterprise pipeline follows a specific logical flow:
 
 * **Package:** The final stage of CI. The compiled, tested binary is packaged—most modernly as an immutable OCI-compliant container image—and pushed to an enterprise registry (like Harbor or Artifactory).
 
----
-
 ## 19.4 Pipeline Caching, Parameterization, and Trigger Mechanics
 
 Optimizing the pipeline for speed and flexibility is essential for enterprise DevOps tools engineers.
@@ -177,8 +173,6 @@ Enterprise pipelines must handle variation. **Parameterization** allows the pipe
 * **Commit Triggers:** Run on every push to specific branches.
 * **Tag Triggers:** Run the full "publish and release" workflow only when a semantic version tag (e.g., `v1.2.0`) is pushed.
 
----
-
 ## 19.5 Hands-On Lab: Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins
 
 ### Lab Scenario
@@ -192,8 +186,6 @@ As a DevOps engineer, you must create a fully automated, production-grade CI/CD 
 * Integrate a code linter and a dependency security scanner.
 * Package the binary into a Docker image and push it to a registry.
 
----
-
 ### Step 1: Pre-requisites and Infrastructure Setup
 
 For this lab, you will use GitLab CI.
@@ -201,8 +193,6 @@ For this lab, you will use GitLab CI.
 1. Access to a GitLab instance and project.
 2. A functional **GitLab Runner** with the **Docker executor** configured.
 3. An **Enterprise Container Registry** (e.g., `registry.local:5000`) available for push operations.
-
----
 
 ### Step 2: Implement the Java Multi-Stage Pipeline
 
@@ -279,9 +269,6 @@ publish_docker_image:
     - if: '$CI_COMMIT_BRANCH == "main"' # Only run packaging on the main branch
 
 ```
-
----
-
 ### Step 3: Formatting, Validation, and Execution
 
 The pipeline automation engineer must validate their work before committing.
@@ -300,8 +287,6 @@ git push
 
 ```
 
----
-
 ### Step 4: Verification
 
 Go to the GitLab project sidebar -> **CI/CD** -> **Pipelines** and examine the execution graph. Ensure:
@@ -309,8 +294,6 @@ Go to the GitLab project sidebar -> **CI/CD** -> **Pipelines** and examine the e
 1. The `security` stage successfully executed and blocked critical dependencies.
 2. The `package` stage executed and pushed an image (check your registry).
 3. The intermediate artifact (`target/my-app.jar`) was available for packaging.
-
----
 
 ## Self-Assessment & Exam Practice Questions
 
