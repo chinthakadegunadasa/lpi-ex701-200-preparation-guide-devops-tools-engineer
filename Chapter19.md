@@ -116,7 +116,6 @@ Enterprise DevOps teams must move beyond static agents toward dynamic scaling.
 2. **VM Scale Sets:** Auto-scaling VMs based on demand (e.g., Azure Scale Sets, AWS EC2 Auto Scaling), which clean up after the job.
 3. **Containerized Execution (Kubernetes):** This is the **most modern approach**. Runners or agents are spun up dynamically as temporary pods on a Kubernetes cluster. When the job finishes, the pod is destroyed.
 
----
 
 ## 19.3 Multi-Stage Pipelines: Build, Test, Security Scan, and Package
 
