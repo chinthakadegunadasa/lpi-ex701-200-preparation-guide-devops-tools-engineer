@@ -764,10 +764,10 @@ ansible-playbook site.yml
 
 **Question 1**: An administrator needs to define default variable values for an Ansible role that can easily be overridden by playbook variables or `group_vars`. Which role directory should contain these variables?
 
-* A) `vars/main.yml`
-* B) `defaults/main.yml`
-* C) `meta/main.yml`
-* D) `files/main.yml`
+A) `vars/main.yml`
+B) `defaults/main.yml`
+C) `meta/main.yml`
+D) `files/main.yml`
 
 **Answer**: **B**
 
@@ -775,10 +775,10 @@ ansible-playbook site.yml
 
 **Question 2**: Which Ansible Vault command allows an engineer to encrypt a single variable value directly into an unencrypted variable file without encrypting the entire file?
 
-* A) `ansible-vault encrypt_string`
-* B) `ansible-vault encrypt_inline`
-* C) `ansible-vault create_key`
-* D) `ansible-vault embed`
+A) `ansible-vault encrypt_string`
+B) `ansible-vault encrypt_inline`
+C) `ansible-vault create_key`
+D) `ansible-vault embed`
 
 **Answer**: **A**
 
@@ -786,10 +786,10 @@ ansible-playbook site.yml
 
 **Question 3**: In an Ansible playbook, a task is configured with `async: 600` and `poll: 0`. How does Ansible execute this task?
 
-* A) Ansible polls the target host every 600 seconds until completion.
-* B) Ansible waits up to 600 seconds for completion, checking every second.
-* C) Ansible launches the task asynchronously and immediately moves to the next task without waiting.
-* D) Ansible cancels the task if it does not complete within 0 seconds.
+A) Ansible polls the target host every 600 seconds until completion.
+B) Ansible waits up to 600 seconds for completion, checking every second.
+C) Ansible launches the task asynchronously and immediately moves to the next task without waiting.
+D) Ansible cancels the task if it does not complete within 0 seconds.
 
 **Answer**: **C**
 
