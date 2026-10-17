@@ -228,8 +228,6 @@ You are tasked with deploying an enterprise-grade, production-aligned multi-node
 *   **Control Plane (`cp-01`)**: Ubuntu 22.04 LTS, 2 vCPU, 4GB RAM, IP: `10.0.10.11`
 *   **Worker Node (`worker-01`)**: Ubuntu 22.04 LTS, 2 vCPU, 4GB RAM, IP: `10.0.10.21`
 
----
-
 ### Step 1: System Pre-requisites Optimization (Execute on ALL Nodes)
 
 Disable swap, configure persistent kernel modules for bridge traffic, and adjust kernel parameters.
@@ -301,9 +299,6 @@ sudo apt-get install -y kubelet kubeadm kubectl
 # Pin versions to prevent unintended upgrades
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
-
----
-
 ### Step 4: Initialize Control Plane Node (Execute ONLY on `cp-01`)
 
 Construct a custom bootstrap manifest and execute `kubeadm init`.
