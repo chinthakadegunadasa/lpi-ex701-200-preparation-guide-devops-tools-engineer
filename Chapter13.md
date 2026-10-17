@@ -311,8 +311,6 @@ resource "aws_instance" "web" {
 
 Design and deploy a reusable enterprise module that provisions AWS compute instances attached to a customized VPC, using dynamic variable inputs, outputs, and local tags.
 
----
-
 ### Step 1: Directory Setup
 
 Create a structured workspace containing both the child module definition and a root caller configuration:
