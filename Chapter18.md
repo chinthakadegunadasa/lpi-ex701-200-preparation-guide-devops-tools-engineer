@@ -227,8 +227,6 @@ docker ps -f name=private_registry
 
 ```
 
----
-
 ### Step 4: Configure Local DNS and Trust TLS Certificates
 
 To allow the local system to resolve `registry.local` and trust the self-signed TLS certificate:
