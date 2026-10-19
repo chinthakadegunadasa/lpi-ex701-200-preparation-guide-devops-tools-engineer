@@ -140,6 +140,7 @@ log_info "Enterprise workstation provisioning completed successfully!"
 In enterprise environments operating under strict compliance frameworks (such as SOC2, ISO 27001, or NIST), package installations cannot rely on blind execution or unverified public keys. Debian 13 introduces rigorous checks regarding repository structures and cryptographic verification.
 
 ### 1. Cryptographic Verification and Keyrings Lifecycle
+
 Under Debian 13 and modern APT standards, legacy key placement in `/etc/apt/trusted.gpg` or `.gpg` ring files directly in `/etc/apt/trusted.gpg.d/` is deprecated due to global namespace pollution vulnerabilities. 
 
 * **Best Practice:** Always place third-party repository GPG keys explicitly converted to binary format into `/etc/apt/keyrings/` and bind them explicitly using the `signed-by` attribute in source list files.
@@ -150,6 +151,7 @@ deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.debian.
 ```
 
 ### 2. Package Pinning and Version Locking (`apt_pinning`)
+
 To prevent unauthorized upstream breaking changes or unexpected minor-version upgrades during automated `apt-get upgrade` cycles in production pipelines, package pinning is enforced using `/etc/apt/preferences.d/`.
 
 Create a preference pinning file `/etc/apt/preferences.d/devops-pins`:
@@ -165,8 +167,11 @@ Pin-Priority: 1001
 ```
 
 * **Explanation of Pin-Priority Values:**
+
   * `P > 1000`: Causes a version to be installed even if this constitutes a version downgrade.
+
   * `990 <= P < 1000`: Causes a version to be installed even if it does not come from the target release, unless the target release version is already installed.
+
   * `500 <= P < 900`: Standard priority for packages from normal repositories.
 
 ### 3. Managing Dependencies and Cleaning Caches
@@ -184,6 +189,9 @@ dpkg --audit
 ```
 
 ### Exam Key Takeaways for 701-200
+
 1. **OCI Compliance:** Ensure your runtime engine (`docker` or `podman`) utilizes standards-compliant OCI image layers and secure overlay storage drivers (`overlay2`).
+
 2. **Idempotency & Automation:** Write provisioning scripts that can run multiple times without failing or creating duplicate entries.
+
 3. **Security Boundaries:** Never run container workloads or builds as root when unprivileged rootless modes (supported natively by Podman and Docker rootless) are available.
