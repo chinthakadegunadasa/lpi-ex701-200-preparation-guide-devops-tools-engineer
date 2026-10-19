@@ -154,6 +154,7 @@ LogQL can parse log lines *at query time* and extract temporary labels. This pro
 * `| regexp "<regex>"`: Uses named captured groups to extract labels.
 
 **Query Example (Parsing + Filtering):**
+
 A raw JSON log: `{"method":"POST", "status":500, "msg":"Internal Error"}`
 
 LogQL Query:
