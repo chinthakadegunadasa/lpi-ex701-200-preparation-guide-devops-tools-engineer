@@ -13,21 +13,29 @@ A Pod passes through distinct phases during its lifetime:
 ![Kubernetes Pod Lifecycle](assets/images/chapter9/9-1-Pod-Lifecycle.png)
 
 1. **Pending**: The API server has accepted the Pod manifest, but one or more containers have not been scheduled or created. This includes time spent downloading container images over the network.
+
 2. **Running**: The Pod has been bound to a worker node, and all containers have been created. At least one container is currently running, or is in the process of starting or restarting.
+
 3. **Succeeded**: All containers in the Pod have terminated successfully (exit code `0`) and will not be restarted (typical for `Job` workloads).
+
 4. **Failed**: All containers in the Pod have terminated, and at least one container has terminated in failure (non-zero exit code).
+
 5. **Unknown**: The state of the Pod cannot be obtained, typically due to a communication failure between the control plane (`kube-apiserver`) and the node (`kubelet`).
 
 ### Init Containers vs. App Containers
 
 * **Init Containers**: Run sequentially to completion before any primary application containers start. If an init container fails, the `kubelet` restarts it according to the Pod's `restartPolicy`. They are ideal for pre-flight tasks such as database schema migrations, dynamic configuration rendering, or waiting for dependent network services to become reachable.
+
 * **App Containers**: Run in parallel after all init containers complete successfully.
 
 ### Pod Restart Policies
 
 Defined via `spec.restartPolicy`:
+
 * `Always` (Default): Restarts the container automatically if it exits, regardless of exit code. Used for long-running services (Deployments, StatefulSets).
+
 * `OnFailure`: Restarts the container only if it exits with a non-zero exit code. Used for batch jobs.
+
 * `Never`: Does not restart the container under any circumstance.
 
 ### Container Health Probes: Liveness, Readiness, and Startup
@@ -39,11 +47,15 @@ The `kubelet` uses three types of health probes to monitor container health and 
 #### Probe Mechanisms
 
 1. `httpGet`: Performs an HTTP `GET` request against the container's IP on a specified port and path. Status codes $\ge 200$ and $< 400$ indicate success.
+
 2. `tcpSocket`: Attempts to establish a TCP connection to the specified port. If open, the probe succeeds.
+
 3. `exec`: Runs a specific command inside the container. Exit code `0` indicates success.
+
 4. `grpc`: Checks the health status using the gRPC Health Checking Protocol.
 
 #### Production Production-Ready Manifest with Probes
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -103,8 +115,11 @@ A `Deployment` controller manages declarative updates for stateless applications
 Kills all existing Pods simultaneously before creating new Pods. Causes application downtime, but prevents multi-version concurrency issues during database updates.
 
 #### 2. RollingUpdate Strategy (`spec.strategy.type: RollingUpdate`)
+
 Gradually replaces old Pods with new ones without downtime. Behavior is governed by two parameters:
+
 * `maxSurge`: The maximum number of Pods that can be created above the desired number of Pods during an update. Can be an absolute number (e.g., `2`) or a percentage (e.g., `25%`).
+
 * `maxUnavailable`: The maximum number of Pods that can be unavailable during the update process. Can be an absolute number or a percentage.
 
 ```yaml
@@ -154,7 +169,9 @@ kubectl rollout undo deployment/payment-api --to-revision=2 -n production
 ### Key Features of StatefulSets
 
 1. **Unique Network Identifier**: Pods receive a deterministic, sticky ordinal index ($0, 1, 2, \dots$) and stable DNS names formatted as `<pod-name>.<service-name>.<namespace>.svc.cluster.local`.
+
 2. **Stable Storage**: Storage is provisioned via `volumeClaimTemplates`. Each Pod gets its own `PersistentVolumeClaim` (PVC) that persists across Pod reschedules or deletions.
+
 3. **Ordered Deployment and Scaling**: By default, Pods are created sequentially from $0$ to $N-1$, and terminated in reverse order ($N-1$ down to $0$).
 
 ![Kubernetes StatefulSet](assets/images/chapter9/9-3-Kubernetes-Statefulsets.png)
@@ -223,6 +240,7 @@ Specialized workload controllers address infrastructure-level management and sch
 ![Kubernetes DaemonSet](assets/images/chapter9/9-4-Kubernetes-DaemonSet.png)
 
 ### 1. DaemonSets
+
 Ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are automatically added to them. Common uses include log collectors (`fluentbit`), CNI plugins (`calico`), and monitoring agents (`node-exporter`).
 
 ```yaml
@@ -276,8 +294,11 @@ spec:
 ```
 
 ### 3. CronJobs
+
 Runs Jobs on a time-based schedule using standard Cron format syntax (`minute hour day-of-month month day-of-week`).
+
 * `concurrencyPolicy`: Controls how execution overlaps (`Allow`, `Forbid`, `Replace`).
+
 * `successfulJobsHistoryLimit`: Number of finished successful jobs to retain for audit.
 
 ```yaml
@@ -315,9 +336,11 @@ Kubernetes Services expose applications running on a set of Pods as a network se
 ![External Client](assets/images/chapter9/9-5-External-Client.png)
 
 ### Headless Services
+
 When `spec.clusterIP: None` is set, Kubernetes does not allocate a virtual cluster IP. Instead, the cluster DNS returns individual Pod IP addresses directly in response to A/AAAA record queries. This is used for peer discovery in stateful, clustered applications.
 
 ### Ingress & Ingress Controllers
+
 An `Ingress` resource defines Layer 7 HTTP/HTTPS routing rules. An `Ingress Controller` (e.g., ingress-nginx, HAProxy, Envoy) processes these rules and proxy-routes traffic accordingly.
 
 ```yaml
@@ -368,6 +391,7 @@ EOF
 ```
 
 ### Lab Step 2: Deploy Headless Service and StatefulSet
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -420,6 +444,7 @@ EOF
 ```
 
 ### Lab Step 3: Expose Workload via Standard ClusterIP Service
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -439,6 +464,7 @@ EOF
 ```
 
 ### Lab Step 4: Configure Layer 7 Ingress Routing
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
@@ -465,6 +491,7 @@ EOF
 ```
 
 ### Lab Step 5: Verification and Functional Inspection
+
 ```bash
 # 1. Verify Pod state and ordinal sequence creation
 kubectl get pods -n lab-production -l app=web-db -o wide
@@ -485,8 +512,13 @@ kubectl get endpoints web-db-frontend -n lab-production
 Before proceeding to the next chapter, verify your understanding of the following key concepts:
 
 * [ ] Ability to identify Pod lifecycle states (`Pending`, `Running`, `Succeeded`, `Failed`, `Unknown`).
+
 * [ ] Precise configuration of `livenessProbe`, `readinessProbe`, and `startupProbe`.
+
 * [ ] Executing rolling deployments, paused rollouts, and multi-revision rollbacks using `kubectl rollout`.
+
 * [ ] Key architectural differences between `Deployments` and `StatefulSets` (Identity, DNS, PVC mapping).
+
 * [ ] Operational constraints and target execution models for `DaemonSets`, `Jobs`, and `CronJobs`.
+
 * [ ] Network layer differences between `ClusterIP`, `NodePort`, `LoadBalancer`, and `Ingress Controllers`.
