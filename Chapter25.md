@@ -83,8 +83,6 @@ To achieve seamless automated traffic rerouting during a transport failure, ente
 * **Primary Path:** Configured with higher **BGP Local Preference** (or lower **MED - Multi-Exit Discriminator**) over the Dedicated Circuit.
 * **Secondary Path:** Configured over the IPsec tunnel. If the primary BGP session drops, routes automatically update within seconds without manual intervention.
 
----
-
 ## 25.3 Cloud Storage Architecture: Object, Block, and File Storage Mechanics
 
 Choosing the correct storage architecture impacts system throughput, access patterns, application refactoring effort, and ongoing monthly spend.
@@ -136,8 +134,6 @@ To control cost growth in object storage, lifecycle rules automate data transiti
 2. **Infrequent Access (Cool):** Lower storage cost, small retrieval fee per GB, milliseconds access time (e.g., Logs > 30 days old).
 
 3. **Cold Archive (Glacier / Deep Archive):** Extremely low storage cost per GB, retrieval time takes minutes to hours (e.g., Compliance backups > 90 days old).
-
----
 
 ## 25.4 Cost Optimization, FinOps, and Resource Management Strategies
 
