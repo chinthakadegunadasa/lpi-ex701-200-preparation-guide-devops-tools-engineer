@@ -41,7 +41,7 @@ The Service Registry acts as the central source of truth for the location, statu
 
 Modern registries use consensus algorithms—primarily **Raft**—to maintain consistency across cluster nodes.
 
-![ RAFT CONSENSUS CLUSTER](assets/images/chapter7/7-1-RAFT-CONSENSUS-CLUSTER.png)
+![RAFT CONSENSUS CLUSTER](assets/images/chapter7/7-1-RAFT-CONSENSUS-CLUSTER.png)
 
 #### Raft Protocol Essentials
 
