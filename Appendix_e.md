@@ -7,7 +7,9 @@ This appendix provides a rigorous, enterprise-oriented, and fully hands-on bluep
 The foundational workspace node serves as the hypervisor host for all subsequent virtualized infrastructure. It runs **Debian 13 (Trixie)** configured with the Linux Kernel KVM (Kernel-based Virtual Machine) module and `libvirt` stack.
 
 ### E.1.1. Host System Prerequisites & Hardware Baseline
+
 * **Minimum Host Resources:** 8-Core CPU (Intel VT-x or AMD-V enabled), 64GB ECC RAM, 1TB NVMe PCIe 4.0 Storage Pool.
+
 * **Operating System:** Debian 13 Minimal Server installation with standard system utilities.
 
 ### E.1.2. Installing KVM, QEMU, and Libvirt Packages
@@ -47,6 +49,7 @@ Because the lab environment runs Proxmox VE nodes inside virtual machines, neste
    *(For AMD processors, substitute `kvm_intel` with `kvm_amd` and `nested=1`).*
 
 ### E.1.4. Bridged Networking Configuration (`br0`)
+
 To allow virtual machines to communicate directly with external subnets and each other across nodes, configure a Linux bridge (`br0`) via NetworkManager or `/etc/network/interfaces`. Using `/etc/network/interfaces`:
 
 ```ini
@@ -66,6 +69,7 @@ iface br0 inet dhcp
 ```
 
 Apply the network configuration:
+
 ```bash
 sudo systemctl restart networking
 ```
@@ -75,6 +79,7 @@ sudo systemctl restart networking
 The core infrastructure consists of a production-grade Hyper-Converged Infrastructure (HCI) cluster using **Proxmox VE (PVE 8.x/9.x)** and distributed block storage via **Ceph**.
 
 ### E.2.1. 3-Node Baseline Proxmox VE Hyper-Converged Ceph Storage Cluster
+
 Deploy three nested virtual machines (`pve-node1`, `pve-node2`, `pve-node3`), each assigned 8 vCPUs, 16GB RAM, 50GB OS disk (`/dev/sda`), and three 100GB raw disks (`/dev/sdb`, `/dev/sdc`, `/dev/sdd`) designated for Ceph Object Storage Daemons (OSDs).
 
 #### Network Segmentation Table
@@ -86,6 +91,7 @@ Deploy three nested virtual machines (`pve-node1`, `pve-node2`, `pve-node3`), ea
 | **Ceph Cluster** | `192.168.40.0/24` (VLAN 40) | Inter-OSD replication traffic |
 
 #### Initializing the PVE Cluster
+
 1. On `pve-node1`, initialize the cluster:
 
    ```bash
@@ -99,11 +105,15 @@ Deploy three nested virtual machines (`pve-node1`, `pve-node2`, `pve-node3`), ea
    ```
 
 #### Provisioning the Ceph Storage Cluster
+
 1. Navigate to **PVE Web UI -> Datacenter -> Ceph -> Install** on all three nodes using the stable repository (e.g., Ceph Reef or Squid).
+
 2. Create the Ceph Monitor (`MON`) and Ceph Manager (`MGR`) services across all three nodes.
+
 3. Configure Ceph Pools with optimal Placement Groups ($PG$) calculated via the formula:
    $$\text{PG\_count} = \frac{\text{OSD\_count} \times 100}{\text{size}}$$
    For 9 OSDs with a replica size of 3, set $\text{pg\_num} = 128$.
+
 4. Create OSDs utilizing BlueStore on `/dev/sdb`, `/dev/sdc`, and `/dev/sdd` via the GUI or CLI:
 
    ```bash
@@ -113,10 +123,13 @@ Deploy three nested virtual machines (`pve-node1`, `pve-node2`, `pve-node3`), ea
    ```
 
 ### E.2.2. Scale-Out Architecture: Injecting 2 Additional Compute/Storage Nodes
+
 To validate high availability and dynamic cluster expansion, scale the cluster horizontally by injecting two additional nodes: `pve-node4` and `pve-node5`.
 
 1. Provision and join `pve-node4` and `pve-node5` to `enterprise-cluster`.
+
 2. Attach two 100GB OSD drives (`/dev/sdb`, `/dev/sdc`) to each new node.
+
 3. Expand the Ceph CRUSH map failure domain to rack level (simulated via host weights):
 
    ```bash
@@ -130,6 +143,7 @@ To validate high availability and dynamic cluster expansion, scale the cluster h
    ```bash
    ceph -s
    ```
+ 
    *Expected status:* `HEALTH_OK`, with all placement groups active and clean (`active+clean`).
 
 ## E.3. Enterprise Cluster Management: Proxmox Datacenter Manager (PDM) Integration
@@ -137,7 +151,9 @@ To validate high availability and dynamic cluster expansion, scale the cluster h
 Managing multi-cluster edge and core environments requires centralized control planes. We deploy **Proxmox Datacenter Manager (PDM)** as a dedicated standalone LXC container or VM on the workspace node.
 
 ### E.3.1. PDM Installation and Setup
+
 1. Deploy a Debian 13 VM/LCT container for PDM.
+
 2. Add the Proxmox enterprise/no-subscription repository and install PDM:
 
    ```bash
@@ -147,9 +163,13 @@ Managing multi-cluster edge and core environments requires centralized control p
    ```
 
 ### E.3.2. Registering Remote PVE Clusters with PDM
+
 1. Generate an API Token on `pve-node1` (`enterprise-cluster`) with appropriate privileges (`Datacenter.Allocate`, `VM.Audit`, etc.).
+
 2. Log into the PDM Web UI (`https://<pdm-ip>:8443`).
+
 3. Navigate to **Remotes -> Add Remote Cluster**, input the API endpoint, cluster fingerprint, and administrative credentials.
+
 4. Verify unified multi-cluster views, cross-cluster guest migration readiness, and global metrics aggregation.
 
 ## E.4. Enterprise Backup Architecture: Dedicated Proxmox Backup Server (PBS) Target & Datastore Engine Configuration
@@ -157,7 +177,9 @@ Managing multi-cluster edge and core environments requires centralized control p
 To achieve data protection, immutability, and efficient deduplication, a dedicated **Proxmox Backup Server (PBS)** instance is integrated into the lab topology.
 
 ### E.4.1. PBS Installation & Storage Pool Architecture
+
 1. Deploy a dedicated VM (`pbs-server01`) running PBS 3.x/4.x.
+
 2. Configure a ZFS pool (`tank`) across a dedicated 200GB virtual NVMe disk with compression enabled:
 
    ```bash
@@ -168,6 +190,7 @@ To achieve data protection, immutability, and efficient deduplication, a dedicat
 4. Create a dedicated datastore named `enterprise-store` targeting `/tank/store`.
 
 ### E.4.2. Encryption & Namespace Configuration
+
 1. Initialize client-side encryption keys on PBS to ensure zero-knowledge architecture:
 
    ```bash
@@ -175,7 +198,9 @@ To achieve data protection, immutability, and efficient deduplication, a dedicat
    ```
    
 3. Configure namespaces within the datastore to segment backups by environment (`/production`, `/staging`, `/development`).
+
 4. Add the PBS storage target inside the PVE cluster (`Datacenter -> Storage -> Add -> Proxmox Backup Server`), inputting the fingerprint, datastore name, and encryption key.
+
 5. Schedule automated nightly snapshot backup jobs with retention policies (Prune Schedule: `keep-daily=7, keep-weekly=4, keep-monthly=12`).
 
 ## E.5. Ansible Deployment Playbooks: Automated Bootstrap of the Complete Lab Topology
@@ -268,8 +293,13 @@ playbooks/
 ## E.6. Verification Checklist & Lab Sign-Off
 
 Before proceeding with high-availability testing, failover simulations, or LPI 701-200 operational exercises, verify the following acceptance criteria:
+
 1. `virsh list --all` confirms all 5 PVE nodes and 1 PBS server are running with nested virtualization active.
+
 2. `pvecm status` reports all 5 nodes online under `enterprise-cluster`.
+
 3. `ceph -s` reports `HEALTH_OK` with full OSD map coverage across all storage nodes.
+
 4. PDM successfully displays unified graphs and performance metrics across all registered clusters.
+
 5. A test VM backup executed from PVE to the PBS datastore completes with verified client-side encryption and deduplication.
