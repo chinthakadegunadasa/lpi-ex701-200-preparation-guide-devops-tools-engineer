@@ -135,21 +135,25 @@ backend app_back
 #### Step 3: Verification and Functional Testing
 
 1. **Deploy Stack:**
+
    ```bash
    docker-compose up -d
    ```
 
-2. **Verify Broker Connectivity:**
+3. **Verify Broker Connectivity:**
+
    ```bash
    docker exec -it lab_rabbitmq rabbitmqctl status
    ```
 
-3. **Verify Redis Eviction & Authentication:**
+5. **Verify Redis Eviction & Authentication:**
+
    ```bash
    docker exec -it lab_redis redis-cli -a RedisSecurePass123 INFO memory
    ```
 
-4. **Test HAProxy Gateway:**
+7. **Test HAProxy Gateway:**
+
    ```bash
    curl -I http://localhost:80
    ```
