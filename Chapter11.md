@@ -59,14 +59,16 @@ Kubernetes RBAC controls authorization using four primary API objects under the 
 #### 1. Roles vs. ClusterRoles
 
 * **Role**: Defines permissions **within a single namespace**.
+
 * **ClusterRole**: Defines permissions across the **entire cluster** (including cluster-scoped resources like `Node`, `PersistentVolume`, `CustomResourceDefinition`, or non-resource endpoints like `/healthz`).
 
 #### 2. RoleBindings vs. ClusterRoleBindings
 
 * **RoleBinding**: Grants permissions defined in a `Role` or `ClusterRole` to subjects **within a specific namespace**.
+
 * **ClusterRoleBinding**: Grants permissions across **all namespaces** cluster-wide.
 
-> **Key Architectural Pattern**: Binding a `ClusterRole` via a standard `RoleBinding` grants the specified cluster-wide role templates (e.g., standard `view` or `edit` roles) **only** within the target namespace of the `RoleBinding`.
+* **Key Architectural Pattern**: Binding a `ClusterRole` via a standard `RoleBinding` grants the specified cluster-wide role templates (e.g., standard `view` or `edit` roles) **only** within the target namespace of the `RoleBinding`.
 
 ### Manifest Examples
 
@@ -85,7 +87,6 @@ rules:
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["get", "list", "watch"]
-
 ```
 
 #### ServiceAccount & RoleBinding
@@ -124,7 +125,9 @@ A `NetworkPolicy` object isolates Pod traffic using standard `podSelector` and `
 ### Policy Evaluation Rules
 
 1. **Default Allow**: If no `NetworkPolicy` selects a Pod, all inbound and outbound traffic to/from that Pod is permitted.
+
 2. **Default Deny / Isolation**: Once a Pod is selected by *any* `NetworkPolicy`, it isolates that Pod. Unmatched traffic is blocked (implicit drop).
+
 3. **Additive Policies**: NetworkPolicies are additive. If multiple policies select the same Pod, the allowed rules from all matching policies are combined (OR logic).
 
 ### Manifest: Ingress & Egress Isolation
@@ -163,7 +166,6 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
-
 ```
 
 ## 11.4 Pod Security Standards (PSS) and Admission Controllers
@@ -183,7 +185,9 @@ Kubernetes Pod Security Standards replace the deprecated `PodSecurityPolicy` (PS
 The built-in `PodSecurity` Admission Controller enforces profiles based on namespace labels, evaluated at three distinct modes:
 
 * `enforce`: Rejects pods violating the profile.
+
 * `audit`: Generates audit log events for violations while allowing creation.
+
 * `warn`: Returns a user-facing warning during deployment creation.
 
 ```yaml
@@ -196,7 +200,6 @@ metadata:
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/warn: restricted
     pod-security.kubernetes.io/warn-version: latest
-
 ```
 
 ### Dynamic Admission Control Webhooks
@@ -206,6 +209,7 @@ When an API request passes Authentication and Authorization, it hits the **Admis
 Admission controllers run in two sequential stages:
 
 1. **Mutating Admission Webhooks**: Can intercept, modify, or inject defaults into incoming API payloads (e.g., inject sidecars, add required labels).
+
 2. **Validating Admission Webhooks**: Evaluate payloads against specific validation logic. Rejects requests with HTTP `422 Unprocessable Entity` if rules are violated (e.g., blocking `latest` container image tags).
 
 Popular policy engines such as **Kyverno** and **OPA / Gatekeeper** run as dynamic validating and mutating admission webhooks.
@@ -282,7 +286,6 @@ kubectl create rolebinding developer-rb \
   --role=developer-role \
   --serviceaccount=secure-backend:developer-sa \
   --namespace=secure-backend
-
 ```
 
 ### Step 4: Verify Authorization Matrix (`kubectl auth can-i`)
@@ -309,7 +312,6 @@ kubectl auth can-i list secrets \
 kubectl auth can-i list pods \
   --as=system:serviceaccount:secure-backend:developer-sa \
   -n data-tier
-
 ```
 
 ## 11.6 Self-Assessment & Exam Practice Questions
@@ -317,8 +319,11 @@ kubectl auth can-i list pods \
 **Question 1**: An administrator wants to grant a user permission to list secrets across all namespaces in a cluster using a minimum set of bindings. Which approach should be used?
 
 A) Create a `Role` with permissions on secrets in the `default` namespace and bind it with a `ClusterRoleBinding`.
+
 B) Create a `ClusterRole` with permissions on secrets and bind it using a `ClusterRoleBinding`.
+
 C) Create a `Role` in every namespace and bind each one with a separate `RoleBinding`.
+
 D) Create a `ClusterRole` with permissions on secrets and bind it using a `RoleBinding` in the `kube-system` namespace.
 
 **Answer**: **B**
@@ -328,8 +333,11 @@ D) Create a `ClusterRole` with permissions on secrets and bind it using a `RoleB
 **Question 2**: You create a `NetworkPolicy` targeting pods with `app: frontend`. The policy explicitly defines an `ingress` rule allowing traffic from `app: gateway`. What happens to traffic from `app: monitoring` attempting to reach `app: frontend` on an unlisted port?
 
 A) Traffic is allowed because default ingress behavior permits all connections unless explicitly blocked with a Deny rule.
+
 B) Traffic is forwarded to an admission controller for inspection.
+
 C) Traffic is dropped because targeting `app: frontend` puts it in an isolated state, blocking all non-matched ingress traffic.
+
 D) Traffic is accepted, but logged to the API server audit pipeline.
 
 **Answer**: **C**
@@ -339,8 +347,11 @@ D) Traffic is accepted, but logged to the API server audit pipeline.
 **Question 3**: What type of Admission Controller should be used if an organization requires all created pods to automatically have a security label (`environment: production`) attached upon request creation?
 
 A) Validating Admission Webhook
+
 B) Mutating Admission Webhook
+
 C) RoleBinding Evaluator
+
 D) Node Restriction Controller
 
 **Answer**: **B**
