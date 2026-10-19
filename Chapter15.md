@@ -36,11 +36,10 @@ A critical architectural decision when designing roles is choosing where to defi
 webserver_http_port: 80
 webserver_max_clients: 200
 webserver_worker_processes: "auto"
-
 ```
 
-
 * **`vars/main.yml`**: Used for constants and internal variables strict to the role's implementation details.
+
 ```yaml
 # roles/enterprise_webserver/vars/main.yml
 webserver_packages:
@@ -48,7 +47,6 @@ webserver_packages:
   - nginx-module-geoip
 webserver_service_name: "nginx"
 webserver_config_path: "/etc/nginx/nginx.conf"
-
 ```
 
 ### 15.1.3 Role Dependencies and Execution Flow (`meta/main.yml`)
@@ -80,7 +78,6 @@ dependencies:
   - role: tls_certificate_provisioner
     vars:
       cert_domain: "{{ ansible_fqdn }}"
-
 ```
 
 ### 15.1.4 Installing and Managing Roles via Ansible Galaxy Requirements
@@ -108,7 +105,6 @@ collections:
     version: 6.1.0
   - name: community.general
     version: 7.2.0
-
 ```
 
 #### CLI Management Commands
@@ -122,7 +118,6 @@ ansible-galaxy role install -r requirements.yml -p ./roles/
 
 # Initialize a new role with standard directory structure
 ansible-galaxy role init roles/app_service_node
-
 ```
 
 ## 15.2 Managing Secrets with Ansible Vault
@@ -152,7 +147,6 @@ ansible-vault edit group_vars/production/db_credentials.yml
 
 # Decrypt a file permanently
 ansible-vault decrypt group_vars/production/db_credentials.yml
-
 ```
 
 #### 2. Variable-Level (Inline) Encryption
@@ -162,7 +156,6 @@ Encrypts individual sensitive values inside an unencrypted variable file, keepin
 ```bash
 # Encrypt a single variable string value interactively
 ansible-vault encrypt_string 'SuperSecretDBPassword2026!' --name 'db_password'
-
 ```
 
 Output embedded inside `group_vars/all/vars.yml`:
@@ -178,7 +171,6 @@ db_password: !vault |
           6333333331393838383833303434316135326532383830380a3734373138333930333338353332
           393630653335343831353637373432373031316164343834373238313335373030383131333765
           3532353036323438300a3036326135373838313337336334343236313765353535326138616139
-
 ```
 
 ### 15.2.2 Multi-Vault ID Strategies and Vault Password Files
@@ -193,7 +185,6 @@ Store Vault password files securely on the Control Node (with permissions set to
 echo 'dev_vault_pass_2026' > ~/.vault_pass_dev
 echo 'prod_vault_pass_2026' > ~/.vault_pass_prod
 chmod 0600 ~/.vault_pass_dev ~/.vault_pass_prod
-
 ```
 
 #### Encrypting with Specific Vault IDs
@@ -204,7 +195,6 @@ ansible-vault encrypt --vault-id dev@~/.vault_pass_dev group_vars/development/va
 
 # Encrypt file using the 'prod' vault label
 ansible-vault encrypt --vault-id prod@~/.vault_pass_prod group_vars/production/vault.yml
-
 ```
 
 #### Running Playbooks with Multiple Vault IDs
@@ -213,7 +203,6 @@ ansible-vault encrypt --vault-id prod@~/.vault_pass_prod group_vars/production/v
 ansible-playbook -i inventory/prod site.yml \
   --vault-id dev@~/.vault_pass_dev \
   --vault-id prod@~/.vault_pass_prod
-
 ```
 
 #### Setting Default Vault Configuration (`ansible.cfg`)
@@ -223,7 +212,6 @@ To eliminate the need for CLI flags in automated CI/CD pipelines:
 ```ini
 [defaults]
 vault_identity_list = dev@~/.vault_pass_dev, prod@~/.vault_pass_prod
-
 ```
 
 ## 15.3 Dynamic Inventories for Cloud and Virtualization Enclaves
@@ -282,7 +270,6 @@ hostnames:
 compose:
   ansible_host: private_ip_address
   ansible_user: "'ec2-user'"
-
 ```
 
 ### 15.3.3 Configuring the VMware vSphere Dynamic Inventory Plugin (`vmware_rest`)
@@ -312,7 +299,6 @@ keyed_groups:
     prefix: state
   - key: customValues['Department']
     prefix: dept
-
 ```
 
 ### 15.3.4 Validating Dynamic Inventories with `ansible-inventory`
@@ -337,7 +323,6 @@ ansible-inventory -i inventory/aws_ec2.yml --graph
 
 # Inspect specific host variables computed dynamically
 ansible-inventory -i inventory/aws_ec2.yml --host 10.0.1.45
-
 ```
 
 ## 15.4 Asynchronous Execution, Poll Options, and Error Handling
@@ -349,6 +334,7 @@ Ansible provides **Asynchronous Execution** alongside advanced control flow stru
 ### 15.4.1 Asynchronous Execution (`async` and `poll`)
 
 * **`async`**: Specifies the maximum operational runtime (in seconds) allowed for a task before Ansible terminates it.
+
 * **`poll`**: Controls how frequently (in seconds) Ansible polls the target node to check if the background process has completed.
 
 #### 1. Blocking Asynchronous Task (Long-running task with status polling)
@@ -360,7 +346,6 @@ Ansible stays connected, polling the node every 15 seconds for up to 3600 second
   ansible.builtin.command: /opt/db/scripts/migrate_schema.sh
   async: 3600
   poll: 15
-
 ```
 
 #### 2. Fire-and-Forget Asynchronous Task (`poll: 0`)
@@ -373,7 +358,6 @@ Ansible triggers the task asynchronously and immediately moves to the next task 
   async: 1800
   poll: 0
   register: firmware_async_result
-
 ```
 
 #### 3. Polling Asynchronous Tasks Later in the Playbook
@@ -399,7 +383,6 @@ To track fire-and-forget tasks, capture the task's job ID (`ansible_job_id`) and
   until: job_result.finished
   retries: 30
   delay: 10
-
 ```
 
 ### 15.4.2 Enterprise Error Handling: `block`, `rescue`, `always`
@@ -407,7 +390,9 @@ To track fire-and-forget tasks, capture the task's job ID (`ansible_job_id`) and
 Ansible supports structured error handling similar to `try-catch-finally` programming paradigms via `block`, `rescue`, and `always`.
 
 * **`block`**: Contains the primary tasks intended for standard execution.
+
 * **`rescue`**: Tasks executed **only** if a task within the `block` fails.
+
 * **`always`**: Tasks executed unconditionally, regardless of success or failure in `block` or `rescue`.
 
 ```yaml
@@ -455,7 +440,6 @@ Ansible supports structured error handling similar to `try-catch-finally` progra
       ansible.builtin.file:
         path: "/tmp/app-v2.1.tar.gz"
         state: absent
-
 ```
 
 ### 15.4.3 Error Control Directives: `ignore_errors`, `failed_when`, and `changed_when`
@@ -469,7 +453,6 @@ Ansible supports structured error handling similar to `try-catch-finally` progra
   failed_when: 
     - check_result.rc != 0 
     - "'FATAL' in check_result.stdout"
-
 ```
 
 #### Defining Changed Status (`changed_when`)
@@ -481,7 +464,6 @@ Prevent command/shell tasks from reporting `changed` status unconditionally when
   ansible.builtin.command: pg_isready -h localhost
   register: pg_status
   changed_when: false  # Pure read query, never changes node state
-
 ```
 
 #### Ignoring Task Failures (`ignore_errors`)
@@ -492,7 +474,6 @@ Prevent command/shell tasks from reporting `changed` status unconditionally when
     url: "http://telemetry.internal/ping"
     dest: "/dev/null"
   ignore_errors: true
-
 ```
 
 ## 15.5 Hands-On Lab: Implementing Encrypted Ansible Roles with Automated Dynamic Inventories
@@ -516,7 +497,6 @@ Execute the following commands on the Ansible Control Node:
 ```bash
 mkdir -p ~/ansible_lab/{roles/app_server/{defaults,vars,tasks,handlers,templates,meta},inventory,group_vars/all}
 cd ~/ansible_lab
-
 ```
 
 ### Step 2: Define Ansible Role Files
@@ -552,7 +532,6 @@ Create an encrypted password file on the control node:
 ```bash
 echo "EnterpriseVaultPass2026" > ~/.vault_pass
 chmod 0600 ~/.vault_pass
-
 ```
 
 Create the encrypted vault variable file using inline vault encryption:
@@ -567,7 +546,6 @@ vault_db_password: !vault |
           3030313763323030323936306531333461326437343235620a323333333433393931323339363935
           353738393539343332303737383637373438313437333633323536393036363738383838333132
           3936323730303831310a3036326135373838313337336334343236313765353535326138616139
-
 ```
 
 #### File 4: `roles/app_server/templates/app_server.conf.j2`
@@ -589,7 +567,6 @@ server {
         root /usr/share/nginx/html;
     }
 }
-
 ```
 
 #### File 5: `roles/app_server/handlers/main.yml`
@@ -601,7 +578,6 @@ server {
     name: "{{ app_server_service }}"
     state: restarted
     daemon_reload: true
-
 ```
 
 #### File 6: `roles/app_server/tasks/main.yml`
@@ -698,7 +674,6 @@ become = True
 become_method = sudo
 become_user = root
 become_ask_pass = False
-
 ```
 
 ### Step 5: Execute and Validate the Master Playbook
@@ -713,14 +688,12 @@ Create the master site playbook `site.yml`:
   gather_facts: true
   roles:
     - app_server
-
 ```
 
 #### 1. Validate Dynamic Inventory Discovery
 
 ```bash
 ansible-inventory --graph
-
 ```
 
 Expected Output:
@@ -736,28 +709,24 @@ Expected Output:
   |--@role_appserver:
   |  |--10.0.1.102
   |  |--10.0.1.103
-
 ```
 
 #### 2. Perform Syntax Check
 
 ```bash
 ansible-playbook site.yml --syntax-check
-
 ```
 
 #### 3. Perform a Dry-Run (Check Mode)
 
 ```bash
 ansible-playbook site.yml --check
-
 ```
 
 #### 4. Execute the Production Playbook
 
 ```bash
 ansible-playbook site.yml
-
 ```
 
 ## Self-Assessment & Exam Practice Questions
@@ -765,8 +734,11 @@ ansible-playbook site.yml
 **Question 1**: An administrator needs to define default variable values for an Ansible role that can easily be overridden by playbook variables or `group_vars`. Which role directory should contain these variables?
 
 A) `vars/main.yml`
+
 B) `defaults/main.yml`
+
 C) `meta/main.yml`
+
 D) `files/main.yml`
 
 **Answer**: **B**
@@ -776,8 +748,11 @@ D) `files/main.yml`
 **Question 2**: Which Ansible Vault command allows an engineer to encrypt a single variable value directly into an unencrypted variable file without encrypting the entire file?
 
 A) `ansible-vault encrypt_string`
+
 B) `ansible-vault encrypt_inline`
+
 C) `ansible-vault create_key`
+
 D) `ansible-vault embed`
 
 **Answer**: **A**
@@ -787,8 +762,11 @@ D) `ansible-vault embed`
 **Question 3**: In an Ansible playbook, a task is configured with `async: 600` and `poll: 0`. How does Ansible execute this task?
 
 A) Ansible polls the target host every 600 seconds until completion.
+
 B) Ansible waits up to 600 seconds for completion, checking every second.
+
 C) Ansible launches the task asynchronously and immediately moves to the next task without waiting.
+
 D) Ansible cancels the task if it does not complete within 0 seconds.
 
 **Answer**: **C**
