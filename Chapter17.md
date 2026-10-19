@@ -31,9 +31,13 @@ A **tree** represents a directory state. It maps filenames, file permissions (PO
 A **commit** links a root tree object to a historical timeline. It contains:
 
 * The SHA-1 hash of the root tree.
+
 * Parent commit hash(es) (zero for initial commit, one for standard commit, two or more for merges).
+
 * Author metadata (name, email, timestamp).
+
 * Committer metadata (name, email, timestamp).
+
 * Commit message string and optional GPG signature.
 
 #### 4. Tag Object
@@ -84,9 +88,13 @@ GitFlow utilizes strict separation of roles across multiple long-running branche
 ![GitFlow Model](assets/images/chapter17/17-2-1-GitFlow-Model.png)
 
 * **`main`**: Stores official production history. Every commit is tagged with a release version.
+
 * **`develop`**: Serves as the integration branch for features.
+
 * **`feature/*`**: Cloned off `develop`; merged back into `develop` via Pull Request.
+
 * **`release/*`**: Forked off `develop` when a release scope is met; only bug fixes and documentation are committed here before merging to both `main` and `develop`.
+
 * **`hotfix/*`**: Forked directly off `main` to address critical production issues; merged back to both `main` and `develop`.
 
 #### 2. Trunk-Based Development (TBD)
@@ -96,7 +104,9 @@ Trunk-Based Development enforces a single active branch (`main`/`trunk`). Engine
 ![Trunk-Based Development](assets/images/chapter17/17-2-2-Trunk-Based-Development.png)
 
 * Eliminates long-lived branch drift and large merge conflicts.
+
 * Relies heavily on **Feature Flags** (Feature Toggles) in source code to decouple code deployment from feature release.
+
 * Demands automated unit and integration tests executing within robust CI pipelines.
 
 ## 17.3 Advanced Git CLI Operations: Interactive Rebase, Cherry-Pick, Bisect, and Stash
@@ -110,7 +120,6 @@ Interactive rebasing allows rewriting, combining, reordering, or dropping commit
 ```bash
 # Initiate interactive rebase for the last 5 commits
 git rebase -i HEAD~5
-
 ```
 
 This launches an editor displaying commit directives:
@@ -129,7 +138,6 @@ pick 7b8c9d0 chore: clean up debug print statements
 # s, squash <commit> = use commit, but meld into previous commit
 # f, fixup <commit> = like "squash", but discard this commit's log message
 # d, drop <commit> = remove commit
-
 ```
 
 #### Modified Rebase Script (Squashing and Dropping)
@@ -140,7 +148,6 @@ fixup 5d6e7f8 fix(api): resolve typo in authorization header
 pick 9a8b7c6 docs(api): update OpenAPI specifications
 pick 3e4f5a6 test(api): add integration test cases for auth
 drop 7b8c9d0 chore: clean up debug print statements
-
 ```
 
 ### Cherry-Picking (`git cherry-pick`)
@@ -156,7 +163,6 @@ git cherry-pick e4f2a1b
 
 # Apply commit without automatically committing (leaves changes staged)
 git cherry-pick -n 9c8b7a6
-
 ```
 
 ### Automated Binary Search Regression Isolator (`git bisect`)
@@ -181,7 +187,6 @@ git bisect bad    # If test fails
 
 # 4. Once identified, terminate bisect session and return to original HEAD
 git bisect reset
-
 ```
 
 #### Fully Automated Bisect with Test Script
@@ -190,7 +195,6 @@ git bisect reset
 # Execute automated binary search using a exit-code driven test script
 git bisect start HEAD v2.0.0
 git bisect run pytest tests/test_payment_gateway.py
-
 ```
 
 ### Advanced Stashing Options (`git stash`)
@@ -212,7 +216,6 @@ git stash pop
 
 # Apply specific stash without removing it from stack
 git stash apply stash@{1}
-
 ```
 
 ## 17.4 Client-Side and Server-Side Git Hooks
@@ -228,7 +231,6 @@ CLIENT-SIDE HOOKS (Control Node / Developer Workstation):
 
 SERVER-SIDE HOOKS (Remote Repository / Git Server):
 [ Receiving Push ] ──► pre-receive ──► update ──► (Objects Written) ──► post-receive
-
 ```
 
 #### Hook Execution Matrix
@@ -522,8 +524,11 @@ git commit -m "PROJ-105: Add documentation verifying app configuration"
 **Question 1**: Which low-level Git object stores directory paths, POSIX file permissions, and maps relative filenames to their respective SHA-1 object references?
 
 A) Commit object
+
 B) Blob object
+
 C) Tree object
+
 D) Tag object
 
 **Answer**: **C**
@@ -533,8 +538,11 @@ D) Tag object
 **Question 2**: An operations team needs to enforce a policy where pushes containing invalid commit message formats are rejected at the remote repository level before objects are written. Which Git hook must be deployed on the central Git server?
 
 A) `pre-commit`
+
 B) `pre-receive`
+
 C) `post-commit`
+
 D) `pre-push`
 
 **Answer**: **B**
@@ -544,8 +552,11 @@ D) `pre-push`
 **Question 3**: An engineer wants to isolate a regression in a codebase containing 500 commits between release `v1.0` and `v2.0`. Which Git command uses binary search to identify the exact commit that introduced the bug automatically?
 
 A) `git rebase -i`
+
 B) `git cherry-pick`
+
 C) `git bisect`
+
 D) `git reflog`
 
 **Answer**: **C**
