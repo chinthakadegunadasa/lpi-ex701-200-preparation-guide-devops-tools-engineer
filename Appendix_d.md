@@ -5,9 +5,13 @@
 This full-length practice examination simulates the structure, scope, and technical depth of the **LPI DevOps Tools Engineer (701-200)** certification exam.
 
 * **Total Questions:** 60 scenario-based, multiple-choice questions
+
 * **Time Allowed:** 90 minutes
+
 * **Passing Score:** ~70% (42 out of 60 correct answers)
+
 * **Objective Coverage:** Topics 701.1 through 706.3
+
 * **Exam Strategy:** Each question presents a realistic enterprise operational scenario testing CLI commands, syntax, configuration schemas, architecture patterns, and troubleshooting techniques.
 
 ## D.2. Exam Simulation: 60 Scenario-Based Questions
@@ -53,6 +57,7 @@ D. Factor XI (Logs)
 ### Domain 2: Container Management & Orchestration (702.1–702.5)
 
 #### Question 4 (Objective 702.1)
+
 An engineer needs to build an OCI container image while ensuring build-time secrets are not leaked into intermediate layer history. Which Docker command flag and feature should be utilized?
 
 A. `docker build --build-arg SECRET=value .`  
@@ -174,6 +179,7 @@ D. ReplicaSet
 ### Domain 3: Infrastructure as Code & Configuration Management (703.1–703.4)
 
 #### Question 14 (Objective 703.1)
+
 What is the primary operational objective of Infrastructure as Code (IaC) tools like Terraform and OpenTofu?
 
 A. Replacing CI/CD pipeline triggers with shell scripts.  
@@ -272,6 +278,7 @@ D. It encrypts all plain-text files using Ansible Vault.
 ### Domain 4: Version Control & CI/CD Pipelines (704.1–704.4)
 
 #### Question 22 (Objective 704.1)
+
 An engineer needs to isolate a bug introduced in a project repository containing over 500 commits. Which Git command automates binary search across commit history using test script execution?
 
 A. `git reflog`  
