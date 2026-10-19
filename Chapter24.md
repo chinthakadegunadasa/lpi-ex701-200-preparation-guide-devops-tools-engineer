@@ -541,4 +541,5 @@ In this lab, you successfully:
 3. Utilized Jaeger's timeline DAG visualization to isolate a latency bottleneck across service boundaries.
 
 4. Analyzed context propagation headers (`traceparent`) linking HTTP client/server spans.
-5. Validated performance remediation using observability metrics and trace verification.
+   
+6. Validated performance remediation using observability metrics and trace verification.
