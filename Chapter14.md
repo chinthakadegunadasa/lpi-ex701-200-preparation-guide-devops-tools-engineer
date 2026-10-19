@@ -11,18 +11,24 @@ Unlike agent-based configuration management tools (such as Puppet or Chef) that 
 ### Operational Mechanics
 
 1. **Control Node:** The system where Ansible is installed. Ansible processes playbooks, parses inventories, resolves dependencies, and renders templates locally on the Control Node.
+
 2. **Transport Layer:** Communication with managed nodes occurs via standard protocols:
+
    * **OpenSSH / SFTP / SCP:** Default transport mechanism for Linux/Unix platforms.
+
    * **WinRM / WinPSSession:** Used for native Windows target management.
-3. **Execution Model:** Ansible connects to managed nodes over SSH, transfers small ephemeral Python scripts (modules) to a temporary directory on the target, executes those scripts, extracts JSON formatted results, and cleans up the temporary files.
+
+4. **Execution Model:** Ansible connects to managed nodes over SSH, transfers small ephemeral Python scripts (modules) to a temporary directory on the target, executes those scripts, extracts JSON formatted results, and cleans up the temporary files.
 
 ### Requirements for Managed Nodes
+
 * **POSIX/Linux Targets:** Standard SSH daemon and a Python interpreter installed (`Python >= 3.9`).
+
 * **Windows Targets:** PowerShell 3.0+ and WinRM configured for remote management.
 
 ### Enterprise SSH Tuning (`ansible.cfg`)
 
-To operate efficiently across thousands of enterprise targets, the default SSH transport settings must be tuned in `ansible.cfg`:
+To operate efficiently across thousands of enterprise targets, the default SSH transport settings must be tuned in `ansible.cfg`
 
 ```ini
 [defaults]
@@ -44,6 +50,7 @@ ssh_args        = -o ControlMaster=auto -o ControlPersist=60s -o StrictHostKeyCh
 ```
 
 * **Pipelining (`pipelining = True`):** Bypasses the file-transfer step (`SFTP`/`SCP`) by piping Python scripts directly into the SSH session stdin. This significantly improves task execution performance across large fleets.
+
 * **ControlPersist (`ControlPersist=60s`):** Reuses established SSH sockets for subsequent commands executed against the same target within the specified idle window.
 
 ## 14.2 Inventory Files (Static vs. Dynamic Inventory Engines)
@@ -55,6 +62,7 @@ Ansible manages targets defined in an **inventory**. An inventory maps managed t
 Static inventories use INI or YAML file formats to list hosts and host groups.
 
 #### INI Format (`inventory/hosts.ini`)
+
 ```ini
 [webservers]
 web-node-01.example.com ansible_host=10.0.1.10
@@ -73,6 +81,7 @@ ansible_port=22
 ```
 
 #### YAML Format (`inventory/hosts.yaml`)
+
 ```yaml
 all:
   children:
@@ -140,8 +149,11 @@ ansible-inventory -i aws_ec2.yaml --graph
 ### Task Status Lifecycle
 
 When an Ansible task completes on a managed node, it returns one of three primary states:
+
 1. **`ok`:** Target is already in the desired state; no changes were made.
+
 2. **`changed`:** Target was modified to reach the desired state.
+
 3. **`failed`:** Task encountered an error and execution stopped on that host.
 
 ### Writing Idempotent Tasks (Declarative vs. Imperative)
@@ -149,6 +161,7 @@ When an Ansible task completes on a managed node, it returns one of three primar
 Most native Ansible modules (e.g., `ansible.builtin.copy`, `ansible.builtin.package`, `ansible.builtin.service`, `ansible.builtin.user`) are inherently idempotent. However, command-execution modules (`ansible.builtin.command`, `ansible.builtin.shell`, `ansible.builtin.raw`) are imperative and will trigger a `changed` status on every execution unless explicitly constrained.
 
 #### Non-Idempotent (Anti-Pattern)
+
 ```yaml
 # BAD: Executes every time and always returns status "changed"
 - name: Uncompress software archive
@@ -182,13 +195,21 @@ Most native Ansible modules (e.g., `ansible.builtin.copy`, `ansible.builtin.pack
 Ansible allows variables to be defined in multiple locations. When the same variable name exists in multiple scopes, Ansible evaluates them according to a strict precedence order (listed below from lowest to highest precedence):
 
 1. Command-line role defaults (`roles/x/defaults/main.yml`)
+
 2. Inventory group vars (`group_vars/all.yml`, `group_vars/groupname.yml`)
+
 3. Inventory host vars (`host_vars/hostname.yml`)
+
 4. Playbook `vars` block
+
 5. Playbook `vars_files`
+
 6. Task-level variables (`vars` inside a task)
+
 7. Role variables (`roles/x/vars/main.yml`)
+
 8. Registered task variables (`register: variable_name`)
+
 9. Extra CLI variables (`-e "var_name=value"`) — **Highest Precedence**
 
 ### Ansible Facts
@@ -256,7 +277,9 @@ handlers:
 
 ### Scenario Overview
 In this lab, you will write a complete, production-grade, idempotent Ansible playbook that configures a multi-tier application stack consisting of:
+
 1. **Frontend Tier:** Nginx Reverse Proxy
+
 2. **Application Tier:** Node.js Application service running with systemd
 
 ### Step 1: Lab Directory Structure Setup
@@ -277,6 +300,7 @@ cd multi-tier-lab
 ### Step 2: Configure Static Inventory and Variables
 
 #### `inventory/hosts.ini`
+
 ```ini
 [webservers]
 web-01.lab.internal ansible_host=127.0.0.1 ansible_port=2222
@@ -294,6 +318,7 @@ ansible_ssh_private_key_file=~/.ssh/id_rsa
 ```
 
 #### `group_vars/all.yml`
+
 ```yaml
 app_port: 3000
 app_directory: /opt/node_app
@@ -330,6 +355,7 @@ server {
 ```
 
 #### `roles/nginx/tasks/main.yml`
+
 ```yaml
 ---
 - name: Ensure Nginx package is installed
@@ -390,6 +416,7 @@ server.listen(port, () => {
 ```
 
 #### `roles/app/tasks/main.yml`
+
 ```yaml
 ---
 - name: Create isolated system group for application
@@ -443,6 +470,7 @@ server.listen(port, () => {
 ```
 
 #### `roles/app/handlers/main.yml`
+
 ```yaml
 ---
 - name: Reload Systemd Daemon
