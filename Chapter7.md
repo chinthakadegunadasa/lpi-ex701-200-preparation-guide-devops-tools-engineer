@@ -15,11 +15,15 @@ In monolithic architectures, service communication relies on static hostnames, f
 In client-side discovery, the client application queries the Service Registry directly to discover available service instances. The client executes its own load-balancing algorithm (e.g., Round-Robin, Least Connections, Random) and sends traffic straight to the target instance.
 
 *   **Advantages**:
+
     *   Eliminates extra network hops by bypassing an intermediate API gateway or dedicated load balancer.
+
     *   Eliminates a single point of failure in the traffic path.
 
 *   **Disadvantages**:
+
     *   Tightly couples the client application to the Service Registry API.
+
     *   Requires implementing discovery and load-balancing logic across every programming language and framework used across teams.
 
 #### Server-Side Discovery
@@ -27,12 +31,15 @@ In client-side discovery, the client application queries the Service Registry di
 In server-side discovery, the client issues a standard network request to a router or load balancer (e.g., Traefik, NGINX, HAProxy). This intermediate component queries the Service Registry, selects a healthy endpoint, and proxies the client's request accordingly.
 
 *   **Advantages**:
+
     *   Decouples discovery implementation details completely from client applications.
+
     *   Simplifies client code since services make calls to predictable, static logical endpoints.
 
 *   **Disadvantages**:
 
     *   Introduces an additional network hop, slightly increasing request latency.
+
     *   Requires managing high-availability clusters for the load balancers/routers.
 
 ### Service Registry Architecture & Consensus Algorithms
@@ -46,10 +53,13 @@ Modern registries use consensus algorithms—primarily **Raft**—to maintain co
 #### Raft Protocol Essentials
 
 *   **Leader-Based System**: A cluster consists of a single **Leader** and multiple **Followers**. All state modifications (such as registering services or updating health statuses) must pass through the Leader node.
+
 *   **Log Replication**: When a write occurs, the Leader appends it to its log and replicates the entry to all Follower nodes.
+
 *   **Quorum**: A write is committed only after a majority (Quorum) of cluster nodes acknowledge the log entry:
     $$\text{Quorum} = \lfloor N / 2 \rfloor + 1$$
     *(Where $N$ is the total number of server nodes).*
+
 *   **Leader Elections**: If Followers stop receiving periodic heartbeats from the Leader within a randomized timeout window, a Follower converts to a **Candidate** state and initiates an election.
 
 #### Failure Modes and Split-Brain Prevention
@@ -57,6 +67,7 @@ Modern registries use consensus algorithms—primarily **Raft**—to maintain co
 When network partitions divide a 5-node cluster into two groups—3 nodes on Side A and 2 nodes on Side B:
 
 *   **Side A (3 nodes)**: Meets quorum ($\lfloor 5/2 \rfloor + 1 = 3$), accepts read/write transactions, and elects/maintains a Leader.
+
 *   **Side B (2 nodes)**: Fails to establish quorum ($2 < 3$). Writes are rejected, preventing state divergence (**Split-Brain**).
 
 ### Key-Value Stores for Configuration Management
@@ -64,7 +75,9 @@ When network partitions divide a 5-node cluster into two groups—3 nodes on Sid
 Service discovery solutions frequently incorporate key-value (KV) stores. These distributed KV engines store runtime parameters, secrets, feature flags, and dynamic routing configurations.
 
 *   **Dynamic Updates**: Applications or proxies subscribe to changes in key paths using HTTP long polling or WebSocket-like primitives (e.g., Consul Watches, etcd Watchers).
+
 *   **Hierarchical Namespace**: Keys are stored using Unix-like directory structures (e.g., `config/production/db_connection_string`).
+
 *   **Atomic Transactions**: Multi-key operations succeed or fail in a single step, preserving data integrity across configuration changes.
 
 ## 7.2 HashiCorp Consul Cluster Deployment and Service Registration
@@ -76,10 +89,15 @@ HashiCorp Consul is a widely adopted enterprise solution for service discovery, 
 ![CONSUL DATACENTER](assets/images/chapter7/7-2-CONSUL-DATACENTER.png)
 
 *   **Consul Server**: Manages the Raft consensus, maintains the cluster state, processes RPC queries, and backs up key-value data.
+
 *   **Consul Client**: A lightweight, stateless agent that runs on every physical host or virtual machine. It forwards RPC queries to Servers and performs localized health checks.
+
 *   **Datacenter**: A local, low-latency network environment hosting connected Clients and Servers.
+
 *   **Gossip Protocols (Serf)**:
+
     *   **LAN Gossip**: Uses memberlist libraries over UDP/TCP to manage local node membership and failure detection.
+
     *   **WAN Gossip**: Connects distinct Consul Server clusters across geographically separated datacenters.
 
 ### Deploying a Production-Grade 3-Node Consul Cluster
