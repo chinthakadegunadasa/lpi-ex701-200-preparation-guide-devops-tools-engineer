@@ -31,6 +31,7 @@ In server-side discovery, the client issues a standard network request to a rout
     *   Simplifies client code since services make calls to predictable, static logical endpoints.
 
 *   **Disadvantages**:
+
     *   Introduces an additional network hop, slightly increasing request latency.
     *   Requires managing high-availability clusters for the load balancers/routers.
 
@@ -432,8 +433,6 @@ When triggered:
 2.  **Open State**: When error conditions are met, Traefik trips the breaker and rejects requests immediately with `HTTP 503 Service Unavailable`, protecting downstream services from cascading overload.
 
 3.  **Half-Open State**: After a configurable cooldown period, Traefik passes a limited number of test requests to verify recovery. If successful, the breaker resets to Closed; otherwise, it returns to Open.
-
----
 
 ## 7.5 Hands-On Lab: Integrating HashiCorp Consul with Traefik for Automatic Dynamic Routing
 
