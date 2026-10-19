@@ -37,10 +37,13 @@ To understand modern logging, we must compare the incumbent heavyweight, the ELK
 The ELK stack is the de facto standard for log management. Its power comes from Elasticsearch, which builds a **full-text index** of all ingested logs.
 
 * **Logstash/Fluentd:** Collects and processes logs, transforming formats (e.g., parsing text into JSON).
+
 * **Elasticsearch:** Stores logs and indexes *every field* of *every log line*.
+
 * **Kibana:** The visualization frontend.
 
 **Pros:** Extremely powerful and fast search queries across any field in the logs.
+
 **Cons:** High operational complexity. The full-text index is massive, consuming huge amounts of RAM and expensive, high-speed storage. Scaling Elasticsearch requires significant expertise.
 
 ### The Grafana Loki Approach (Label-Based Indexing)
@@ -52,8 +55,11 @@ A log stream in Loki consists of the actual log lines plus a set of labels (e.g.
 **How Loki Works:**
 
 1. **Ingestion:** Agents (like Promtail) ship logs + labels to Loki.
+
 2. **Indexing:** Loki indexes *only* the labels. The actual log content is compressed into "chunks."
+
 3. **Storage:** Loki stores the small index and the compressed chunks in cheap object storage (e.g., AWS S3, Google Cloud Storage, Azure Blob, or Minio).
+
 4. **Querying:** When you run a query, Loki first uses the indexed labels to find the relevant chunks. It then decompresses those chunks and runs a full-text search (grep) on the flying data.
 
 **Key Differences Summarized:**
@@ -82,8 +88,11 @@ Promtail is the default log collector for Loki. It is acts like a "tails" local 
 **Promtail Lifecycle:**
 
 1. **Discovery:** Discovers targets (files, systemd-journal, or Kubernetes pods) using service discovery, identical to Prometheus.
+
 2. **Attaching Labels:** Critical step. It extracts metadata (e.g., pod name, namespace, container name) and attaches them as labels to the log stream.
+
 3. **Processing (Pipeline):** Allows parsing, transforming, or filtering log lines *before* ingestion.
+
 4. **Shipping:** Sends compressed batches of logs over HTTP to the Loki distributor endpoint.
 
 ### Fluentd / Fluent Bit (The Swiss Army Knife)
@@ -93,8 +102,11 @@ Fluentd is a CNCF graduated project and an industry-standard log processor. Flue
 **Fluentd Approach:**
 
 * **Input Plugins:** Tail files, listen to syslog, receive forward data, listen to HTTP.
+
 * **Parser Plugins:** Convert plain text to JSON, parse Apache/Nginx logs, use regex.
+
 * **Filter Plugins:** Grep/exclude lines, add fields, enrich logs with Kubernetes metadata.
+
 * **Output Plugins:** Send to Loki, Elasticsearch, S3, Kafka, etc.
 
 **Enterprise Consideration:** While Promtail is simple and works perfectly with Loki, enterprises with complex legacy requirements or needing to route logs to *multiple* destinations (e.g., Loki for debugging, S3 for compliance, Kafka for security analysis) will often choose **Fluent Bit** as the edge agent due to its flexibility.
@@ -110,7 +122,9 @@ A LogQL query has two parts: the **Log Stream Selector** and the **Log Pipeline*
 This uses the indexed labels to quickly narrow down the data to scan.
 
 * `{app="mysql"}`: Selects logs for the MySQL application.
+
 * `{env="production", namespace!="testing"}`: Production logs, excluding the testing namespace.
+
 * `{job=~"dev.*"}`: Uses regex to match any job starting with "dev".
 
 ### 2. Log Pipeline (The Filter Query)
@@ -120,8 +134,11 @@ Once the streams are selected, the pipeline processes the decompressed log conte
 **Filtering Operators:**
 
 * `|=` (Line contains): `{app="frontend"} |= "error"`
+
 * `!=` (Line does not contain): `{app="frontend"} != "timeout"`
+
 * `|~` (Line matches regex): `{app="frontend"} |~ "status=(500|502)"`
+
 * `!~` (Line does not match regex): `{app="frontend"} !~ "id=[0-9]+"`
 
 ### 3. Log Parsing and Label Extraction
@@ -131,7 +148,9 @@ LogQL can parse log lines *at query time* and extract temporary labels. This pro
 **Parsers:**
 
 * `| json`: Automatically extracts JSON fields as labels.
+
 * `| logfmt`: Automatically extracts logfmt pairs (`key=value`) as labels.
+
 * `| regexp "<regex>"`: Uses named captured groups to extract labels.
 
 **Query Example (Parsing + Filtering):**
@@ -149,9 +168,11 @@ The most powerful aspect of LogQL is generating metrics from log lines.
 **Range Vector Aggregations:** Count occurrences of logs over time.
 
 * `count_over_time({app="mysql"}[5m])`: Total MySQL logs in 5-minute windows.
+
 * `rate({app="frontend"} |= "error"[1m])`: The per-second rate of errors in frontend logs.
 
 **Unifying Observability (Enterprise Use Case):**
+
 You can use `sum(rate(...))` by labels just like PromQL to calculate error rates per service or pod:
 `sum(rate({namespace="prod"} |= "status=500"[5m])) by (app)`
 
@@ -166,14 +187,19 @@ In this lab, you will deploy a complete, functional logging pipeline in a contai
 **Architecture:**
 
 1. **A simulated application:** Generates mock logs.
+
 2. **Promtail:** Discovers the logs, parses them into JSON, extracts labels, and ships them.
+
 3. **Grafana Loki (Single Binary):** Receives, indexes metadata, stores chunks (locally for simulation), and answers queries.
+
 4. **Minio (Simulated Object Storage):** Acting as S3 to demonstrate Loki's chunk storage capabilities.
+
 5. **Grafana:** The UI used to explore and query the logs via Loki.
 
 ### Prerequisites
 
 * A Linux environment (VM or container).
+
 * Docker and Docker Compose installed.
 
 ### Step 1: Set Up Project Directory
@@ -257,7 +283,6 @@ schema_config:
       index:
         prefix: index_
         period: 24h
-
 ```
 
 ### Step 3: Configure Promtail (promtail-config.yml)
@@ -284,7 +309,6 @@ scrape_configs:
       job: app-logs # Fixed Label
       env: lab       # Fixed Label
       __path__: /var/log/app/*.log # The discovery path
-
 ```
 
 ### Step 4: Create the Docker Compose File (docker-compose.yml)
@@ -360,17 +384,27 @@ You should see structured JSON logs appearing every second.
 ### Step 6: Explore Logs in Grafana using LogQL
 
 1. Open Grafana: `http://localhost:3000` (Anonymous Admin access configured).
+
 2. **Add Data Source:**
+
 * Go to **Configuration (Gears Icon) > Data Sources**.
+
 * Click **Add data source**.
+
 * Select **Loki**.
+
 * Set the URL to `http://loki:3100`.
+
 * Click **Save & test**. Grafana should report that the data source is working.
 
 3. **Explore Logs:**
+
 * Go to **Explore (Compass Icon)**.
+
 * Select **Loki** from the dropdown.
+
 * In the query field, enter the Log Selector: `{job="app-logs"}`.
+
 * Click **Run Query**. You should see the flowing JSON logs from the mock application.
 
 ### Step 7: Masterclass Queries with LogQL
@@ -380,21 +414,29 @@ Execute the following queries in the Grafana Explore view to test your understan
 **Scenario A: Simple Filtering (Text Search)**
 
 * **Goal:** Find all logs containing the word "error" or "failure".
+
 * **Query:** `{job="app-logs"} |~ "error|failure"`
 
 **Scenario B: Structure Discovery (Query-time Parsing)**
 
 * **Goal:** Discover the structure of the JSON logs.
+
 * **Query:** `{job="app-logs"} | json`
+
 * **Observation:** Note how Grafana now displays temporary labels extracted from the JSON fields (e.g., `status`, `method`, `msg`). This demonstrates Loki’s power—we didn't need complicated ingestion-time Logstash processing.
 
 **Scenario C: Advanced Filtering (Parsing + Arithmetic)**
 
 * **Goal:** Find all `GET` requests where the HTTP status code was a `500` internal error.
+
 * **Query Analysis:**
+
 1. Select logs: `{job="app-logs"}`
+
 2. Parse JSON: `| json`
+
 3. Filter by method: `| method="GET"` (uses extracted labels)
+
 4. Filter by status: `| status=500` (extracted status field is treated as an integer)
 
 * **Query:** `{job="app-logs"} | json | method="GET" | status=500`
@@ -402,6 +444,7 @@ Execute the following queries in the Grafana Explore view to test your understan
 **Scenario D: SRE Metric Engineering (Rate Calculation)**
 
 * **Goal:** Calculate the rate of application errors (status=500) per second, per HTTP method, over the last 15 minutes.
+
 * **Query:** `sum(rate({job="app-logs"} | json | status=500 [15m])) by (method)`
 
 ### Lab Conclusion and Key Takeaways
@@ -409,7 +452,11 @@ Execute the following queries in the Grafana Explore view to test your understan
 By completing this lab, you have:
 
 1. Implemented a production-grade (conceptually) logging pipeline using native CNCF tools (Loki, Promtail, Grafana).
+
 2. Gained invaluable hands-on experience configuring Promtail to discover, label, and ship logs.
+
 3. Mastered LogQL syntax for selecting log streams based on indexed labels.
+
 4. Implemented real-time structural analysis using query-time parsers (`| json`) and written complex SRE-focused metrics queries (error rates).
+
 5. Bridged the observability gap by understanding how Loki leverages shared labels with Prometheus for unified metrics and log dashboards.
