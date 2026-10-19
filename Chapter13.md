@@ -22,11 +22,12 @@ resource "aws_instance" "app_node" {
     Name = "production-app-node"
   }
 }
-
 ```
 
 * **Blocks:** Containers for configuration objects. Blocks have a type (e.g., `resource`, `variable`, `data`, `output`, `module`) and zero or more block labels.
+
 * **Arguments:** Assign values to names within a block using the `=` operator.
+
 * **Expressions:** Represent values, either literally or by referencing other elements in the configuration graph.
 
 ### HCL Primitive and Complex Data Types
@@ -36,7 +37,9 @@ HCL enforces strong typing to validate infrastructure configurations prior to AP
 #### Primitive Data Types
 
 * `string`: A sequence of Unicode characters (e.g., `"t3.micro"`, `"us-east-1"`).
+
 * `number`: Integer or floating-point numeric value (e.g., `80`, `3.14`).
+
 * `bool`: Boolean flag (`true` or `false`).
 
 #### Complex (Collection and Structural) Data Types
@@ -66,7 +69,6 @@ variable "database_config" {
     engine_version    = "15.3"
   }
 }
-
 ```
 
 ## 13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
@@ -163,7 +165,6 @@ modules/aws-compute-node/
 ├── outputs.tf          # Explicit output exports
 ├── versions.tf         # Terraform and provider version pinning
 └── tests/              # Native unit/integration tests
-
 ```
 
 ### Instantiating Child Modules
@@ -178,7 +179,6 @@ module "app_server_cluster" {
 
   tags = local.common_tags
 }
-
 ```
 
 ### Dynamic Resource Generation: `for_each` and `count`
@@ -199,7 +199,6 @@ resource "aws_instance" "worker" {
     Name = "worker-node-${count.index + 1}"
   }
 }
-
 ```
 
 #### `for_each` Meta-Argument
@@ -229,7 +228,6 @@ resource "aws_subnet" "subnet" {
     Name = "subnet-${each.key}"
   }
 }
-
 ```
 
 ## 13.4 Resource Lifecycle Management and Workspace Management
@@ -259,7 +257,6 @@ resource "aws_instance" "critical_app" {
     ]
   }
 }
-
 ```
 
 ### Workspace Management
@@ -278,7 +275,6 @@ terraform workspace select production
 
 # Display current active workspace
 terraform workspace show
-
 ```
 
 #### Utilizing Workspace Name in Code
@@ -302,7 +298,6 @@ resource "aws_instance" "web" {
     Environment = terraform.workspace
   }
 }
-
 ```
 
 ## 13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning
@@ -318,7 +313,6 @@ Create a structured workspace containing both the child module definition and a 
 ```bash
 mkdir -p terraform-lab13/modules/compute
 cd terraform-lab13
-
 ```
 
 ### Step 2: Build the Child Compute Module
@@ -341,7 +335,6 @@ variable "subnet_id" {
   type        = string
   description = "Target subnet ID"
 }
-
 variable "node_name" {
   type        = string
   description = "Logical name tag for instance"
@@ -351,7 +344,6 @@ variable "environment" {
   type        = string
   description = "Deployment environment"
 }
-
 ```
 
 #### `modules/compute/main.tf`
@@ -388,7 +380,6 @@ resource "aws_instance" "node" {
     create_before_destroy = true
   }
 }
-
 ```
 
 #### `modules/compute/outputs.tf`
@@ -403,7 +394,6 @@ output "private_ip" {
   description = "Private IP address assigned to node"
   value       = aws_instance.node.private_ip
 }
-
 ```
 
 ### Step 3: Configure Root Module and Invocation
@@ -441,7 +431,6 @@ variable "environment" {
   type    = string
   default = "dev"
 }
-
 ```
 
 #### `main.tf`
@@ -489,7 +478,6 @@ module "app_node" {
   node_name     = "primary-api"
   environment   = var.environment
 }
-
 ```
 
 #### `outputs.tf`
@@ -502,7 +490,6 @@ output "deployed_node_details" {
     private_ip  = module.app_node.private_ip
   }
 }
-
 ```
 
 ### Step 4: Validate, Plan, and Apply
@@ -521,7 +508,6 @@ terraform plan -out=tfplan.binary
 
 # 4. Apply execution plan
 terraform apply tfplan.binary
-
 ```
 
 ### Step 5: Verification and Cleanup
@@ -534,5 +520,4 @@ terraform output deployed_node_details
 
 # Clean up resources to prevent cloud cost accumulation
 terraform destroy -auto-approve
-
 ```
