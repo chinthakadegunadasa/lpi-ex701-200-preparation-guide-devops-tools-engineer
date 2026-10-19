@@ -366,6 +366,7 @@ server {
 ```
 
 #### Running Consul Template
+
 ```bash
 consul-template -config=/etc/consul-template/config.hcl
 ```
@@ -423,6 +424,7 @@ Circuit breaking prevents cascading system failures by failing fast when downstr
 ![IRCUIT BREAKER STATES](assets/images/chapter7/7-4-CIRCUIT-BREAKER-STATES.png)
 
 #### Traefik Circuit Breaker Configuration
+
 In Traefik, circuit breakers are declared using middleware tags registered alongside Consul services:
 
 ```hcl
@@ -457,8 +459,11 @@ When triggered:
 An enterprise web platform requires dynamic routing for a microservices infrastructure using Traefik and Consul running within a Docker environment:
 
 *   **Consul Server**: Operates as the central service registry on port `8500`.
+
 *   **Traefik Edge Proxy**: Listens on port `80` for public HTTP traffic and port `8080` for its administrative dashboard.
+
 *   **Microservice - Web API (Version 1)**: Scaling dynamically across multiple container instances.
+
 *   **Microservice - Web API (Version 2)**: Scaled alongside V1 using dynamic routing tags to allow canary testing.
 
 ### Step 1: Create the Project Structure and Docker Compose Environment
