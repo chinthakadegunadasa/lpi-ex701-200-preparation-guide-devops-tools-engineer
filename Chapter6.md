@@ -11,11 +11,15 @@ Docker uses storage drivers to manage the image layers and the writable containe
 ### Deep Dive: Storage Driver Mechanics
 
 #### 1. `overlay2`
+
 `overlay2` is the recommended default storage driver for Docker on modern Linux distributions. It operates at the directory level rather than the block level, union-mounting multiple directories into a single unified view.
 
 * **Lowerdir:** Read-only image layers stacked on top of one another.
+
 * **Upperdir:** Read-write container layer where runtime modifications are written.
+
 * **Merged:** The unified view accessible inside the container filesystem.
+
 * **Workdir:** Internal directory used by Linux kernel OverlayFS to prepare atomic file operations.
 
 > **Enterprise Note:** Ensure underlying `xfs` filesystems are formatted with `ftype=1`. Without d_type support, `overlay2` will fail to process rename and copy operations correctly.
@@ -26,9 +30,11 @@ xfs_info /var/lib/docker | grep ftype
 ```
 
 #### 2. `btrfs` and `zfs`
+
 For storage systems requiring native snapshotting, enterprise backup integration, or multi-disk pooling:
 
 * **`btrfs`:** Works at the subvolume level. When a container is modified, `btrfs` performs block-level Copy-on-Write, making layer creation and snapshotting fast, though heavy write workloads can cause allocation fragmentation over time.
+
 * **`zfs`:** Uses ZFS storage pools (`zpool`). It offers robust features like data deduplication, checksumming, and memory caching via the Adaptive Replacement Cache (ARC). However, ARC can conflict with host memory if limits are not explicitly set in `/etc/modprobe.d/zfs.conf`.
 
 ## 6.2 Persistent Volumes, Bind Mounts, and Tmpfs Mounts
@@ -40,6 +46,7 @@ Container filesystems are ephemeral by design; when a container is destroyed, it
 ### Storage Implementation Strategies
 
 #### 1. Docker Volumes (Managed Storage)
+
 Docker Volumes are stored in host storage managed by the Docker daemon (`/var/lib/docker/volumes/`). They bypass the storage driver, offering native performance equal to host I/O.
 
 ```bash
@@ -52,6 +59,7 @@ docker volume create --driver local \
 ```
 
 #### 2. Bind Mounts
+
 Bind mounts map an arbitrary file or directory from the host system directly into the container.
 
 ```bash
@@ -63,6 +71,7 @@ docker run -d \
 ```
 
 #### 3. Tmpfs Mounts
+
 Tmpfs mounts store data exclusively in host memory (RAM), ensuring sensitive information like keys or credentials never hit non-volatile disk storage.
 
 ```bash
@@ -95,12 +104,15 @@ In multi-host production deployments, containers across different physical or vi
 ### VXLAN Mechanics & Control Plane Synchronization
 
 1. **Virtual Extensible LAN (VXLAN):** Encapsulates Layer-2 Ethernet frames inside standard Layer-3 IPv4/UDP packets (destination port `4789`). This creates an isolated virtual network spanning multiple physical host subnets.
+
 2. **VXLAN Network Identifier (VNI):** A 24-bit integer providing up to 16 million isolated overlay segments, preventing cross-tenant packet leakage.
+
 3. **Control Plane Operations:** Managed via Docker Swarm or external key-value stores (e.g., `etcd`, `Consul`). It tracks container locations, IP assignments, and MAC addresses across hosts, updating host ARP and FDB (Forwarding Database) tables automatically.
 
 ## 6.5 Hands-On Lab: Configuring Cross-Node Container Overlay Networks with Custom Subnets
 
 ### Lab Scenario
+
 You need to build a multi-host overlay network spanning two nodes (`node-01` and `node-02`). You will set up an encrypted custom overlay network, deploy container workloads across both nodes, verify cross-host IP connectivity, and inspect the underlying VXLAN tunnel traffic.
 
 ![Hands-On Cross-Node Overlay Lab Configuration](assets/images/chapter6/6-5-Hands-On-Cross-Node-Overlay-Lab-Configuration.png)
@@ -109,18 +121,23 @@ You need to build a multi-host overlay network spanning two nodes (`node-01` and
 
 #### Step 1: Initialize Swarm Cluster
 On `node-01` (Manager):
+
 ```bash
 # Initialize Swarm cluster management plane
 docker swarm init --advertise-addr 10.10.0.11
 ```
+
 *Copy the generated join token and execute it on `node-02` (Worker):*
+
 ```bash
 # Join worker node to cluster
 docker swarm join --token SWMTKN-1-356abc... 10.10.0.11:2377
 ```
 
 #### Step 2: Create Custom Encrypted Overlay Network
+
 On `node-01` (Manager):
+
 ```bash
 # Create custom multi-host overlay network with IPSEC encryption
 docker network create \
@@ -133,6 +150,7 @@ docker network create \
 ```
 
 #### Step 3: Deploy Workloads Across Nodes
+
 ```bash
 # Deploy isolated container on node-01
 docker run -d \
@@ -148,6 +166,7 @@ docker run -d \
 ```
 
 #### Step 4: Verify Cross-Host Network Connectivity
+
 ```bash
 # Retrieve internal overlay IP assigned to web_service_node2
 NODE2_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' web_service_node2)
@@ -158,6 +177,7 @@ docker exec -it web_service_node1 ping -c 4 $NODE2_IP
 
 #### Step 5: Capture and Inspect Encapsulated VXLAN Traffic
 Run `tcpdump` on the host interface of `node-01` to capture encrypted UDP port 4789 packets moving between nodes:
+
 ```bash
 # Capture raw host-level VXLAN encapsulated frame flow
 sudo tcpdump -i eth0 -n udp port 4789 -c 5
@@ -166,6 +186,8 @@ sudo tcpdump -i eth0 -n udp port 4789 -c 5
 ### Key Exam Takeaways (LPI 701-200)
 
 * **Storage Driver vs. Volumes:** Storage drivers use Copy-on-Write (`overlay2`, `btrfs`, `zfs`) to manage immutable container layers, adding performance overhead. **Volumes** bypass storage drivers completely, providing raw disk I/O performance.
+
 * **Network Isolation:** The `bridge` driver provides single-host NAT isolation. The `host` driver bypasses container network namespaces. The `macvlan` driver assigns layer-2 MAC addresses to containers directly on host networks.
+
 * **Overlay Tunneling:** Docker overlay networks use **VXLAN** encapsulation running over **UDP port 4789**. Control planes synchronize state using Swarm Raft or distributed key-value databases.
 * **Tmpfs Mounts:** Tmpfs mounts store sensitive runtime data purely in **host system memory**, ensuring sensitive keys or tokens are never saved to non-volatile disk storage.
