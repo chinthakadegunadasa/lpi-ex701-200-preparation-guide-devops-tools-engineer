@@ -15,33 +15,49 @@ The **Automated Testing Pyramid** provides a structural model for balancing test
 Unit tests isolate individual procedures, methods, functions, or modules from external dependencies (such as databases, remote network sockets, message queues, or third-party APIs).
 
 *   **Scope:** Function and method logic validation.
+
 *   **Dependencies:** Completely mocked or stubbed out using mock objects, stubs, or test doubles.
+
 *   **Pipeline Stage:** Triggered during the initial `compile` or `build` phase on every pull request or git push.
+
 *   **Execution Time:** Milliseconds to seconds.
+
 *   **Target Coverage:** High (80%+ code line/branch coverage).
 
 ### 2. Integration Testing
+
 Integration tests evaluate interactions between combined modules or external sub-systems (e.g., verifying that an ORM repository executes correct SQL queries against an isolated database instance or container).
 
 *   **Scope:** Module-to-module communication, database interactions, messaging brokers, storage adapters.
+
 *   **Dependencies:** Real lightweight instances, often provisioned dynamically using ephemeral containers (e.g., Testcontainers or Docker Compose).
+
 *   **Pipeline Stage:** Run during post-build validation before artifact publishing.
+
 *   **Execution Time:** Seconds to minutes.
 
 ### 3. System Testing
+
 System testing validates the completely assembled application in an integrated environment to ensure it adheres to specified business requirements.
 
 *   **Scope:** End-to-end application lifecycle within simulated target platforms.
+
 *   **Dependencies:** Fully deployed application stack, including microservice backends, caches, and dependent service mocks.
+
 *   **Pipeline Stage:** Executed in staging or pre-production deployment environments.
+
 *   **Execution Time:** Minutes.
 
 ### 4. End-to-End (E2E) & User Interface Testing
+
 E2E tests simulate authentic user interactions across the entire system layer—including front-end web browser interfaces, API gateways, databases, and background async queue workers.
 
 *   **Scope:** Business workflows (e.g., user registration, cart checkout, payment processing).
+
 *   **Tools:** Playwright, Cypress, Selenium.
+
 *   **Pipeline Stage:** Executed scheduled nightly or as part of pre-release staging candidate validation.
+
 *   **Execution Time:** Minutes to hours.
 
 ### Strategic Test Pyramid Metrics Comparison
@@ -93,7 +109,6 @@ done
 
 echo "[FATAL] Smoke Test Failed: Target environment unavailable or unhealthy."
 exit 1
-
 ```
 
 ### User Acceptance Testing (UAT)
@@ -265,7 +280,6 @@ EOF
 npm install
 ```
 
-
 4. Start the mock target API in the background:
 
 ```bash
@@ -302,7 +316,6 @@ export default function () {
   });
   sleep(0.1);
 }
-
 ```
 
 ### Step 3: Construct Pipeline Automator Script
@@ -343,7 +356,6 @@ else
     echo "=================================================="
     exit 1
 fi
-
 ```
 
 2. Make the script executable:
