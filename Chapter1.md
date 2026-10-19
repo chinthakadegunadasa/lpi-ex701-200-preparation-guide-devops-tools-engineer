@@ -19,7 +19,9 @@ API-First architecture establishes contract-driven interfaces before implementat
 ### Protocol Analysis and Configuration
 
 - **REST (OpenAPI/Swagger):** Standardized over HTTP/1.1 or HTTP/2 using JSON payloads and standard HTTP methods (`GET`, `POST`, `PUT`, `DELETE`).
+
 - **gRPC (Protocol Buffers):** High-performance, low-latency framework using HTTP/2 transport and binary protocol buffers for schema definitions and multiplexing.
+
 - **GraphQL:** Query language for APIs enabling clients to request exactly the payload fields required, eliminating over-fetching and under-fetching.
 
 #### Protocol Buffers Interface Definition (`user_service.proto`)
@@ -70,7 +72,9 @@ Event-Driven Architecture (EDA) decouples producers and consumers using event br
 ### Event Processing Patterns
 
 - **Pub/Sub (Publish/Subscribe):** Events are broadcast to all subscribed consumers (e.g., Kafka Topics, SNS).
+
 - **Point-to-Point (Queue):** Messages are consumed by exactly one consumer worker from a shared pool (e.g., SQS, RabbitMQ Queues).
+
 - **Event Sourcing:** State changes are logged as an immutable sequence of events, allowing point-in-time reconstruction.
 
 ![Event Routing and DLX Processing Workflow](./assets/images/chapter1/1-3-Event-Routing-and-DLX-Processing-Workflow.png)
@@ -82,7 +86,9 @@ Building resilient systems requires engineering for failure at every layer of th
 ### Resiliency Patterns
 
 1. **Circuit Breaker:** Prevents cascading failures by stopping requests to a struggling service once an error threshold is reached (States: *Closed*, *Open*, *Half-Open*).
+
 2. **Bulkhead:** Isolates critical resource pools (e.g., separate thread pools per downstream dependency) so that an outage in one pool does not starve others.
+
 3. **Rate Limiting & Throttling:** Protects services from overload by enforcing upper limits on incoming request rates using algorithms like token bucket or leaky bucket.
 
 ![Circuit Breaker State Machine Topology](./assets/images/chapter1/1-4-Circuit-Breaker-State-Machine-Topology.png)
@@ -238,20 +244,27 @@ if __name__ == '__main__':
 ### Lab Verification Steps
 
 1. **Spin up the decoupled microservice stack:**
+
    ```bash
    docker compose up -d --build
    ```
-2. **Verify container health and network connectivity:**
+
+3. **Verify container health and network connectivity:**
+
    ```bash
    docker compose ps
    ```
-3. **Dispatch a test order via the HAProxy endpoint:**
+
+4. **Dispatch a test order via the HAProxy endpoint:**
+
    ```bash
    curl -X POST http://localhost/api/v1/orders \
      -H "Content-Type: application/json" \
      -d '{"order_id": "ORD-2026-8891", "user_id": "USR-402", "amount": 249.99}'
    ```
-4. **Confirm worker event processing in Redis:**
+
+6. **Confirm worker event processing in Redis:**
+
    ```bash
    docker exec -it lab_state_cache redis-cli -a CacheSecure2026! GET "order:ORD-2026-8891:status"
    ```
