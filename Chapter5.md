@@ -11,10 +11,15 @@ Unlike full hardware virtualization provided by hypervisors, containers leverage
 Namespaces wrap global system resources in abstractions. A process within a namespace sees only its isolated instance of that resource:
 
 1. **PID Namespace (`clone` flag `CLONE_NEWPID`):** Isolates process IDs. The main process inside a container becomes PID 1, while maintaining a standard PID on the host system.
+
 2. **NET Namespace (`CLONE_NEWNET`):** Provides isolated network devices, IP routing tables, port bindings, and firewall rules.
+
 3. **MNT Namespace (`CLONE_NEWNS`):** Isolates file system mount points, ensuring process file system operations do not leak into the host.
+
 4. **IPC Namespace (`CLONE_NEWIPC`):** Isolates System V IPC and POSIX message queues.
+
 5. **UTS Namespace (`CLONE_NEWUTS`):** Isolates hostnames and NIS domain names.
+
 6. **USER Namespace (`CLONE_NEWUSER`):** Maps container root users (UID 0) to non-privileged UIDs on the host system for enhanced security.
 
 To inspect namespaces of running processes on an enterprise host:
@@ -70,8 +75,11 @@ Modern Docker uses a modular, decoupled architecture rather than a single monoli
 ### Component Breakdown & Execution Lifecycle
 
 1. **Docker Daemon (`dockerd`):** Exposes the REST API, manages Docker networks, volumes, image builds, and orchestrates calls to `containerd`.
+
 2. **`containerd`:** An industry-standard container runtime manager. It handles image distribution, storage management, container execution lifecycle, and supervisor operations.
+
 3. **`containerd-shim`:** A lightweight daemon process spawned for each container. It allows daemonless containers—enabling `dockerd` or `containerd` to be restarted or upgraded without stopping running containers.
+
 4. **`runc`:** The lightweight CLI tool built according to OCI specifications. It interacts directly with the kernel to configure namespaces and cgroups, starts the container process, and then terminates.
 
 To directly monitor `containerd` activities bypassing the Docker daemon:
@@ -287,6 +295,8 @@ CMD ["node", "dist/server.js"]
 ### Key Exam Takeaways (LPI 701-200)
 
 * **Linux Namespaces vs cgroups:** Namespaces provide **isolation** (what a process can see), whereas Control Groups (cgroups) provide **resource limits** (what a process can use).
+
 * **Decoupled Architecture:** The Docker CLI communicates via REST API to `dockerd`, which delegates container life-cycle operations to `containerd` via gRPC. `containerd` relies on `containerd-shim` to execute containers via `runc`.
+
 * **Multi-Stage Build Efficiency:** Multi-stage builds reduce total container image size and eliminate security vulnerabilities by keeping compilers, SDKs, and source code out of the production layer.
 * **Security Controls:** Production containers must avoid running as `root` (UID 0), utilize read-only root filesystems where possible, drop unneeded Linux capabilities (`--cap-drop=ALL`), and mount secrets dynamically via BuildKit rather than storing them in environment variables or layers.
