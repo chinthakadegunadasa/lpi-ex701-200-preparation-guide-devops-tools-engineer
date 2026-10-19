@@ -16,18 +16,23 @@ Chaos Engineering is not random destruction; it is a structured, scientific meth
 ### The Core Principles
 
 #### 1. Define 'Steady State' as a Measurable Output
+
 Before injecting failures, you must define normal behavior using key performance indicators (KPIs) and service level indicators (SLIs), such as HTTP 2xx response rate, overall transaction throughput, or end-to-end user latency (e.g., $P_{99} < 150\text{ms}$). Technical metrics (such as CPU or RAM utilization) are secondary to business-level steady-state metrics.
 
 #### 2. Hypothesize that Steady State Will Persist
+
 Formulate a precise, testable hypothesis before executing an experiment: *"Even if 50% of the payment-service pod instances in availability zone us-east-1a are terminated, overall checkout transaction throughput will remain within 98% of steady state due to automated load balancer health checks."*
 
 #### 3. Vary Real-World Events
+
 Simulate real-world operational degradation: hardware node crashes, network partition splits, severe network latency spikes, disk fill-ups, memory leaks, clock drift, or dependent third-party API outages.
 
 #### 4. Run Experiments in Production (or Staging-at-Scale)
+
 While early experiments begin in pre-production, real-world traffic patterns, real data distributions, and actual network topologies exist only in production. To build true confidence, experiments must eventually run against live production systems.
 
 #### 5. Minimize Blast Radius and Automate Abort Conditions
+
 Chaos experiments must be controlled to prevent catastrophic outages.
 *   **Targeting:** Start with a single pod or instance before scaling to an availability zone.
 *   **Automated Stop-Loss (Circuit Breakers):** If predefined safety metrics (e.g., error rate exceeding 2%) are breached, the chaos engine must instantly halt fault injection and automatically rollback the system to a clean state.
@@ -45,9 +50,9 @@ Linux provides native traffic control (`tc`) tools leveraging the `netem` (netwo
 #### Simulating Network Latency
 
 Adding a deterministic 200ms delay with a 20ms jitter to interface `eth0`:
+
 ```bash
 sudo tc qdisc add dev eth0 root netem delay 200ms 20ms
-
 ```
 
 #### Simulating Packet Loss
@@ -71,6 +76,7 @@ sudo tc qdisc del dev eth0 root
 Node failure testing validates that control planes (such as Kubernetes or Auto Scaling Groups) re-schedule workloads, re-route network traffic, and maintain capacity during physical machine or hypervisor crashes.
 
 * **Soft Failures:** Graceful shutdown signals (`SIGTERM`, `systemctl stop kubelet`).
+
 * **Hard Failures:** Hard node power-off (`sysrq` triggers, AWS `ec2-stop-instances`, or GCP `compute instances stop`).
 
 ## 27.3 Chaos Mesh and Gremlin Engine Deployment in Kubernetes Environments
@@ -194,13 +200,11 @@ In this hands-on lab, you will deploy a microservice application into a local Ku
 mkdir -p ~/chaos-lab && cd ~/chaos-lab
 ```
 
-
 2. Ensure `kind` or `minikube` is running, then create the `demo` namespace:
 
 ```bash
 kubectl create namespace demo
 ```
-
 
 3. Deploy the target `payment-api` microservice (`payment-api.yaml`):
 
@@ -286,7 +290,6 @@ spec:
 EOF
 kubectl apply -f traffic-generator.yaml
 ```
-
 
 5. Verify that initial steady-state latency is under 15ms:
 
