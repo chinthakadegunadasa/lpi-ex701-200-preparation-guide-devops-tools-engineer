@@ -352,8 +352,6 @@ server {
 consul-template -config=/etc/consul-template/config.hcl
 ```
 
----
-
 ## 7.4 Health Checking and Automated Traffic Rerouting
 
 Automated health checks ensure that traffic is sent only to healthy service instances. When an instance fails, the service registry updates its status and signals edge proxies to reroute incoming traffic.
