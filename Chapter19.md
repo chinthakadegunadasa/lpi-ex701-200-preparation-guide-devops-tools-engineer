@@ -9,7 +9,9 @@ Modern DevOps practices lean heavily toward **Declarative Pipelines**, which are
 Declarative pipelines offer:
 
 * **Pipeline-as-Code (PaC):** Storing pipeline definitions in git, allowing for code review, versioning, and rollback.
+
 * **Predictability:** Each run uses the exact configuration defined in the file.
+
 * **Maintainability:** Easier to read and update than complex imperative scripts.
 
 ### 19.1.1 Jenkins (Jenkinsfile)
@@ -67,7 +69,6 @@ test_job:
   script:
     - echo "Running all automated unit tests..."
     # Implementation...
-
 ```
 
 ### 19.1.3 GitHub Actions (`.github/workflows/ci.yml`)
@@ -98,7 +99,6 @@ jobs:
       - name: Test
         run: echo "Running unit tests..."
         # Implementation...
-
 ```
 
 ## 19.2 Pipeline Runners, Agents, and Scalable Execution Environments
@@ -106,6 +106,7 @@ jobs:
 Running a large enterprise CI/CD environment requires robust infrastructure. The code compilation and testing don't happen on the Jenkins master; they occur on dedicated **Agents** or **Runners**.
 
 * **Agents/Nodes (Jenkins):** Machines that connect to the master to execute builds. They must contain all necessary build dependencies (e.g., JDK, Docker).
+
 * **Runners (GitLab/GitHub):** Processes (often containers) that pick up and run CI/CD jobs.
 
 ### 19.2.1 Scalable Strategies
@@ -113,7 +114,9 @@ Running a large enterprise CI/CD environment requires robust infrastructure. The
 Enterprise DevOps teams must move beyond static agents toward dynamic scaling.
 
 1. **Static Agents:** Cost-inefficient, prone to "snowflakes" (unique, manual configurations).
+
 2. **VM Scale Sets:** Auto-scaling VMs based on demand (e.g., Azure Scale Sets, AWS EC2 Auto Scaling), which clean up after the job.
+
 3. **Containerized Execution (Kubernetes):** This is the **most modern approach**. Runners or agents are spun up dynamically as temporary pods on a Kubernetes cluster. When the job finishes, the pod is destroyed.
 
 
@@ -130,11 +133,14 @@ A robust enterprise pipeline follows a specific logical flow:
 ### 19.3.2 Stage Breakdown
 
 * **Build:** The first stage. Compiles the source code into a binary artifact (e.g., a `.jar`, `.tar.gz`, or executable). Dependencies are resolved here.
-* **Test:** Executes automated test suites. This includes fast unit tests and slower integration tests. **Test results must be published** for visibility (e.g., JUnit XML results).
-* **Security Scan:** This is the critical **"Shift Left"** component.
-* **SAST (Static Application Security Testing):** Analyzing the source code itself for common anti-patterns or hardcoded secrets (e.g., SonarQube).
-* **Dependency/Composition Analysis:** Scanning the included open-source libraries for known Common Vulnerabilities and Exposures (CVEs) (e.g., Snyk or Trivy).
 
+* **Test:** Executes automated test suites. This includes fast unit tests and slower integration tests. **Test results must be published** for visibility (e.g., JUnit XML results).
+
+* **Security Scan:** This is the critical **"Shift Left"** component.
+
+* **SAST (Static Application Security Testing):** Analyzing the source code itself for common anti-patterns or hardcoded secrets (e.g., SonarQube).
+
+* **Dependency/Composition Analysis:** Scanning the included open-source libraries for known Common Vulnerabilities and Exposures (CVEs) (e.g., Snyk or Trivy).
 
 * **Package:** The final stage of CI. The compiled, tested binary is packaged—most modernly as an immutable OCI-compliant container image—and pushed to an enterprise registry (like Harbor or Artifactory).
 
@@ -147,6 +153,7 @@ Optimizing the pipeline for speed and flexibility is essential for enterprise De
 Enterprise builds download hundreds of megabytes of dependencies (Java Maven, Node modules, Python pip). We must **cache these** between pipeline runs. Caching is different from artifacts:
 
 * **Artifacts:** Formally produced files (e.g., a `.tar.gz` executable) passed from stage to stage.
+
 * **Cache:** Temporary storage of downloaded dependencies (e.g., `~/.m2`, `node_modules`).
 
 **Example: Caching in GitLab CI**
@@ -169,7 +176,9 @@ Enterprise pipelines must handle variation. **Parameterization** allows the pipe
 **Trigger Mechanics** are the rules deciding **when** a pipeline runs:
 
 * **Merge Requests:** Run the pipeline when a developer requests to merge into `main`.
+
 * **Commit Triggers:** Run on every push to specific branches.
+
 * **Tag Triggers:** Run the full "publish and release" workflow only when a semantic version tag (e.g., `v1.2.0`) is pushed.
 
 ## 19.5 Hands-On Lab: Writing a Production-Grade Multi-Stage Pipeline in GitLab CI / Jenkins
@@ -181,8 +190,11 @@ As a DevOps engineer, you must create a fully automated, production-grade CI/CD 
 ### Objectives
 
 * Define a four-stage pipeline.
+
 * Implement caching for Maven dependencies.
+
 * Integrate a code linter and a dependency security scanner.
+
 * Package the binary into a Docker image and push it to a registry.
 
 ### Step 1: Pre-requisites and Infrastructure Setup
@@ -190,7 +202,9 @@ As a DevOps engineer, you must create a fully automated, production-grade CI/CD 
 For this lab, you will use GitLab CI.
 
 1. Access to a GitLab instance and project.
+
 2. A functional **GitLab Runner** with the **Docker executor** configured.
+
 3. An **Enterprise Container Registry** (e.g., `registry.local:5000`) available for push operations.
 
 ### Step 2: Implement the Java Multi-Stage Pipeline
@@ -291,7 +305,9 @@ git push
 Go to the GitLab project sidebar -> **CI/CD** -> **Pipelines** and examine the execution graph. Ensure:
 
 1. The `security` stage successfully executed and blocked critical dependencies.
+
 2. The `package` stage executed and pushed an image (check your registry).
+
 3. The intermediate artifact (`target/my-app.jar`) was available for packaging.
 
 ## Self-Assessment & Exam Practice Questions
@@ -299,18 +315,25 @@ Go to the GitLab project sidebar -> **CI/CD** -> **Pipelines** and examine the e
 **Question 1:** An enterprise pipeline is taking 25 minutes to complete because it downloads 400MB of Maven Java dependencies on every run. Which component of the CI configuration must be utilized to accelerate subsequent pipeline execution?
 
 A) Artifacts
+
 B) Cache
+
 C) Scripted Pipeline syntax
+
 D) Static runners
 
 **Answer:** **B**
+
 *Explanation:* **Cache** is used specifically to store downloaded external dependencies (like Maven repositories or `node_modules`) between pipeline runs, accelerating execution by avoiding duplicate downloads.
 
 **Question 2:** When migrating from a scripted Jenkins pipeline to a declarative Jenkinsfile, which block becomes the primary container for all major functional phases (such as Build, Test, and Package)?
 
 A) `pipeline`
+
 B) `agent`
+
 C) `stages`
+
 D) `steps`
 
 **Answer:** **C**
@@ -319,9 +342,13 @@ D) `steps`
 **Question 3:** Which specific trigger mechanic is a best practice for a CD workflow, ensuring that full artifact publication and deployment to production only occur when a stable semantic version tag is pushed?
 
 A) Commit Triggers
+
 B) Scheduled Triggers
+
 C) Parameterization
+
 D) Tag Triggers
 
 **Answer:** **D**
+
 *Explanation:* **Tag Triggers** allow the CD logic to be decoupled from every commit, ensuring that full release automation is only initiated upon explicit semantic version tagging (e.g., `v1.2.0`).
