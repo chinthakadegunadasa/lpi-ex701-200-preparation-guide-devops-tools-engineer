@@ -8,7 +8,6 @@ Kubernetes separates storage allocation from infrastructure consumption through 
 
 ### Storage Lifecycle Architecture
 
-
 ![Kubernetes Storage binding model](assets/images/chapter10/10-1-STORAGE-BINDING-AND-LIFECYCLE.png)
 
 ### Storage Reclamation Policies
@@ -22,8 +21,11 @@ When a user deletes a PVC bound to a PV, the reclaim policy defined on the PV te
 Access modes define how many nodes can concurrently mount a given PV:
 
 1. `ReadWriteOnce` (`RWO`): Volume can be mounted as read-write by a single node.
+
 2. `ReadOnlyMany` (`ROX`): Volume can be mounted as read-only by many nodes concurrently.
+
 3. `ReadWriteMany` (`RWX`): Volume can be mounted as read-write by many nodes concurrently (requires distributed file storage like NFS, CephFS, or Gluster).
+
 4. `ReadWriteOncePod` (`RWOP`): Volume can be mounted as read-write by a single Pod across the entire cluster (CSI-specific).
 
 ### Dynamic Provisioning Manifests
@@ -63,11 +65,15 @@ The Container Storage Interface (CSI) standardizes the out-of-tree interface bet
 ### CSI RPC Methods Breakdown
 
 1. **CSI Controller Service**:
+
    * `CreateVolume()` / `DeleteVolume()`: Provisions or deprovisions storage assets on the storage vendor's SAN/NAS API.
+
    * `ControllerPublishVolume()` / `ControllerUnpublishVolume()`: Attaches/detaches block storage to a specific target host machine (e.g., AWS EBS `AttachVolume`).
 
-2. **CSI Node Service**:
+3. **CSI Node Service**:
+
    * `NodeStageVolume()`: Formats the block device with a file system (`ext4`, `xfs`) and mounts it to a global staging directory.
+
    * `NodePublishVolume()`: Bind-mounts the staged volume into the container's isolated mount namespace (`/var/lib/kubelet/pods/<pod-uid>/volumes/...`).
 
 ## 10.3 Decoupling Configuration using ConfigMaps
@@ -143,6 +149,7 @@ Kubernetes Secrets handle sensitive data such as passwords, API keys, and TLS ce
 ### Native Secrets Security Limitations
 
 1. **Base64 Encoding**: Native Secret objects are only base64-encoded, **not encrypted**, when stored or queried unless Encryption at Rest is explicitly configured on the API server.
+
 2. **etcd Exposure**: Plaintext secrets exist in the etcd datastore unless encrypted using `EncryptionConfiguration` with a provider key (`kms`, `aescbc`, `secretbox`).
 
 ### External Secrets Operator (ESO) & Vault Integration Architecture
@@ -308,9 +315,13 @@ Before moving forward, ensure proficiency in the following key domain concepts:
 
 ```
 * [ ] Understanding PV access modes (`RWO`, `ROX`, `RWX`, `RWOP`) and reclaim policies (`Retain`, `Delete`).
+
 * [ ] Differentiating between in-tree volume plugins and out-of-tree CSI driver RPC operations (`CreateVolume`, `NodeStageVolume`, `NodePublishVolume`).
+
 * [ ] Utilizing ConfigMaps via Environment Variables, `envFrom`, and volume mounts.
+
 * [ ] Managing Kubernetes Secrets security constraints, base64 encoding mechanics, and etcd encryption at rest.
+
 * [ ] Integrating external secrets stores using operators (e.g., External Secrets Operator with HashiCorp Vault).
 ```
 
