@@ -9,8 +9,11 @@ Shift-left security incorporates security practices, checks, and compliance audi
 Automated quality gates fail pipeline builds if predefined security baselines are breached. Key components include:
 
 1. **Pre-commit Hooks:** Prevent sensitive information (API tokens, private keys) from entering git version history.
+
 2. **Static Analysis Gates:** Enforce static analysis execution; fail builds on `CRITICAL` or `HIGH` Severity Vulnerability Findings.
+
 3. **Software Bill of Materials (SBOM) Attestation:** Generate signed SBOMs during build time to guarantee package integrity.
+
 4. **Automated Compliance Verification:** Use Infrastructure as Code (IaC) scanners like Checkov or Trivy to evaluate Terraform/Kubernetes manifests against CIS Benchmarks before deployment.
 
 ## 3.2 Static Application Security Testing (SAST) and Dynamic Scanning (DAST)
@@ -104,6 +107,7 @@ vault write auth/kubernetes/config \
 ```
 
 #### 2. Define Policy and Role
+
 ```hcl
 # policy-app.hcl
 path "secret/data/production/database" {
@@ -125,9 +129,11 @@ vault write auth/kubernetes/role/app-role \
 ## 3.5 Hands-On Lab: Building a Complete SAST/DAST Vulnerability Scanning Pipeline
 
 ### Lab Scenario
+
 You are assigned to build an automated DevSecOps security pipeline for a critical microservice. The pipeline must enforce strict security controls: detect hardcoded secrets using Gitleaks, perform SAST analysis via Semgrep, verify container dependencies with Trivy, sign the built artifact using Cosign, and execute a DAST baseline security scan against the staging application endpoint.
 
 ![Hands-On DevSecOps Pipeline Security Architecture](assets/images/chapter3/3-5-Hands-On-DevSecOps-Pipeline-Security-Architecture.png)
+
 ### Step-by-Step Implementation
 
 #### Step 1: Pre-commit Secret Scanning Configuration (`.gitleaks.toml`)
@@ -217,14 +223,20 @@ dast_zap_scan:
 #### Step 3: Verification & Pipeline Execution Results
 
 1. Trigger pipeline execution by submitting a commit containing a test payload or pull request.
+
 2. Monitor stage logs to ensure Gitleaks blocks any committed plain-text credentials.
+
 3. Validate that Semgrep parses ASTs to flag insecure code constructs before image compilation.
+
 4. Verify that Trivy halts deployment if base OS layers contain unpatched `CRITICAL` Common Vulnerabilities and Exposures (CVEs).
 5. Inspect the generated OWASP ZAP HTML report (`zap_report.html`) for dynamic HTTP security header gaps, missing anti-CSRF tokens, or permissive CORS configurations.
 
 ### Key Exam Takeaways (LPI 701-200)
 
 * **Shift-Left Paradigm:** Security checks must be integrated into early stages of development (IDE, pre-commit, pull requests) to lower remediation overhead and limit risk exposure.
+
 * **SAST vs. DAST:** SAST analyzes source code without executing it (White-Box, early CI), whereas DAST evaluates running application binaries/endpoints (Black-Box, staging runtime).
+
 * **Supply Chain Security:** Requires tracking dependencies with software composition analysis (SCA), enforcing Software Bill of Materials (SBOM) generation, and signing artifacts with tools like Cosign.
+
 * **Secrets Management:** Enterprise environments must avoid static file-based secrets, using dynamic injection and lease management via centralized secret engines like HashiCorp Vault.
