@@ -13,14 +13,19 @@ Grafana is the industry-standard open-source platform for data visualization, da
 To avoid clutter and "dashboard fatigue," enterprise dashboards are organized using standard operational telemetry methodologies:
 
 * **The RED Method (For Application & Microservices):**
+
 * **Rate:** The number of requests your service is serving per second.
+
 * **Errors:** The number of those requests that are failing per second.
+
 * **Duration:** The amount of time those requests are taking (latency distribution/quantiles).
-
-
+  
 * **The USE Method (For Infrastructure & Host Node Hardware):**
+
 * **Utilization:** The average time that the resource was busy (e.g., CPU %, Memory usage %).
+
 * **Saturation:** The degree to which the resource has extra work which it can't service, often waiting in a queue (e.g., Load Average, Disk I/O Wait).
+
 * **Errors:** The count of error events at the infrastructure level (e.g., network packet drops, disk read errors).
 
 ### 2. Templating with Variables and Dynamic Dashboards
@@ -28,7 +33,9 @@ To avoid clutter and "dashboard fatigue," enterprise dashboards are organized us
 Hardcoding cluster names, instances, or namespaces into dashboards does not scale in an enterprise setting. Grafana provides **Variables** to build dynamic, multi-tenant dashboards:
 
 * **Query Variables:** Fetch dynamic options directly from data sources (e.g., PromQL query: `label_values(node_cpu_seconds_total, environment)`).
+
 * **Custom / Interval Variables:** Allow operators to dynamically select time ranges (`1m`, `5m`, `1h`) for rate queries (`rate(http_requests_total[$interval])`).
+
 * **Chained / Cascading Variables:** Variables that depend on other variables (e.g., selecting an `Environment` filters the `Cluster` dropdown, which in turn filters available `Pod` names).
 
 ### 3. Dashboard Provisioning as Code
@@ -77,6 +84,7 @@ Static alerting evaluates a metric against a fixed, predefined constant value.
 ```
 
 * **Pros:** Easy to write, simple to understand, low computational cost on Prometheus.
+
 * **Cons:** High risk of false positives for diurnal (day/night) traffic spikes; fails to catch subtle degradations during low-traffic off-peak hours.
 
 ### 2. Anomaly Detection and Trend Forecasting
@@ -84,12 +92,14 @@ Static alerting evaluates a metric against a fixed, predefined constant value.
 For non-linear or highly variable workloads, static thresholds are insufficient. Prometheus provides mathematical functions for trend analysis and dynamic thresholds:
 
 * **Predictive Alerting (`predict_linear`):** Predicts future metric values based on linear regression over a past time window.
+
 ```promql
 # Alert if disk space is predicted to fill up within 4 hours based on the last 1-hour trend
 predict_linear(node_filesystem_free_bytes{mountpoint="/"}[1h], 4 * 3600) < 0
 ```
 
 * **Diurnal / Seasonal Comparison (Offsetting):** Compares current performance against the exact same time window from previous weeks.
+
 ```promql
 # Alert if request rate drops by more than 50% compared to last week
 http_requests_total < (http_requests_total offset 1w * 0.5)
@@ -98,6 +108,7 @@ http_requests_total < (http_requests_total offset 1w * 0.5)
 ### 3. Symptom-Based Alerting vs. Cause-Based Alerting
 
 * **Symptom-Based (Preferred for PagerDuty/On-Call):** Focuses on user impact (e.g., "High HTTP 5xx error rate" or "Latency exceeds SLA").
+
 * **Cause-Based (Preferred for Dashboards/Informational Alerts):** Focuses on internal component state (e.g., "High Host CPU" or "Garbage Collection pause time high").
 
 ## 23.3 Prometheus Alertmanager Configuration: Grouping, Inhibitions, and Silences
@@ -111,8 +122,11 @@ Prometheus server evaluates rules and fires alerts to an independent binary: **A
 Grouping aggregates alerts of similar nature into a single combined notification to avoid storming engineers with dozens of simultaneous messages during a cascading failure.
 
 * `group_by`: Labels used to bundle alerts together (e.g., `['cluster', 'namespace', 'alertname']`).
+
 * `group_wait`: How long to buffer initial alerts in a group before sending the first notification (e.g., `30s`).
+
 * `group_interval`: How long to wait before sending notifications about *new* alerts added to an existing group (e.g., `5m`).
+
 * `repeat_interval`: Minimum time to wait before re-sending a notification that has already been delivered (e.g., `12h`).
 
 ### 2. Alert Inhibitions
@@ -203,8 +217,11 @@ In this practical lab, you will deploy a complete, fully integrated observabilit
 **Components:**
 
 1. **Prometheus:** Scrapes targets, evaluates alert rules, and fires alerts.
+
 2. **Alertmanager:** Receives alerts, handles grouping, and dispatches notifications.
+
 3. **Node Exporter:** Exposes host-level infrastructure metrics (USE method).
+
 4. **Grafana:** Provides real-time operational dashboards and alert status monitoring.
 
 ### Step 1: Create Lab Directory Structure
@@ -407,9 +424,13 @@ curl -s http://localhost:9090/api/v1/targets | grep -o '"health":"up"'
 ### Step 8: Simulate Metric Spike to Trigger Firing Alerts
 
 1. **Verify initial alert state:**
+
 Access the Prometheus Alert Web UI at `http://localhost:9090/alerts`. Note that `HostHighMemoryUsage` is in the **INACTIVE** state.
+
 2. **Generate artificial memory load on the system:**
+
 Run a temporary memory stress process or execute a PromQL test query using lower artificial threshold bounds in Prometheus UI to force rule evaluation to `PENDING` -> `FIRING`:
+
 Alternatively, trigger an active rule directly by temporarily updating `prometheus/alert.rules.yml` threshold from `75%` to `1%` and reloading Prometheus:
 
 ```bash
@@ -420,7 +441,9 @@ curl -X POST http://localhost:9090/-/reload || docker restart prometheus
 3. **Observe State Transitions in Prometheus:**
    
 * **INACTIVE:** Metric value is within normal baseline.
+
 * **PENDING:** Threshold exceeded (`> 1%`), but pending the `for: 1m` duration window to avoid flapping.
+
 * **FIRING:** Active threshold exceeded longer than duration window. Alert dispatched to Alertmanager.
 
 4. **Verify Active Alert in Alertmanager Dashboard:**
@@ -430,8 +453,11 @@ Navigate to `http://localhost:9093`. Confirm the alert `HostHighMemoryUsage` is 
 ### Step 9: Configure and Visualize Firing Alerts in Grafana
 
 1. Log into Grafana at `http://localhost:3000` using credentials `admin` / `devops`.
+
 2. Navigate to **Explore** (Compass Icon) and select the automatically provisioned **Prometheus** datasource.
+
 3. Query the current status of firing alerts using Prometheus metric vectors:
+
 ```promql
 ALERTS{alertstate="firing"}
 ```
@@ -439,8 +465,11 @@ ALERTS{alertstate="firing"}
 4. Create a new dashboard panel:
    
 * Select **Stat** or **Alert List** visualization.
+
 * Enter expression: `count(ALERTS{alertstate="firing"})`.
+
 * Configure Thresholds: Green = 0, Red $\ge$ 1.
+
 * Save the dashboard under the "Infrastructure" folder.
 
 ### Lab Conclusion & Key Learning Verification
@@ -448,6 +477,9 @@ ALERTS{alertstate="firing"}
 By completing this hands-on lab, you have successfully:
 
 1. Built a complete, provisioned monitoring and alerting pipeline using GitOps-driven configurations.
+
 2. Implemented predictive analysis (`predict_linear`) and dynamic threshold alerting rules.
+
 3. Managed the alert lifecycle through Prometheus rule evaluation, `PENDING` to `FIRING` state transitions, and Alertmanager routing.
+
 4. Provisioned automated Grafana data sources and visualized live alert telemetry.
