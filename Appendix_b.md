@@ -7,11 +7,13 @@ This appendix serves as an authoritative, enterprise-grade command reference man
 Containerized environments require precise inspection, resource constraint tuning, and cache hygiene.
 
 ### 1. Advanced Container Inspection & Diagnostics
+
 * **Inspect resource utilization across running containers:**
 
   ```bash
   docker stats --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
   ```
+
 * **Inspect low-level container metadata (JSON format with Go templates):**
 
   ```bash
@@ -25,6 +27,7 @@ Containerized environments require precise inspection, resource constraint tunin
   ```
 
 ### 2. Storage and Network Management
+
 * **Prune unused build cache and dangling volumes to reclaim storage:**
 
   ```bash
@@ -42,6 +45,7 @@ Containerized environments require precise inspection, resource constraint tunin
 Enterprise Kubernetes troubleshooting requires extracting precise telemetry and manipulating live cluster objects without destabilizing production workloads.
 
 ### 1. Diagnostics & Debugging
+
 * **Execute an interactive diagnostic shell inside an ephemeral debug container attached to a pod:**
 
    ```bash
@@ -61,6 +65,7 @@ Enterprise Kubernetes troubleshooting requires extracting precise telemetry and 
   ```
 
 ### 2. Advanced JSONPath & Go-Template Filtering
+
 * **List all node internal IP addresses and kernel versions:**
 
   ```bash
@@ -96,6 +101,7 @@ State manipulation is critical when handling infrastructure drift, refactoring r
   ```
 
 ### 2. Emergency Recovery & Import
+
 * **Remove a resource from state tracking without deleting actual cloud infrastructure:**
 
   ```bash
@@ -113,6 +119,7 @@ State manipulation is critical when handling infrastructure drift, refactoring r
 Executing playbooks in production requires strict verbosity control, dry runs, and secure handling of sensitive variables.
 
 ### 1. Enterprise Playbook Execution
+
 * **Execute a playbook in dry-run (check) mode with high verbosity for debugging task impacts:**
 
   ```bash
@@ -126,6 +133,7 @@ Executing playbooks in production requires strict verbosity control, dry runs, a
   ```
 
 ### 2. Ansible Vault Lifecycle Management
+
 * **Encrypt a sensitive secrets file in place:**
 
   ```bash
@@ -133,6 +141,7 @@ Executing playbooks in production requires strict verbosity control, dry runs, a
   ```
   
 * **View an encrypted vault file without saving plaintext to disk:**
+
   ```bash
   ansible-vault view inventories/production/group_vars/vault.yml --vault-password-file ~/.vault_pass.txt
   ```
@@ -148,6 +157,7 @@ Executing playbooks in production requires strict verbosity control, dry runs, a
 Managing messy history, isolating regressions, and surgical cherry-picking are vital competencies for CI/CD pipeline engineers.
 
 ### 1. History Exploration & Bisecting
+
 * **Binary search through commit history to isolate a performance regression:**
 
   ```bash
@@ -178,6 +188,7 @@ Managing messy history, isolating regressions, and surgical cherry-picking are v
   ```bash
   git cherry-pick -x <commit_sha>
   ```
+
 ## B.6. PromQL & LogQL Query Cheat Sheet
 
 Observability relies on precise data extraction from Prometheus metrics and Grafana Loki log streams.
@@ -198,7 +209,7 @@ Observability relies on precise data extraction from Prometheus metrics and Graf
   
 * **Calculate instant CPU saturation ratio relative to total capacity:**
 
-   ```promql
+  ```promql
   1 - rate(node_cpu_seconds_total{mode="idle"}[5m])
   ```
 
