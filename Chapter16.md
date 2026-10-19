@@ -13,12 +13,15 @@ In traditional configuration management, server instances are provisioned as bar
 To eliminate configuration drift and reduce deployment risks, modern enterprise architectures implement **Immutable Infrastructure**. Under this paradigm:
 
 * Infrastructure components (virtual machines, cloud instances, containers) are never updated or patched in-place.
+
 * When code or configuration updates are required, a brand-new **Golden Image** is compiled, tested, and deployed to replace the existing instances.
+
 * Live instances are treated as disposable units ("cattle, not pets").
 
 ### Role of HashiCorp Packer and Cloud-init
 
 * **HashiCorp Packer:** Serves as the build-time engine. It automates the creation of identical machine images across multiple platforms (AWS AMI, OpenStack QCOW2, VMware OVA, GCP Images) from a single source specification.
+
 * **Cloud-init:** Serves as the launch-time boot engine. It performs early-stage initialization on cloud instances during their first boot cycle (e.g., setting hostnames, expanding storage partitions, configuring network interfaces, injecting SSH public keys).
 
 ## 16.2 HashiCorp Packer Architecture: Builders, Provisioners, and Post-Processors
@@ -57,7 +60,9 @@ Source blocks configure specific infrastructure platforms to spin up temporary v
 Common enterprise builders include:
 
 * `amazon-ebs`: Launches an EC2 instance in AWS, runs provisioners over SSH/WinRM, and creates an AMI.
+
 * `qemu`: Bootstraps local ISO files inside a QEMU/KVM virtual machine to output disk images (`.qcow2`, `.raw`).
+
 * `vsphere-iso`: Interacts directly with VMware vCenter APIs to install OS images onto ESXi hosts.
 
 #### 3. Build Blocks & Provisioners
@@ -67,7 +72,9 @@ The `build` block binds defined `sources` together and passes them through a seq
 Common provisioners:
 
 * `shell`: Executes local or remote bash scripts.
+
 * `ansible`: Runs Ansible playbooks directly against the temporary build target.
+
 * `file`: Uploads files or directory trees into the image during compilation.
 
 #### 4. Post-Processors
@@ -106,7 +113,6 @@ build {
     strip_path = true
   }
 }
-
 ```
 
 ## 16.3 Automating OS Provisioning via Cloud-Init and Kickstart
@@ -151,7 +157,6 @@ runcmd:
   - [ systemctl, daemon-reload ]
   - [ systemctl, enable, --now, fail2ban ]
   - echo "System initialized by Cloud-Init on $(date)" > /var/log/cloud-init-bootstrap.log
-
 ```
 
 ### Passing Installer Responses in Packer
@@ -175,7 +180,6 @@ source "qemu" "debian_iso" {
     "<enter>"
   ]
 }
-
 ```
 
 ## 16.4 Integrating Packer into CI/CD Automated Pipelines
@@ -184,14 +188,16 @@ To operate immutable image generation securely at scale, image builds must be in
 
 ```
 [ Git Commit (HCL Code) ] ──► [ Pipeline Trigger ] ──► [ packer validate & fmt ] ──► [ packer build ] ──► [ Register Golden Image ]
-
 ```
 
 ### CI/CD Integration Best Practices
 
 1. **Automated Validation:** Always execute `packer validate` and `packer fmt -check` early in pipeline stages to verify syntax and formatting without spinning up build instances.
+
 2. **Secret Management:** Never hardcode cloud credentials or SSH keys into Packer HCL code. Pass sensitive credentials as environment variables (`PKR_VAR_variable_name`) or retrieve them dynamically from key management stores (e.g., HashiCorp Vault).
+
 3. **Automated Image Cleanup:** Ensure pipelines implement clean-up routines to terminate orphaned temporary build instances or security groups if a build stage fails midway.
+
 4. **Image Lifecycle Management (AMI Pruning):** Implement post-build tasks or scheduled cron jobs to deregister obsolete golden images and clean up underlying storage snapshots.
 
 ### Enterprise GitLab CI Pipeline Definition (`.gitlab-ci.yml`)
@@ -227,7 +233,6 @@ packer_build_production:
     expire_in: 30 days
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-
 ```
 
 ## 16.5 Hands-On Lab: Building Automated Hardened Debian 13 Golden Machine Images
@@ -243,7 +248,6 @@ Create a structured project workspace:
 ```bash
 mkdir -p packer-debian13-lab/{http,scripts}
 cd packer-debian13-lab
-
 ```
 
 ### Step 2: Define Automated Installer Preseed Configuration
@@ -305,7 +309,6 @@ d-i grub-installer/bootdev string /dev/sda
 
 # Final Notification
 d-i finish-install/reboot_in_progress note
-
 ```
 
 ### Step 3: Write Hardening & Provisioning Shell Scripts
@@ -354,7 +357,6 @@ sudo truncate -s 0 /var/log/wtmp
 sudo truncate -s 0 /var/log/lastlog
 
 echo "==> Image Hardening Complete."
-
 ```
 
 Make the script executable:
@@ -444,7 +446,6 @@ build {
     strip_path = true
   }
 }
-
 ```
 
 ### Step 5: Format, Validate, and Execute the Build
@@ -463,7 +464,6 @@ packer validate debian13.pkr.hcl
 
 # 4. Run the image compilation build process
 packer build debian13.pkr.hcl
-
 ```
 
 ### Step 6: Verify Build Artifacts
@@ -476,7 +476,6 @@ ls -lh output-debian13-golden/
 
 # Inspect manifest execution summary
 cat manifest.json
-
 ```
 
 ## Self-Assessment & Exam Practice Questions
@@ -484,8 +483,11 @@ cat manifest.json
 **Question 1**: An administrator needs to build identical machine images for both AWS and VMware vSphere using HashiCorp Packer. Which block in the Packer template defines the target platform mechanisms used to spin up instances and produce snapshots?
 
 A) `provisioner`
+
 B) `source`
+
 C) `post-processor`
+
 D) `variables`
 
 **Answer**: **B**
@@ -495,8 +497,11 @@ D) `variables`
 **Question 2**: Which utility is primarily responsible for performing first-boot machine customization (e.g., expanding root volumes, writing network configs, injecting public keys) on cloud instances deployed from an immutable Golden Image?
 
 A) Cloud-init
+
 B) Kickstart
+
 C) Subiquity
+
 D) Preseed
 
 **Answer**: **A**
@@ -506,8 +511,11 @@ D) Preseed
 **Question 3**: In a CI/CD pipeline running automated Packer builds, what is the best practice for passing cloud vendor secret access keys to the build template?
 
 A) Embed credentials directly in `default` values inside the `variables.tf` file.
+
 B) Store plaintext credentials inside the `http_directory` answer file.
+
 C) Pass credentials via environment variables (`PKR_VAR_...`) or retrieve them dynamically from a secrets engine.
+
 D) Hardcode credentials in the `post-processor` block.
 
 **Answer**: **C**
