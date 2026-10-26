@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # or 'master'
+    tags:
+      - 'v*.*.*'  # Triggers release build on version tags like v1.0.0
   workflow_dispatch:
     inputs:
       book_title:
@@ -89,6 +91,7 @@ jobs:
           ./build_book.sh "${ARGS[@]}"
 
       - name: Commit and Push Updated TOC.md Back to Repository
+        if: github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/')
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -219,6 +222,17 @@ jobs:
             *.epub
             build_report.txt
             TOC.md
+
+      - name: Create GitHub Release on Tag
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.pdf
+            *.docx
+            *.epub
+            build_report.txt
+          generate_release_notes: true
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
