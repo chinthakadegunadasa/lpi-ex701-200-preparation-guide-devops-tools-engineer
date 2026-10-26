@@ -1,0 +1,25 @@
+changelog:
+  categories:
+    - title: "📖 Manuscript & Content Updates"
+      labels:
+        - "documentation"
+        - "enhancement"
+        - "manuscript"
+    - title: "💻 Code Snippets & Examples"
+      labels:
+        - "code"
+        - "examples"
+    - title: "⚙️ Build Engine & CI/CD Pipeline"
+      labels:
+        - "ci"
+        - "build"
+        - "automation"
+    - title: "🐛 Fixes & Typos"
+      labels:
+        - "bug"
+        - "fix"
+  exclude:
+    labels:
+      - "ignore"
+    authors:
+      - "github-actions[bot]"
