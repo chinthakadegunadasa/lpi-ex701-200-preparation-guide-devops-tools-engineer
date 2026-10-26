@@ -287,15 +287,7 @@ cat << EOF_LATEX > "$LATEX_HEADER_FILE"
 
 \usepackage{fvextra}
 \usepackage{xcolor}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
-  breaklines,
-  commandchars=\\\{\},
-  frame=single,
-  framerule=0.5pt,
-  rulecolor=\color{black!30},
-  xleftmargin=0pt,
-  samepage
-}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\},frame=single,framerule=0.5pt,rulecolor=\color{black!30},xleftmargin=0pt,samepage}
 
 \usepackage{graphicx}
 \usepackage{caption}
