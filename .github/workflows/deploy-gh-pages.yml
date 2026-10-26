@@ -1,12 +1,29 @@
-name: Deploy Markdown Book to GitHub Pages
+name: Universal KDP Book Builder & GitHub Pages Deployment
 
 on:
   push:
     branches:
       - main  # or 'master'
+  workflow_dispatch:
+    inputs:
+      book_title:
+        description: 'Book Title'
+        required: true
+        default: 'The Ultimate Handbook of DevOps Practitioner'
+        type: string
+      book_repo_url:
+        description: 'Git Repository URL containing .md files (optional)'
+        required: false
+        default: ''
+        type: string
+      build_profile:
+        description: 'Build Profile (kdp or draft)'
+        required: false
+        default: 'kdp'
+        type: string
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -20,20 +37,64 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
-      - name: Set up Python
+      - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
-      - name: Install MkDocs Material & Extensions
+      - name: Install System & Document Dependencies
         run: |
-          pip install mkdocs \
-                      mkdocs-material \
-                      pymdown-extensions
+          sudo apt-get update
+          sudo apt-get install -y \
+            pandoc \
+            libreoffice \
+            ghostscript \
+            pdftk-java \
+            poppler-utils \
+            fontconfig \
+            git \
+            ttf-mscorefonts-installer
+          sudo fc-cache -f -v
+
+      - name: Install Python Dependencies (KDP & MkDocs)
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install --no-cache-dir \
+            python-docx \
+            Pillow \
+            uno \
+            mkdocs \
+            mkdocs-material \
+            pymdown-extensions
+
+      - name: Execute Universal KDP Build Script & Generate TOC.md
+        env:
+          BOOK_TITLE: "${{ github.event.inputs.book_title || 'The Ultimate Handbook of DevOps Practitioner' }}"
+          BOOK_REPO_URL: "${{ github.event.inputs.book_repo_url }}"
+          BUILD_PROFILE: "${{ github.event.inputs.build_profile || 'kdp' }}"
+          OUTPUT_FORMAT: "all"
+        run: |
+          chmod +x build_book.sh
+          ARGS=(--profile "${{ env.BUILD_PROFILE }}" --format all)
+          if [ -n "${{ env.BOOK_REPO_URL }}" ]; then
+            ARGS+=(--repo "${{ env.BOOK_REPO_URL }}")
+          fi
+          ./build_book.sh "${ARGS[@]}"
+
+      - name: Commit and Push Updated TOC.md Back to Repository
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add TOC.md
+          git diff --staged --quiet || git commit -m "docs: auto-update TOC.md from build engine [skip ci]"
+          git push || echo "Push skipped or already up-to-date."
 
       - name: Prepare Staging Directory & Build mkdocs.yml
         run: |
@@ -45,7 +106,6 @@ jobs:
           def natural_sort_key(s):
               return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
 
-          # Clean and re-create docs_build folder
           staging_dir = 'docs_build'
           if os.path.exists(staging_dir):
               shutil.rmtree(staging_dir)
@@ -53,7 +113,7 @@ jobs:
 
           # 1. Copy non-markdown static assets (images, css, code)
           for root, dirs, files in os.walk('.'):
-              if any(ignored in root for ignored in ['_site', '.github', '.git', staging_dir]):
+              if any(ignored in root for ignored in ['_site', '.github', '.git', staging_dir, 'build_out']):
                   continue
               for f in files:
                   if not f.endswith('.md'):
@@ -66,7 +126,7 @@ jobs:
           # 2. Collect and sort all markdown files naturally
           md_files = []
           for root, dirs, files in os.walk('.'):
-              if any(ignored in root for ignored in ['_site', '.github', '.git', staging_dir]):
+              if any(ignored in root for ignored in ['_site', '.github', '.git', staging_dir, 'build_out']):
                   continue
               for f in files:
                   if f.endswith('.md') and f.lower() not in ['toc.md', 'readme.md']:
@@ -95,10 +155,9 @@ jobs:
 
           nav_yaml = '\n'.join(nav_entries)
 
-          # Construct configuration with left navigation pane enabled
           config_content = (
-              'site_name: LPI 701-200 DevOps Tools Engineer Handbook\n'
-              'site_description: Comprehensive Enterprise Preparation Guide for LPI 701-200\n'
+              'site_name: The Ultimate Handbook of DevOps Practitioner\n'
+              'site_description: Comprehensive Enterprise Preparation Guide & Handbook\n'
               'site_author: Madduma Kattadilage Chinthaka Deshapriya Gunadasa\n'
               'site_url: https://chinthakadegunadasa.github.io/lpi-ex701-200-preparation-guide-devops-tools-engineer/\n\n'
               'docs_dir: \"docs_build\"\n'
@@ -150,10 +209,10 @@ jobs:
         run: |
           mkdocs build --site-dir _site
 
-      - name: Setup Pages
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload KDP Artifacts & Website Bundle
         uses: actions/upload-pages-artifact@v3
         with:
           path: '_site'
