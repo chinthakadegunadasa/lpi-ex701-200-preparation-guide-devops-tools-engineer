@@ -8,12 +8,12 @@ on:
       book_title:
         description: 'Book Title'
         required: true
-        default: 'The Ultimate Handbook of DevOps Practitioner\'s Handboo'
+        default: 'The Ultimate Handbook of DevOps Practitioner'
         type: string
       book_repo_url:
         description: 'Git Repository URL containing .md files (optional)'
         required: false
-        default: ''
+        default: 'https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git'
         type: string
       build_profile:
         description: 'Build Profile (kdp or draft)'
@@ -56,7 +56,7 @@ jobs:
       - name: Execute Universal KDP Build Script
         env:
           BOOK_TITLE: "${{ github.event.inputs.book_title || 'The Ultimate DevOps Practitioner\'s Handbook' }}"
-          BOOK_REPO_URL: "${{ github.event.inputs.book_repo_url || 'https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git' }}"
+          BOOK_REPO_URL: "${{ github.event.inputs.book_repo_url || '' }}"
           BUILD_PROFILE: "${{ github.event.inputs.build_profile || 'kdp' }}"
           OUTPUT_FORMAT: "all"
         run: |
