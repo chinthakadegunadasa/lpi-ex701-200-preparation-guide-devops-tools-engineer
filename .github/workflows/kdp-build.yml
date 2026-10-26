@@ -1,4 +1,4 @@
-name: Universal KDP Book Builder
+name: Universal KDP Book Builder & TOC Sync
 
 on:
   push:
@@ -13,13 +13,16 @@ on:
       book_repo_url:
         description: 'Git Repository URL containing .md files (optional)'
         required: false
-        default: 'https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git'
+        default: ''
         type: string
       build_profile:
         description: 'Build Profile (kdp or draft)'
         required: false
         default: 'kdp'
         type: string
+
+permissions:
+  contents: write
 
 jobs:
   build-kdp:
@@ -28,6 +31,8 @@ jobs:
     steps:
       - name: Checkout Build Engine Repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
@@ -55,8 +60,8 @@ jobs:
 
       - name: Execute Universal KDP Build Script
         env:
-          BOOK_TITLE: "${{ github.event.inputs.book_title || 'The Ultimate DevOps Practitioner\'s Handbook' }}"
-          BOOK_REPO_URL: "${{ github.event.inputs.book_repo_url || '' }}"
+          BOOK_TITLE: "${{ github.event.inputs.book_title || 'The Ultimate Handbook of DevOps Practitioner' }}"
+          BOOK_REPO_URL: "${{ github.event.inputs.book_repo_url }}"
           BUILD_PROFILE: "${{ github.event.inputs.build_profile || 'kdp' }}"
           OUTPUT_FORMAT: "all"
         run: |
@@ -67,6 +72,14 @@ jobs:
           fi
           ./build_book.sh "${ARGS[@]}"
 
+      - name: Commit and Push Updated TOC.md
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add TOC.md
+          git diff --staged --quiet || git commit -m "docs: auto-update TOC.md [skip ci]"
+          git push
+
       - name: Upload KDP Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -76,3 +89,4 @@ jobs:
             *.docx
             *.epub
             build_report.txt
+            TOC.md
