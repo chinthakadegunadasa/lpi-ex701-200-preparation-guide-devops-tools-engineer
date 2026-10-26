@@ -8,7 +8,7 @@ on:
       book_title:
         description: 'Book Title'
         required: true
-        default: 'The Ultimate DevOps Practitioner\'s Handbook'
+        default: 'The Ultimate Handbook of DevOps Practitioner\'s Handboo'
         type: string
       book_repo_url:
         description: 'Git Repository URL containing .md files (optional)'
