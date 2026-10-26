@@ -1,0 +1,78 @@
+name: Universal KDP Book Builder
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      book_title:
+        description: 'Book Title'
+        required: true
+        default: 'The Ultimate DevOps Practitioner\'s Handbook'
+        type: string
+      book_repo_url:
+        description: 'Git Repository URL containing .md files (optional)'
+        required: false
+        default: ''
+        type: string
+      build_profile:
+        description: 'Build Profile (kdp or draft)'
+        required: false
+        default: 'kdp'
+        type: string
+
+jobs:
+  build-kdp:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Build Engine Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pandoc \
+            libreoffice \
+            ghostscript \
+            pdftk-java \
+            poppler-utils \
+            fontconfig \
+            git \
+            ttf-mscorefonts-installer
+          sudo fc-cache -f -v
+
+      - name: Install Python Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install --no-cache-dir python-docx Pillow uno
+
+      - name: Execute Universal KDP Build Script
+        env:
+          BOOK_TITLE: "${{ github.event.inputs.book_title || 'The Ultimate DevOps Practitioner\'s Handbook' }}"
+          BOOK_REPO_URL: "${{ github.event.inputs.book_repo_url || 'https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git' }}"
+          BUILD_PROFILE: "${{ github.event.inputs.build_profile || 'kdp' }}"
+          OUTPUT_FORMAT: "all"
+        run: |
+          chmod +x build_book.sh
+          ARGS=(--profile "${{ env.BUILD_PROFILE }}" --format all)
+          if [ -n "${{ env.BOOK_REPO_URL }}" ]; then
+            ARGS+=(--repo "${{ env.BOOK_REPO_URL }}")
+          fi
+          ./build_book.sh "${ARGS[@]}"
+
+      - name: Upload KDP Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kdp-publication-bundle
+          path: |
+            *.pdf
+            *.docx
+            *.epub
+            build_report.txt
