@@ -55,6 +55,7 @@ jobs:
           sudo apt-get install -y \
             pandoc \
             libreoffice \
+            python3-uno \
             ghostscript \
             pdftk-java \
             poppler-utils \
@@ -69,7 +70,6 @@ jobs:
           pip install --no-cache-dir \
             python-docx \
             Pillow \
-            uno \
             mkdocs \
             mkdocs-material \
             pymdown-extensions
@@ -209,10 +209,21 @@ jobs:
         run: |
           mkdocs build --site-dir _site
 
+      - name: Upload KDP Book Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kdp-publication-bundle
+          path: |
+            *.pdf
+            *.docx
+            *.epub
+            build_report.txt
+            TOC.md
+
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload KDP Artifacts & Website Bundle
+      - name: Upload GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '_site'
