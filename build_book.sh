@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # --- Universal Configuration & Environment Defaults ---
-BOOK_TITLE="${BOOK_TITLE:-The Ultimate DevOps Practitioner's Handbook}"
+BOOK_TITLE="${BOOK_TITLE:-The Ultimate Handbook of DevOps Practitioner}"
+BOOK_REPO_URL="${BOOK_REPO_URL:-}"
 SLUG_TITLE=$(echo "$BOOK_TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
 
 INTERMEDIATE_DOCX="temp_combined.docx"
@@ -11,6 +12,7 @@ FINAL_PDF="${FINAL_PDF:-${SLUG_TITLE}-KDP.pdf}"
 FINAL_EPUB="${FINAL_EPUB:-${SLUG_TITLE}.epub}"
 BUILD_DIR="build_out"
 COMBINED_MD="combined_manuscript.md"
+TOC_MD="TOC.md"
 REF_DOC="reference.docx"
 FRONT_COVER_PDF="${FRONT_COVER_PDF:-front_cover.pdf}"
 BACK_COVER_PDF="${BACK_COVER_PDF:-back_cover.pdf}"
@@ -23,8 +25,8 @@ LO_PID=""
 DRY_RUN=false
 SKIP_COVER=false
 DEBUG=false
-BUILD_PROFILE="${BUILD_PROFILE:-kdp}"    # Options: kdp (prepress 300dpi), draft (fast screen/ebook)
-OUTPUT_FORMAT="${OUTPUT_FORMAT:-all}"    # Options: pdf, epub, docx, all
+BUILD_PROFILE="${BUILD_PROFILE:-kdp}"
+OUTPUT_FORMAT="${OUTPUT_FORMAT:-all}"
 CUSTOM_OUTPUT=""
 WATERMARK_TEXT="${WATERMARK_TEXT:-}"
 FONT_FAMILY="${FONT_FAMILY:-Google Sans Flex}"
@@ -38,6 +40,8 @@ START_TIME=$(date +%s)
 # --- Argument Parsing ---
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --repo) BOOK_REPO_URL="$2"; shift 2 ;;
+        --title) BOOK_TITLE="$2"; shift 2 ;;
         --dry-run) DRY_RUN=true; shift ;;
         --skip-cover) SKIP_COVER=true; shift ;;
         --debug) DEBUG=true; shift ;;
@@ -47,22 +51,22 @@ while [[ $# -gt 0 ]]; do
         --font) FONT_FAMILY="$2"; shift 2 ;;
         --code-font) CODE_FONT_FAMILY="$2"; shift 2 ;;
         --watermark) WATERMARK_TEXT="$2"; shift 2 ;;
-        --title) BOOK_TITLE="$2"; shift 2 ;;
         --target) TARGET_FILES+=("$2"); shift 2 ;;
         --help)
             echo "Usage: $0 [OPTIONS]"
             echo "Options:"
-            echo "  --dry-run            Validate environment and dependencies without building"
-            echo "  --skip-cover         Skip merging covers or embedding EPUB cover images"
-            echo "  --debug              Preserve intermediate build artifacts for inspection"
-            echo "  --output <file>      Specify custom output filename base"
+            echo "  --repo <url>         Git repository URL containing manuscript markdown files"
             echo "  --title <title>      Set book title dynamically"
-            echo "  --profile <name>     Set build profile ('kdp' for prepress or 'draft')"
+            echo "  --dry-run            Validate environment without building"
+            echo "  --skip-cover         Skip merging covers or embedding EPUB cover images"
+            echo "  --debug              Preserve intermediate build artifacts"
+            echo "  --output <file>      Specify custom output filename base"
+            echo "  --profile <name>     Set build profile ('kdp' or 'draft')"
             echo "  --format <fmt>       Output format ('pdf', 'epub', 'docx', or 'all')"
             echo "  --font <name>        Override body font family"
-            echo "  --code-font <name>   Override monospace code font family"
-            echo "  --watermark <text>   Apply a diagonal text watermark across interior pages"
-            echo "  --target <file/dir>  Specify individual file or directory to process"
+            echo "  --code-font <name>   Override monospace font family"
+            echo "  --watermark <text>   Apply diagonal watermark across interior PDF"
+            echo "  --target <file/dir>  Specify individual file or directory"
             echo "  --help               Display this help message"
             exit 0
             ;;
@@ -90,9 +94,9 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-echo "=== [Step 0/8] Pre-flight Dependency & Environment Checks ==="
+echo "=== [Step 0/8] Pre-flight Dependency Checks ==="
 MISSING_DEPS=()
-for cmd in pandoc python3 soffice gs pdftk pdfinfo pdffonts pdfimages pdftoppm fc-list; do
+for cmd in pandoc python3 soffice gs pdftk pdfinfo pdffonts pdfimages pdftoppm fc-list git; do
     command -v "$cmd" &> /dev/null || MISSING_DEPS+=("$cmd")
 done
 python3 -c "import docx" &> /dev/null || MISSING_DEPS+=("python-docx")
@@ -102,6 +106,16 @@ python3 -c "import PIL" &> /dev/null || MISSING_DEPS+=("python3-pil (Pillow)")
 if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     echo "Error: Missing required dependencies: ${MISSING_DEPS[*]}"
     exit 1
+fi
+
+# --- Remote Repository Ingestion ---
+if [[ -n "$BOOK_REPO_URL" ]]; then
+    echo "=== Fetching Manuscript Files from Remote GitHub Repository ==="
+    echo "Repository URL: $BOOK_REPO_URL"
+    git clone --depth 1 "$BOOK_REPO_URL" temp_repo_workspace
+    shopt -s nullglob
+    cp -rn temp_repo_workspace/* ./ 2>/dev/null || true
+    rm -rf temp_repo_workspace
 fi
 
 if [[ "$DRY_RUN" == true ]]; then
@@ -124,9 +138,8 @@ else
     [[ -f "Introduction.md" ]] && FILES+=("Introduction.md")
     while IFS= read -r file; do FILES+=("$file"); done < <(find . -maxdepth 1 -name "Chapter*.md" | sort -V)
     while IFS= read -r file; do FILES+=("$file"); done < <(find . -maxdepth 1 -name "Appendix_*.md" | sort)
-    # Fallback to any markdown files if standard naming conventions aren't found
     if [ ${#FILES[@]} -eq 0 ]; then
-        while IFS= read -r file; do FILES+=("$file"); done < <(find . -maxdepth 1 -name "*.md" ! -name "README.md" | sort -V)
+        while IFS= read -r file; do FILES+=("$file"); done < <(find . -maxdepth 1 -name "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
     fi
 fi
 
@@ -158,11 +171,10 @@ for section in doc.sections:
 doc.save('reference.docx')
 EOF
 
-echo "=== [Step 3/8] Combining Manuscript Files (Title Page First) ==="
+echo "=== [Step 3/8] Combining Manuscript Files & Generating TOC.md for GitHub Pages ==="
 > "$COMBINED_MD"
 ODD_PAGE_BREAK=$'\n\n```{=openxml}\n<w:p><w:pPr><w:sectPr><w:type w:val="oddPage"/></w:sectPr></w:pPr></w:p>\n```\n\n'
 
-# Guarantee title.md is placed first if present
 if [[ -f "title.md" && ${#TARGET_FILES[@]} -eq 0 ]]; then
     cat "title.md" >> "$COMBINED_MD"
     echo -e "$ODD_PAGE_BREAK" >> "$COMBINED_MD"
@@ -181,17 +193,44 @@ for f in "${FILES[@]}"; do
     fi
 done
 
-# Strip static manual Markdown TOC sections to prevent duplication with Pandoc --toc
-python3 - "$COMBINED_MD" << 'EOF_TOC'
+python3 - "$COMBINED_MD" "$TOC_MD" << 'EOF_TOC'
 import sys, re
-with open(sys.argv[1], 'r', encoding='utf-8') as f:
+
+md_file = sys.argv[1]
+toc_out_file = sys.argv[2]
+
+with open(md_file, 'r', encoding='utf-8') as f:
     content = f.read()
+
 cleaned = re.sub(r'(?i)#+\s+Table of Contents.*?(?=\n#|\Z)', '', content, flags=re.DOTALL)
-with open(sys.argv[1], 'w', encoding='utf-8') as f:
+
+with open(md_file, 'w', encoding='utf-8') as f:
     f.write(cleaned)
+
+headers = re.findall(r'^(#{1,4})\s+(.+)$', cleaned, re.MULTILINE)
+
+toc_lines = [
+    f"# Table of Contents",
+    f"",
+    f"*Auto-generated table of contents for **{sys.argv[0]}** website & documentation.*\n",
+    ""
+]
+
+for hashes, title in headers:
+    level = len(hashes)
+    if level > 3:
+        continue
+    indent = "    " * (level - 1)
+    slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+    toc_lines.append(f"{indent}* [{title}](#{slug})")
+
+with open(toc_out_file, 'w', encoding='utf-8') as f:
+    f.write("\n".join(toc_lines) + "\n")
+
+print(f"Generated GitHub Pages TOC file: {toc_out_file}")
 EOF_TOC
 
-echo "=== [Step 4/8] Compiling Intermediate Formats & Enforcing Odd-Page TOC ==="
+echo "=== [Step 4/8] Compiling Intermediate Formats & Forcing Odd-Numbered TOC Page ==="
 PANDOC_ARGS=(
     "$COMBINED_MD"
     --from=markdown
@@ -212,22 +251,12 @@ if [[ "$OUTPUT_FORMAT" == "epub" || "$OUTPUT_FORMAT" == "all" ]]; then
     "${EPUB_CMD[@]}"
 fi
 
-# Post-processing Python script to guarantee:
-# 1. Title page is before auto TOC.
-# 2. Table of Contents starts on a new odd-numbered page.
-python3 - "$CODE_FONT_FAMILY" << 'EOF'
-import sys
+python3 - << 'EOF'
 import docx
-from docx.shared import Inches, Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-code_font = sys.argv[1]
-
 doc = docx.Document('temp_combined.docx')
-
-# Enforce oddPage section break immediately before the Table of Contents heading/field
 toc_found = False
 for p in doc.paragraphs:
     text = p.text.strip()
@@ -242,7 +271,6 @@ for p in doc.paragraphs:
         break
 
 if not toc_found and len(doc.paragraphs) > 1:
-    # Fallback: insert section break on the second major block if explicit TOC title text isn't a plain paragraph
     for p in doc.paragraphs[1:10]:
         if p._p.xpath('.//w:fldSimple[contains(@w:instr, "TOC")]') or p._p.xpath('.//w:fldChar'):
             pPr = p._p.get_or_add_pPr()
@@ -253,14 +281,8 @@ if not toc_found and len(doc.paragraphs) > 1:
             pPr.append(sectPr)
             break
 
-settings_elm = doc.settings._element
-if settings_elm.find(qn('w:autoHyphenation')) is None:
-    auto_hyphen = OxmlElement('w:autoHyphenation')
-    auto_hyphen.set(qn('w:val'), 'true')
-    settings_elm.append(auto_hyphen)
-
 doc.save('temp_combined.docx')
-print("Odd-page TOC positioning and hyphenation enforced successfully.")
+print("Odd-page TOC constraint successfully enforced.")
 EOF
 
 echo "=== [Step 5/8] Updating Native TOC Fields & Rendering PDF via LibreOffice ==="
@@ -369,14 +391,11 @@ Duration: ${ELAPSED} seconds
 Build Profile: $BUILD_PROFILE
 Output Format: $OUTPUT_FORMAT
 
-Source Files (${#FILES[@]}):
-$(printf '  - %s\n' "${FILES[@]}")
-
 Generated Artifacts:
   - DOCX: $FINAL_DOCX
+  - TOC:  $TOC_MD
 $([[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]] && echo "  - PDF:  $FINAL_PDF")
 $([[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "epub" ]] && echo "  - EPUB: $FINAL_EPUB")
 REPORT
 
 echo "=== [Step 8/8] Build Complete ==="
-echo "Artifacts generated successfully."
