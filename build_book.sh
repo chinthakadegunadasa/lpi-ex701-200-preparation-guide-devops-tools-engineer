@@ -10,7 +10,7 @@ set -euo pipefail
 # --- Pre-flight Checks ---
 echo "=== [Step 0/8] Pre-flight Dependency Checks ==="
 MISSING_DEPS=()
-for cmd in pandoc libreoffice ghostscript pdftk; do
+for cmd in pandoc libreoffice ghostscript pdftk xelatex; do
     if ! command -v "$cmd" &> /dev/null; then
         MISSING_DEPS+=("$cmd")
     fi
@@ -173,14 +173,14 @@ if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
         framerule=0.5pt,
         rulecolor=\color{black!30},
         xleftmargin=0pt,
-        samepage,
-        raggedright % Ensures left justification
+        samepage
       }
 
       % --- 3 & 4. Image Center Justification, Italic Taglines & Margin Scaling ---
       \usepackage{graphicx}
       \usepackage{caption}
       \captionsetup[figure]{font=it,justification=centering,singlelinecheck=false}
+      \let\Oldincludegraphics\Oldincludegraphics
       \let\Oldincludegraphics\includegraphics
       \renewcommand{\includegraphics}[2][]{%
         \begin{center}
