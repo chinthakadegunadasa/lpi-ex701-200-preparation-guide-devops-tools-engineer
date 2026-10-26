@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # ==============================================================================
-# Universal KDP Book Builder Script (Prepress & Pre-flight Automated Workflow)
+# Universal KDP Book Builder Script (Bash 3.2+ Compatible Prepress Pipeline)
+# Target: The Ultimate Handbook of DevOps Practitioner
 # ==============================================================================
 
 # --- Universal Configuration & Environment Defaults ---
@@ -24,6 +25,7 @@ COVER_IMG="${COVER_IMG:-front_cover_flat.png}"
 EPUB_CSS="epub.css"
 BUILD_REPORT="build_report.txt"
 TEMP_PY="update_toc_bridge.py"
+LATEX_HEADER_FILE="prepress_header.tex"
 
 LO_PID=""
 DRY_RUN=false
@@ -55,7 +57,7 @@ while [[ $# -gt 0 ]]; do
         --font) FONT_FAMILY="$2"; shift 2 ;;
         --code-font) CODE_FONT_FAMILY="$2"; shift 2 ;;
         --watermark) WATERMARK_TEXT="$2"; shift 2 ;;
-        --target) TARGET_FILES+=("$2"); shift 2 ;;
+        --target) TARGET_FILES=("${TARGET_FILES[@]}" "$2"); shift 2 ;;
         --help)
             echo "Usage: $0 [OPTIONS]"
             echo "Options:"
@@ -92,7 +94,7 @@ cleanup() {
         wait "$LO_PID" 2>/dev/null || true
     fi
     if [[ "$DEBUG" != true ]]; then
-        rm -f "$TEMP_PY" "$COMBINED_MD"
+        rm -f "$TEMP_PY" "$COMBINED_MD" "$LATEX_HEADER_FILE"
     fi
     exit "$exit_code"
 }
@@ -101,16 +103,17 @@ trap cleanup EXIT INT TERM
 echo "=== [Step 0/8] Pre-flight Dependency Checks ==="
 MISSING_DEPS=()
 for cmd in pandoc xelatex python3 soffice gs pdftk pdfinfo pdffonts pdfimages pdftoppm fc-list git; do
-    command -v "$cmd" &> /dev/null || MISSING_DEPS+=("$cmd")
+    command -v "$cmd" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "$cmd")
 done
-python3 -c "import docx" &> /dev/null || MISSING_DEPS+=("python-docx")
-python3 -c "import uno" &> /dev/null || MISSING_DEPS+=("python3-uno")
-python3 -c "import PIL" &> /dev/null || MISSING_DEPS+=("python3-pil (Pillow)")
+python3 -c "import docx" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "python-docx")
+python3 -c "import uno" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "python3-uno")
+python3 -c "import PIL" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "python3-pil")
 
 if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     echo "Error: Missing required dependencies: ${MISSING_DEPS[*]}"
     exit 1
 fi
+echo "All system dependencies verified."
 
 # --- Remote Repository Ingestion ---
 if [[ -n "$BOOK_REPO_URL" ]]; then
@@ -132,18 +135,18 @@ FILES=()
 if [ ${#TARGET_FILES[@]} -gt 0 ]; then
     for target in "${TARGET_FILES[@]}"; do
         if [[ -d "$target" ]]; then
-            while IFS= read -r file; do FILES+=("$file"); done < <(find "$target" -maxdepth 1 -name "*.md" | sort -V)
+            while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find "$target" -maxdepth 1 -name "*.md" | sort -V)
         elif [[ -f "$target" ]]; then
-            FILES+=("$target")
+            FILES=("${FILES[@]}" "$target")
         fi
     done
 else
-    [[ -f "title.md" ]] && FILES+=("title.md")
-    [[ -f "Introduction.md" ]] && FILES+=("Introduction.md")
-    while IFS= read -r file; do FILES+=("$file"); done < <(find . -maxdepth 1 -name "Chapter*.md" | sort -V)
-    while IFS= read -r file; do FILES+=("$file"); done < <(find . -maxdepth 1 -name "Appendix_*.md" | sort)
+    [[ -f "title.md" ]] && FILES=("${FILES[@]}" "title.md")
+    [[ -f "Introduction.md" ]] && FILES=("${FILES[@]}" "Introduction.md")
+    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Chapter*.md" | sort -V)
+    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Appendix_*.md" | sort)
     if [ ${#FILES[@]} -eq 0 ]; then
-        while IFS= read -r file; do FILES+=("$file"); done < <(find . -maxdepth 1 -name "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
+        while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
     fi
 fi
 
@@ -239,6 +242,72 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via XeLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
+cat << EOF_LATEX > "$LATEX_HEADER_FILE"
+\usepackage{fontspec}
+\setmainfont{${FONT_FAMILY}}[AutoFakeBold=1.5,AutoFakeItalic=0.25]
+\setmonofont{${CODE_FONT_FAMILY}}[AutoFakeBold=1.5]
+
+\usepackage{microtype}
+\emergencystretch=3em
+\hyphenpenalty=500
+\exhyphenpenalty=500
+
+\usepackage{tocloft}
+\renewcommand{\cftdot}{.}
+\renewcommand{\cftdotsep}{1.5}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14.5pt}
+\fancyhead[LE,RO]{\nouppercase{\leftmark}}
+\fancyhead[RE,LO]{\small\itshape ${BOOK_TITLE}}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{0.1pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+\makeatletter
+\let\oldfrontmatter\frontmatter
+\renewcommand{\frontmatter}{%
+  \oldfrontmatter
+  \pagenumbering{roman}
+  \pagestyle{plain}
+}
+\let\oldmainmatter\mainmatter
+\renewcommand{\mainmatter}{%
+  \oldmainmatter
+  \pagenumbering{arabic}
+  \pagestyle{fancy}
+}
+\makeatother
+
+\usepackage{fvextra}
+\usepackage{xcolor}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  breaklines,
+  commandchars=\\\{\},
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{black!30},
+  xleftmargin=0pt,
+  samepage
+}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup[figure]{font=it,justification=centering,singlelinecheck=false}
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \begin{center}
+    \Oldincludegraphics[width=1.0\textwidth,keepaspectratio]{#2}%
+  \end{center}
+}
+EOF_LATEX
+
 if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
     pandoc "$COMBINED_MD" \
       --from=markdown+tex_math_single_backslash \
@@ -248,77 +317,10 @@ if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
       --top-level-division=chapter \
       -V documentclass=book \
       -V classoption=openright,twoside,11pt \
-      -V geometry="paperwidth=${TRIM_WIDTH}in,paperheight=${TRIM_HEIGHT}in,margin=1in,inner=1.25in,outer=1in" \
-      -V mainfont="$FONT_FAMILY" \
-      -V monofont="$CODE_FONT_FAMILY" \
+      -V geometry="paperwidth=${TRIM_WIDTH}in,paperheight=${TRIM_HEIGHT}in,margin=1in,inner=1.25in,outer=1in,headsep=0.2in" \
       -V linestretch=1.15 \
       -V title="$BOOK_TITLE" \
-      -H <(cat <<'EOF_LATEX'
-      % --- Paragraph Justification, Microtype & Word Spacing ---
-      \usepackage{microtype}
-      \spaceskip=0.333em plus 0.1em minus 0.05em
-      \hyphenpenalty=500
-      \exhyphenpenalty=500
-
-      % --- Dotted Leaders & Right-Aligned Page Numbers in TOC ---
-      \usepackage{tocloft}
-      \renewcommand{\cftdot}{.}
-      \renewcommand{\cftdotsep}{1.5}
-      \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
-      \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
-      \renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
-
-      % --- Headers, Footers, Roman Numerals & 0.1pt Rules ---
-      \usepackage{fancyhdr}
-      \usepackage{titlesec}
-      \pagestyle{fancy}
-      \fancyhf{}
-      \fancyhead[LE,RO]{\nouppercase{\leftmark}}
-      \fancyhead[RE,LO]{\small\itshape The Ultimate Handbook of DevOps Practitioner}
-      \fancyfoot[LE,RO]{\thepage}
-      \renewcommand{\headrulewidth}{0.1pt}
-      \renewcommand{\footrulewidth}{0.0pt}
-
-      \makeatletter
-      \let\oldfrontmatter\frontmatter
-      \renewcommand{\frontmatter}{%
-        \oldfrontmatter
-        \pagenumbering{roman}
-        \pagestyle{plain}
-      }
-      \let\oldmainmatter\mainmatter
-      \renewcommand{\mainmatter}{%
-        \oldmainmatter
-        \pagenumbering{arabic}
-        \pagestyle{fancy}
-      }
-      \makeatother
-
-      % --- Source Code Block Left-Justification ---
-      \usepackage{fvextra}
-      \usepackage{xcolor}
-      \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
-        breaklines,
-        commandchars=\\\{\},
-        frame=single,
-        framerule=0.5pt,
-        rulecolor=\color{black!30},
-        xleftmargin=0pt,
-        samepage
-      }
-
-      % --- Image Stretch within Print Margins & Centered Italic Captions ---
-      \usepackage{graphicx}
-      \usepackage{caption}
-      \captionsetup[figure]{font=it,justification=centering,singlelinecheck=false}
-      \let\Oldincludegraphics\includegraphics
-      \renewcommand{\includegraphics}[2][]{%
-        \begin{center}
-          \Oldincludegraphics[width=1.0\textwidth,keepaspectratio]{#2}%
-        \end{center}
-      }
-EOF_LATEX
-      ) \
+      -H "$LATEX_HEADER_FILE" \
       -o "$UNOPTIMIZED_PDF"
 fi
 
@@ -333,13 +335,13 @@ PANDOC_ARGS=(
     --toc-depth=3
     --metadata=title="$BOOK_TITLE"
 )
-[[ -f "references.bib" ]] && PANDOC_ARGS+=(--citeproc --bibliography=references.bib)
+[[ -f "references.bib" ]] && PANDOC_ARGS=("${PANDOC_ARGS[@]}" "--citeproc" "--bibliography=references.bib")
 pandoc "${PANDOC_ARGS[@]}"
 
 if [[ "$OUTPUT_FORMAT" == "epub" || "$OUTPUT_FORMAT" == "all" ]]; then
     EPUB_CMD=(pandoc "$COMBINED_MD" --from=markdown --to=epub3 --output="$FINAL_EPUB" --toc --toc-depth=3 --metadata=title="$BOOK_TITLE")
-    [[ "$SKIP_COVER" == false && -f "$COVER_IMG" ]] && EPUB_CMD+=(--epub-cover-image="$COVER_IMG")
-    [[ -f "$EPUB_CSS" ]] && EPUB_CMD+=(--css="$EPUB_CSS")
+    [[ "$SKIP_COVER" == false && -f "$COVER_IMG" ]] && EPUB_CMD=("${EPUB_CMD[@]}" "--epub-cover-image=$COVER_IMG")
+    [[ -f "$EPUB_CSS" ]] && EPUB_CMD=("${EPUB_CMD[@]}" "--css=$EPUB_CSS")
     "${EPUB_CMD[@]}"
 fi
 
