@@ -264,7 +264,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with book title removed from headers and page numbers center-aligned
+# Generate LaTeX header with center-aligned headers (titlesec) and strictly margin-wrapped code blocks (fvextra)
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -296,6 +296,18 @@ latex_template = r"""
 
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+
+% Center-align all heading levels
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\centering}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\centering}
+  {\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\centering}
+  {\thesubsection}{1em}{}
+
 \pagestyle{fancy}
 \fancyhf{}
 \setlength{\headheight}{14.5pt}
@@ -321,7 +333,18 @@ latex_template = r"""
 
 \usepackage{fvextra}
 \usepackage{xcolor}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\},frame=single,framerule=0.5pt,rulecolor=\color{black!30},xleftmargin=0pt,samepage}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  breaklines=true,
+  breakanywhere=true,
+  commandchars=\\\{\},
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{black!30},
+  xleftmargin=0pt,
+  xrightmargin=0pt,
+  linewidth=\textwidth,
+  samepage
+}
 
 \usepackage{graphicx}
 \usepackage{caption}

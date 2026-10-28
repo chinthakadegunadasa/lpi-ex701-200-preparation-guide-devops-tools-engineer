@@ -1,7 +1,7 @@
 === KDP Build Report ===
-Date: Wed Oct 28 12:10:52 PM +0530 2026
+Date: Wed Oct 28 12:34:41 PM +0530 2026
 Book Title: The Ultimate Handbook of DevOps Practitioner
-Duration: 135 seconds
+Duration: 136 seconds
 Build Profile: kdp
 Output Format: all
 
