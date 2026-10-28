@@ -182,7 +182,7 @@ echo "=== [Step 3/8] Combining Manuscript & Ensuring Dedicated Title Page Before
 > "$COMBINED_MD"
 ODD_PAGE_BREAK=$'\n\n```{=openxml}\n<w:p><w:pPr><w:sectPr><w:type w:val="oddPage"/></w:sectPr></w:pPr></w:p>\n```\n\n'
 
-# Feature: Explicitly place title.md on a dedicated page before TOC / chapters
+# Place title.md on a dedicated page before the Table of Contents
 if [[ -f "title.md" ]]; then
     cat "title.md" >> "$COMBINED_MD"
     echo -e "$ODD_PAGE_BREAK" >> "$COMBINED_MD"
@@ -259,7 +259,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via XeLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with safe font fallbacks, full justification, hyphenation, and margin image scaling
+# Generate robust LaTeX header with safe font mapping for xdvipdfmx backend
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" "$BOOK_TITLE" << 'EOF_HEADER'
 import sys
 
@@ -271,21 +271,14 @@ book_title = sys.argv[4]
 latex_template = r"""
 \usepackage{fontspec}
 \setmainfont{__FONT_FAMILY__}[
-  AutoFakeBold=1.5,
-  AutoFakeItalic=0.25,
-  Fallbacks = {
-    { Font = "Liberation Sans" },
-    { Font = "DejaVu Sans" },
-    { Font = "FreeSans" }
-  }
+  BoldFont = *,
+  BoldFeatures = {FakeBold = 1.5},
+  ItalicFont = *,
+  ItalicFeatures = {FakeSlant = 0.25}
 ]
 \setmonofont{__CODE_FONT_FAMILY__}[
-  AutoFakeBold=1.5,
-  Fallbacks = {
-    { Font = "Liberation Mono" },
-    { Font = "DejaVu Sans Mono" },
-    { Font = "FreeMono" }
-  }
+  BoldFont = *,
+  BoldFeatures = {FakeBold = 1.5}
 ]
 
 \usepackage{microtype}
