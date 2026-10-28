@@ -320,7 +320,7 @@ code_font_family = sys.argv[3]
 latex_template = r"""
 \usepackage{fontspec}
 \setmainfont{__BODY_FONT__}
-\setmonofont{__CODE_FONT__}
+\setmonofont{__CODE_FONT__}[Scale=0.85]
 
 \usepackage{amssymb}
 \usepackage{newunicodechar}
@@ -367,26 +367,38 @@ latex_template = r"""
 \renewcommand{\headrulewidth}{0.1pt}
 \renewcommand{\footrulewidth}{0.1pt}
 
+\makeatletter
+\let\oldfrontmatter\frontmatter
+\renewcommand{\frontmatter}{%
+  \oldfrontmatter
+  \pagenumbering{roman}
+  \pagestyle{plain}
+}
+\let\oldmainmatter\mainmatter
+\renewcommand{\mainmatter}{%
+  \oldmainmatter
+  \pagenumbering{arabic}
+  \pagestyle{fancy}
+}
+\makeatother
+
 \usepackage{fvextra}
 \usepackage{xcolor}
 
 \fvset{
   breaklines=true,
   breakanywhere=true,
-  fontsize=\small,
-  frame=single,
-  framerule=0.5pt,
-  rulecolor=\color{black!30},
-  xleftmargin=0pt,
-  xrightmargin=0pt
+  fontsize=\small
 }
 
-\RenewDocumentEnvironment{Highlighting}{O{}}{%
-  \fvset{breaklines=true, breakanywhere=true, fontsize=\small, frame=single, framerule=0.5pt, rulecolor=\color{black!30}}%
-  \Verbatim[commandchars=\\\{\},#1]%
+\makeatletter
+\renewenvironment{Highlighting}[1][]{%
+  \gdef\FancyVerbFormatLine##1{##1}%
+  \Verbatim[breaklines=true,breakanywhere=true,fontsize=\small,frame=single,framerule=0.5pt,rulecolor=\color{black!30},#1]%
 }{%
   \endVerbatim
 }
+\makeatother
 
 \usepackage{graphicx}
 \usepackage{caption}
