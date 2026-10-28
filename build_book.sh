@@ -320,7 +320,7 @@ code_font_family = sys.argv[3]
 latex_template = r"""
 \usepackage{fontspec}
 \setmainfont{__BODY_FONT__}
-\setmonofont{__CODE_FONT__}[Scale=0.85]
+\setmonofont[Scale=0.85]{__CODE_FONT__}
 
 \usepackage{amssymb}
 \usepackage{newunicodechar}
@@ -385,20 +385,26 @@ latex_template = r"""
 \usepackage{fvextra}
 \usepackage{xcolor}
 
-\fvset{
-  breaklines=true,
-  breakanywhere=true,
-  fontsize=\small
+\fvset{breaklines=true, breakanywhere=true}
+
+% Fix for inline code in tables: allow soft hyphens and breaking across table cell boundaries
+\usepackage{seqsplit}
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{%
+  \oldtexttt{\seqsplit{#1}}%
 }
 
-\makeatletter
-\renewenvironment{Highlighting}[1][]{%
-  \gdef\FancyVerbFormatLine##1{##1}%
-  \Verbatim[breaklines=true,breakanywhere=true,fontsize=\small,frame=single,framerule=0.5pt,rulecolor=\color{black!30},#1]%
-}{%
-  \endVerbatim
+% Robust Highlighting environment override: preserving native Pandoc syntax tokens without raw TeX leak
+\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{
+  breaklines=true,
+  breakanywhere=true,
+  fontsize=\small,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{black!30},
+  xleftmargin=0pt,
+  xrightmargin=0pt
 }
-\makeatother
 
 \usepackage{graphicx}
 \usepackage{caption}
