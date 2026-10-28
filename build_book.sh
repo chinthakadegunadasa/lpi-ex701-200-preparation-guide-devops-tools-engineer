@@ -3,7 +3,7 @@ set -euo pipefail
 
 # ==============================================================================
 # Universal KDP Book Builder & GitHub Pages Documentation Script
-# Repository: lpi-ex701-200-preparation-guide-devops-tools-engineer[cite: 3]
+# Repository: https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git
 # ==============================================================================
 
 # --- Universal Configuration & Environment Defaults ---
@@ -178,18 +178,19 @@ for section in doc.sections:
 doc.save('reference.docx')
 EOF
 
-echo "=== [Step 3/8] Generating GitHub Pages Compatible TOC.md & Assembling Manuscript ==="
+echo "=== [Step 3/8] Combining Manuscript & Ensuring Dedicated Title Page Before TOC ==="
 > "$COMBINED_MD"
 ODD_PAGE_BREAK=$'\n\n```{=openxml}\n<w:p><w:pPr><w:sectPr><w:type w:val="oddPage"/></w:sectPr></w:pPr></w:p>\n```\n\n'
 
-if [[ -f "title.md" && ${#TARGET_FILES[@]} -eq 0 ]]; then
+# Feature: Explicitly place title.md on a dedicated page before TOC / chapters
+if [[ -f "title.md" ]]; then
     cat "title.md" >> "$COMBINED_MD"
     echo -e "$ODD_PAGE_BREAK" >> "$COMBINED_MD"
 fi
 
 FIRST=true
 for f in "${FILES[@]}"; do
-    [[ "$f" == "title.md" && ${#TARGET_FILES[@]} -eq 0 ]] && continue
+    [[ "$f" == "title.md" ]] && continue
     if [[ "$FIRST" == true && ! -f "title.md" ]]; then
         cat "$f" >> "$COMBINED_MD"
         FIRST=false
@@ -200,7 +201,7 @@ for f in "${FILES[@]}"; do
     fi
 done
 
-# Python script to generate multi-file relative TOC.md for GitHub Pages
+# Python script to generate GitHub Pages compatible TOC.md
 python3 - "$TOC_MD" "$BOOK_TITLE" "${FILES[@]}" << 'EOF_TOC'
 import sys, os, re
 
@@ -211,16 +212,15 @@ file_list = sys.argv[3:]
 toc_lines = [
     f"# Table of Contents",
     f"",
-    f"Welcome to the official documentation and study guide for **{book_title}**[cite: 3].",
+    f"Official documentation and study guide for **{book_title}**.",
     f"",
     f"---",
     ""
 ]
 
 for fpath in file_list:
-    # Normalize path
     fpath = fpath.lstrip('./')
-    if fpath in ['title.md', 'TOC.md', 'README.md']:
+    if fpath in ['TOC.md', 'README.md']:
         continue
     if not os.path.isfile(fpath):
         continue
@@ -231,7 +231,6 @@ for fpath in file_list:
     except Exception:
         continue
 
-    # Extract primary heading or derive from filename
     h1_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
     if h1_match:
         chapter_title = h1_match.group(1).strip()
@@ -240,7 +239,6 @@ for fpath in file_list:
 
     toc_lines.append(f"## [{chapter_title}]({fpath})")
 
-    # Extract subheaders (h2, h3) with GitHub Pages relative links
     subheaders = re.findall(r'^(#{2,3})\s+(.+)$', content, re.MULTILINE)
     for hashes, sub_title in subheaders:
         level = len(hashes)
@@ -261,6 +259,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via XeLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
+# Generate LaTeX header with safe font fallbacks, full justification, hyphenation, and margin image scaling
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" "$BOOK_TITLE" << 'EOF_HEADER'
 import sys
 
@@ -271,13 +270,30 @@ book_title = sys.argv[4]
 
 latex_template = r"""
 \usepackage{fontspec}
-\setmainfont{__FONT_FAMILY__}[AutoFakeBold=1.5,AutoFakeItalic=0.25]
-\setmonofont{__CODE_FONT_FAMILY__}[AutoFakeBold=1.5]
+\setmainfont{__FONT_FAMILY__}[
+  AutoFakeBold=1.5,
+  AutoFakeItalic=0.25,
+  Fallbacks = {
+    { Font = "Liberation Sans" },
+    { Font = "DejaVu Sans" },
+    { Font = "FreeSans" }
+  }
+]
+\setmonofont{__CODE_FONT_FAMILY__}[
+  AutoFakeBold=1.5,
+  Fallbacks = {
+    { Font = "Liberation Mono" },
+    { Font = "DejaVu Sans Mono" },
+    { Font = "FreeMono" }
+  }
+]
 
 \usepackage{microtype}
 \emergencystretch=3em
 \hyphenpenalty=500
 \exhyphenpenalty=500
+\tolerance=200
+\sloppy
 
 \hbadness=10000
 \vbadness=10000
