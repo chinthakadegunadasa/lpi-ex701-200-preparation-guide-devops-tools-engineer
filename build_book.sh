@@ -264,7 +264,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with center-aligned headers (titlesec) and strictly margin-wrapped code blocks (fvextra)
+# Generate LaTeX header with center-aligned headings and valid fvextra options
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -342,7 +342,6 @@ latex_template = r"""
   rulecolor=\color{black!30},
   xleftmargin=0pt,
   xrightmargin=0pt,
-  linewidth=\textwidth,
   samepage
 }
 
