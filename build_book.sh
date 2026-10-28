@@ -264,7 +264,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with center-aligned headings and valid fvextra options
+# Generate LaTeX header with center-aligned headings and left-aligned, margin-wrapped code blocks
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -336,6 +336,7 @@ latex_template = r"""
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
   breaklines=true,
   breakanywhere=true,
+  fontsize=\small,
   commandchars=\\\{\},
   frame=single,
   framerule=0.5pt,
