@@ -365,37 +365,27 @@ latex_template = r"""
 \fancyhead[C]{\nouppercase{\leftmark}}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.1pt}
-\renewcommand{\footrulewidth}{0.0pt}
-
-\makeatletter
-\let\oldfrontmatter\frontmatter
-\renewcommand{\frontmatter}{%
-  \oldfrontmatter
-  \pagenumbering{roman}
-  \pagestyle{plain}
-}
-\let\oldmainmatter\mainmatter
-\renewcommand{\mainmatter}{%
-  \oldmainmatter
-  \pagenumbering{arabic}
-  \pagestyle{fancy}
-}
-\makeatother
+\renewcommand{\footrulewidth}{0.1pt}
 
 \usepackage{fvextra}
 \usepackage{xcolor}
 
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+\fvset{
   breaklines=true,
   breakanywhere=true,
   fontsize=\small,
-  commandchars=\\\{\},
   frame=single,
   framerule=0.5pt,
   rulecolor=\color{black!30},
   xleftmargin=0pt,
-  xrightmargin=0pt,
-  samepage
+  xrightmargin=0pt
+}
+
+\RenewDocumentEnvironment{Highlighting}{O{}}{%
+  \fvset{breaklines=true, breakanywhere=true, fontsize=\small, frame=single, framerule=0.5pt, rulecolor=\color{black!30}}%
+  \Verbatim[commandchars=\\\{\},#1]%
+}{%
+  \endVerbatim
 }
 
 \usepackage{graphicx}
