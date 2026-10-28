@@ -3,6 +3,7 @@ set -euo pipefail
 
 # ==============================================================================
 # Universal KDP Book Builder & GitHub Pages Documentation Script
+# Engine: LuaLaTeX (Native Variable Font Support)
 # Repository: https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git
 # ==============================================================================
 
@@ -102,7 +103,7 @@ trap cleanup EXIT INT TERM
 
 echo "=== [Step 0/8] Pre-flight Dependency Checks ==="
 MISSING_DEPS=()
-for cmd in pandoc xelatex python3 soffice gs pdftk pdfinfo pdffonts pdfimages pdftoppm fc-list git; do
+for cmd in pandoc lualatex python3 soffice gs pdftk pdfinfo pdffonts pdfimages pdftoppm fc-list git; do
     command -v "$cmd" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "$cmd")
 done
 python3 -c "import docx" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "python-docx")
@@ -255,45 +256,23 @@ with open(toc_out_file, 'w', encoding='utf-8') as f:
 print(f"Generated GitHub Pages compatible TOC.md: {toc_out_file}")
 EOF_TOC
 
-echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via XeLaTeX ==="
+echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with intelligent font checking and safe fallback to prevent xdvipdfmx crashes
+# Generate LaTeX header loading Google Sans Flex and Google Sans Code natively via LuaLaTeX
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" "$BOOK_TITLE" << 'EOF_HEADER'
-import sys, subprocess
+import sys
 
 header_file = sys.argv[1]
 font_family = sys.argv[2]
 code_font_family = sys.argv[3]
 book_title = sys.argv[4]
 
-def check_font(name):
-    try:
-        out = subprocess.check_output(['fc-list', ':family'], universal_newlines=True)
-        return name.lower() in out.lower()
-    except Exception:
-        return False
-
-# Fallback to DejaVu Sans / Mono if custom Google Sans fonts are missing from system cache
-body_font = font_family if check_font(font_family) else "DejaVu Sans"
-code_font = code_font_family if check_font(code_font_family) else "DejaVu Sans Mono"
-
-print(f"Using Body Font: {body_font}")
-print(f"Using Code Font: {code_font}")
-
 latex_template = r"""
 \usepackage{fontspec}
-\setmainfont{__BODY_FONT__}[
-  BoldFont = *,
-  BoldFeatures = {FakeBold = 1.5},
-  ItalicFont = *,
-  ItalicFeatures = {FakeSlant = 0.25}
-]
-\setmonofont{__CODE_FONT__}[
-  BoldFont = *,
-  BoldFeatures = {FakeBold = 1.5}
-]
+\setmainfont{__BODY_FONT__}
+\setmonofont{__CODE_FONT__}
 
 \usepackage{microtype}
 \emergencystretch=3em
@@ -353,8 +332,8 @@ latex_template = r"""
 }
 """
 
-latex_content = latex_template.replace("__BODY_FONT__", body_font) \
-                               .replace("__CODE_FONT__", code_font) \
+latex_content = latex_template.replace("__BODY_FONT__", font_family) \
+                               .replace("__CODE_FONT__", code_font_family) \
                                .replace("__BOOK_TITLE__", book_title)
 
 with open(header_file, 'w', encoding='utf-8') as f:
@@ -364,7 +343,7 @@ EOF_HEADER
 if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
     pandoc "$COMBINED_MD" \
       --from=markdown+tex_math_single_backslash \
-      --pdf-engine=xelatex \
+      --pdf-engine=lualatex \
       --toc \
       --toc-depth=3 \
       --top-level-division=chapter \
