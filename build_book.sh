@@ -387,23 +387,22 @@ latex_template = r"""
 
 \fvset{breaklines=true, breakanywhere=true}
 
-% Fix for inline code in tables: allow soft hyphens and breaking across table cell boundaries
-\usepackage{seqsplit}
+\makeatletter
+\let\oldHighlighting\Highlighting
+\let\oldendHighlighting\endHighlighting
+\renewenvironment{Highlighting}{%
+  \oldHighlighting
+  \fvset{breaklines=true, breakanywhere=true, fontsize=\small, frame=single, framerule=0.5pt, rulecolor=\color{black!30}}%
+}{%
+  \oldendHighlighting
+}
+\makeatother
+
+% Break long inline code paths cleanly without throwing errors on TeX escape commands
+\OldTexttt
 \let\oldtexttt\texttt
 \renewcommand{\texttt}[1]{%
-  \oldtexttt{\seqsplit{#1}}%
-}
-
-% Robust Highlighting environment override: preserving native Pandoc syntax tokens without raw TeX leak
-\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{
-  breaklines=true,
-  breakanywhere=true,
-  fontsize=\small,
-  frame=single,
-  framerule=0.5pt,
-  rulecolor=\color{black!30},
-  xleftmargin=0pt,
-  xrightmargin=0pt
+  \oldtexttt{\hyphenchar\font=`\/\discretionary{/}{/}{}\ZeroWidthSpace #1}%
 }
 
 \usepackage{graphicx}
