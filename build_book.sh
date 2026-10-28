@@ -115,7 +115,6 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     exit 1
 fi
 
-# Refresh LuaLaTeX font database to prevent missing font metric errors
 echo "Refreshing LuaLaTeX font cache..."
 luaotfload-tool -u -f &>/dev/null || true
 echo "All system dependencies verified."
@@ -160,19 +159,25 @@ if [ ${#FILES[@]} -eq 0 ]; then
     exit 1
 fi
 
-echo "=== [Step 2/8] Rebuilding reference.docx (Trim: ${TRIM_WIDTH}\" x ${TRIM_HEIGHT}\") ==="
+echo "=== [Step 2/8] Rebuilding reference.docx (Trim: ${TRIM_WIDTH}\" x ${TRIM_HEIGHT}\", Fonts: ${FONT_FAMILY} / ${CODE_FONT_FAMILY}) ==="
 rm -rf "$REF_DOC"
 pandoc --print-default-data-file reference.docx > "$REF_DOC"
 
-python3 - "$TRIM_WIDTH" "$TRIM_HEIGHT" << 'EOF'
+python3 - "$TRIM_WIDTH" "$TRIM_HEIGHT" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF'
 import sys
 import docx
 from docx.shared import Inches
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 
 width = float(sys.argv[1])
 height = float(sys.argv[2])
+font_family = sys.argv[3]
+code_font_family = sys.argv[4]
 
 doc = docx.Document('reference.docx')
+
+# Adjust section margins and trim sizes
 for section in doc.sections:
     section.page_width = Inches(width)
     section.page_height = Inches(height)
@@ -180,7 +185,18 @@ for section in doc.sections:
     section.bottom_margin = Inches(0.75)
     section.left_margin = Inches(0.875)
     section.right_margin = Inches(0.875)
+
+# Set base fonts across document styles
+styles = doc.styles
+for style in styles:
+    if hasattr(style, 'font'):
+        if 'Code' in style.name or 'Source' in style.name or 'Verbatim' in style.name or 'Consolas' in style.font.name:
+            style.font.name = code_font_family
+        else:
+            style.font.name = font_family
+
 doc.save('reference.docx')
+print("Configured reference.docx with Google Sans Flex and Google Sans Code.")
 EOF
 
 echo "=== [Step 3/8] Combining Manuscript & Ensuring Dedicated Title Page Before TOC ==="
@@ -264,7 +280,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with center-aligned headings and left-aligned, margin-wrapped code blocks
+# Generate LaTeX header with drop caps, center headings, and wrapped code blocks
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -276,6 +292,11 @@ latex_template = r"""
 \usepackage{fontspec}
 \setmainfont{__BODY_FONT__}
 \setmonofont{__CODE_FONT__}
+
+\usepackage{lettrine}
+\renewcommand{\LettrineFontHook}{\bfseries\color{black}}
+\setlength{\DefaultFindent}{2pt}
+\setlength{\DefaultNindent}{0em}
 
 \usepackage{microtype}
 \emergencystretch=3em
@@ -401,12 +422,19 @@ if [[ "$OUTPUT_FORMAT" == "epub" || "$OUTPUT_FORMAT" == "all" ]]; then
     "${EPUB_CMD[@]}"
 fi
 
-python3 - << 'EOF'
+# Post-processing DOCX to enforce odd-page TOC breaks, font styling, drop caps, and native TOC field integration
+python3 - "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF'
+import sys
 import docx
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
+font_family = sys.argv[1]
+code_font_family = sys.argv[2]
+
 doc = docx.Document('temp_combined.docx')
+
+# 1. Enforce Odd-Page TOC Break
 toc_found = False
 for p in doc.paragraphs:
     text = p.text.strip()
@@ -417,22 +445,60 @@ for p in doc.paragraphs:
         type_elem.set(qn('w:val'), 'oddPage')
         sectPr.append(type_elem)
         pPr.append(sectPr)
+        
+        # Inject dynamic Word Table of Contents field block
+        p_toc = p.insert_paragraph_before()
+        run_toc = p_toc.add_run()
+        fldChar1 = OxmlElement('w:fldChar')
+        fldChar1.set(qn('w:fldCharType'), 'begin')
+        instrText = OxmlElement('w:instrText')
+        instrText.set(qn('xml:space'), 'preserve')
+        instrText.text = "TOC \\o \"1-3\" \\h \\z \\u"
+        fldChar2 = OxmlElement('w:fldChar')
+        fldChar2.set(qn('w:fldCharType'), 'separate')
+        fldChar3 = OxmlElement('w:fldChar')
+        fldChar3.set(qn('w:fldCharType'), 'end')
+
+        run_toc._r.append(fldChar1)
+        run_toc._r.append(instrText)
+        run_toc._r.append(fldChar2)
+        run_toc._r.append(fldChar3)
         toc_found = True
         break
 
-if not toc_found and len(doc.paragraphs) > 1:
-    for p in doc.paragraphs[1:10]:
-        if p._p.xpath('.//w:fldSimple[contains(@w:instr, "TOC")]') or p._p.xpath('.//w:fldChar'):
-            pPr = p._p.get_or_add_pPr()
-            sectPr = OxmlElement('w:sectPr')
-            type_elem = OxmlElement('w:type')
-            type_elem.set(qn('w:val'), 'oddPage')
-            sectPr.append(type_elem)
-            pPr.append(sectPr)
-            break
+# 2. Apply Font Definitions & First-Letter Drop Caps to DOCX Paragraphs
+in_chapter = False
+first_p_done = False
+
+for p in doc.paragraphs:
+    if p.style.name.startswith('Heading 1'):
+        in_chapter = True
+        first_p_done = False
+        continue
+
+    # Apply Drop Cap to the first paragraph following Heading 1
+    if in_chapter and not first_p_done and p.text.strip():
+        if len(p.runs) > 0 and len(p.runs[0].text) > 0:
+            first_run = p.runs[0]
+            first_char = first_run.text[0]
+            rest_text = first_run.text[1:]
+            
+            first_run.text = rest_text
+            new_run = p.insert_paragraph_before().add_run(first_char) # Fallback drop cap representation
+            new_run.font.size = docx.shared.Pt(32)
+            new_run.font.bold = True
+            new_run.font.name = font_family
+            first_p_done = True
+
+    # Font enforcement across runs
+    for run in p.runs:
+        if 'Code' in p.style.name or 'Verbatim' in p.style.name:
+            run.font.name = code_font_family
+        else:
+            run.font.name = font_family
 
 doc.save('temp_combined.docx')
-print("Odd-page TOC constraint successfully enforced.")
+print("Odd-page TOC constraint, drop caps, and dynamic TOC field successfully integrated into DOCX.")
 EOF
 
 cp "$INTERMEDIATE_DOCX" "$FINAL_DOCX"
