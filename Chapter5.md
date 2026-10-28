@@ -103,9 +103,9 @@ Enterprise container build pipelines must produce secure, minimal, and determini
 The following Dockerfile demonstrates a production-grade build for a Go application using non-root execution and minimal dependencies.
 
 ```dockerfile
-# =================----------------=============================================
+# ==============================================================
 # STAGE 1: Build & Compilation Environment
-# =================----------------=============================================
+# ==============================================================
 FROM golang:1.22-alpine AS builder
 
 # Install security certificates and build tools
