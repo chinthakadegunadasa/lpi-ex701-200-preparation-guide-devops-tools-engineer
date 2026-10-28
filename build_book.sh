@@ -186,63 +186,75 @@ for style in doc.styles:
         if style.font is not None:
             if style.name in ['Normal', 'Body Text', 'List Bullet', 'List Number']:
                 style.font.name = 'Google Sans Flex'
-                if hasattr(style, 'paragraph_format'):
-                    style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
             elif style.name in ['Monospace', 'Code', 'Verbatim', 'Source Code']:
                 style.font.name = 'Google Sans Code'
+        if hasattr(style, 'paragraph_format') and style.paragraph_format is not None:
+            if style.name in ['Normal', 'Body Text']:
+                style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     except Exception:
         pass
 
 doc.save('reference.docx')
 EOF
 
-echo "=== [Step 3/8] Combining Manuscript & Ensuring Dedicated Title Page Before TOC ==="
+echo "=== [Step 3/8] Combining Manuscript & Injecting Drop Caps for PDF ==="
 > "$COMBINED_MD"
 ODD_PAGE_BREAK=$'\n\n```{=openxml}\n<w:p><w:pPr><w:sectPr><w:type w:val="oddPage"/></w:sectPr></w:pPr></w:p>\n```\n\n'
 
-# Place title.md on a dedicated page before the Table of Contents
-if [[ -f "title.md" ]]; then
-    cat "title.md" >> "$COMBINED_MD"
-    echo -e "$ODD_PAGE_BREAK" >> "$COMBINED_MD"
-fi
-
-FIRST=true
-for f in "${FILES[@]}"; do
-    [[ "$f" == "title.md" ]] && continue
-    if [[ "$FIRST" == true && ! -f "title.md" ]]; then
-        cat "$f" >> "$COMBINED_MD"
-        FIRST=false
-    else
-        echo -e "$ODD_PAGE_BREAK" >> "$COMBINED_MD"
-        cat "$f" >> "$COMBINED_MD"
-        FIRST=false
-    fi
-done
-
-# Python script to apply LaTeX drop caps to markdown manuscript for PDF compilation
-python3 - "$COMBINED_MD" << 'EOF_DROPCAP'
+# Process combined markdown and inject \lettrine for PDF chapter drop caps
+python3 - "$COMBINED_MD" "$ODD_PAGE_BREAK" "${FILES[@]}" << 'EOF_COMBINE'
 import sys, re
 
-md_file = sys.argv[1]
+combined_file = sys.argv[1]
+odd_page_break = sys.argv[2]
+file_list = sys.argv[3:]
 
-with open(md_file, 'r', encoding='utf-8') as f:
-    content = f.read()
+out_content = []
 
-# Pattern to locate first body paragraph immediately after any level-1 header
-def apply_drop_cap(match):
-    header = match.group(1)
-    first_para = match.group(2).strip()
-    if first_para and not first_para.startswith('```') and not first_para.startswith('\\') and not first_para.startswith('!['):
-        first_letter = first_para[0]
-        rest_of_para = first_para[1:]
-        return f"{header}\n\n\\lettrine{{{first_letter}}}{{{rest_of_para[:5]}}}{rest_of_para[5:]}"
-    return match.group(0)
+if "title.md" in file_list:
+    with open("title.md", "r", encoding="utf-8") as f:
+        out_content.append(f.read())
+    out_content.append(odd_page_break)
 
-modified_content = re.sub(r'^(#\s+[^\n]+)\n+\s*([A-Za-z][^\n]+)', apply_drop_cap, content, flags=re.MULTILINE)
+first = True
+for fpath in file_list:
+    if fpath == "title.md":
+        continue
+    if not sys.platform.startswith('win'):
+        fpath = fpath.lstrip('./')
+    try:
+        with open(fpath, "r", encoding="utf-8") as f:
+            text = f.read()
+    except Exception:
+        continue
 
-with open(md_file, 'w', encoding='utf-8') as f:
-    f.write(modified_content)
-EOF_DROPCAP
+    # Inject \lettrine for the first body paragraph after H1
+    lines = text.split("\n")
+    injected = False
+    new_lines = []
+    for line in lines:
+        if not injected and line.strip() and not line.strip().startswith('#') and not line.strip().startswith('`') and not line.strip().startswith('!'):
+            match = re.match(r'^([A-Za-z])(.*)$', line.strip())
+            if match:
+                first_char = match.group(1)
+                rest_word = match.group(2)
+                line = f"\\lettrine[lines=3]{{{first_char}}}{{{rest_word[0:4]}}}{rest_word[4:]}"
+                injected = True
+        new_lines.append(line)
+    
+    chapter_text = "\n".join(new_lines)
+
+    if first and "title.md" not in file_list:
+        out_content.append(chapter_text)
+        first = False
+    else:
+        out_content.append(odd_page_break)
+        out_content.append(chapter_text)
+        first = False
+
+with open(combined_file, "w", encoding="utf-8") as f:
+    f.write("\n".join(out_content))
+EOF_COMBINE
 
 # Python script to generate GitHub Pages compatible TOC.md
 python3 - "$TOC_MD" "$BOOK_TITLE" "${FILES[@]}" << 'EOF_TOC'
@@ -302,7 +314,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with center-aligned headings, center headers, drop caps, and wrapped code blocks
+# Generate LaTeX header with drop caps, center headings, and left-aligned auto-hyphenated code blocks
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -326,10 +338,6 @@ latex_template = r"""
 \vbadness=10000
 
 \usepackage{lettrine}
-\renewcommand{\LettrineFontHook}{\bfseries\color{black}}
-\setlength{\DefaultFindent}{2pt}
-\setlength{\DefaultNindent}{0em}
-
 \usepackage{tocloft}
 \renewcommand{\cftdot}{.}
 \renewcommand{\cftdotsep}{1.5}
@@ -376,6 +384,8 @@ latex_template = r"""
 
 \usepackage{fvextra}
 \usepackage{xcolor}
+
+% Left-aligned, auto-wrapped, auto-hyphenated code blocks within margins
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
   breaklines=true,
   breakanywhere=true,
@@ -423,7 +433,7 @@ if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
       -o "$UNOPTIMIZED_PDF"
 fi
 
-echo "=== [Step 5/8] Compiling DOCX & EPUB Formats (with Automated TOC, Full Justification, & Drop Caps) ==="
+echo "=== [Step 5/8] Compiling DOCX & EPUB Formats (with Full Justification & Dynamic TOC) ==="
 PANDOC_ARGS=(
     "$COMBINED_MD"
     --from=markdown
@@ -438,156 +448,131 @@ PANDOC_ARGS=(
 pandoc "${PANDOC_ARGS[@]}"
 
 if [[ "$OUTPUT_FORMAT" == "epub" || "$OUTPUT_FORMAT" == "all" ]]; then
-    EPUB_CMD=(pandoc "$COMBINED_MD" --from=markdown --to=epub3 --output="$FINAL_EPUB" --toc --toc-depth=3 --metadata=title="$BOOK_TITLE")
-    [[ "$SKIP_COVER" == false && -f "$COVER_IMG" ]] && EPUB_CMD=("${EPUB_CMD[@]}" "--epub-cover-image=$COVER_IMG")
-    [[ -f "$EPUB_CSS" ]] && EPUB_CMD=("${EPUB_CMD[@]}" "--css=$EPUB_CSS")
-    "${EPUB_CMD[@]}"
+    EPUB_ARGS=(
+        "$COMBINED_MD"
+        --from=markdown
+        --to=epub3
+        --output="$FINAL_EPUB"
+        --toc
+        --toc-depth=3
+        --metadata=title="$BOOK_TITLE"
+    )
+    if [[ "$SKIP_COVER" == false && -f "$COVER_IMG" ]]; then
+        EPUB_ARGS=("${EPUB_ARGS[@]}" "--epub-cover-image=$COVER_IMG")
+    fi
+    pandoc "${EPUB_ARGS[@]}"
 fi
 
-python3 - << 'EOF'
-import docx
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
+# Update DOCX native field TOC bridge using LibreOffice Python script
+cat << 'EOF_LO' > "$TEMP_PY"
+import uno
+import sys
+import os
 
-doc = docx.Document('temp_combined.docx')
+local_context = uno.get_component_context()
+resolver = local_context.ServiceManager.createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", local_context)
+try:
+    context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
+except Exception as e:
+    sys.exit(1)
 
-# 1. Enforce Odd-page constraint for TOC section break
-toc_found = False
-for p in doc.paragraphs:
-    text = p.text.strip()
-    if "Table of Contents" in text or "Contents" in text:
-        pPr = p._p.get_or_add_pPr()
-        sectPr = OxmlElement('w:sectPr')
-        type_elem = OxmlElement('w:type')
-        type_elem.set(qn('w:val'), 'oddPage')
-        sectPr.append(type_elem)
-        pPr.append(sectPr)
-        toc_found = True
-        break
+desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
+cwd = os.getcwd()
+docx_path = os.path.join(cwd, sys.argv[1])
+url = f"file://{docx_path}"
 
-if not toc_found and len(doc.paragraphs) > 1:
-    for p in doc.paragraphs[1:10]:
-        if p._p.xpath('.//w:fldSimple[contains(@w:instr, "TOC")]') or p._p.xpath('.//w:fldChar'):
-            pPr = p._p.get_or_add_pPr()
-            sectPr = OxmlElement('w:sectPr')
-            type_elem = OxmlElement('w:type')
-            type_elem.set(qn('w:val'), 'oddPage')
-            sectPr.append(type_elem)
-            pPr.append(sectPr)
-            break
+properties = []
+p = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
+p.Name = 'Hidden'
+p.Value = True
+properties.append(p)
 
-# 2. Inject dynamic Word TOC field structure
-has_toc_field = any(p._p.xpath('.//w:fldSimple[contains(@w:instr, "TOC")]') or p._p.xpath('.//w:fldChar') for p in doc.paragraphs)
-if not has_toc_field and len(doc.paragraphs) > 1:
-    p_toc = doc.paragraphs[1]
-    run = p_toc.add_run()
-    fldChar1 = OxmlElement('w:fldChar')
-    fldChar1.set(qn('w:fldCharType'), 'begin')
-    instrText = OxmlElement('w:instrText')
-    instrText.set(qn('xml:space'), 'preserve')
-    instrText.text = 'TOC \\o "1-3" \\h \\z \\u'
-    fldChar2 = OxmlElement('w:fldChar')
-    fldChar2.set(qn('w:fldCharType'), 'separate')
-    fldChar3 = OxmlElement('w:fldChar')
-    fldChar3.set(qn('w:fldCharType'), 'end')
-    r = run._r
-    r.append(fldChar1)
-    r.append(instrText)
-    r.append(fldChar2)
-    r.append(fldChar3)
+doc = desktop.loadComponentFromURL(url, "_blank", 0, tuple(properties))
+indexes = doc.getDocumentIndexes()
+for i in range(indexes.getCount()):
+    index = indexes.getByIndex(i)
+    index.update()
 
-# 3. Apply Drop Caps and Full Justification across body paragraphs
-is_after_heading = False
-for p in doc.paragraphs:
-    if p.style.name.startswith('Heading'):
-        is_after_heading = True
-        continue
-    
-    if p.text and p.text.strip() and not p.style.name.startswith('Code') and not p.style.name.startswith('Verbatim'):
-        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        
-        # Enforce Drop Cap on first paragraph following a heading
-        if is_after_heading and len(p.runs) > 0 and len(p.runs[0].text.strip()) > 0:
-            first_run = p.runs[0]
-            txt = first_run.text.lstrip()
-            if txt and not txt.startswith('\\lettrine'):
-                first_char = txt[0]
-                first_run.text = txt[1:]
-                
-                drop_run = p.insert_paragraph_before().add_run(first_char)
-                drop_run.font.size = docx.shared.Pt(36)
-                drop_run.font.bold = True
-                drop_run.font.name = 'Google Sans Flex'
-            is_after_heading = False
+doc.store()
+doc.close(True)
+EOF_LO
 
-    for run in p.runs:
-        if 'Code' in p.style.name or 'Verbatim' in p.style.name:
-            run.font.name = 'Google Sans Code'
-        else:
-            run.font.name = 'Google Sans Flex'
-
-doc.save('temp_combined.docx')
-print("DOCX full justification, drop caps, font families, and dynamic TOC successfully generated.")
-EOF
-
-cp "$INTERMEDIATE_DOCX" "$FINAL_DOCX"
-rm -f "$INTERMEDIATE_DOCX"
+soffice --headless --accept="socket,host=localhost,port=2002;urp;" &
+LO_PID=$!
+sleep 3
+python3 "$TEMP_PY" "$INTERMEDIATE_DOCX" || true
+mv "$INTERMEDIATE_DOCX" "$FINAL_DOCX"
 
 echo "=== [Step 6/8] Optimizing Interior PDF & Applying Watermark ==="
-OPTIMIZED_INTERIOR="$BUILD_DIR/optimized_interior.pdf"
-GS_SETTINGS="/prepress"
-[[ "$BUILD_PROFILE" == "draft" ]] && GS_SETTINGS="/screen"
-
-if [ -f "$UNOPTIMIZED_PDF" ]; then
-    gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS="$GS_SETTINGS" \
-       -dNOPAUSE -dQUIET -dBATCH -dEmbedAllFonts=true -dSubsetFonts=true \
-       -sOutputFile="$OPTIMIZED_INTERIOR" "$UNOPTIMIZED_PDF"
-    rm -f "$UNOPTIMIZED_PDF"
+if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
+    gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/prepress -dNOPAUSE -dQUIET -dBATCH -sOutputFile="$FINAL_PDF" "$UNOPTIMIZED_PDF"
 
     if [[ -n "$WATERMARK_TEXT" ]]; then
-        WATERMARKED_PDF="$BUILD_DIR/watermarked_interior.pdf"
-        cat << PS_EOF > "$BUILD_DIR/watermark.ps"
-/Helvetica-Bold findfont 48 scalefont setfont 0.93 setgray
-1 1 { pop gsave 250 400 translate 45 rotate 0 0 moveto ($WATERMARK_TEXT) show grestore } for
-PS_EOF
-        gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile="$WATERMARKED_PDF" "$OPTIMIZED_INTERIOR" 2>/dev/null || true
-        [[ -f "$WATERMARKED_PDF" ]] && mv "$WATERMARKED_PDF" "$OPTIMIZED_INTERIOR"
-        rm -f "$BUILD_DIR/watermark.ps"
+        echo "Applying watermark: $WATERMARK_TEXT"
+        python3 - "$FINAL_PDF" "$WATERMARK_TEXT" << 'EOF_WM'
+import sys
+from pypdf import PdfReader, PdfWriter
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+import io
+
+pdf_in = sys.argv[1]
+watermark_text = sys.argv[2]
+
+packet = io.BytesIO()
+can = canvas.Canvas(packet, pagesize=letter)
+can.setFont("Helvetica-Bold", 40)
+can.setFillColorRGB(0.8, 0.8, 0.8, alpha=0.3)
+can.saveState()
+can.translate(300, 400)
+can.rotate(45)
+can.drawCentredString(0, 0, watermark_text)
+can.restoreState()
+can.save()
+
+packet.seek(0)
+watermark_pdf = PdfReader(packet)
+watermark_page = watermark_pdf.pages[0]
+
+reader = PdfReader(pdf_in)
+writer = PdfWriter()
+
+for page in reader.pages:
+    page.merge_page(watermark_page)
+    writer.add_page(page)
+
+with open(pdf_in, "wb") as f:
+    writer.write(f)
+EOF_WM
     fi
 fi
 
 echo "=== [Step 7/8] Cover Integration & Final Assembly ==="
-FINAL_OUTPUT_PATH="$OPTIMIZED_INTERIOR"
-if [[ "$SKIP_COVER" == false && -f "$FRONT_COVER_PDF" && -f "$BACK_COVER_PDF" && -f "$OPTIMIZED_INTERIOR" ]]; then
-    MERGED_PDF="$BUILD_DIR/final_book_with_covers.pdf"
-    pdftk "$FRONT_COVER_PDF" "$OPTIMIZED_INTERIOR" "$BACK_COVER_PDF" cat output "$MERGED_PDF"
-    FINAL_OUTPUT_PATH="$MERGED_PDF"
-elif [[ "$SKIP_COVER" == false && -f "$FRONT_COVER_PDF" && -f "$OPTIMIZED_INTERIOR" ]]; then
-    MERGED_PDF="$BUILD_DIR/final_book_with_covers.pdf"
-    pdftk "$FRONT_COVER_PDF" "$OPTIMIZED_INTERIOR" cat output "$MERGED_PDF"
-    FINAL_OUTPUT_PATH="$MERGED_PDF"
+if [[ "$SKIP_COVER" == false && "$OUTPUT_FORMAT" != "epub" ]]; then
+    if [[ -f "$FRONT_COVER_PDF" && -f "$FINAL_PDF" ]]; then
+        pdftk "$FRONT_COVER_PDF" "$FINAL_PDF" cat output "${BUILD_DIR}/temp_with_front.pdf"
+        mv "${BUILD_DIR}/temp_with_front.pdf" "$FINAL_PDF"
+    fi
+    if [[ -f "$BACK_COVER_PDF" && -f "$FINAL_PDF" ]]; then
+        pdftk "$FINAL_PDF" "$BACK_COVER_PDF" cat output "${BUILD_DIR}/temp_with_back.pdf"
+        mv "${BUILD_DIR}/temp_with_back.pdf" "$FINAL_PDF"
+    fi
 fi
 
-[[ -f "$FINAL_OUTPUT_PATH" ]] && mv "$FINAL_OUTPUT_PATH" "$FINAL_PDF"
-rm -rf "$BUILD_DIR"
-
+echo "=== [Step 8/8] Build Complete ==="
 END_TIME=$(date +%s)
 ELAPSED=$((END_TIME - START_TIME))
 
-cat << REPORT > "$BUILD_REPORT"
-=== KDP Build Report ===
-Date: $(date)
+cat << EOF_REPORT > "$BUILD_REPORT"
+Build Execution Summary
+=======================
 Book Title: $BOOK_TITLE
-Duration: ${ELAPSED} seconds
-Build Profile: $BUILD_PROFILE
-Output Format: $OUTPUT_FORMAT
+Build Time: ${ELAPSED} seconds
+Generated Files:
+- PDF:  $FINAL_PDF
+- DOCX: $FINAL_DOCX
+- EPUB: $FINAL_EPUB
+- TOC:  $TOC_MD
+EOF_REPORT
 
-Generated Artifacts:
-  - DOCX: $FINAL_DOCX
-  - TOC:  $TOC_MD
-$([[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]] && echo "  - PDF:  $FINAL_PDF")
-$([[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "epub" ]] && echo "  - EPUB: $FINAL_EPUB")
-REPORT
-
-echo "=== [Step 8/8] Build Complete ==="
+cat "$BUILD_REPORT"
