@@ -3,7 +3,7 @@ set -euo pipefail
 
 # ==============================================================================
 # Universal KDP Book Builder & GitHub Pages Documentation Script
-# Engine: LuaLaTeX (Native Variable Font Support)
+# Engine: LuaLaTeX (Native Variable Font Support & Font Cache Reset)
 # Repository: https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git
 # ==============================================================================
 
@@ -101,9 +101,9 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-echo "=== [Step 0/8] Pre-flight Dependency Checks ==="
+echo "=== [Step 0/8] Pre-flight Dependency & Font Cache Checks ==="
 MISSING_DEPS=()
-for cmd in pandoc lualatex python3 soffice gs pdftk pdfinfo pdffonts pdfimages pdftoppm fc-list git; do
+for cmd in pandoc lualatex python3 soffice gs pdftk pdfinfo pdffonts pdfimages pdftoppm fc-list git luaotfload-tool; do
     command -v "$cmd" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "$cmd")
 done
 python3 -c "import docx" &> /dev/null || MISSING_DEPS=("${MISSING_DEPS[@]}" "python-docx")
@@ -114,6 +114,10 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     echo "Error: Missing required dependencies: ${MISSING_DEPS[*]}"
     exit 1
 fi
+
+# Refresh LuaLaTeX font database to prevent missing font metric errors
+echo "Refreshing LuaLaTeX font cache..."
+luaotfload-tool -u -f &>/dev/null || true
 echo "All system dependencies verified."
 
 # --- Remote Repository Ingestion ---
@@ -260,14 +264,13 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header loading Google Sans Flex and Google Sans Code natively via LuaLaTeX
-python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" "$BOOK_TITLE" << 'EOF_HEADER'
+# Generate LaTeX header with book title removed from headers and page numbers center-aligned
+python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
 header_file = sys.argv[1]
 font_family = sys.argv[2]
 code_font_family = sys.argv[3]
-book_title = sys.argv[4]
 
 latex_template = r"""
 \usepackage{fontspec}
@@ -297,8 +300,7 @@ latex_template = r"""
 \fancyhf{}
 \setlength{\headheight}{14.5pt}
 \fancyhead[LE,RO]{\nouppercase{\leftmark}}
-\fancyhead[RE,LO]{{\small\itshape __BOOK_TITLE__}}
-\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.1pt}
 \renewcommand{\footrulewidth}{0.0pt}
 
@@ -333,8 +335,7 @@ latex_template = r"""
 """
 
 latex_content = latex_template.replace("__BODY_FONT__", font_family) \
-                               .replace("__CODE_FONT__", code_font_family) \
-                               .replace("__BOOK_TITLE__", book_title)
+                               .replace("__CODE_FONT__", code_font_family)
 
 with open(header_file, 'w', encoding='utf-8') as f:
     f.write(latex_content.strip() + "\n")
