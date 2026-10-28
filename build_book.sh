@@ -274,7 +274,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with drop caps, center headings, and wrapped code blocks
+# Generate LaTeX header with center-aligned headings and center-aligned headers
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -322,7 +322,7 @@ latex_template = r"""
 \pagestyle{fancy}
 \fancyhf{}
 \setlength{\headheight}{14.5pt}
-\fancyhead[LE,RO]{\nouppercase{\leftmark}}
+\fancyhead[C]{\nouppercase{\leftmark}}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.1pt}
 \renewcommand{\footrulewidth}{0.0pt}
@@ -464,12 +464,8 @@ if not has_toc_field and len(doc.paragraphs) > 1:
     r.append(fldChar2)
     r.append(fldChar3)
 
-# 3. Enlarge first letter of first paragraphs of chapters (Drop Cap styling approximation in docx)
+# 3. Apply Google Sans Flex font styling to body text
 for p in doc.paragraphs:
-    if p.text and len(p.text) > 0 and p.style.name.startswith('Heading'):
-        pass
-    # Simple heuristic for body paragraphs following headings
-    # We ensure font styling matches Google Sans Flex
     for run in p.runs:
         run.font.name = 'Google Sans Flex'
 
