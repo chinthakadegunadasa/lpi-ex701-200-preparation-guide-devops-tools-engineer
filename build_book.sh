@@ -2,13 +2,13 @@
 set -euo pipefail
 
 # ==============================================================================
-# Universal KDP Book Builder Script (Bash 3.2+ Compatible Prepress Pipeline)
-# Target: The Ultimate Handbook of DevOps Practitioner
+# Universal KDP Book Builder & GitHub Pages Documentation Script
+# Repository: lpi-ex701-200-preparation-guide-devops-tools-engineer[cite: 3]
 # ==============================================================================
 
 # --- Universal Configuration & Environment Defaults ---
 BOOK_TITLE="${BOOK_TITLE:-The Ultimate Handbook of DevOps Practitioner}"
-BOOK_REPO_URL="${BOOK_REPO_URL:-}"
+BOOK_REPO_URL="${BOOK_REPO_URL:-https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git}"
 SLUG_TITLE=$(echo "$BOOK_TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
 
 INTERMEDIATE_DOCX="temp_combined.docx"
@@ -178,7 +178,7 @@ for section in doc.sections:
 doc.save('reference.docx')
 EOF
 
-echo "=== [Step 3/8] Combining Manuscript Files & Generating TOC.md for GitHub Pages ==="
+echo "=== [Step 3/8] Generating GitHub Pages Compatible TOC.md & Assembling Manuscript ==="
 > "$COMBINED_MD"
 ODD_PAGE_BREAK=$'\n\n```{=openxml}\n<w:p><w:pPr><w:sectPr><w:type w:val="oddPage"/></w:sectPr></w:pPr></w:p>\n```\n\n'
 
@@ -200,57 +200,87 @@ for f in "${FILES[@]}"; do
     fi
 done
 
-python3 - "$COMBINED_MD" "$TOC_MD" "$BOOK_TITLE" << 'EOF_TOC'
-import sys, re
+# Python script to generate multi-file relative TOC.md for GitHub Pages
+python3 - "$TOC_MD" "$BOOK_TITLE" "${FILES[@]}" << 'EOF_TOC'
+import sys, os, re
 
-md_file = sys.argv[1]
-toc_out_file = sys.argv[2]
-book_title = sys.argv[3]
-
-with open(md_file, 'r', encoding='utf-8') as f:
-    content = f.read()
-
-cleaned = re.sub(r'(?i)#+\s+Table of Contents.*?(?=\n#|\Z)', '', content, flags=re.DOTALL)
-
-with open(md_file, 'w', encoding='utf-8') as f:
-    f.write(cleaned)
-
-headers = re.findall(r'^(#{1,4})\s+(.+)$', cleaned, re.MULTILINE)
+toc_out_file = sys.argv[1]
+book_title = sys.argv[2]
+file_list = sys.argv[3:]
 
 toc_lines = [
     f"# Table of Contents",
     f"",
-    f"*Auto-generated table of contents for **{book_title}** website & documentation.*\n",
+    f"Welcome to the official documentation and study guide for **{book_title}**[cite: 3].",
+    f"",
+    f"---",
     ""
 ]
 
-for hashes, title in headers:
-    level = len(hashes)
-    if level > 3:
+for fpath in file_list:
+    # Normalize path
+    fpath = fpath.lstrip('./')
+    if fpath in ['title.md', 'TOC.md', 'README.md']:
         continue
-    indent = "    " * (level - 1)
-    slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
-    toc_lines.append(f"{indent}* [{title}](#{slug})")
+    if not os.path.isfile(fpath):
+        continue
+
+    try:
+        with open(fpath, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception:
+        continue
+
+    # Extract primary heading or derive from filename
+    h1_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
+    if h1_match:
+        chapter_title = h1_match.group(1).strip()
+    else:
+        chapter_title = os.path.splitext(os.path.basename(fpath))[0].replace('_', ' ').title()
+
+    toc_lines.append(f"## [{chapter_title}]({fpath})")
+
+    # Extract subheaders (h2, h3) with GitHub Pages relative links
+    subheaders = re.findall(r'^(#{2,3})\s+(.+)$', content, re.MULTILINE)
+    for hashes, sub_title in subheaders:
+        level = len(hashes)
+        slug = re.sub(r'[^a-z0-9]+', '-', sub_title.lower()).strip('-')
+        if level == 2:
+            toc_lines.append(f"  * [{sub_title}]({fpath}#{slug})")
+        elif level == 3:
+            toc_lines.append(f"    * [{sub_title}]({fpath}#{slug})")
+    toc_lines.append("")
 
 with open(toc_out_file, 'w', encoding='utf-8') as f:
     f.write("\n".join(toc_lines) + "\n")
 
-print(f"Generated GitHub Pages TOC file: {toc_out_file}")
+print(f"Generated GitHub Pages compatible TOC.md: {toc_out_file}")
 EOF_TOC
 
 echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via XeLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-cat << EOF_LATEX > "$LATEX_HEADER_FILE"
+python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" "$BOOK_TITLE" << 'EOF_HEADER'
+import sys
+
+header_file = sys.argv[1]
+font_family = sys.argv[2]
+code_font_family = sys.argv[3]
+book_title = sys.argv[4]
+
+latex_template = r"""
 \usepackage{fontspec}
-\setmainfont{${FONT_FAMILY}}[AutoFakeBold=1.5,AutoFakeItalic=0.25]
-\setmonofont{${CODE_FONT_FAMILY}}[AutoFakeBold=1.5]
+\setmainfont{__FONT_FAMILY__}[AutoFakeBold=1.5,AutoFakeItalic=0.25]
+\setmonofont{__CODE_FONT_FAMILY__}[AutoFakeBold=1.5]
 
 \usepackage{microtype}
 \emergencystretch=3em
 \hyphenpenalty=500
 \exhyphenpenalty=500
+
+\hbadness=10000
+\vbadness=10000
 
 \usepackage{tocloft}
 \renewcommand{\cftdot}{.}
@@ -265,7 +295,7 @@ cat << EOF_LATEX > "$LATEX_HEADER_FILE"
 \fancyhf{}
 \setlength{\headheight}{14.5pt}
 \fancyhead[LE,RO]{\nouppercase{\leftmark}}
-\fancyhead[RE,LO]{\small\itshape ${BOOK_TITLE}}
+\fancyhead[RE,LO]{{\small\itshape __BOOK_TITLE__}}
 \fancyfoot[LE,RO]{\thepage}
 \renewcommand{\headrulewidth}{0.1pt}
 \renewcommand{\footrulewidth}{0.0pt}
@@ -298,7 +328,15 @@ cat << EOF_LATEX > "$LATEX_HEADER_FILE"
     \Oldincludegraphics[width=1.0\textwidth,keepaspectratio]{#2}%
   \end{center}
 }
-EOF_LATEX
+"""
+
+latex_content = latex_template.replace("__FONT_FAMILY__", font_family) \
+                               .replace("__CODE_FONT_FAMILY__", code_font_family) \
+                               .replace("__BOOK_TITLE__", book_title)
+
+with open(header_file, 'w', encoding='utf-8') as f:
+    f.write(latex_content.strip() + "\n")
+EOF_HEADER
 
 if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
     pandoc "$COMBINED_MD" \

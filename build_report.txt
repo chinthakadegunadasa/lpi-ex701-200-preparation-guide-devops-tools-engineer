@@ -1,0 +1,12 @@
+=== KDP Build Report ===
+Date: Wed Oct 28 06:55:57 AM +0530 2026
+Book Title: The Ultimate Handbook of DevOps Practitioner
+Duration: 37 seconds
+Build Profile: kdp
+Output Format: all
+
+Generated Artifacts:
+  - DOCX: the-ultimate-handbook-of-devops-practitioner-KDP.docx
+  - TOC:  TOC.md
+  - PDF:  the-ultimate-handbook-of-devops-practitioner-KDP.pdf
+  - EPUB: the-ultimate-handbook-of-devops-practitioner.epub
