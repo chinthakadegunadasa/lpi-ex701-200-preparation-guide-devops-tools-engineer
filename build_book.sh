@@ -195,7 +195,7 @@ for f in "${FILES[@]}"; do
         cat "$f" >> "$COMBINED_MD"
         FIRST=false
     else
-        echo "$ODD_PAGE_BREAK" >> "$COMBINED_MD"
+        echo -e "$ODD_PAGE_BREAK" >> "$COMBINED_MD"
         cat "$f" >> "$COMBINED_MD"
         FIRST=false
     fi
@@ -259,24 +259,38 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via XeLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate robust LaTeX header with safe font mapping for xdvipdfmx backend
+# Generate LaTeX header with intelligent font checking and safe fallback to prevent xdvipdfmx crashes
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" "$BOOK_TITLE" << 'EOF_HEADER'
-import sys
+import sys, subprocess
 
 header_file = sys.argv[1]
 font_family = sys.argv[2]
 code_font_family = sys.argv[3]
 book_title = sys.argv[4]
 
+def check_font(name):
+    try:
+        out = subprocess.check_output(['fc-list', ':family'], universal_newlines=True)
+        return name.lower() in out.lower()
+    except Exception:
+        return False
+
+# Fallback to DejaVu Sans / Mono if custom Google Sans fonts are missing from system cache
+body_font = font_family if check_font(font_family) else "DejaVu Sans"
+code_font = code_font_family if check_font(code_font_family) else "DejaVu Sans Mono"
+
+print(f"Using Body Font: {body_font}")
+print(f"Using Code Font: {code_font}")
+
 latex_template = r"""
 \usepackage{fontspec}
-\setmainfont{__FONT_FAMILY__}[
+\setmainfont{__BODY_FONT__}[
   BoldFont = *,
   BoldFeatures = {FakeBold = 1.5},
   ItalicFont = *,
   ItalicFeatures = {FakeSlant = 0.25}
 ]
-\setmonofont{__CODE_FONT_FAMILY__}[
+\setmonofont{__CODE_FONT__}[
   BoldFont = *,
   BoldFeatures = {FakeBold = 1.5}
 ]
@@ -339,8 +353,8 @@ latex_template = r"""
 }
 """
 
-latex_content = latex_template.replace("__FONT_FAMILY__", font_family) \
-                               .replace("__CODE_FONT_FAMILY__", code_font_family) \
+latex_content = latex_template.replace("__BODY_FONT__", body_font) \
+                               .replace("__CODE_FONT__", code_font) \
                                .replace("__BOOK_TITLE__", book_title)
 
 with open(header_file, 'w', encoding='utf-8') as f:
