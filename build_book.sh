@@ -115,7 +115,6 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     exit 1
 fi
 
-# Refresh LuaLaTeX font database to prevent missing font metric errors
 echo "Refreshing LuaLaTeX font cache..."
 luaotfload-tool -u -f &>/dev/null || true
 echo "All system dependencies verified."
@@ -201,7 +200,6 @@ echo "=== [Step 3/8] Combining Manuscript & Injecting Drop Caps for PDF ==="
 > "$COMBINED_MD"
 ODD_PAGE_BREAK=$'\n\n```{=openxml}\n<w:p><w:pPr><w:sectPr><w:type w:val="oddPage"/></w:sectPr></w:pPr></w:p>\n```\n\n'
 
-# Process combined markdown and inject \lettrine for PDF chapter drop caps
 python3 - "$COMBINED_MD" "$ODD_PAGE_BREAK" "${FILES[@]}" << 'EOF_COMBINE'
 import sys, re
 
@@ -228,7 +226,6 @@ for fpath in file_list:
     except Exception:
         continue
 
-    # Inject \lettrine for the first body paragraph after H1
     lines = text.split("\n")
     injected = False
     new_lines = []
@@ -256,7 +253,6 @@ with open(combined_file, "w", encoding="utf-8") as f:
     f.write("\n".join(out_content))
 EOF_COMBINE
 
-# Python script to generate GitHub Pages compatible TOC.md
 python3 - "$TOC_MD" "$BOOK_TITLE" "${FILES[@]}" << 'EOF_TOC'
 import sys, os, re
 
@@ -314,7 +310,6 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with drop caps, center headings, and left-aligned auto-hyphenated code blocks
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -326,6 +321,12 @@ latex_template = r"""
 \usepackage{fontspec}
 \setmainfont{__BODY_FONT__}
 \setmonofont{__CODE_FONT__}
+
+\usepackage{amssymb}
+\usepackage{newunicodechar}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{✓}{\ensuremath{\checkmark}}
+\newunicodechar{✗}{\ensuremath{\times}}
 
 \usepackage{microtype}
 \emergencystretch=3em
@@ -348,7 +349,6 @@ latex_template = r"""
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 
-% Center-align all heading levels
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries\centering}
   {\chaptertitlename\ \thechapter}{20pt}{\Huge}
@@ -385,7 +385,6 @@ latex_template = r"""
 \usepackage{fvextra}
 \usepackage{xcolor}
 
-% Left-aligned, auto-wrapped, auto-hyphenated code blocks within margins
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
   breaklines=true,
   breakanywhere=true,
@@ -419,7 +418,7 @@ EOF_HEADER
 
 if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
     pandoc "$COMBINED_MD" \
-      --from=markdown+tex_math_single_backslash \
+      --from=markdown+tex_math_single_backslash+tex_math_dollars \
       --pdf-engine=lualatex \
       --toc \
       --toc-depth=3 \
@@ -436,7 +435,7 @@ fi
 echo "=== [Step 5/8] Compiling DOCX & EPUB Formats (with Full Justification & Dynamic TOC) ==="
 PANDOC_ARGS=(
     "$COMBINED_MD"
-    --from=markdown
+    --from=markdown+tex_math_single_backslash+tex_math_dollars
     --to=docx
     --output="$INTERMEDIATE_DOCX"
     --reference-doc="$REF_DOC"
@@ -450,7 +449,7 @@ pandoc "${PANDOC_ARGS[@]}"
 if [[ "$OUTPUT_FORMAT" == "epub" || "$OUTPUT_FORMAT" == "all" ]]; then
     EPUB_ARGS=(
         "$COMBINED_MD"
-        --from=markdown
+        --from=markdown+tex_math_single_backslash+tex_math_dollars
         --to=epub3
         --output="$FINAL_EPUB"
         --toc
@@ -463,13 +462,13 @@ if [[ "$OUTPUT_FORMAT" == "epub" || "$OUTPUT_FORMAT" == "all" ]]; then
     pandoc "${EPUB_ARGS[@]}"
 fi
 
-# Update DOCX native field TOC bridge using LibreOffice Python script
+# LibreOffice Python bridge script (Fixed camelCase API)
 cat << 'EOF_LO' > "$TEMP_PY"
 import uno
 import sys
 import os
 
-local_context = uno.get_component_context()
+local_context = uno.getComponentContext()
 resolver = local_context.ServiceManager.createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", local_context)
 try:
     context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
