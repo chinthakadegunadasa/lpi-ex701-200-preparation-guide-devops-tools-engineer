@@ -167,6 +167,7 @@ pandoc --print-default-data-file reference.docx > "$REF_DOC"
 python3 - "$TRIM_WIDTH" "$TRIM_HEIGHT" << 'EOF'
 import sys
 import docx
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 width = float(sys.argv[1])
 height = float(sys.argv[2])
@@ -185,6 +186,8 @@ for style in doc.styles:
         if style.font is not None:
             if style.name in ['Normal', 'Body Text', 'List Bullet', 'List Number']:
                 style.font.name = 'Google Sans Flex'
+                if hasattr(style, 'paragraph_format'):
+                    style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
             elif style.name in ['Monospace', 'Code', 'Verbatim', 'Source Code']:
                 style.font.name = 'Google Sans Code'
     except Exception:
@@ -215,6 +218,31 @@ for f in "${FILES[@]}"; do
         FIRST=false
     fi
 done
+
+# Python script to apply LaTeX drop caps to markdown manuscript for PDF compilation
+python3 - "$COMBINED_MD" << 'EOF_DROPCAP'
+import sys, re
+
+md_file = sys.argv[1]
+
+with open(md_file, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# Pattern to locate first body paragraph immediately after any level-1 header
+def apply_drop_cap(match):
+    header = match.group(1)
+    first_para = match.group(2).strip()
+    if first_para and not first_para.startswith('```') and not first_para.startswith('\\') and not first_para.startswith('!['):
+        first_letter = first_para[0]
+        rest_of_para = first_para[1:]
+        return f"{header}\n\n\\lettrine{{{first_letter}}}{{{rest_of_para[:5]}}}{rest_of_para[5:]}"
+    return match.group(0)
+
+modified_content = re.sub(r'^(#\s+[^\n]+)\n+\s*([A-Za-z][^\n]+)', apply_drop_cap, content, flags=re.MULTILINE)
+
+with open(md_file, 'w', encoding='utf-8') as f:
+    f.write(modified_content)
+EOF_DROPCAP
 
 # Python script to generate GitHub Pages compatible TOC.md
 python3 - "$TOC_MD" "$BOOK_TITLE" "${FILES[@]}" << 'EOF_TOC'
@@ -274,7 +302,7 @@ echo "=== [Step 4/8] Compiling High-Resolution Prepress PDF via LuaLaTeX ==="
 mkdir -p "$BUILD_DIR"
 UNOPTIMIZED_PDF="$BUILD_DIR/temp_combined.pdf"
 
-# Generate LaTeX header with center-aligned headings and center-aligned headers
+# Generate LaTeX header with center-aligned headings, center headers, drop caps, and wrapped code blocks
 python3 - "$LATEX_HEADER_FILE" "$FONT_FAMILY" "$CODE_FONT_FAMILY" << 'EOF_HEADER'
 import sys
 
@@ -298,6 +326,10 @@ latex_template = r"""
 \vbadness=10000
 
 \usepackage{lettrine}
+\renewcommand{\LettrineFontHook}{\bfseries\color{black}}
+\setlength{\DefaultFindent}{2pt}
+\setlength{\DefaultNindent}{0em}
+
 \usepackage{tocloft}
 \renewcommand{\cftdot}{.}
 \renewcommand{\cftdotsep}{1.5}
@@ -391,7 +423,7 @@ if [[ "$OUTPUT_FORMAT" == "all" || "$OUTPUT_FORMAT" == "pdf" ]]; then
       -o "$UNOPTIMIZED_PDF"
 fi
 
-echo "=== [Step 5/8] Compiling DOCX & EPUB Formats (with Automated TOC) ==="
+echo "=== [Step 5/8] Compiling DOCX & EPUB Formats (with Automated TOC, Full Justification, & Drop Caps) ==="
 PANDOC_ARGS=(
     "$COMBINED_MD"
     --from=markdown
@@ -414,12 +446,13 @@ fi
 
 python3 - << 'EOF'
 import docx
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 doc = docx.Document('temp_combined.docx')
 
-# 1. Enforce Odd-page constraint for TOC
+# 1. Enforce Odd-page constraint for TOC section break
 toc_found = False
 for p in doc.paragraphs:
     text = p.text.strip()
@@ -444,7 +477,7 @@ if not toc_found and len(doc.paragraphs) > 1:
             pPr.append(sectPr)
             break
 
-# 2. Inject dynamic Word TOC field if missing
+# 2. Inject dynamic Word TOC field structure
 has_toc_field = any(p._p.xpath('.//w:fldSimple[contains(@w:instr, "TOC")]') or p._p.xpath('.//w:fldChar') for p in doc.paragraphs)
 if not has_toc_field and len(doc.paragraphs) > 1:
     p_toc = doc.paragraphs[1]
@@ -464,13 +497,38 @@ if not has_toc_field and len(doc.paragraphs) > 1:
     r.append(fldChar2)
     r.append(fldChar3)
 
-# 3. Apply Google Sans Flex font styling to body text
+# 3. Apply Drop Caps and Full Justification across body paragraphs
+is_after_heading = False
 for p in doc.paragraphs:
+    if p.style.name.startswith('Heading'):
+        is_after_heading = True
+        continue
+    
+    if p.text and p.text.strip() and not p.style.name.startswith('Code') and not p.style.name.startswith('Verbatim'):
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        
+        # Enforce Drop Cap on first paragraph following a heading
+        if is_after_heading and len(p.runs) > 0 and len(p.runs[0].text.strip()) > 0:
+            first_run = p.runs[0]
+            txt = first_run.text.lstrip()
+            if txt and not txt.startswith('\\lettrine'):
+                first_char = txt[0]
+                first_run.text = txt[1:]
+                
+                drop_run = p.insert_paragraph_before().add_run(first_char)
+                drop_run.font.size = docx.shared.Pt(36)
+                drop_run.font.bold = True
+                drop_run.font.name = 'Google Sans Flex'
+            is_after_heading = False
+
     for run in p.runs:
-        run.font.name = 'Google Sans Flex'
+        if 'Code' in p.style.name or 'Verbatim' in p.style.name:
+            run.font.name = 'Google Sans Code'
+        else:
+            run.font.name = 'Google Sans Flex'
 
 doc.save('temp_combined.docx')
-print("DOCX styling, fonts, and automated TOC successfully enforced.")
+print("DOCX full justification, drop caps, font families, and dynamic TOC successfully generated.")
 EOF
 
 cp "$INTERMEDIATE_DOCX" "$FINAL_DOCX"
@@ -493,7 +551,7 @@ if [ -f "$UNOPTIMIZED_PDF" ]; then
 /Helvetica-Bold findfont 48 scalefont setfont 0.93 setgray
 1 1 { pop gsave 250 400 translate 45 rotate 0 0 moveto ($WATERMARK_TEXT) show grestore } for
 PS_EOF
-        gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile="$WATERMARKED_PDF" "$BUILD_DIR/watermark.ps" "$OPTIMIZED_INTERIOR" 2>/dev/null || true
+        gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile="$WATERMARKED_PDF" "$OPTIMIZED_INTERIOR" 2>/dev/null || true
         [[ -f "$WATERMARKED_PDF" ]] && mv "$WATERMARKED_PDF" "$OPTIMIZED_INTERIOR"
         rm -f "$BUILD_DIR/watermark.ps"
     fi
