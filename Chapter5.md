@@ -211,9 +211,9 @@ dist/
 Create an optimized multi-stage `Dockerfile` leveraging Node.js Alpine base images.
 
 ```dockerfile
-# =================----------------=============================================
+# =============================================================
 # STAGE 1: Build Dependencies and Transpile
-# =================----------------=============================================
+# =============================================================
 FROM node:20-alpine AS build-stage
 
 WORKDIR /usr/src/app
@@ -233,9 +233,9 @@ RUN npm run build
 # Prune development dependencies to retain only production packages
 RUN npm prune --production
 
-# =================----------------=============================================
+# =============================================================
 # STAGE 2: Hardened Production Runtime
-# =================----------------=============================================
+# =============================================================
 FROM node:20-alpine AS production-stage
 
 ENV NODE_ENV=production
@@ -299,4 +299,5 @@ CMD ["node", "dist/server.js"]
 * **Decoupled Architecture:** The Docker CLI communicates via REST API to `dockerd`, which delegates container life-cycle operations to `containerd` via gRPC. `containerd` relies on `containerd-shim` to execute containers via `runc`.
 
 * **Multi-Stage Build Efficiency:** Multi-stage builds reduce total container image size and eliminate security vulnerabilities by keeping compilers, SDKs, and source code out of the production layer.
+
 * **Security Controls:** Production containers must avoid running as `root` (UID 0), utilize read-only root filesystems where possible, drop unneeded Linux capabilities (`--cap-drop=ALL`), and mount secrets dynamically via BuildKit rather than storing them in environment variables or layers.
