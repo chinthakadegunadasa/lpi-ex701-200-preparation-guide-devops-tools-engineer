@@ -148,7 +148,7 @@ else
     [[ -f "title.md" ]] && FILES=("${FILES[@]}" "title.md")
     [[ -f "Introduction.md" ]] && FILES=("${FILES[@]}" "Introduction.md")
     while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Chapter*.md" | sort -V)
-    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Appendix_*.md" | sort)
+    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Appendix_*.md" | sort -V)
     if [ ${#FILES[@]} -eq 0 ]; then
         while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
     fi
@@ -326,7 +326,7 @@ code_font_family = sys.argv[3]
 latex_template = r"""
 \usepackage{fontspec}
 \setmainfont{__BODY_FONT__}
-\setmonofont[Scale=0.85]{__CODE_FONT__}
+\setmonofont[Scale=0.82,HyphenChar=`\-]{__CODE_FONT__}
 
 \usepackage{xcolor}
 \definecolor{headingblue}{RGB}{0, 51, 102}
@@ -338,11 +338,10 @@ latex_template = r"""
 \newunicodechar{✗}{\ensuremath{\times}}
 
 \usepackage{microtype}
-\emergencystretch=3em
-\hyphenpenalty=500
-\exhyphenpenalty=500
-\tolerance=200
-\sloppy
+\emergencystretch=5em
+\hyphenpenalty=50
+\exhyphenpenalty=50
+\tolerance=1000
 
 \hbadness=10000
 \vbadness=10000
@@ -400,16 +399,20 @@ latex_template = r"""
   fontsize=\small
 }
 
+% Robust inline texttt line breaking configuration
 \makeatletter
-\let\oldtexttt\texttt
-\renewcommand{\texttt}[1]{%
+\DeclareRobustCommand\texttt[1]{%
   \begingroup
   \ttfamily\small
+  \fontdimen2\font=0.25em % enable space stretch
+  \fontdimen3\font=0.15em
+  \fontdimen4\font=0.1em
+  \fontdimen7\font=0.1em
   \hyphenchar\font=`\-
-  \OldTextttFontHelper{#1}%
+  \let\saved@break\penalty
+  #1%
   \endgroup
 }
-\newcommand{\OldTextttFontHelper}[1]{\oldtexttt{#1}}
 \makeatother
 
 \usepackage{graphicx}
@@ -494,7 +497,7 @@ resolver = local_context.ServiceManager.createInstanceWithContext("com.sun.star.
 try:
     context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
 except Exception as e:
-    sys.exit(1)
+    sys.argv[1]
 
 desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
 cwd = os.getcwd()
