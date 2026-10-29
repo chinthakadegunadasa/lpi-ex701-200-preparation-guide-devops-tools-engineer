@@ -147,10 +147,10 @@ if [ ${#TARGET_FILES[@]} -gt 0 ]; then
 else
     [[ -f "title.md" ]] && FILES=("${FILES[@]}" "title.md")
     [[ -f "Introduction.md" ]] && FILES=("${FILES[@]}" "Introduction.md")
-    while IFS= read -r file; do FILES=("${FILES[@]}" "Chapter*.md" | sort -V)
-    while IFS= read -r file; do FILES=("${FILES[@]}" "Appendix_*.md" | sort)
+    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Chapter*.md" | sort -V)
+    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Appendix_*.md" | sort)
     if [ ${#FILES[@]} -eq 0 ]; then
-        while IFS= read -r file; do FILES=("${FILES[@]}" "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
+        while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
     fi
 fi
 
@@ -494,7 +494,6 @@ resolver = local_context.ServiceManager.createInstanceWithContext("com.sun.star.
 try:
     context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
 except Exception as e:
-    sys.argv(1)
     sys.exit(1)
 
 desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
