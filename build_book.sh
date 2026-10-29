@@ -338,10 +338,10 @@ latex_template = r"""
 \newunicodechar{✗}{\ensuremath{\times}}
 
 \usepackage{microtype}
-\emergencystretch=5em
-\hyphenpenalty=50
-\exhyphenpenalty=50
-\tolerance=1000
+\emergencystretch=8em
+\hyphenpenalty=10
+\exhyphenpenalty=10
+\tolerance=9999
 
 \hbadness=10000
 \vbadness=10000
@@ -399,17 +399,34 @@ latex_template = r"""
   fontsize=\small
 }
 
-% Robust inline texttt line breaking configuration
+% LuaLaTeX Native Character Break Callback for Monospace and Inline Verbatim Text
+\directlua{
+  local function allow_code_breaks(head)
+    for n in luatexbase.node.traverse_id(node.id("glyph"), head) do
+      if n.font and font.getfont(n.font) then
+        local font_name = font.getfont(n.font).name or ""
+        if font_name:find("Code") or font_name:find("Mono") or font_name:find("Courier") then
+          local char = utf8.char(n.char)
+          if char == "/" or char == "." or char == "_" or char == "-" or char == " " or char == "," then
+            local penalty = node.new(node.id("penalty"))
+            penalty.penalty = 0
+            node.insert_after(head, n, penalty)
+          end
+        end
+      end
+    end
+    return head
+  end
+  luatexbase.add_to_callback("pre_linebreak_filter", allow_code_breaks, "allow_code_breaks")
+}
+
 \makeatletter
 \DeclareRobustCommand\texttt[1]{%
   \begingroup
   \ttfamily\small
-  \fontdimen2\font=0.25em % enable space stretch
-  \fontdimen3\font=0.15em
-  \fontdimen4\font=0.1em
-  \fontdimen7\font=0.1em
+  \spaceskip=0.3em plus 0.2em minus 0.1em
+  \xspaceskip=0.3em plus 0.2em minus 0.1em
   \hyphenchar\font=`\-
-  \let\saved@break\penalty
   #1%
   \endgroup
 }
