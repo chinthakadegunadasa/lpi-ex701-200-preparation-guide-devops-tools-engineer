@@ -147,10 +147,10 @@ if [ ${#TARGET_FILES[@]} -gt 0 ]; then
 else
     [[ -f "title.md" ]] && FILES=("${FILES[@]}" "title.md")
     [[ -f "Introduction.md" ]] && FILES=("${FILES[@]}" "Introduction.md")
-    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Chapter*.md" | sort -V)
-    while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "Appendix_*.md" | sort)
+    while IFS= read -r file; do FILES=("${FILES[@]}" "Chapter*.md" | sort -V)
+    while IFS= read -r file; do FILES=("${FILES[@]}" "Appendix_*.md" | sort)
     if [ ${#FILES[@]} -eq 0 ]; then
-        while IFS= read -r file; do FILES=("${FILES[@]}" "$file"); done < <(find . -maxdepth 1 -name "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
+        while IFS= read -r file; do FILES=("${FILES[@]}" "*.md" ! -name "README.md" ! -name "TOC.md" | sort -V)
     fi
 fi
 
@@ -167,6 +167,7 @@ python3 - "$TRIM_WIDTH" "$TRIM_HEIGHT" << 'EOF'
 import sys
 import docx
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import RGBColor
 
 width = float(sys.argv[1])
 height = float(sys.argv[2])
@@ -180,6 +181,8 @@ for section in doc.sections:
     section.left_margin = docx.shared.Inches(0.875)
     section.right_margin = docx.shared.Inches(0.875)
 
+heading_blue = RGBColor(0x00, 0x33, 0x66)
+
 for style in doc.styles:
     try:
         if style.font is not None:
@@ -187,6 +190,9 @@ for style in doc.styles:
                 style.font.name = 'Google Sans Flex'
             elif style.name in ['Monospace', 'Code', 'Verbatim', 'Source Code']:
                 style.font.name = 'Google Sans Code'
+            elif style.name.startswith('Heading'):
+                style.font.name = 'Google Sans Flex'
+                style.font.color.rgb = heading_blue
         if hasattr(style, 'paragraph_format') and style.paragraph_format is not None:
             if style.name in ['Normal', 'Body Text']:
                 style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
@@ -322,6 +328,9 @@ latex_template = r"""
 \setmainfont{__BODY_FONT__}
 \setmonofont[Scale=0.85]{__CODE_FONT__}
 
+\usepackage{xcolor}
+\definecolor{headingblue}{RGB}{0, 51, 102}
+
 \usepackage{amssymb}
 \usepackage{newunicodechar}
 \newunicodechar{→}{\ensuremath{\rightarrow}}
@@ -349,14 +358,15 @@ latex_template = r"""
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 
+% Center-align and apply headingblue color to all heading levels
 \titleformat{\chapter}[display]
-  {\normalfont\huge\bfseries\centering}
+  {\normalfont\huge\bfseries\centering\color{headingblue}}
   {\chaptertitlename\ \thechapter}{20pt}{\Huge}
 \titleformat{\section}
-  {\normalfont\Large\bfseries\centering}
+  {\normalfont\Large\bfseries\centering\color{headingblue}}
   {\thesection}{1em}{}
 \titleformat{\subsection}
-  {\normalfont\large\bfseries\centering}
+  {\normalfont\large\bfseries\centering\color{headingblue}}
   {\thesubsection}{1em}{}
 
 \pagestyle{fancy}
@@ -383,7 +393,6 @@ latex_template = r"""
 \makeatother
 
 \usepackage{fvextra}
-\usepackage{xcolor}
 
 \fvset{
   breaklines=true,
@@ -452,11 +461,18 @@ PANDOC_ARGS=(
 pandoc "${PANDOC_ARGS[@]}"
 
 if [[ "$OUTPUT_FORMAT" == "epub" || "$OUTPUT_FORMAT" == "all" ]]; then
+    cat << 'EOF_CSS' > "$EPUB_CSS"
+h1, h2, h3, h4, h5, h6 {
+  color: #003366;
+  text-align: center;
+}
+EOF_CSS
     EPUB_ARGS=(
         "$COMBINED_MD"
         --from=markdown+tex_math_single_backslash+tex_math_dollars
         --to=epub3
         --output="$FINAL_EPUB"
+        --css="$EPUB_CSS"
         --toc
         --toc-depth=3
         --metadata=title="$BOOK_TITLE"
