@@ -732,6 +732,6 @@ docker compose down -v
 | **Raft Quorum Calculation** | Consensus Algorithm | $\lfloor N / 2 \rfloor + 1$ | $N=3 \rightarrow Q=2$; $N=5 \rightarrow Q=3$. Prevents split-brain state during network partitions. |
 | **Consul Configuration** | Declarative HCL Setup | `/etc/consul.d/consul.hcl` | `bootstrap_expect` defines required node count for cluster bootstrap. |
 | **Consul Service Registration** | REST API Payload | `PUT /v1/agent/service/register` | Updates catalogue; includes HTTP, TCP, or script-based health checks. |
-| **Traefik Dynamic Provider** | Consul Catalog Integration | `--providers.consulcatalog=true` | Reads tags dynamically from Consul to configure routers, entrypoints, and middlewares without restarts. |
+| **Traefik Dynamic Provider** | Consul Catalog Integration | `-- providers.consulcatalog=true` | Reads tags dynamically from Consul to configure routers, entrypoints, and middlewares without restarts. |
 | **NGINX Template Updates** | Consul Template Daemon | `consul-template -config=cfg.hcl` | Renders configuration files dynamically and triggers graceful reloads (`systemctl reload nginx`). |
 | **Circuit Breaking** | Traefik Middleware | `circuitbreaker.expression` | Trips to `Open` state when error thresholds are crossed, returning `HTTP 503` to prevent cascading failures. |
