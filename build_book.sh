@@ -385,25 +385,23 @@ latex_template = r"""
 \usepackage{fvextra}
 \usepackage{xcolor}
 
-\fvset{breaklines=true, breakanywhere=true}
+\fvset{
+  breaklines=true,
+  breakanywhere=true,
+  fontsize=\small
+}
 
 \makeatletter
-\let\oldHighlighting\Highlighting
-\let\oldendHighlighting\endHighlighting
-\renewenvironment{Highlighting}{%
-  \oldHighlighting
-  \fvset{breaklines=true, breakanywhere=true, fontsize=\small, frame=single, framerule=0.5pt, rulecolor=\color{black!30}}%
-}{%
-  \oldendHighlighting
-}
-\makeatother
-
-% Break long inline code paths cleanly without throwing errors on TeX escape commands
-\OldTexttt
 \let\oldtexttt\texttt
 \renewcommand{\texttt}[1]{%
-  \oldtexttt{\hyphenchar\font=`\/\discretionary{/}{/}{}\ZeroWidthSpace #1}%
+  \begingroup
+  \ttfamily\small
+  \hyphenchar\font=`\-
+  \OldTextttFontHelper{#1}%
+  \endgroup
 }
+\newcommand{\OldTextttFontHelper}[1]{\oldtexttt{#1}}
+\makeatother
 
 \usepackage{graphicx}
 \usepackage{caption}
@@ -480,6 +478,7 @@ resolver = local_context.ServiceManager.createInstanceWithContext("com.sun.star.
 try:
     context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
 except Exception as e:
+    sys.argv(1)
     sys.exit(1)
 
 desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
