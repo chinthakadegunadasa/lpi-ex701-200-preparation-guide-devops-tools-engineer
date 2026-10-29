@@ -220,6 +220,20 @@ if "title.md" in file_list:
         out_content.append(f.read())
     out_content.append(odd_page_break)
 
+def preprocess_markdown(text):
+    # Convert '* [ ]' checklists into standard bullet points so Pandoc indents and wraps them
+    text = re.sub(r'^\*\s+\[\s*\]\s+', r'* ', text, flags=re.MULTILINE)
+    
+    # Process inline backticks to allow line breaking after commas, spaces, and slashes
+    def fix_backticks(match):
+        code_str = match.group(1)
+        # Add a zero-width space after commas, slashes, underscores, and dashes inside backticks
+        code_str = re.sub(r'([/,\._\-])', r'\1\\hspace{0pt}', code_str)
+        return f'`{code_str}`'
+
+    text = re.sub(r'`([^`\n]+)`', fix_backticks, text)
+    return text
+
 first = True
 for fpath in file_list:
     if fpath == "title.md":
@@ -232,11 +246,12 @@ for fpath in file_list:
     except Exception:
         continue
 
+    text = preprocess_markdown(text)
     lines = text.split("\n")
     injected = False
     new_lines = []
     for line in lines:
-        if not injected and line.strip() and not line.strip().startswith('#') and not line.strip().startswith('`') and not line.strip().startswith('!'):
+        if not injected and line.strip() and not line.strip().startswith('#') and not line.strip().startswith('`') and not line.strip().startswith('!') and not line.strip().startswith('*'):
             match = re.match(r'^([A-Za-z])(.*)$', line.strip())
             if match:
                 first_char = match.group(1)
@@ -338,9 +353,9 @@ latex_template = r"""
 \newunicodechar{✗}{\ensuremath{\times}}
 
 \usepackage{microtype}
-\emergencystretch=5em
-\hyphenpenalty=50
-\exhyphenpenalty=50
+\emergencystretch=8em
+\hyphenpenalty=10
+\exhyphenpenalty=10
 \tolerance=9999
 
 \hbadness=10000
@@ -406,7 +421,7 @@ latex_template = r"""
   \spaceskip=0.33em plus 0.25em minus 0.15em
   \xspaceskip=0.33em plus 0.25em minus 0.15em
   \hyphenchar\font=`\-
-  \emergencystretch=4em
+  \emergencystretch=8em
   #1%
   \endgroup
 }
