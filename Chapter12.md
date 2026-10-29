@@ -161,7 +161,6 @@ terraform {
     dynamodb_table = "terraform-lock-table" # DynamoDB table for locking mechanism
   }
 }
-
 ```
 
 ## 12.4 State Inspection, Import, and Refactoring Strategies
