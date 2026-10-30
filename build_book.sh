@@ -221,17 +221,8 @@ if "title.md" in file_list:
     out_content.append(odd_page_break)
 
 def preprocess_markdown(text):
-    # Convert '* [ ]' checklists into standard bullet points so Pandoc indents and wraps them
+    # Convert '* [ ]' checklists into standard bullet points
     text = re.sub(r'^\*\s+\[\s*\]\s+', r'* ', text, flags=re.MULTILINE)
-    
-    # Process inline backticks to allow line breaking after commas, spaces, and slashes
-    def fix_backticks(match):
-        code_str = match.group(1)
-        # Add a zero-width space after commas, slashes, underscores, and dashes inside backticks
-        code_str = re.sub(r'([/,\._\-])', r'\1\\hspace{0pt}', code_str)
-        return f'`{code_str}`'
-
-    text = re.sub(r'`([^`\n]+)`', fix_backticks, text)
     return text
 
 first = True
@@ -341,7 +332,7 @@ code_font_family = sys.argv[3]
 latex_template = r"""
 \usepackage{fontspec}
 \setmainfont{__BODY_FONT__}
-\setmonofont[Scale=0.82,HyphenChar=`\-]{__CODE_FONT__}
+\setmonofont[Scale=0.80,HyphenChar=`\-]{__CODE_FONT__}
 
 \usepackage{xcolor}
 \definecolor{headingblue}{RGB}{0, 51, 102}
@@ -422,6 +413,9 @@ latex_template = r"""
   \xspaceskip=0.33em plus 0.25em minus 0.15em
   \hyphenchar\font=`\-
   \emergencystretch=8em
+  \fontdimen2\font=0.3em
+  \fontdimen3\font=0.2em
+  \fontdimen4\font=0.1em
   #1%
   \endgroup
 }
