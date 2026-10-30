@@ -5,42 +5,46 @@
 Infrastructure as Code (IaC) tools such as Terraform and OpenTofu abstract cloud resource provisioning into declarative configuration files. However, maintaining the source of truth between your local configuration and real-world cloud resources requires a robust **state mechanism**.
 
 * **What is State?** State is a JSON-formatted mapping file (`terraform.tfstate`) that records resource metadata, resource IDs, and dependency graphs. Without state, IaC tools cannot determine which cloud resources need creation, modification, or destruction during an apply operation.
-* **The Limitations of Local State:** By default, IaC tools store state locally on the engineer's workstation. In team environments, local state introduces critical failure modes:
-  * **Race Conditions:** Two engineers running `apply` simultaneously can overwrite each other's changes, corrupting the state file.F
-  * **Lack of Visibility:** CI/CD pipelines cannot access local files residing on developer laptops.
-  * **Security Risks:** State files frequently contain sensitive attribute data (e.g., database connection strings, API keys, private IP addresses) in plaintext.
 
----
+* **The Limitations of Local State:** By default, IaC tools store state locally on the engineer's workstation. In team environments, local state introduces critical failure modes:
+
+  * **Race Conditions:** Two engineers running `apply` simultaneously can overwrite each other's changes, corrupting the state file.F
+
+  * **Lack of Visibility:** CI/CD pipelines cannot access local files residing on developer laptops.
+
+  * **Security Risks:** State files frequently contain sensitive attribute data (e.g., database connection strings, API keys, private IP addresses) in plaintext.
 
 ## 12.2 Enterprise Backend Requirements
 
 To scale IaC across multiple engineers and automated CI/CD pipelines, organizations must transition from local state to a **remote backend**. A production-ready remote backend must satisfy three core architectural pillars:
 
 1. **Centralized Storage:** A durable, highly available object store accessible by authorized team members and CI/CD runners.
-2. **State Locking:** A locking mechanism to serialize concurrent write operations and prevent state corruption.
-3. **Encryption & Access Control:** Strict cryptographic encryption at rest and in transit, coupled with principle-of-least-privilege Identity and Access Management (IAM) policies.
 
----
+2. **State Locking:** A locking mechanism to serialize concurrent write operations and prevent state corruption.
+
+3. **Encryption & Access Control:** Strict cryptographic encryption at rest and in transit, coupled with principle-of-least-privilege Identity and Access Management (IAM) policies.
 
 ## 12.3 Amazon S3 as a Scalable State Backend
 
 Amazon Simple Storage Service (S3) serves as the industry-standard remote backend for AWS-centric IaC deployments. S3 provides high durability, cost-effective storage, and native security controls.
 
 ### Essential S3 Configuration Primitives
-* **Versioning:** S3 bucket versioning must be enabled to maintain a history of state revisions. If a state file becomes corrupted or accidentally overwritten, administrators can roll back to a previous known-good version.
-* **Encryption at Rest:** Server-Side Encryption (SSE-S3 or SSE-KMS using AWS Key Management Service) ensures that sensitive credentials stored within the state file are never exposed in plaintext on disk.
-* **Public Access Blocking:** All public access blocks must be strictly enforced on the state bucket to prevent accidental data leaks.
 
----
+* **Versioning:** S3 bucket versioning must be enabled to maintain a history of state revisions. If a state file becomes corrupted or accidentally overwritten, administrators can roll back to a previous known-good version.
+
+* **Encryption at Rest:** Server-Side Encryption (SSE-S3 or SSE-KMS using AWS Key Management Service) ensures that sensitive credentials stored within the state file are never exposed in plaintext on disk.
+
+* **Public Access Blocking:** All public access blocks must be strictly enforced on the state bucket to prevent accidental data leaks.
 
 ## 12.4 DynamoDB State Locking and Concurrency Control
 
-While S3 provides durable storage, object storage alone does not support atomic locking for concurrent write operations. To solve this, Terraform integrates with **Amazon DynamoDB** to implement distributed state locking.
+While S3 provides durable storage, object storage alone does not support atomic locking for concurrent write operations. To solve this, Terraform integrates with 
+
+**Amazon DynamoDB** to implement distributed state locking.
 
 * **How Locking Works:** When an engineer initiates `terraform apply`, the IaC client acquires a lock in the DynamoDB table using a unique lock ID. If another engineer or pipeline attempts to run an apply while the lock is active, the operation is blocked until the lock is released upon completion.
-* **Orphaned Locks:** In the event of an abrupt pipeline crash or network interruption, locks can occasionally become orphaned. Administrators can manually release locks using `terraform force-unlock <LOCK_ID>`, though this should be done with extreme caution after verifying no operations are running.
 
----
+* **Orphaned Locks:** In the event of an abrupt pipeline crash or network interruption, locks can occasionally become orphaned. Administrators can manually release locks using `terraform force-unlock <LOCK_ID>`, though this should be done with extreme caution after verifying no operations are running.
 
 ## 12.5 Hands-On Lab: Provisioning Remote State Storage with S3 Backend and Lock Table
 
@@ -48,21 +52,20 @@ While S3 provides durable storage, object storage alone does not support atomic 
 
 This lab guides LPI 701-200 candidates through bootstrapping a secure, shared enterprise backend for an IaC project using AWS services. You will provision an Amazon S3 bucket for remote state storage and an Amazon DynamoDB table for state locking, establishing robust concurrency control and state integrity across your engineering team.
 
----
-
 ### Why Bootstrapping Matters
 
 This foundational bootstrapping process is typically executed outside the primary IaC management lifecycle—or managed within its own isolated state configuration. 
 
 * **Security Primitives:** Establishes encryption at rest, versioning, and strict access control policies before any production resources are deployed.
-* **State Isolation:** Prevents circular dependencies by separating the state infrastructure from the workloads it manages.
-* **Concurrency Control:** Configures state locking to prevent race conditions when multiple engineers or CI/CD pipelines apply infrastructure updates simultaneously.
 
----
+* **State Isolation:** Prevents circular dependencies by separating the state infrastructure from the workloads it manages.
+
+* **Concurrency Control:** Configures state locking to prevent race conditions when multiple engineers or CI/CD pipelines apply infrastructure updates simultaneously.
 
 ### Step-by-Step Implementation
 
 #### Step 1: Define the Bootstrap Configuration
+
 Create a directory named `bootstrap` and configure your provider settings in `providers.tf`:
 
 ```hcl
@@ -82,6 +85,7 @@ provider "aws" {
 ```
 
 #### Step 2: Provision S3 Bucket and DynamoDB Table
+
 Create `main.tf` to provision the S3 bucket with versioning and encryption, alongside the DynamoDB lock table:
 
 ```hcl
@@ -134,6 +138,7 @@ data "aws_caller_identity" "current" {}
 ```
 
 #### Step 3: Configure the Remote Backend
+
 Once your S3 bucket and DynamoDB table are successfully deployed, configure your main project's backend block in `backend.tf`:
 
 ```hcl
@@ -148,8 +153,6 @@ terraform {
 }
 ```
 
----
-
 ## 12.6 State Migration Best Practices & Safety Precautions
 
 Migrating Terraform state—whether moving from a local workstation to an AWS S3 bucket, switching object stores, or splitting a monolithic state file into micro-state modules—is a critical operation.
@@ -157,16 +160,21 @@ Migrating Terraform state—whether moving from a local workstation to an AWS S3
 ### Pre-Migration Safety Protocol
 
 1. **Pull a Standalone Local State Backup:**
+ 
    ```bash
    terraform state pull > backup_pre_migration_$(date +%Y%m%d).tfstate
    ```
+
 2. **Verify Target Storage Security & Versioning:** Ensure the target bucket has object versioning enabled and default server-side encryption configured prior to migration.
+
 3. **Ensure Active Lock Resolution:** Confirm no active operations or orphaned DynamoDB/backend locks exist.
+
 4. **Align Provider and Engine Versions:** Confirm that all team members and CI/CD agents are using identical Terraform engine and provider plugin versions.
 
 ### Step-by-Step Migration Process
 
 #### Step 1: Update Backend Configuration
+
 Modify your `backend.tf` or `main.tf` file to specify the new backend destination:
 
 ```hcl
@@ -182,6 +190,7 @@ terraform {
 ```
 
 #### Step 2: Execute Re-initialization with State Transfer
+
 Run `terraform init` with the `-migrate-state` flag:
 
 ```bash
@@ -194,16 +203,17 @@ Immediately run a dry-run plan after migration completes:
 ```bash
 terraform plan
 ```
-The output must show **`No changes. Your infrastructure matches the configuration.`**
 
----
+The output must show **`No changes. Your infrastructure matches the configuration.`**
 
 ## 12.7 Production CI/CD Integration & Keyless OIDC Authentication
 
 ### 1. Keyless AWS Authentication via OIDC
+
 Instead of storing permanent AWS Access Keys and Secret Keys in CI/CD secrets, production pipelines use **OIDC federation**.
 
 #### IAM Trust Policy (`trust-policy.json`)
+
 ```json
 {
   "Version": "2012-10-17",
@@ -318,8 +328,6 @@ jobs:
         run: terraform apply -input=false tfplan
 ```
 
----
-
 ## 12.8 GitOps Workflows & Related Ecosystem Tools
 
 ### 1. Atlantis vs. GitHub Actions
@@ -369,6 +377,7 @@ spec:
 ### 3. Ansible Configuration Management & Vault Secrets
 
 #### Ansible Role Directory Architecture
+
 ```text
 roles/
 └── webserver/
@@ -381,6 +390,7 @@ roles/
 ```
 
 #### Encrypting Variables with Ansible Vault
+
 ```yaml
 ---
 db_host: "db.prod.internal"
@@ -407,15 +417,20 @@ db_password: !vault |
 | **Resource Overhead** | High per-pod CPU and memory footprint. | Minimal shared node-level footprint. |
 | **Lifecycle & Upgrades** | Disruptive (requires application pod restarts). | Non-Disruptive (node-level component upgrades). |
 
----
-
 ## 12.9 Summary & Exam Checklist (LPI 701-200)
 
 For the **Linux Professional Institute DevOps Tools Engineer (Exam 701-200)** certification, ensure you can:
+
 * Explain the role and structure of the `terraform.tfstate` file.
+
 * Configure S3 remote backends with versioning, encryption, and public access blocks.
+
 * Implement distributed state locking using AWS DynamoDB.
+
 * Execute state migration safely using `terraform init -migrate-state`.
+
 * Understand OIDC keyless authentication for CI/CD pipelines.
+
 * Distinguish between Ansible (configuration management) and Terraform (provisioning).
+
 * Comprehend containerization internals (namespaces, cgroups), multi-stage Dockerfiles, and Kubernetes primitives (Deployments, StatefulSets, DaemonSets, Services, Ingress).
