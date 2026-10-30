@@ -1,18 +1,20 @@
 # Chapter 13: Declarative Infrastructure Provisioning
 
-This chapter covers the operational mechanics, language constructs, and design patterns required to write enterprise-grade HashiCorp Configuration Language (HCL) code. It maps directly to the **LPI 701-200 DevOps Tools Engineer Exam Objectives** under Subject Area 701 (Infrastructure as Code and Automation).
+Welcome to **Chapter 13** of *The Ultimate Handbook of DevOps Practitioner*. In this chapter, we transition from theoretical infrastructure automation to rigorous, production-grade **HashiCorp Configuration Language (HCL)** engineering. 
 
-## 13.1 HCL (HashiCorp Configuration Language) Syntax and Data Types
+Writing infrastructure code that runs cleanly in a local test environment is easy; designing enterprise-grade modules that withstand multi-region deployments, automated CI/CD pipelines, dynamic secrets management, GitOps controllers, and strict compliance audits requires a disciplined approach. This chapter maps directly to the **LPI 701-200 DevOps Tools Engineer Exam Objectives** under Subject Area 701 (Infrastructure as Code and Automation).
 
-HashiCorp Configuration Language (HCL2) is a declarative, human-readable, and machine-friendly language optimized for defining infrastructure resources. Understanding its underlying syntax rules, block types, and type system is essential for developing predictable IaC configurations.
+## 13.1 Mastering HCL2 Syntax and Strict Typing
 
-### HCL Core Syntax Architecture
+HashiCorp Configuration Language (HCL2) bridges human readability and machine execution. In an enterprise environment, treating HCL as software code—complete with style guides, linters, and strict static validation—is non-negotiable.
 
-An HCL configuration file consists of **blocks**, **arguments**, and **expressions**:
+### The Anatomy of an HCL Block
+
+An HCL configuration is structured around three primary elements: **blocks**, **arguments**, and **expressions**.
 
 ```hcl
 # Block Type: "resource"
-# Block Labels: "aws_instance" (Type), "app_node" (Local Name)
+# Block Labels: "aws_instance" (Resource Type), "app_node" (Local Identifier)
 resource "aws_instance" "app_node" {
   # Argument Key = Expression Value
   ami           = "ami-0c55b159cbfafe1f0"
@@ -24,35 +26,37 @@ resource "aws_instance" "app_node" {
 }
 ```
 
-* **Blocks:** Containers for configuration objects. Blocks have a type (e.g., `resource`, `variable`, `data`, `output`, `module`) and zero or more block labels.
+*   **Blocks:** The structural containers. They define infrastructure objects, variables, data sources, and outputs, characterized by a block type and optional string labels.
 
-* **Arguments:** Assign values to names within a block using the `=` operator.
+*   **Arguments:** Key-value assignments inside blocks that configure specific attributes using the `=` operator.
 
-* **Expressions:** Represent values, either literally or by referencing other elements in the configuration graph.
+*   **Expressions:** Literals, function calls, or references to other objects within the configuration dependency graph.
 
-### HCL Primitive and Complex Data Types
+### Enterprise Data Type Enforcement
 
-HCL enforces strong typing to validate infrastructure configurations prior to API execution.
+Relying on implicit typing in production leads to runtime failures during `terraform apply`. HCL enforces strong typing to catch configuration errors at plan-time.
 
 #### Primitive Data Types
 
-* `string`: A sequence of Unicode characters (e.g., `"t3.micro"`, `"us-east-1"`).
+*   `string`: Unicode character sequences (e.g., `"us-east-1"`).
 
-* `number`: Integer or floating-point numeric value (e.g., `80`, `3.14`).
+*   `number`: Integer or floating-point values (e.g., `443`, `3.14`).
 
-* `bool`: Boolean flag (`true` or `false`).
+*   `bool`: Boolean flags (`true` or `false`).
 
-#### Complex (Collection and Structural) Data Types
+#### Complex Collection & Structural Types
 
-| Type Construct | Description | Example Syntax |
-| --- | --- | --- |
-| `list(...)` | Ordered collection of elements of a single type. Indexing is zero-based (`[0]`). | `list(string)` → `["subnet-a", "subnet-b"]` |
-| `set(...)` | Unordered collection of unique values of a single type. Automatically removes duplicates. | `set(string)` → `["sg-123", "sg-456"]` |
-| `map(...)` | Collection of key-value pairs where all values must share the same type. | `map(string)` → `{ env = "prod", owner = "ops" }` |
-| `object(...)` | Structural type defining specific named attributes, each with its own designated type. | `object({ id = string, port = number, active = bool })` |
-| `tuple(...)` | Sequence of elements where each element position has a distinct, predefined type. | `tuple([string, number, bool])` → `["vpc-1", 443, true]` |
+| Type Construct | Enterprise Use Case | Example Syntax |
+| :--- | :--- | :--- |
+| `list(...)` | Ordered sequences of identical types (e.g., subnet routing). | `list(string)` $\rightarrow$ `["subnet-a", "subnet-b"]` |
+| `set(...)` | Unordered collections with automatic duplicate purging (e.g., security group rules). | `set(string)` $\rightarrow$ `["sg-123", "sg-456"]` |
+| `map(...)` | Key-value dictionaries sharing a common value type (e.g., tags, lookup tables). | `map(string)` $\rightarrow$ `{ env = "prod", owner = "ops" }` |
+| `object(...)` | Strongly typed structural schemas with named attributes. | `object({ id = string, port = number, active = bool })` |
+| `tuple(...)` | Fixed-length sequences where each position has a distinct type. | `tuple([string, number, bool])` $\rightarrow$ `["vpc-1", 443, true]` |
 
-#### Structural Type Example
+#### Production Structural Validation Example
+
+Using `object` types alongside `validation` blocks guarantees that incoming configuration parameters conform strictly to enterprise compliance standards:
 
 ```hcl
 variable "database_config" {
@@ -62,65 +66,62 @@ variable "database_config" {
     multi_az          = bool
     engine_version    = string
   })
-  default = {
-    instance_class    = "db.r6g.xlarge"
-    allocated_storage = 100
-    multi_az          = true
-    engine_version    = "15.3"
+  
+  description = "Standardized database configuration profile"
+  
+  validation {
+    condition     = can(regex("^db\\.", var.database_config.instance_class))
+    error_message = "Database instance class must be a valid RDS SKU starting with 'db'."
   }
 }
 ```
 
 ## 13.2 Dynamic Infrastructure with Variables, Outputs, and Locals
 
-Enterprise IaC configurations must be dynamic, parameterized, and modular. Hardcoding values into resource blocks is anti-pattern in production environments.
+Hardcoded values create brittle codebases. Enterprise infrastructure modules must be parameterized to handle multiple environments (dev, staging, production) cleanly.
 
-### Input Variables (`variables.tf`)
+### Input Variables & Precedence Hierarchy
 
-Input variables serve as parameters for a module or workspace.
+Input variables define the public API of your module. 
 
 ```hcl
 variable "environment" {
   type        = string
-  description = "Target execution environment (dev, staging, prod)"
+  description = "Target execution environment"
   
   validation {
     condition     = contains(["dev", "staging", "prod"], var.environment)
-    error_message = "Environment must be one of: dev, staging, prod."
+    error_message = "Environment must be one of: dev, staging, or prod."
   }
 }
-
-variable "ingress_ports" {
-  type        = list(number)
-  description = "List of allowed inbound ports"
-  default     = [80, 443]
-}
-
 ```
 
-#### Variable Precedence Hierarchy (Lowest to Highest)
+When managing variables across complex pipelines, understand the strict **Variable Precedence Hierarchy** (ordered from lowest to highest priority):
 
-When the same variable is defined in multiple places, Terraform resolves the value according to the following strict order of precedence (1 is lowest, 6 is highest):
+1. Default values defined in the `variable` block.
 
-1. Default value in `variable` block.
-2. Environment variables (`TF_VAR_variable_name`).
-3. `terraform.tfvars` or `terraform.tfvars.json` file.
-4. `*.auto.tfvars` or `*.auto.tfvars.json` files (loaded lexicographically).
-5. Command-line flag `-var` or `-var-file` explicitly passed during run execution.
+2. Environment variables prefixed with `TF_VAR_` (e.g., `TF_VAR_environment=prod`).
+
+3. The `terraform.tfvars` or `terraform.tfvars.json` files.
+
+4. Files matching `*.auto.tfvars` or `*.auto.tfvars.json` (evaluated lexicographically).
+
+5. Explicit command-line flags (`-var` or `-var-file`).
 
 ### Local Values (`locals.tf`)
 
-Local values assign a name to an expression, preventing repetitive code and simplifying complex calculations.
+Local values prevent repetitive expressions and encapsulate internal naming conventions or tag schemas:
+
 
 ```hcl
 locals {
-  name_prefix = "${var.organization}-${var.environment}"
+  name_prefix = "enterprise-${var.environment}"
   
   common_tags = {
-    Organization = var.organization
+    Organization = "Cybergate Service"
     Environment  = var.environment
     ManagedBy    = "Terraform"
-    Project      = "Core-Infrastructure"
+    Audited      = "true"
   }
 }
 
@@ -128,82 +129,36 @@ resource "aws_vpc" "primary" {
   cidr_block = "10.0.0.0/16"
   tags       = merge(local.common_tags, { Name = "${local.name_prefix}-vpc" })
 }
-
 ```
 
-### Output Values (`outputs.tf`)
+### Secure Output Handling
 
-Outputs expose specific infrastructure attributes for consumption by external pipelines, root configurations, or remote state lookups.
+Outputs expose resource attributes to parent modules or external CI/CD pipelines. Always mark sensitive credentials or keys:
 
 ```hcl
-output "vpc_id" {
-  description = "The ID of the provisioned primary VPC"
-  value       = aws_vpc.primary.id
-}
-
-output "db_password" {
-  description = "Sensitive master database password"
+output "db_master_password" {
+  description = "Master database password securely stored in state"
   value       = aws_db_instance.main.password
-  sensitive   = true # Prevents value from displaying in standard console outputs
+  sensitive   = true # Suppresses value output in standard console logs
 }
-
 ```
 
-## 13.3 Enterprise Module Architecture and Reusability
+## 13.3 Enterprise Module Architecture & Dynamic Iteration
 
-A Terraform/OpenTofu module is a container for multiple resources configured together. A **Root Module** executes from the main working directory, while **Child Modules** are instantiated inside configurations to standardize patterns.
-
-### Standard Module Structure
-
-An enterprise-ready child module maintains a clean interface boundary:
+Scaling IaC across dozens of microservices requires modularization. A clean child module follows a strict structural contract:
 
 ```text
 modules/aws-compute-node/
-├── README.md           # Documentation and usage examples
+├── README.md           # Architectural overview and usage examples
 ├── main.tf             # Core resource definitions
-├── variables.tf        # Explicit input parameters
-├── outputs.tf          # Explicit output exports
-├── versions.tf         # Terraform and provider version pinning
-└── tests/              # Native unit/integration tests
+├── variables.tf        # Explicit input contracts
+├── outputs.tf          # Explicit output interfaces
+└── versions.tf         # Strict provider and language version pinning
 ```
 
-### Instantiating Child Modules
+### Dynamic Resource Generation: `for_each` vs. `count`
 
-```hcl
-module "app_server_cluster" {
-  source  = "git::https://github.com/enterprise/terraform-aws-compute.git//modules/instance?ref=v2.1.0"
-
-  environment   = var.environment
-  instance_type = "t3.medium"
-  subnet_ids    = data.terraform_remote_state.network.outputs.private_subnet_ids
-
-  tags = local.common_tags
-}
-```
-
-### Dynamic Resource Generation: `for_each` and `count`
-
-To generate multiple instances of a resource or module dynamically, use `count` or `for_each`.
-
-#### `count` Meta-Argument
-
-Useful when creating identical copies based on an integer value:
-
-```hcl
-resource "aws_instance" "worker" {
-  count         = var.worker_count
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t3.micro"
-
-  tags = {
-    Name = "worker-node-${count.index + 1}"
-  }
-}
-```
-
-#### `for_each` Meta-Argument
-
-Preferred for collection-driven provisioning. Prevents cascading updates when items are removed from the middle of a list:
+In enterprise environments, prefer `for_each` over `count` when managing collections. `count` relies on integer indexing; if an item is removed from the middle of a list, every subsequent resource is destroyed and recreated. `for_each` uses stable map keys, preventing accidental cascade updates.
 
 ```hcl
 variable "subnets" {
@@ -213,7 +168,6 @@ variable "subnets" {
   }))
   default = {
     "public-a"  = { cidr = "10.0.1.0/24", az = "us-east-1a" }
-    "public-b"  = { cidr = "10.0.2.0/24", az = "us-east-1b" }
     "private-a" = { cidr = "10.0.10.0/24", az = "us-east-1a" }
   }
 }
@@ -230,13 +184,11 @@ resource "aws_subnet" "subnet" {
 }
 ```
 
-## 13.4 Resource Lifecycle Management and Workspace Management
+## 13.4 Resource Lifecycle Control and State Workspaces
 
-Managing infrastructure state safely requires control over resource update behaviors and environment isolates.
+Production stability relies on fine-tuning how Terraform manages resource state changes.
 
-### Controlling Resource Lifecycles
-
-The `lifecycle` meta-block customizes default creation/destruction behaviors for individual resources:
+### Lifecycle Meta-Blocks
 
 ```hcl
 resource "aws_instance" "critical_app" {
@@ -244,13 +196,13 @@ resource "aws_instance" "critical_app" {
   instance_type = "t3.large"
 
   lifecycle {
-    # 1. Prevent accidental destruction via 'terraform destroy'
+    # 1. Prevent accidental deletion during teardown scripts
     prevent_destroy = true
 
-    # 2. Create replacement before destroying old resource during immutable updates
+    # 2. Ensure zero downtime during updates (Blue/Green pattern)
     create_before_destroy = true
 
-    # 3. Ignore external modifications to specific attributes (prevents drift conflict)
+    # 3. Protect auto-scaled or externally modified tags from state drift conflict
     ignore_changes = [
       tags["LastScanned"],
       user_data
@@ -259,91 +211,27 @@ resource "aws_instance" "critical_app" {
 }
 ```
 
-### Workspace Management
+## 13.5 Hands-On Lab: Building a Production-Ready Compute Module
 
-Workspaces allow multiple state files to be managed from the same root configuration directory.
+Let’s put these concepts into practice by constructing a modular, enterprise-grade directory layout that provisions an AWS VPC and an EC2 compute instance.
 
-```bash
-# List existing workspaces
-terraform workspace list
-
-# Create and switch to a new workspace
-terraform workspace new staging
-
-# Select an existing workspace
-terraform workspace select production
-
-# Display current active workspace
-terraform workspace show
-```
-
-#### Utilizing Workspace Name in Code
-
-```hcl
-locals {
-  # Dynamically scale instance type depending on active workspace
-  instance_type = lookup({
-    dev        = "t3.micro"
-    staging    = "t3.medium"
-    production = "c6i.xlarge"
-  }, terraform.workspace, "t3.micro")
-}
-
-resource "aws_instance" "web" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = local.instance_type
-
-  tags = {
-    Name        = "web-server-${terraform.workspace}"
-    Environment = terraform.workspace
-  }
-}
-```
-
-## 13.5 Hands-On Lab: Building Modular Terraform Code for Automated Cloud Node Provisioning
-
-### Objective
-
-Design and deploy a reusable enterprise module that provisions AWS compute instances attached to a customized VPC, using dynamic variable inputs, outputs, and local tags.
-
-### Step 1: Directory Setup
-
-Create a structured workspace containing both the child module definition and a root caller configuration:
+### Step 1: Initialize Directory Layout
 
 ```bash
 mkdir -p terraform-lab13/modules/compute
 cd terraform-lab13
 ```
 
-### Step 2: Build the Child Compute Module
+### Step 2: Write the Compute Module Files
 
 #### `modules/compute/variables.tf`
 
 ```hcl
-variable "ami_id" {
-  type        = string
-  description = "AMI ID to launch instance"
-}
-
-variable "instance_type" {
-  type        = string
-  description = "Compute instance SKU"
-  default     = "t3.micro"
-}
-
-variable "subnet_id" {
-  type        = string
-  description = "Target subnet ID"
-}
-variable "node_name" {
-  type        = string
-  description = "Logical name tag for instance"
-}
-
-variable "environment" {
-  type        = string
-  description = "Deployment environment"
-}
+variable "ami_id" { type = string }
+variable "instance_type" { type = string; default = "t3.micro" }
+variable "subnet_id" { type = string }
+variable "node_name" { type = string }
+variable "environment" { type = string }
 ```
 
 #### `modules/compute/main.tf`
@@ -385,20 +273,13 @@ resource "aws_instance" "node" {
 #### `modules/compute/outputs.tf`
 
 ```hcl
-output "instance_id" {
-  description = "ID of created EC2 instance"
-  value       = aws_instance.node.id
-}
-
-output "private_ip" {
-  description = "Private IP address assigned to node"
-  value       = aws_instance.node.private_ip
-}
+output "instance_id" { value = aws_instance.node.id }
+output "private_ip" { value = aws_instance.node.private_ip }
 ```
 
-### Step 3: Configure Root Module and Invocation
+### Step 3: Implement the Root Caller Configuration
 
-Return to the root `terraform-lab13` folder and construct the root caller configuration.
+Navigate back to the root `terraform-lab13` folder.
 
 #### `versions.tf`
 
@@ -416,42 +297,28 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
-
 ```
 
 #### `variables.tf`
-
 ```hcl
-variable "aws_region" {
-  type    = string
-  default = "us-east-1"
-}
-
-variable "environment" {
-  type    = string
-  default = "dev"
-}
+variable "aws_region" { type = string; default = "us-east-1" }
+variable "environment" { type = string; default = "dev" }
 ```
 
 #### `main.tf`
-
 ```hcl
-# Look up latest Amazon Linux 2 AMI dynamically
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
-
   filter {
     name   = "name"
     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 }
 
-# Provision foundational Network infrastructure
 resource "aws_vpc" "lab_vpc" {
   cidr_block           = "10.100.0.0/16"
   enable_dns_hostnames = true
-
   tags = {
     Name        = "lab-vpc-${var.environment}"
     Environment = var.environment
@@ -462,13 +329,9 @@ resource "aws_subnet" "lab_subnet" {
   vpc_id            = aws_vpc.lab_vpc.id
   cidr_block        = "10.100.1.0/24"
   availability_zone = "${var.aws_region}a"
-
-  tags = {
-    Name = "lab-subnet-a"
-  }
+  tags = { Name = "lab-subnet-a" }
 }
 
-# Call local child module
 module "app_node" {
   source = "./modules/compute"
 
@@ -481,10 +344,8 @@ module "app_node" {
 ```
 
 #### `outputs.tf`
-
 ```hcl
 output "deployed_node_details" {
-  description = "Details exported from child compute module"
   value = {
     instance_id = module.app_node.instance_id
     private_ip  = module.app_node.private_ip
@@ -492,32 +353,663 @@ output "deployed_node_details" {
 }
 ```
 
-### Step 4: Validate, Plan, and Apply
-
-Execute the standard validation and deployment workflow:
+### Step 4: Execute Workflow & Clean Up
 
 ```bash
-# 1. Initialize working directory and load providers/modules
+# 1. Initialize working directory
 terraform init
 
-# 2. Validate configuration syntax and consistency
+# 2. Validate configuration syntax
 terraform validate
 
-# 3. Perform dry-run plan step
-terraform plan -out=tfplan.binary
+# 3. Plan and execute
+terraform apply -auto-approve
 
-# 4. Apply execution plan
-terraform apply tfplan.binary
-```
-
-### Step 5: Verification and Cleanup
-
-Confirm that outputs are correctly populated from the child module:
-
-```bash
-# Display output values
-terraform output deployed_node_details
-
-# Clean up resources to prevent cloud cost accumulation
+# 4. Clean up resources
 terraform destroy -auto-approve
 ```
+
+---
+
+## 13.6 Enterprise State Management and State Locking
+
+In local development, Terraform stores resource metadata in a local file named `terraform.tfstate`. In an enterprise setting with multiple engineers and automated CI/CD pipelines, local state files are a liability. They risk state corruption, expose plain-text secrets, and prevent concurrent deployments.
+
+To solve this, enterprise IaC architectures rely on **remote backends** with distributed storage and **state locking**.
+
+### S3 Backend with DynamoDB State Locking Architecture
+
+By storing state in an encrypted Amazon S3 bucket and utilizing a DynamoDB table for locking, you prevent two engineers or CI/CD pipelines from applying conflicting state modifications simultaneously.
+
+#### Creating the Backend Infrastructure (`backend-setup/main.tf`)
+Before configuring your main project backend, provision the supporting state storage infrastructure:
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "terraform_state" {
+  bucket        = "cybergate-terraform-state-prod"
+  force_destroy = false
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "aws_s3_bucket_versioning" "enabled" {
+  bucket = aws_s3_bucket.terraform_state.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
+  bucket = aws_s3_bucket.terraform_state.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "cybergate-terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+```
+
+#### Configuring the Remote Backend in Root Modules (`backend.tf`)
+Once your S3 bucket and DynamoDB table are provisioned, configure your root module to use the remote backend:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket         = "cybergate-terraform-state-prod"
+    key            = "compute-node/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "cybergate-terraform-locks"
+    encrypt        = true
+  }
+}
+```
+
+---
+
+## 13.7 Automated Infrastructure Testing with Terratest
+
+Writing enterprise IaC without automated testing is like writing production microservices without unit tests. **Terratest** is a Go-based library developed by Gruntwork that allows you to write automated tests for your Terraform code. It provisions real infrastructure, validates behavior using assertions, and cleans up after itself.
+
+### Setting Up the Test Directory Structure
+
+```text
+terraform-lab13/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── modules/
+└── test/
+    ├── go.mod
+    ├── go.sum
+    └── compute_test.go
+```
+
+### Step 1: Initialize Go Module & Install Terratest
+
+```bash
+cd test
+go mod init github.com/enterprise/terraform-lab13/test
+go get github.com/gruntwork-io/terratest/modules/terraform
+```
+
+### Step 2: Write the Integration Test (`test/compute_test.go`)
+
+```go
+package test
+
+import (
+	"testing"
+
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestTerraformComputeModule(t *testing.T) {
+	t.Parallel()
+
+	terraformOptions := &terraform.Options{
+		TerraformDir: "../",
+		Vars: map[string]interface{}{
+			"aws_region":  "us-east-1",
+			"environment": "test",
+		},
+	}
+
+	defer terraform.Destroy(t, terraformOptions)
+	terraform.InitAndApply(t, terraformOptions)
+
+	instanceID := terraform.Output(t, terraformOptions, "deployed_node_details")
+	privateIP := terraform.Output(t, terraformOptions, "deployed_node_details")
+
+	assert.NotEmpty(t, instanceID)
+	assert.NotEmpty(t, privateIP)
+}
+```
+
+### Step 3: Execute Automated Tests
+
+```bash
+go test -v -timeout 30m compute_test.go
+```
+
+## 13.8 GitHub Actions CI/CD Pipeline for Enterprise IaC
+
+Manually executing `terraform apply` from a local workstation is an enterprise anti-pattern. Production infrastructure changes must be driven through automated, auditable, and secure CI/CD pipelines.
+
+### Enterprise Workflow Configuration (`.github/workflows/terraform-ci.yml`)
+
+```yaml
+name: Enterprise Terraform CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  validate-and-test:
+    name: Validate, Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.0"
+
+      - name: Verify Formatting
+        run: terraform fmt -check -recursive
+
+      - name: Initialize Terraform
+        run: terraform init -backend=false
+
+      - name: Validate Syntax
+        run: terraform validate
+
+      - name: Run TFLint
+        uses: tflint-actions/setup-tflint@v3
+        with:
+          tflint_version: v0.50.0
+      - run: tflint --init && tflint
+
+      - name: Run Tfsec Security Scanner
+        uses: tfsec/tfsec-action@v1
+
+  deploy-infrastructure:
+    name: Production Apply
+    needs: validate-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.0"
+
+      - name: Authenticate to AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsTerraformDeploymentRole
+          aws-region: us-east-1
+
+      - name: Terraform Init & Apply
+        run: |
+          terraform init
+          terraform apply -auto-approve
+```
+
+## 13.9 Secure Cloud Authentication via OpenID Connect (OIDC)
+
+Hardcoding static AWS credentials inside GitHub repository secrets is a severe security vulnerability. Enterprise pipelines eliminate static credentials by utilizing **OpenID Connect (OIDC)**. GitHub acts as the OIDC Identity Provider (IdP), issuing short-lived JSON Web Tokens (JWT) directly to runners. AWS STS validates the token and exchanges it for temporary IAM credentials.
+
+### IAM Role Trust Policy (`github-oidc-trust-policy.json`)
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+        },
+        "StringLike": {
+          "token.actions.githubusercontent.com:sub": "repo:chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer:*"
+        }
+      }
+    }
+  ]
+}
+```
+
+---
+
+## 13.10 Domain-Driven Terraform State Partitioning and Remote Lookups
+
+Managing a massive, monolithic Terraform configuration is an enterprise anti-pattern. A single state corruption halts all infrastructure deployments across the entire organization.
+
+To scale infrastructure safely, enterprise architectures adopt **Domain-Driven State Partitioning**. State files are split into distinct functional boundaries (e.g., `network`, `database`, `compute`), managed in separate directories, and connected via `terraform_remote_state` data sources:
+
+```hcl
+data "terraform_remote_state" "network" {
+  backend = "s3"
+
+  config = {
+    bucket         = "cybergate-terraform-state-prod"
+    key            = "network/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "cybergate-terraform-locks"
+  }
+}
+
+resource "aws_instance" "app_node" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = "t3.medium"
+  subnet_id     = data.terraform_remote_state.network.outputs.private_subnet_ids[0]
+
+  tags = {
+    Name = "partitioned-app-node"
+  }
+}
+```
+
+## 13.11 Automated Policy-as-Code with OPA (Open Policy Agent) and Conftest
+
+Enterprise governance requires **Policy-as-Code** using **Open Policy Agent (OPA)** and **Conftest**. OPA evaluates JSON execution plans generated by Terraform against declarative Rego policies *before* any cloud resources are touched.
+
+### Rego Security Policy (`policy/security.rego`)
+
+```rego
+package terraform.security
+
+import future.keywords.in
+
+deny[msg] {
+    resource := input.resource_changes[_]
+    resource.type == "aws_security_group"
+    
+    ingress := resource.change.after.ingress[_]
+    cidr := ingress.cidr_blocks[_]
+    cidr == "0.0.0.0/0"
+    
+    port := ingress.from_port
+    port == 22
+    
+    msg := sprintf("CRITICAL SECURITY VIOLATION: Security group '%v' allows unrestricted public SSH access.", [resource.address])
+}
+```
+
+### Executing Conftest in CI/CD Workflow
+
+```bash
+terraform plan -out=tfplan.binary
+terraform show -json tfplan.binary > tfplan.json
+conftest test tfplan.json --policy policy/
+```
+
+## 13.12 Hardened Golden AMIs with HashiCorp Packer and Ansible
+
+Relying on runtime bootstrapping scripts creates boot latency and repository dependency risks. Enterprise infrastructure standards mandate the **Immutable Infrastructure Pattern** via pre-baked **Golden AMIs** built with **HashiCorp Packer** and provisioned using **Ansible**.
+
+### Packer Spec (`ami.pkr.hcl`)
+
+```hcl
+packer {
+  required_plugins {
+    amazon = { version = "~> 1.3"; source = "github.com/hashicorp/amazon" }
+    ansible = { version = "~> 1.1"; source = "github.com/hashicorp/ansible" }
+  }
+}
+
+source "amazon-ebs" "secure_node" {
+  region        = "us-east-1"
+  instance_type = "t3.micro"
+  ami_name      = "cybergate-hardened-base-${formatdate("YYYYMMDD-hhmmss", timestamp())}"
+  
+  source_ami_filter {
+    filters = {
+      name                = "amzn2-ami-hvm-*-x86_64-gp2"
+      root-device-type    = "ebs"
+      virtualization-type = "hvm"
+    }
+    most_recent = true
+    owners      = ["amazon"]
+  }
+  ssh_username = "ec2-user"
+}
+
+build {
+  sources = ["source.amazon-ebs.secure_node"]
+  provisioner "ansible" {
+    playbook_file = "./ansible/hardening.yml"
+    user          = "ec2-user"
+  }
+}
+```
+
+### Ansible Hardening Playbook (`ansible/hardening.yml`)
+
+```yaml
+---
+- name: Apply Enterprise Security Hardening
+  hosts: all
+  become: true
+  tasks:
+    - name: Update all system packages to latest security versions
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Ensure SSH root login is disabled
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+      notify: Restart SSH
+
+    - name: Ensure strict SSH protocol version
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^Protocol'
+        line: 'Protocol 2'
+      notify: Restart SSH
+
+    - name: Install and start auditd service
+      yum:
+        name: audit
+        state: present
+
+  handlers:
+    - name: Restart SSH
+      systemd:
+        name: sshd
+        state: restarted
+```
+
+## 13.13 Advanced Terraform Drift Detection and Automated Remediation
+
+Enterprise governance requires continuous, automated drift detection with real-time alerting.
+
+### Scheduled Drift Detection Workflow (`.github/workflows/terraform-drift.yml`)
+
+```yaml
+name: Enterprise Infrastructure Drift Detection
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  detect-drift:
+    name: Run Drift Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.0"
+
+      - name: Authenticate to AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsTerraformDeploymentRole
+          aws-region: us-east-1
+
+      - name: Check for Infrastructure Drift
+        run: |
+          terraform init
+          terraform plan -detailed-exitcode -no-color || exit_code=$?
+          if [ "${exit_code:-0}" -eq 2 ]; then
+            echo "DRIFT_DETECTED=true" >> $GITHUB_ENV
+            echo "::warning::Infrastructure drift detected!"
+            exit 2
+          fi
+```
+
+## 13.14 Zero-Downtime Blue/Green Deployments with Terraform and Route53
+
+Blue/Green Deployments eliminate update downtime by maintaining two identical production environments (**Blue** and **Green**) and shifting traffic using **Amazon Route 53 Weighted Routing Policies**.
+
+```hcl
+variable "traffic_shift_to_green" {
+  type    = bool
+  default = false
+}
+
+locals {
+  blue_weight  = var.traffic_shift_to_green ? 0 : 100
+  green_weight = var.traffic_shift_to_green ? 100 : 0
+}
+
+resource "aws_route53_record" "app_blue" {
+  zone_id = var.route53_zone_id
+  name    = "api.cybergate.one"
+  type    = "A"
+  ttl     = 30
+
+  set_identifier = "blue-stack"
+  weighted_routing_policy { weight = local.blue_weight }
+  records = [aws_instance.blue_node.public_ip]
+}
+
+resource "aws_route53_record" "app_green" {
+  zone_id = var.route53_zone_id
+  name    = "api.cybergate.one"
+  type    = "A"
+  ttl     = 30
+
+  set_identifier = "green-stack"
+  weighted_routing_policy { weight = local.green_weight }
+  records = [aws_instance.green_node.public_ip]
+}
+```
+
+---
+
+## 13.15 Multi-Region Disaster Recovery State Replication & Provider Aliasing
+
+Designing a Multi-Region Disaster Recovery (DR) architecture with Terraform involves multi-region provider aliasing combined with S3 Cross-Region Replication (CRR) and DynamoDB Global Tables.
+
+```hcl
+provider "aws" {
+  alias  = "primary"
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "dr"
+  region = "us-west-2"
+}
+
+resource "aws_instance" "primary_app" {
+  provider      = aws.primary
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t3.medium"
+  tags          = { Name = "production-primary-node" }
+}
+
+resource "aws_instance" "dr_app" {
+  provider      = aws.dr
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t3.medium"
+  tags          = { Name = "production-dr-node" }
+}
+```
+
+## 13.16 Dynamic Secrets Management with HashiCorp Vault
+
+Enterprise architectures eliminate static secrets by integrating **HashiCorp Vault**, dynamically generating short-lived, ephemeral database credentials and API tokens at runtime.
+
+```hcl
+provider "vault" {
+  address = "https://vault.cybergate.one:8200"
+}
+
+data "vault_kv_secret_v2" "database_creds" {
+  mount = "secret"
+  name  = "production/rds-master"
+}
+
+resource "aws_db_instance" "secure_postgres" {
+  identifier        = "cybergate-prod-db"
+  engine            = "postgres"
+  engine_version    = "15.3"
+  instance_class    = "db.r6g.xlarge"
+  allocated_storage = 100
+
+  username = data.vault_kv_secret_v2.database_creds.data["username"]
+  password = data.vault_kv_secret_v2.database_creds.data["password"]
+
+  skip_final_snapshot = true
+}
+```
+
+## 13.17 Advanced GitOps Continuous Delivery with Argo CD and Terraform Controllers
+
+Enterprise GitOps flips traditional push-based deployment models to a **pull-based architecture** using **Argo CD** and Kubernetes-native Terraform Controllers.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: terraform-drift-reconciliation-cron
+  namespace: argocd
+spec:
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: "Forbid"
+  workflowSpec:
+    spec:
+      entrypoint: reconcile-infrastructure
+      templates:
+      - name: reconcile-infrastructure
+        container:
+          image: hashicorp/terraform:1.6.0
+          command: ["sh", "-c"]
+          args:
+            - |
+              git clone https://github.com/chinthakadegunadasa/lpi-ex701-200-preparation-guide-devops-tools-engineer.git /workspace/repo
+              cd /workspace/repo
+              terraform init
+              terraform apply -auto-approve
+```
+
+## LPI 701-200 Exam Objective 701: Practice Questions
+
+### Question 1: HCL Syntax and Variable Precedence
+**Scenario:** A DevOps engineer runs `terraform apply -var="environment=staging"` while an environment variable `TF_VAR_environment=production` is exported in their active shell session, and a `terraform.tfvars` file specifies `environment = "development"`. 
+
+Which value will Terraform assign to `var.environment` during execution?
+
+A. `development` (from `terraform.tfvars`)
+
+B. `production` (from environment variable `TF_VAR_environment`)
+
+C. `staging` (from command-line `-var` flag)
+
+D. Terraform will throw a validation conflict error and halt execution.
+
+> **Correct Answer:** **C**  
+
+> *Explanation:* According to Terraform's strict variable precedence hierarchy, explicit command-line flags (`-var` or `-var-file`) override environment variables, tfvars files, and default block values.
+
+### Question 2: Resource Iteration (`for_each` vs. `count`)
+
+**Scenario:** A team manages a list of three IAM users using an index-based iteration construct. When the middle user (`bob`) is removed from the list, Terraform destroys and recreates the user account for `charlie` (who was at index 2 and shifted to index 1). 
+
+Which meta-argument should the engineer adopt to prevent cascading updates when items are modified in collections?
+A.`count`
+B. `for_each`
+C. `lifecycle { create_before_destroy = true }`
+D. `depends_on`
+
+> **Correct Answer:** **B**  
+> *Explanation:* `for_each` maps resources to unique map keys or set elements rather than positional integer indices (`count.index`), ensuring that removing an item from the middle of a collection does not alter the identifiers of remaining items.
+
+### Question 3: State Locking and Remote Backends
+**Scenario:** Two developers on an enterprise DevOps team attempt to run `terraform apply` concurrently against the same AWS infrastructure stack. 
+
+What native mechanism prevents state corruption and simultaneous modifications in a production S3 backend?
+* A. S3 Bucket Versioning
+* B. DynamoDB State Locking via `LockID`
+* C. Git Branch Protection Rules
+* D. Terraform Workspace Isolation
+
+> **Correct Answer:** **B**  
+
+> *Explanation:* When configured with an S3 backend, Terraform utilizes an Amazon DynamoDB table to acquire an exclusive lock (`LockID`) during state read/write operations, preventing concurrent conflicting writes.
+
+### Question 4: Policy-as-Code and Compliance
+**Scenario:** Your security team mandates that no Terraform configuration may provision an AWS Security Group permitting unrestricted inbound access (`0.0.0.0/0`) on port 22. 
+
+Which tool and policy language combination is standard for evaluating these rules against generated Terraform JSON execution plans prior to deployment?
+
+A. TFLint using YAML configuration rules
+
+B. Open Policy Agent (OPA) using Rego policy scripts
+
+C. Ansible security playbooks with YAML linting
+
+D. Terratest using Go assertion libraries
+
+> **Correct Answer:** **B**  
+
+> *Explanation:* Open Policy Agent (OPA) paired with Conftest evaluates structured JSON execution plans against declarative rules written in the Rego language to enforce automated Policy-as-Code compliance.
+
+### Question 5: Immutable Infrastructure and Golden AMIs
+
+**Scenario:** An enterprise team wants to eliminate boot-time configuration drift and reduce launch latency for auto-scaling EC2 fleets by pre-installing security patches and auditing tools into a snapshot image before deployment. 
+
+Which tool combination is specifically engineered for building immutable golden AMIs?
+
+A. Terraform and Docker
+
+B. Packer and Ansible
+
+C. Kubernetes and Helm
+
+D. Vault and Consul
+
+> **Correct Answer:** **B**  
+
+> *Explanation:* HashiCorp Packer automates the creation of machine images (AMIs) across cloud platforms, while Ansible acts as the provisioner to apply hardening scripts and configurations inside the temporary build instance.
