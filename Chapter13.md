@@ -300,12 +300,14 @@ provider "aws" {
 ```
 
 #### `variables.tf`
+
 ```hcl
 variable "aws_region" { type = string; default = "us-east-1" }
 variable "environment" { type = string; default = "dev" }
 ```
 
 #### `main.tf`
+
 ```hcl
 data "aws_ami" "amazon_linux" {
   most_recent = true
@@ -344,6 +346,7 @@ module "app_node" {
 ```
 
 #### `outputs.tf`
+
 ```hcl
 output "deployed_node_details" {
   value = {
@@ -368,8 +371,6 @@ terraform apply -auto-approve
 # 4. Clean up resources
 terraform destroy -auto-approve
 ```
-
----
 
 ## 13.6 Enterprise State Management and State Locking
 
@@ -441,8 +442,6 @@ terraform {
   }
 }
 ```
-
----
 
 ## 13.7 Automated Infrastructure Testing with Terratest
 
@@ -958,28 +957,35 @@ D. Terraform will throw a validation conflict error and halt execution.
 **Scenario:** A team manages a list of three IAM users using an index-based iteration construct. When the middle user (`bob`) is removed from the list, Terraform destroys and recreates the user account for `charlie` (who was at index 2 and shifted to index 1). 
 
 Which meta-argument should the engineer adopt to prevent cascading updates when items are modified in collections?
-A.`count`
+
+A. `count`
+
 B. `for_each`
+
 C. `lifecycle { create_before_destroy = true }`
+
 D. `depends_on`
 
 > **Correct Answer:** **B**  
+
 > *Explanation:* `for_each` maps resources to unique map keys or set elements rather than positional integer indices (`count.index`), ensuring that removing an item from the middle of a collection does not alter the identifiers of remaining items.
 
 ### Question 3: State Locking and Remote Backends
 **Scenario:** Two developers on an enterprise DevOps team attempt to run `terraform apply` concurrently against the same AWS infrastructure stack. 
 
 What native mechanism prevents state corruption and simultaneous modifications in a production S3 backend?
-* A. S3 Bucket Versioning
-* B. DynamoDB State Locking via `LockID`
-* C. Git Branch Protection Rules
-* D. Terraform Workspace Isolation
+
+A. S3 Bucket Versioning
+B. DynamoDB State Locking via `LockID`
+C. Git Branch Protection Rules
+D. Terraform Workspace Isolation
 
 > **Correct Answer:** **B**  
 
 > *Explanation:* When configured with an S3 backend, Terraform utilizes an Amazon DynamoDB table to acquire an exclusive lock (`LockID`) during state read/write operations, preventing concurrent conflicting writes.
 
 ### Question 4: Policy-as-Code and Compliance
+
 **Scenario:** Your security team mandates that no Terraform configuration may provision an AWS Security Group permitting unrestricted inbound access (`0.0.0.0/0`) on port 22. 
 
 Which tool and policy language combination is standard for evaluating these rules against generated Terraform JSON execution plans prior to deployment?
